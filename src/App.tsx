@@ -2,6 +2,9 @@ import { Box, Container, Image } from "@chakra-ui/react";
 import React from "react";
 import { useAuth } from "./modules/api/auth";
 import { useTop20 } from "./modules/api/music";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Login } from "./components/routes/Login";
+import styled from "@emotion/styled";
 
 const Top20: React.FC<{ org: string; type: "w" | "m" }> = ({ org, type }) => {
   const [top20] = useTop20({ org, type });
@@ -52,28 +55,46 @@ function Header() {
   const { isLoggedIn, logout, user } = useAuth();
 
   return (
-    <header>
+    <HeaderContainer>
+      <Link to="/home">Home</Link>
       {isLoggedIn ? (
         <div>
           <button onClick={logout}>Logout</button>
+          {user && <h3>{user.username}</h3>}
         </div>
       ) : (
         <div>
-          <a href="/login">Login</a>
+          <Link to="/login">Login</Link>
         </div>
       )}
-      {user && <h3>{user.username}</h3>}
-    </header>
+    </HeaderContainer>
   );
+}
+
+function Home() {
+  return <Top20 org="Hololive" type="w" />;
 }
 
 function App() {
   return (
-    <Container>
-      <Header />
-      <Top20 org="Hololive" type="w" />
-    </Container>
+    <Router>
+      <Container>
+        <Header />
+        <Switch>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </Container>
+    </Router>
   );
 }
 
 export default App;
+
+const HeaderContainer = styled.div`
+  background: gray;
+`;
