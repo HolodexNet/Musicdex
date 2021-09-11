@@ -1,27 +1,24 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { createStore, persist, StoreProvider } from "easy-peasy";
+// https://chakra-ui.com/docs/migration#css-reset
 import "focus-visible/dist/focus-visible";
 import React from "react";
 import ReactDOM from "react-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
 import App from "./App";
 import "./modules/i18n";
 import storeModel from "./store";
+import { theme } from "./theme";
 import reportWebVitals from "./utils/reportWebVitals";
 
 // https://easy-peasy.dev/docs/api/persist.html
 const store = createStore(persist(storeModel, { storage: "localStorage" }));
 
-const queryClient = new QueryClient();
-
 store.persist.resolveRehydration().then(() => {
   ReactDOM.render(
     <React.StrictMode>
       <StoreProvider store={store}>
-        <ChakraProvider>
-          <QueryClientProvider client={queryClient}>
-            <App />
-          </QueryClientProvider>
+        <ChakraProvider theme={theme}>
+          <App />
         </ChakraProvider>
       </StoreProvider>
     </React.StrictMode>,

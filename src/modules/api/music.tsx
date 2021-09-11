@@ -29,6 +29,7 @@ export function useTop20({ org, type }: { org: string; type: "w" | "m" }) {
 
   useEffect(() => {
     (async () => {
+      setRes(null);
       const endpoint = `/api/v2/songs/top20?org=${org}&type=${type}`;
       const res = await fetch(endpoint);
       setRes(res);

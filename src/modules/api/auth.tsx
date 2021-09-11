@@ -1,5 +1,7 @@
+import styled from "@emotion/styled";
 import cFetch from "cross-fetch";
 import { useCallback } from "react";
+import OAuth2Login from "react-simple-oauth2-login";
 import { useStoreActions, useStoreState } from "../../store";
 
 export interface OAuth2SuccessResponse {
@@ -59,12 +61,38 @@ export function useAuth() {
     setUser(null);
   }
 
+  async function onSuccess(res: OAuth2SuccessResponse) {
+    const token = await getToken({
+      authToken: res.access_token,
+      service: "discord",
+      jwt: undefined,
+    });
+    const { jwt, user } = token;
+    setToken(jwt);
+    setUser(user);
+  }
+
+  function onFailure(err: any) {
+    console.log("Error", err);
+  }
+
   return {
     isLoggedIn,
     user,
     fetch,
     login,
     logout,
+    LoginButton: () => (
+      <LoginButton
+        authorizationUrl="https://discord.com/api/oauth2/authorize"
+        responseType="token"
+        clientId="793619250115379262"
+        redirectUri={`${window.location.protocol}//${window.location.host}/discord`}
+        scope="identify"
+        onSuccess={onSuccess}
+        onFailure={onFailure}
+      />
+    ),
   };
 }
 
@@ -92,3 +120,9 @@ export async function getToken({
   });
   return res.json();
 }
+
+const LoginButton = styled(OAuth2Login)`
+  background: lightblue;
+  padding: 5px 15px;
+  border-radius: 4px;
+`;
