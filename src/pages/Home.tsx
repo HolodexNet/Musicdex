@@ -1,6 +1,6 @@
 import { Container, Select } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Top20 } from "../Top20";
+import { Top20 } from "../components/Top20";
 
 export function Home() {
   const [org, setOrg] = useState<string>("Hololive");

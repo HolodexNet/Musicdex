@@ -1,5 +1,5 @@
 import { action, Action, computed, Computed } from "easy-peasy";
-import { User } from "../modules/api/auth";
+import { User } from "../modules/auth";
 
 export interface AuthModel {
   token: string | null;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Jacket } from "./Jacket";
-import { useTop20 } from "../modules/api/music";
+import { useTop20 } from "../modules/rankings";
 
 export const Top20: React.FC<{ org: string; type: "w" | "m" }> = ({
   org,

@@ -23,6 +23,11 @@ yarn start
 yarn build
 ```
 
+## Links
+
+- [API wishlist from the frontend side · Issue #1 · HolodexNet/Musicdex](https://github.com/HolodexNet/Musicdex/issues/1)
+- [Kanban on HolodexNet](https://github.com/HolodexNet/Holodex/projects/2)
+
 ## References
 
 - [React documentation](https://reactjs.org/).

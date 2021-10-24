@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "./auth";
+import { useAuth } from "../auth";
 
 export interface Channel {
   name: string;

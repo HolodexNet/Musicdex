@@ -10,7 +10,6 @@ export const Jacket: React.FC<{
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
       <Image p={3} src={artwork} alt={title} />
-
       <Box pl={3}>
         <Box
           mt="1"
