@@ -47,6 +47,22 @@ export function Player() {
     setPlayer(event.target);
   }
 
+  function onPlay() {
+    setIsPlaying(true);
+  }
+
+  function onPause() {
+    setIsPlaying(false);
+  }
+
+  // discard player when target is null
+  useEffect(() => {
+    if (!target) {
+      setPlayer(null);
+      return;
+    }
+  }, [target]);
+
   // handle keyboard shortcuts
   useKeyboardEvents(
     (event) => {
@@ -60,16 +76,6 @@ export function Player() {
     },
     [isExpanded, setTarget]
   );
-
-  // handle if video id is changed
-  useEffect(() => {
-    if (!target) {
-      setIsPlaying(false);
-      setPlayer(null);
-      return;
-    }
-    setIsPlaying(true);
-  }, [target, isPlaying]);
 
   // controls
   function togglePlay() {
@@ -108,6 +114,8 @@ export function Player() {
               },
             }}
             onReady={onReady}
+            onPlay={onPlay}
+            onPause={onPause}
           />
         )}
       </PlayerContainer>
