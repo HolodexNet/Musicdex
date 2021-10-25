@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../auth";
+import { resizeArtwork } from "./utils";
 
 export interface Channel {
   name: string;
@@ -22,8 +23,13 @@ export interface Music {
   channel: Channel;
 }
 
+function enlargeArtworks(music: Music): Music {
+  music.art = resizeArtwork(music.art);
+  return music;
+}
+
 export function useTop20({ org, type }: { org: string; type: "w" | "m" }) {
-  const { fetch } = useAuth();
+  const { fetchJSON } = useAuth();
 
   const [res, setRes] = useState<Music[] | null>(null);
 
@@ -31,10 +37,10 @@ export function useTop20({ org, type }: { org: string; type: "w" | "m" }) {
     (async () => {
       setRes(null);
       const endpoint = `/api/v2/songs/top20?org=${org}&type=${type}`;
-      const res = await fetch(endpoint);
+      const res = (await fetchJSON<Music[]>(endpoint)).map(enlargeArtworks);
       setRes(res);
     })();
-  }, [org, type, fetch]);
+  }, [org, type, fetchJSON]);
 
   return [res];
 }

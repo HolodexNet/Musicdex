@@ -37,8 +37,8 @@ export function useAuth() {
   const setUser = useStoreActions((actions) => actions.auth.setUser);
   const setToken = useStoreActions((actions) => actions.auth.setToken);
 
-  const fetch = useCallback(
-    async (input: RequestInfo, init?: RequestInit) => {
+  const fetchJSON = useCallback(
+    async function <T>(input: RequestInfo, init?: RequestInit): Promise<T> {
       const newInit = {
         ...init,
         headers: {
@@ -79,7 +79,7 @@ export function useAuth() {
   return {
     isLoggedIn,
     user,
-    fetch,
+    fetchJSON,
     login,
     logout,
     LoginButton: () => (

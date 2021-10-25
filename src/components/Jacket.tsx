@@ -6,9 +6,17 @@ export const Jacket: React.FC<{
   artwork: string;
   artist: string;
   playCount: number;
-}> = ({ title, artwork, artist, playCount }) => {
+  onClick?: () => void;
+}> = ({ title, artwork, artist, playCount, onClick }) => {
   return (
-    <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
+    <Box
+      onClick={() => onClick && onClick()}
+      style={{ cursor: onClick ? "pointer" : "inherit" }}
+      maxW="sm"
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+    >
       <Image p={3} src={artwork} alt={title} />
       <Box pl={3}>
         <Box

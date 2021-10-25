@@ -1,12 +1,15 @@
 import { createTypedHooks } from "easy-peasy";
 import authModel, { AuthModel } from "./auth";
+import playerModel, { PlayerModel } from "./player";
 
 export interface StoreModel {
   auth: AuthModel;
+  player: PlayerModel;
 }
 
 const storeModel: StoreModel = {
   auth: authModel,
+  player: playerModel,
 };
 
 export default storeModel;
