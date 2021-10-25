@@ -1,11 +1,28 @@
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaExpand, FaPause, FaPlay } from "react-icons/fa";
 import { FiMinimize2 } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
 import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreActions, useStoreState } from "../../store";
+
+function useKeyboardEvents(
+  callback: (event: KeyboardEvent) => void,
+  deps: React.DependencyList = []
+) {
+  const onKeyPressed = useCallback(
+    (event: KeyboardEvent) => {
+      callback(event);
+    },
+    [callback]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", onKeyPressed);
+    return () => document.removeEventListener("keydown", onKeyPressed);
+  }, [deps, onKeyPressed]);
+}
 
 export function Player() {
   const target = useStoreState((state) => state.player.target);
@@ -24,11 +41,25 @@ export function Player() {
     } else {
       player.pauseVideo();
     }
-  }, [isPlaying]);
+  }, [isPlaying, player]);
 
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
   }
+
+  // handle keyboard shortcuts
+  useKeyboardEvents(
+    (event) => {
+      if (event.key === "Escape") {
+        if (isExpanded) {
+          setIsExpanded(false);
+        } else {
+          setTarget(null);
+        }
+      }
+    },
+    [isExpanded, setTarget]
+  );
 
   // handle if video id is changed
   useEffect(() => {
@@ -37,11 +68,8 @@ export function Player() {
       setPlayer(null);
       return;
     }
-    if (!isPlaying) {
-      setIsExpanded(true);
-    }
     setIsPlaying(true);
-  }, [target]);
+  }, [target, isPlaying]);
 
   // controls
   function togglePlay() {
