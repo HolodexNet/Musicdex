@@ -3,17 +3,18 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Header } from "./components/Header";
 // import { Player } from "./components/player/Player";
 import { Home } from "./pages/Home";
+import { Playlist } from "./pages/Playlist";
 
 function App() {
   return (
     <Router>
       <Header />
       <Switch>
-        <Route path="/">
+        <Route exact path="/">
           <Home />
         </Route>
         <Route path="/playlists/:playlistId">
-          <Home />
+          <Playlist />
         </Route>
       </Switch>
       {/* <Player /> */}

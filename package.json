@@ -45,7 +45,8 @@
     "@types/youtube-player": "^5.5.5",
     "husky": "^7.0.4",
     "prettier": "^2.4.1",
-    "pretty-quick": "^3.1.1"
+    "pretty-quick": "^3.1.1",
+    "http-proxy-middleware": "^2.0.1"
   },
   "browserslist": {
     "production": [
@@ -65,6 +66,5 @@
       "react-app/jest"
     ]
   },
-  "private": true,
-  "proxy": "https://staging.holodex.net"
+  "private": true
 }
