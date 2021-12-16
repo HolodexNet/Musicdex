@@ -2,10 +2,10 @@ import { Spacer } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../modules/auth";
+import { useClient } from "../modules/client";
 
 export function Header() {
-  const { isLoggedIn, logout, user, LoginButton } = useAuth();
+  const { isLoggedIn, logout, user, LoginButton } = useClient();
 
   return (
     <HeaderContainer>

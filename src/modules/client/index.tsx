@@ -29,7 +29,7 @@ export interface User {
   yt_channel_key: string | null;
 }
 
-export function useAuth() {
+export function useClient() {
   const isLoggedIn = useStoreState((state) => state.auth.isLoggedIn);
   const user = useStoreState((state) => state.auth.user);
   const token = useStoreState((state) => state.auth.token);

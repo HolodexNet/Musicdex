@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useClient } from "../client";
 import { encodeUrl } from "../client/utils";
-import { resizeArtwork } from "./utils";
 
 export interface Channel {
   name: string;
@@ -24,12 +23,12 @@ export interface Song {
   channel: Channel;
 }
 
-function enlargeArtworks(music: Song): Song {
-  music.art = resizeArtwork(music.art);
-  return music;
-}
+// function enlargeArtworks(music: Song): Song {
+//   music.art = resizeArtwork(music.art);
+//   return music;
+// }
 
-export function useTop20({ org, type }: { org: string; type: "w" | "m" }) {
+export function usePlaylist({ id }: { id: string }) {
   const { fetchJSON } = useClient();
 
   const [res, setRes] = useState<Song[] | null>(null);
@@ -37,11 +36,11 @@ export function useTop20({ org, type }: { org: string; type: "w" | "m" }) {
   useEffect(() => {
     (async () => {
       setRes(null);
-      const endpoint = encodeUrl("/api/v2/songs/top20", { org, type });
-      const res = (await fetchJSON<Song[]>(endpoint)).map(enlargeArtworks);
+      const endpoint = `/api/v2/musicdex/playlist/${id}`;
+      const res = await fetchJSON<Song[]>(endpoint);
       setRes(res);
     })();
-  }, [org, type, fetchJSON]);
+  }, [id]);
 
   return [res];
 }
