@@ -17,15 +17,15 @@
     "@testing-library/user-event": "^13.5.0",
     "cross-fetch": "^3.1.4",
     "easy-peasy": "^5.0.4",
-    "fast-average-color": "^6.4.2",
+    "fast-average-color": "^7.0.1",
     "focus-visible": "^5.2.0",
     "framer-motion": "^4.1.17",
-    "i18next": "^21.3.3",
+    "i18next": "^21.6.0",
     "i18next-browser-languagedetector": "^6.1.2",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
-    "react-i18next": "^11.12.0",
+    "react-i18next": "^11.15.1",
     "react-icons": "^4.3.1",
     "react-query": "^3.28.0",
     "react-router": "^5.2.1",
@@ -50,7 +50,7 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
+      ">0.5%",
       "not dead",
       "not op_mini all"
     ],
