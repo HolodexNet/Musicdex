@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"i18n-ally.localesPaths": [
+			"src/modules/i18n"
+		]
+	}
+}

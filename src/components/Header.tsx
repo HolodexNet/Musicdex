@@ -11,7 +11,9 @@ export function Header() {
     <HeaderContainer>
       <Link to="/home">Home</Link>
       <Spacer />
-      <Link to="/home">Musicdex</Link>
+      <Link to="/home">
+        Musicdex (we can get rid of this header, or the Sidebar header)
+      </Link>
       <Spacer />
       {isLoggedIn ? (
         <div>

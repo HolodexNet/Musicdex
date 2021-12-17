@@ -4,7 +4,7 @@ module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: "http://localhost:2434",
+      target: "https://staging2.holodex.net/",
       changeOrigin: true,
       pathRewrite: {
         "^/api/v2": "/v2",

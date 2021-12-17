@@ -4,20 +4,22 @@ import { Header } from "./components/Header";
 // import { Player } from "./components/player/Player";
 import { Home } from "./pages/Home";
 import { Playlist } from "./pages/Playlist";
+import SideBar from "./components/Sidebar";
 
-function App() {
+function App(this: any) {
   return (
     <Router>
       <Header />
-      <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route path="/playlists/:playlistId">
-          <Playlist />
-        </Route>
-      </Switch>
-      {/* <Player /> */}
+      <SideBar>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/playlists/:playlistId">
+            <Playlist />
+          </Route>
+        </Switch>
+      </SideBar>
     </Router>
   );
 }
