@@ -2,7 +2,7 @@ import { Container, Select } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Jacket } from "../components/Jacket";
-import { usePlaylist } from "../modules/playlist";
+import { usePlaylist } from "../modules/playlist/index_hook";
 
 export function Playlist() {
   let { playlistId }: { playlistId: string } = useParams();

@@ -19,18 +19,18 @@ export interface Playlist {
 // }
 
 export function usePlaylist({ id }: { id: string }) {
-  const { fetchJSON } = useClient();
+  const { AxiosInstance } = useClient();
 
   const [res, setRes] = useState<Playlist | null>(null);
 
   useEffect(() => {
     (async () => {
       setRes(null);
-      const endpoint = `/api/v2/musicdex/playlist/${id}`;
-      const res = await fetchJSON<Playlist>(endpoint);
-      setRes(res);
+      const endpoint = `/musicdex/playlist/${id}`;
+      const res = await AxiosInstance<Playlist>(endpoint);
+      setRes(res.data);
     })();
-  }, [id]);
+  }, [id, AxiosInstance]);
 
   return res;
 }

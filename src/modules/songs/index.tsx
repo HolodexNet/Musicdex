@@ -30,7 +30,7 @@ function enlargeArtworks(music: Song): Song {
 }
 
 export function useTop20({ org, type }: { org: string; type: "w" | "m" }) {
-  const { fetchJSON } = useClient();
+  const { AxiosInstance } = useClient();
 
   const [res, setRes] = useState<Song[] | null>(null);
 
@@ -38,10 +38,12 @@ export function useTop20({ org, type }: { org: string; type: "w" | "m" }) {
     (async () => {
       setRes(null);
       const endpoint = encodeUrl("/api/v2/songs/top20", { org, type });
-      const res = (await fetchJSON<Song[]>(endpoint)).map(enlargeArtworks);
+      const res = (await AxiosInstance<Song[]>(endpoint)).data.map(
+        enlargeArtworks
+      );
       setRes(res);
     })();
-  }, [org, type, fetchJSON]);
+  }, [org, type, AxiosInstance]);
 
   return [res];
 }

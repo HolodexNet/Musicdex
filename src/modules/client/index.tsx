@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import cFetch from "cross-fetch";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useCallback } from "react";
 import OAuth2Login from "react-simple-oauth2-login";
 import { useStoreActions, useStoreState } from "../../store";
@@ -29,6 +29,8 @@ export interface User {
   yt_channel_key: string | null;
 }
 
+const BASE_URL = `${window.location.protocol}//${window.location.host}/api/v2`;
+
 export function useClient() {
   const isLoggedIn = useStoreState((state) => state.auth.isLoggedIn);
   const user = useStoreState((state) => state.auth.user);
@@ -37,17 +39,20 @@ export function useClient() {
   const setUser = useStoreActions((actions) => actions.auth.setUser);
   const setToken = useStoreActions((actions) => actions.auth.setToken);
 
-  const fetchJSON = useCallback(
-    async function <T>(input: RequestInfo, init?: RequestInit): Promise<T> {
-      const newInit = {
-        ...init,
+  const AxiosInstance = useCallback(
+    function <T>(
+      url: string,
+      config?: AxiosRequestConfig
+    ): Promise<AxiosResponse<T>> {
+      const configWithUser: AxiosRequestConfig = {
+        baseURL: BASE_URL,
+        ...config,
         headers: {
-          ...init?.headers,
+          ...config?.headers,
           ...(token && { Authorization: `Bearer ${token}` }),
         },
       };
-      const res = await cFetch(input, newInit);
-      return res.json();
+      return axios(url, configWithUser);
     },
     [token]
   );
@@ -60,6 +65,19 @@ export function useClient() {
     setToken(null);
     setUser(null);
   }
+
+  return {
+    isLoggedIn,
+    user,
+    AxiosInstance,
+    login,
+    logout,
+  };
+}
+
+export function useClientLogin() {
+  const setUser = useStoreActions((actions) => actions.auth.setUser);
+  const setToken = useStoreActions((actions) => actions.auth.setToken);
 
   async function onSuccess(res: OAuth2SuccessResponse) {
     const token = await getToken({
@@ -77,11 +95,6 @@ export function useClient() {
   }
 
   return {
-    isLoggedIn,
-    user,
-    fetchJSON,
-    login,
-    logout,
     LoginButton: () => (
       <LoginButton
         authorizationUrl="https://discord.com/api/oauth2/authorize"
