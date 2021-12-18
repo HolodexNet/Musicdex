@@ -7,8 +7,8 @@ import {
 } from "easy-peasy";
 
 export interface PlaybackModel {
-  queue: Song[];
-  playlistQueue: Song[];
+  queue: Song[]; // a high priority queue of song. This plays 'next'.
+  playlistQueue: Song[]; // a queue that is fed by the playlist.
   playlistQueue2: Song[]; // a backup queue for songs ONLY if Shuffle + Repeat
   currentPlaylist?: PlaylistFull;
 
@@ -16,15 +16,21 @@ export interface PlaybackModel {
   repeatMode: "none" | "repeat" | "repeat-one";
   isRepeatOne: boolean;
 
+  // the current song at the top of the queue.
   currentlyPlaying: Computed<PlaybackModel, Song | undefined>;
 
+  // setting the shuffle / repeat.
   toggleShuffle: Action<PlaybackModel, null>;
   toggleRepeat: Action<PlaybackModel, null>;
 
+  // advances song, if user clicked a queue spot, advance by that #.
   nextSong: Action<PlaybackModel, number>;
 
+  // queues songs up into the queue.
   queueSongs: Action<PlaybackModel, Song[]>;
+  // sets a playlist into the queue
   setPlaylist: Action<PlaybackModel, PlaylistFull>;
+  // shuffles everything, optionally keeping first playlistQueue item.
   shufflePlaylist: Action<PlaybackModel, boolean>;
 }
 
