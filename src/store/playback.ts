@@ -1,13 +1,5 @@
 import { StatHelpText } from "@chakra-ui/react";
-import {
-  action,
-  Action,
-  computed,
-  Computed,
-  thunk,
-  Thunk,
-  useStoreActions,
-} from "easy-peasy";
+import { action, Action, thunk, Thunk } from "easy-peasy";
 
 export interface PlaybackModel {
   // ==== Currently Playing. It is separate from queue and playlistQueue.
