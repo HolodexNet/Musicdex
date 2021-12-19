@@ -37,6 +37,7 @@ import {
 } from "react-icons/fi";
 import Footer from "./Footer";
 import { Searchbox } from "./header/Searchbox";
+import { Player } from "./player/Player";
 
 interface LinkItemProps {
   name: string;
@@ -57,32 +58,57 @@ export default function FrameWithHeader({
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
-      {/* Generic Display: always present */}
-      <Nav onOpen={onOpen} />
+    <Box
+      h="100vh"
+      w="100vw"
+      bg={useColorModeValue("gray.100", "gray.900")}
+      overflow="hidden"
+    >
+      <Flex direction="column" h="100vh" overflow="hidden">
+        {/* Generic Display: always present */}
+        <Nav onOpen={onOpen} />
 
-      <SidebarContent
-        onClose={() => onClose}
-        display={{ base: "none", md: "block" }}
-      />
-      {/* Mobile Display: (provide close method) */}
-      <Drawer
-        autoFocus={false}
-        isOpen={isOpen}
-        placement="left"
-        onClose={onClose}
-        returnFocusOnClose={false}
-        onOverlayClick={onClose}
-        size="full"
-      >
-        <DrawerContent>
-          <SidebarContent onClose={onClose} />
-        </DrawerContent>
-      </Drawer>
-      <Box ml={{ base: 0, md: 60 }} p="4">
-        {children}
-      </Box>
-      <Footer></Footer>
+        {/* Mobile Display: (provide close method) */}
+        <Drawer
+          autoFocus={false}
+          isOpen={isOpen}
+          placement="left"
+          onClose={onClose}
+          returnFocusOnClose={false}
+          onOverlayClick={onClose}
+          size="full"
+        >
+          <DrawerContent>
+            <SidebarContent onClose={onClose} />
+          </DrawerContent>
+        </Drawer>
+        <Flex
+          flexGrow={1}
+          flexFlow="row nowrap"
+          alignItems="stretch"
+          overflow="hidden"
+        >
+          <SidebarContent
+            onClose={() => onClose}
+            display={{ base: "none", md: "block" }}
+            paddingTop="4"
+          />
+
+          <Box
+            // ml={{ base: 0, md: 60 }}
+            overflowY="scroll"
+            h="100%"
+            position="relative"
+            p="4"
+            flexGrow={1}
+            flexShrink={1}
+          >
+            {children}
+            <Footer></Footer>
+          </Box>
+        </Flex>
+        <Player />
+      </Flex>
     </Box>
   );
 }
@@ -99,7 +125,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       borderRight="1px"
       borderRightColor={useColorModeValue("gray.200", "gray.700")}
       w={{ base: "full", md: 60 }}
-      pos="fixed"
+      // pos="fixed"
       h="full"
       {...rest}
     >

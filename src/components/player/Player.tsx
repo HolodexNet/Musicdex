@@ -1,4 +1,5 @@
 import {
+  ContainerProps,
   Slider,
   SliderFilledTrack,
   SliderThumb,
@@ -89,7 +90,7 @@ export function Player() {
   }
 
   return (
-    <Container expanded={false} visible={true}>
+    <Container visible={true}>
       {/* Time: { seconds } , { progress } */}
       {currentSong && (
         <YouTube
@@ -129,12 +130,12 @@ export function Player() {
   );
 }
 
-const Container = styled.div<{ expanded: boolean; visible: boolean }>`
-  position: fixed;
-  bottom: 0;
-  right: 0;
+const Container = styled.div<{ visible: boolean }>`
   width: 100%;
-  height: ${({ expanded }) => (expanded ? "100%" : "80px")};
+  height: 80px;
+  flex-basis: 1;
+  flex-shrink: 0;
+  position: relative;
   transition: all 0.3s ease-out;
   background: #1c1c1c;
   /* overflow: hidden; */
