@@ -10,39 +10,50 @@ import {
 } from "easy-peasy";
 
 export interface PlaybackModel {
-  queue: Song[]; // a high priority queue of song. This plays 'next'.
-  _queueAdd: Action<PlaybackModel, Song[]>;
-  _queueClear: Action<PlaybackModel, void>;
-
-  playlistQueue: Song[]; // a queue that is fed by the playlist.
-  playlistQueue2: Song[]; // a backup queue for songs ONLY if Shuffle + Repeat
-  currentPlaylist?: PlaylistFull;
-  _setPlaylist: Action<PlaybackModel, PlaylistFull>;
-  _shufflePlaylist: Action<PlaybackModel, void>; // specifically if you want to shuffle again... probably not a public.
-
-  shuffleMode: boolean;
-  _setShuffleMode: Action<PlaybackModel, boolean>;
-  repeatMode: "none" | "repeat" | "repeat-one";
-
+  // ==== Currently Playing. It is separate from queue and playlistQueue.
   currentlyPlaying: {
     from: "queue" | "playlist" | "none";
     song?: Song;
     repeat: number;
   };
 
+  // ==== Queue and Queue Mutators
+  queue: Song[]; // a high priority queue of song. This plays 'next'.
+
+  _queueAdd: Action<PlaybackModel, Song[]>;
+  _queueClear: Action<PlaybackModel, void>;
+
+  // ===== Playlist and Playlist Mutators:
+  playlistQueue: Song[]; // a queue that is fed by the playlist.
+  playlistQueue2: Song[]; // a backup queue for songs ONLY if Shuffle + Repeat
+  currentPlaylist?: PlaylistFull;
+
+  _setPlaylist: Action<PlaybackModel, PlaylistFull>;
+  _shufflePlaylist: Action<PlaybackModel, void>; // specifically if you want to shuffle again... probably not a public.
+
+  // ==== Playback Mode:
+  shuffleMode: boolean;
+  repeatMode: "none" | "repeat" | "repeat-one";
+
   // setting the shuffle / repeat.
   toggleShuffle: Thunk<PlaybackModel, void>;
+  _setShuffleMode: Action<PlaybackModel, boolean>;
   toggleRepeat: Action<PlaybackModel, void>;
 
-  // advances song, if user clicked a queue spot, advance by that #.
-  // nextSong: Action<PlaybackModel, number>;
+  // ==== Lifecycle:
+  // Ejects the currently playing song and puts it somewhere appropriate / throws it out.
   _ejectCurrentlyPlaying: Action<PlaybackModel, void>;
+  // Adds a new song to now playing.
   _insertCurrentlyPlaying: Action<
     PlaybackModel,
     "playlist" | "queue" | "repeat-one"
   >;
+  // Forcibly insert a song into now playing.
   _forceInsertCurrentlyPlaying: Action<PlaybackModel, Song>;
+  // If the currently playing is from = 'playlist', this fn modifies from = 'queue' instead.
   _detachCurrentlyPlayingToQueue: Action<PlaybackModel, void>;
+
+  // ==== Public Methods:
   // queues songs up into the queue.
   queueSongs: Thunk<PlaybackModel, { songs: Song[]; immediatelyPlay: boolean }>;
   // adds a playlist into the queue
@@ -50,7 +61,7 @@ export interface PlaybackModel {
     PlaybackModel,
     { playlist: PlaylistFull; immediatelyPlay: boolean }
   >;
-  // shuffles everything, always keeping the current playing.
+  // for pressing NEXT or pressing a item on up-next.
   next: Thunk<PlaybackModel, { count: number; isSkip: boolean }>;
 }
 
