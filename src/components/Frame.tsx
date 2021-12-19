@@ -35,6 +35,7 @@ import {
   FiSettings,
   FiPlusCircle,
 } from "react-icons/fi";
+import { Searchbox } from "./header/Searchbox";
 
 interface LinkItemProps {
   name: string;
@@ -57,7 +58,7 @@ export default function FrameWithHeader({
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       {/* Generic Display: always present */}
-      <MobileNav onOpen={onOpen} />
+      <Nav onOpen={onOpen} />
 
       <SidebarContent
         onClose={() => onClose}
@@ -101,12 +102,18 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}
     >
-      {/* <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+      <Flex
+        h="20"
+        alignItems="center"
+        mx="8"
+        justifyContent="space-between"
+        display={{ base: "flex", md: "none" }}
+      >
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
           Logo
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
-      </Flex> */}
+      </Flex>
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon}>
           {link.name}
@@ -159,7 +166,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+const Nav = ({ onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
       ml={{ base: 0 }}
@@ -169,7 +176,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      justifyContent={{ base: "space-between", md: "flex-end" }}
+      justifyContent={{ base: "space-between", md: "space-between" }}
       {...rest}
     >
       <IconButton
@@ -181,13 +188,15 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       />
 
       <Text
-        display={{ base: "flex", md: "none" }}
+        display={{ base: "flex", md: "flex" }}
         fontSize="2xl"
         fontFamily="monospace"
         fontWeight="bold"
       >
         Logo
       </Text>
+
+      <Searchbox></Searchbox>
 
       <HStack spacing={{ base: "0", md: "6" }}>
         <IconButton
