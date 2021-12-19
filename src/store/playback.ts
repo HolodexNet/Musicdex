@@ -178,39 +178,6 @@ const playbackModel: PlaybackModel = {
     if (state.currentlyPlaying.song) state.currentlyPlaying.from = "queue";
   }),
 
-  // TODO: how do you play the same song twice?
-  // nextSong: action((state, count) => {
-
-  // while (state.queue.length > 0 && count > 0) {
-  //   state.queue.shift();
-  //   count--;
-  // }
-  // while (state.playlistQueue.length > 0 && count > 0) {
-  //   const pop = state.playlistQueue.shift();
-  //   if (!pop) break; //undefined?
-  //   count--;
-  //   if (state.repeatMode === "repeat" || state.repeatMode === "repeat-one") {
-  //     if (state.shuffleMode) {
-  //       state.playlistQueue2.push(pop);
-  //     } else {
-  //       state.playlistQueue.push(pop);
-  //     }
-  //   }
-  // }
-  // while (state.playlistQueue2.length > 0 && count > 0) {
-  //   const pop = state.playlistQueue2.shift();
-  //   if (!pop) break; //undefined?
-  //   count--;
-  //   if (state.repeatMode === "repeat" || state.repeatMode === "repeat-one") {
-  //     state.playlistQueue2.push(pop);
-  //   }
-  // }
-  // if (state.playlistQueue.length === 0 && state.playlistQueue2.length > 0) {
-  //   state.playlistQueue = state.playlistQueue2;
-  //   state.playlistQueue2 = [];
-  // }
-  // }),
-
   queueSongs: thunk((actions, { songs, immediatelyPlay }, h) => {
     if (songs.length === 0) return;
     if (immediatelyPlay) {
