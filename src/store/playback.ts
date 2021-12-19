@@ -172,9 +172,11 @@ const playbackModel: PlaybackModel = {
   }),
 
   _forceInsertCurrentlyPlaying: action((state, song) => {
-    state.currentlyPlaying.from = "queue";
-    state.currentlyPlaying.song = song;
-    state.currentlyPlaying.repeat++;
+    state.currentlyPlaying = {
+      from: "queue",
+      song,
+      repeat: state.currentlyPlaying.repeat + 1,
+    };
   }),
 
   _detachCurrentlyPlayingToQueue: action((state) => {
@@ -182,6 +184,7 @@ const playbackModel: PlaybackModel = {
   }),
 
   queueSongs: thunk((actions, { songs, immediatelyPlay }, h) => {
+    console.log(songs);
     if (songs.length === 0) return;
     if (immediatelyPlay) {
       // songs should be singular.

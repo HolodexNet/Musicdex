@@ -15,7 +15,7 @@ export const Top20: React.FC<{ org: string; type: "w" | "m" }> = ({
   }
 
   function handleClick(song: Song) {
-    queueSongs({ songs: [song], immediatelyPlay: false });
+    queueSongs({ songs: [song], immediatelyPlay: true });
   }
 
   return (

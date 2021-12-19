@@ -1,3 +1,9 @@
+import {
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
+} from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useCallback, useEffect, useState } from "react";
 import { FaExpand, FaPause, FaPlay } from "react-icons/fa";
@@ -6,42 +12,51 @@ import { IoMdClose } from "react-icons/io";
 import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreActions, useStoreState } from "../../store";
-
-function useKeyboardEvents(
-  callback: (event: KeyboardEvent) => void,
-  deps: React.DependencyList = []
-) {
-  const onKeyPressed = useCallback(
-    (event: KeyboardEvent) => {
-      callback(event);
-    },
-    [callback]
-  );
-
-  useEffect(() => {
-    document.addEventListener("keydown", onKeyPressed);
-    return () => document.removeEventListener("keydown", onKeyPressed);
-  }, [deps, onKeyPressed]);
-}
+import { useKeyboardEvents } from "./PlayerKeyboardControls";
 
 export function Player() {
-  const target = useStoreState((state) => state.player.target);
-
-  const setTarget = useStoreActions((state) => state.player.setTarget);
-
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const currentSong = useStoreState(
+    (state) => state.playback.currentlyPlaying.song
+  );
+  //   const [currentSong, setCurrentSong] = useState<Song | null>(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
 
+  const [seconds, setSeconds] = useState<number>(0);
+  const [progress, setProgress] = useState<number>(0);
   // bind React state and YouTube Player's state
   useEffect(() => {
     if (!player) return;
-    if (isPlaying) {
-      player.playVideo();
-    } else {
-      player.pauseVideo();
-    }
+    // isPlaying ? player.playVideo() : player.pauseVideo();
   }, [isPlaying, player]);
+
+  //   useEffect(() => {
+  //       if(currentSong) {
+  //         setTimeout(() => {
+  //             player?.seekTo(currentSong.start, true)
+  //         }, 1000);
+  //       }
+  //   }, [currentSong]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timer | null = null;
+    if (player && currentSong) {
+      timer = setInterval(() => {
+        const s = player.getCurrentTime();
+        setSeconds(s);
+
+        const shiftedStart = s - currentSong.start;
+        const totalDuration = currentSong.end - currentSong.start;
+        const prog = Math.min(Math.max(shiftedStart / totalDuration, 0), 1);
+        console.log(prog);
+        setProgress(prog);
+      }, 200);
+    }
+    return () => {
+      timer && clearInterval(timer);
+    };
+  }, [player, currentSong]);
 
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
@@ -55,28 +70,6 @@ export function Player() {
     setIsPlaying(false);
   }
 
-  // discard player when target is null
-  useEffect(() => {
-    if (!target) {
-      setPlayer(null);
-      return;
-    }
-  }, [target]);
-
-  // handle keyboard shortcuts
-  useKeyboardEvents(
-    (event) => {
-      if (event.key === "Escape") {
-        if (isExpanded) {
-          setIsExpanded(false);
-        } else {
-          setTarget(null);
-        }
-      }
-    },
-    [isExpanded, setTarget]
-  );
-
   // controls
   function togglePlay() {
     setIsPlaying((prev) => !prev);
@@ -88,7 +81,7 @@ export function Player() {
 
   function onCloseButtonClicked() {
     setIsExpanded(false);
-    setTarget(null);
+    // setTarget(null);
   }
 
   function onOverlayClicked() {
@@ -96,66 +89,55 @@ export function Player() {
   }
 
   return (
-    <Container expanded={isExpanded} visible={target !== null}>
-      <PlayerContainer>
-        <PlayerOverlay enabled={!isExpanded} onClick={onOverlayClicked} />
-        {target && (
-          <YouTube
-            containerClassName="yt-container"
-            className="yt-player"
-            videoId={target}
-            opts={{
-              playerVars: {
-                // https://developers.google.com/youtube/player_parameters
-                autoplay: 1,
-                showinfo: 0,
-                rel: 0,
-                modestbranding: 1,
-              },
-            }}
-            onReady={onReady}
-            onPlay={onPlay}
-            onPause={onPause}
-          />
-        )}
-      </PlayerContainer>
+    <Container expanded={false} visible={true}>
+      {/* Time: { seconds } , { progress } */}
+      {currentSong && (
+        <YouTube
+          containerClassName="yt-container"
+          className="yt-player"
+          videoId={currentSong.video_id}
+          opts={{
+            playerVars: {
+              // https://developers.google.com/youtube/player_parameters
+              autoplay: 1,
+              showinfo: 0,
+              rel: 0,
+              modestbranding: 1,
+              start: currentSong.start,
+            },
+          }}
+          onReady={onReady}
+          onPlay={onPlay}
+          onPause={onPause}
+        />
+      )}
 
-      <Controlls>
-        <Button onClick={onCloseButtonClicked}>
-          <IoMdClose />
-        </Button>
-        <Button onClick={togglePlay}>
-          {isPlaying ? <FaPause /> : <FaPlay />}
-        </Button>
-        <Button onClick={toggleExpanded}>
-          {isExpanded ? <FiMinimize2 /> : <FaExpand />}
-        </Button>
-      </Controlls>
+      <Slider
+        defaultValue={0}
+        min={0}
+        max={1}
+        value={progress}
+        className="progress-slider"
+        colorScheme="blue"
+      >
+        <SliderTrack>
+          <SliderFilledTrack />
+        </SliderTrack>
+        <SliderThumb />
+      </Slider>
     </Container>
   );
 }
-
-const Controlls = styled.div`
-  display: flex;
-  margin: 0 30px 0 10px;
-  flex-direction: column;
-`;
-
-const Button = styled.button`
-  padding: 5px;
-`;
 
 const Container = styled.div<{ expanded: boolean; visible: boolean }>`
   position: fixed;
   bottom: 0;
   right: 0;
-  width: ${({ expanded }) => (expanded ? "100%" : "380px")};
-  height: ${({ expanded }) => (expanded ? "100%" : "100px")};
+  width: 100%;
+  height: ${({ expanded }) => (expanded ? "100%" : "80px")};
   transition: all 0.3s ease-out;
   background: #1c1c1c;
-  overflow: hidden;
-  margin: ${({ expanded }) => (expanded ? "0px" : "20px")};
-  border-radius: ${({ expanded }) => (expanded ? "0px" : "50px")};
+  /* overflow: hidden; */
   flex-direction: row;
   display: flex;
   align-items: center;
@@ -163,28 +145,22 @@ const Container = styled.div<{ expanded: boolean; visible: boolean }>`
   opacity: ${({ visible }) => (visible ? "1" : "0")};
 
   .yt-container {
-    height: 100%;
-    width: 100%;
+    width: 600px;
+    height: 300px;
+    position: absolute;
+    bottom: 100px;
   }
 
   .yt-player {
     width: 100%;
     height: 100%;
   }
-`;
 
-const PlayerContainer = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-`;
-
-const PlayerOverlay = styled.div<{ enabled: boolean }>`
-  display: ${({ enabled }) => (enabled ? "block" : "none")};
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  cursor: pointer;
+  .progress-slider,
+  .chakra-slider {
+    position: absolute !important;
+    top: 0;
+    transform: translateY(-50%);
+    width: 100%;
+  }
 `;
