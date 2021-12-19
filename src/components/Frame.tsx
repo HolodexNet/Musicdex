@@ -77,10 +77,10 @@ export default function FrameWithHeader({
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      {/* Navigation header for mobile? */}
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>
+      <Box></Box>
     </Box>
   );
 }

@@ -16,10 +16,10 @@ export function useTop20({ org, type }: { org: string; type: "w" | "m" }) {
   useEffect(() => {
     (async () => {
       setRes(null);
-      const endpoint = encodeUrl("/api/v2/songs/top20", { org, type });
-      const res = (await AxiosInstance<Song[]>(endpoint)).data.map(
-        enlargeArtworks
-      );
+      const endpoint = encodeUrl("/songs/latest", { org, type });
+      const res = (
+        await AxiosInstance<Song[]>(endpoint, { method: "POST", data: { org } })
+      ).data.map(enlargeArtworks);
       setRes(res);
     })();
   }, [org, type, AxiosInstance]);
