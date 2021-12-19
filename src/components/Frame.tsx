@@ -35,6 +35,7 @@ import {
   FiSettings,
   FiPlusCircle,
 } from "react-icons/fi";
+import Footer from "./Footer";
 import { Searchbox } from "./header/Searchbox";
 
 interface LinkItemProps {
@@ -81,7 +82,7 @@ export default function FrameWithHeader({
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>
-      <Box></Box>
+      <Footer></Footer>
     </Box>
   );
 }
