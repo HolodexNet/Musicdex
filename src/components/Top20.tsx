@@ -8,14 +8,14 @@ export const Top20: React.FC<{ org: string; type: "w" | "m" }> = ({
   type,
 }) => {
   const [top20] = useTop20({ org, type });
-  const setTarget = useStoreActions((actions) => actions.player.setTarget);
+  const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
 
   if (!top20) {
     return <div>Loading</div>;
   }
 
-  function handleClick(videoId: string) {
-    setTarget(videoId);
+  function handleClick(song: Song) {
+    queueSongs({ songs: [song], immediatelyPlay: false });
   }
 
   return (
@@ -23,7 +23,7 @@ export const Top20: React.FC<{ org: string; type: "w" | "m" }> = ({
       <h1>Top20</h1>
       {top20.map((music) => (
         <Jacket
-          onClick={() => handleClick(music.video_id)}
+          onClick={() => handleClick(music)}
           key={music.video_id + music.start}
           title={music.name}
           artwork={music.art}
