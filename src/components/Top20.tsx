@@ -1,16 +1,16 @@
 import React from "react";
 import { Jacket } from "./Jacket";
-import { useTop20 } from "../modules/songs";
 import { useStoreActions } from "../store";
+import { useTrendingSongs } from "../modules/services/songs.service";
 
 export const Top20: React.FC<{ org: string; type: "w" | "m" }> = ({
   org,
   type,
 }) => {
-  const [top20] = useTop20({ org, type });
+  const { data: trendingSongs, isLoading } = useTrendingSongs({ org });
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
 
-  if (!top20) {
+  if (isLoading) {
     return <div>Loading</div>;
   }
 
@@ -21,7 +21,8 @@ export const Top20: React.FC<{ org: string; type: "w" | "m" }> = ({
   return (
     <div>
       <h1>Top20</h1>
-      {top20.map((music) => (
+      {isLoading && <p>Loading...</p>}
+      {trendingSongs?.map((music) => (
         <Jacket
           onClick={() => handleClick(music)}
           key={music.video_id + music.start}
