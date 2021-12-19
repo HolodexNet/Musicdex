@@ -19,7 +19,7 @@ export function Playlist() {
               title={music.name}
               artwork={music.art}
               artist={music.original_artist}
-              playCount={Number(music.frequency)}
+              // playCount={Number(music.frequency)}
             />
           ))}
         </div>

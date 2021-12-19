@@ -28,7 +28,7 @@ export const Top20: React.FC<{ org: string; type: "w" | "m" }> = ({
           title={music.name}
           artwork={music.art}
           artist={music.original_artist}
-          playCount={Number(music.frequency)}
+          // playCount={Number(music.frequency)}
         />
       ))}
     </div>

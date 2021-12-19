@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useClient } from "../client";
-import { Song } from "../songs";
 export interface Playlist {
   id: string;
   listed: boolean;

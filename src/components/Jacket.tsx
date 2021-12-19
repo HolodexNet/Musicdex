@@ -5,7 +5,7 @@ export const Jacket: React.FC<{
   title: string;
   artwork: string;
   artist: string;
-  playCount: number;
+  playCount?: number;
   onClick?: () => void;
 }> = ({ title, artwork, artist, playCount, onClick }) => {
   return (
@@ -33,7 +33,7 @@ export const Jacket: React.FC<{
 
         <Box d="flex" mt="2" alignItems="center">
           <Box as="span" ml="2" color="gray.600" fontSize="sm">
-            {playCount} plays
+            {/* {playCount} plays */}
           </Box>
         </Box>
       </Box>

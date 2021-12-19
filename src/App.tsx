@@ -4,13 +4,13 @@ import { Header } from "./components/Header";
 // import { Player } from "./components/player/Player";
 import { Home } from "./pages/Home";
 import { Playlist } from "./pages/Playlist";
-import SideBar from "./components/Sidebar";
+import FrameWithHeader from "./components/Frame";
 
 function App(this: any) {
   return (
     <Router>
-      <Header />
-      <SideBar>
+      {/* <Header /> */}
+      <FrameWithHeader>
         <Switch>
           <Route exact path="/">
             <Home />
@@ -19,7 +19,7 @@ function App(this: any) {
             <Playlist />
           </Route>
         </Switch>
-      </SideBar>
+      </FrameWithHeader>
     </Router>
   );
 }

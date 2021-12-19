@@ -20,25 +20,35 @@ import {
   MenuItem,
   MenuList,
   VStack,
+  Divider,
 } from "@chakra-ui/react";
 import React, { ReactNode, ReactText } from "react";
 import { IconType } from "react-icons";
-import { MdHome } from "react-icons/md";
-import { FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
+import {
+  FiMenu,
+  FiBell,
+  FiChevronDown,
+  FiHome,
+  FiHeart,
+  FiClock,
+  FiServer,
+  FiSettings,
+  FiPlusCircle,
+} from "react-icons/fi";
 
 interface LinkItemProps {
   name: string;
   icon: IconType;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", icon: MdHome },
-  // { name: 'Trending', icon: FiTrendingUp },
-  // { name: 'Explore', icon: FiCompass },
-  // { name: 'Favourites', icon: FiStar },
-  // { name: 'Settings', icon: FiSettings },
+  { name: "Home", icon: FiHome },
+  { name: "Recently Played", icon: FiClock },
+  { name: "Liked Songs", icon: FiHeart },
+  { name: "My Playlists", icon: FiServer },
+  { name: "Settings", icon: FiSettings },
 ];
 
-export default function SidebarWithHeader({
+export default function FrameWithHeader({
   children,
 }: {
   children?: ReactNode;
@@ -46,10 +56,14 @@ export default function SidebarWithHeader({
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+      {/* Generic Display: always present */}
+      <MobileNav onOpen={onOpen} />
+
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
       />
+      {/* Mobile Display: (provide close method) */}
       <Drawer
         autoFocus={false}
         isOpen={isOpen}
@@ -63,8 +77,7 @@ export default function SidebarWithHeader({
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
-      <MobileNav onOpen={onOpen} />
+      {/* Navigation header for mobile? */}
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>
@@ -88,17 +101,21 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}
     >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+      {/* <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
           Logo
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
-      </Flex>
+      </Flex> */}
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon}>
           {link.name}
         </NavItem>
       ))}
+      <Divider />
+      <NavItem key="playlist" icon={FiPlusCircle}>
+        Create New Playlist
+      </NavItem>
     </Box>
   );
 };
@@ -145,7 +162,7 @@ interface MobileProps extends FlexProps {
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
-      ml={{ base: 0, md: 60 }}
+      ml={{ base: 0 }}
       px={{ base: 4, md: 4 }}
       height="20"
       alignItems="center"
