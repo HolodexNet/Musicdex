@@ -1,4 +1,8 @@
 import { ChakraProvider } from "@chakra-ui/react";
+import {
+  HyperThemeEditor,
+  ThemeEditorProvider,
+} from "@hypertheme-editor/chakra-ui";
 import { createStore, persist, StoreProvider } from "easy-peasy";
 // https://chakra-ui.com/docs/migration#css-reset
 import "focus-visible/dist/focus-visible";
@@ -21,6 +25,10 @@ store.persist.resolveRehydration().then(() => {
     <React.StrictMode>
       <StoreProvider store={store}>
         <ChakraProvider theme={theme}>
+          <ThemeEditorProvider>
+            <HyperThemeEditor pos="fixed" bottom={4} right={2} zIndex={12} />
+          </ThemeEditorProvider>
+
           <QueryClientProvider client={queryClient}>
             <App />
           </QueryClientProvider>

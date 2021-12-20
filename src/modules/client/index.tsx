@@ -57,9 +57,9 @@ export function useClient() {
     [token]
   );
 
-  function login() {
-    if (isLoggedIn) return;
-  }
+  // function login() {
+  //   if (isLoggedIn) return;
+  // }
 
   function logout() {
     setToken(null);
@@ -70,7 +70,7 @@ export function useClient() {
     isLoggedIn,
     user,
     AxiosInstance,
-    login,
+    // login,
     logout,
   };
 }

@@ -1760,6 +1760,45 @@
   resolved "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
+"@hypertheme-editor/chakra-ui-colors@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@hypertheme-editor/chakra-ui-colors/-/chakra-ui-colors-0.1.2.tgz#64372d90332c0d9000c5fad1ba65d47a4968e50b"
+  integrity sha512-+1KLyOZgqyioncb2qfzRZbPqyEf7iSHZ8fj45v6M1wumPkqW08/D1n787VakuDD80wrMIM4kBak78wXxdr3WcA==
+  dependencies:
+    colord "^2.1.0"
+    react-colorful "^5.2.3"
+
+"@hypertheme-editor/chakra-ui-core@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@hypertheme-editor/chakra-ui-core/-/chakra-ui-core-0.1.2.tgz#5b957b1371d0f1a581bd2667b95f8b7eea35a3c7"
+  integrity sha512-Mov+NrQ8zmdmtJ8Xx9vq/3pZRgXnAvXuG3rdeN9H7bQ4fZZ/qY+n+NQZL6BP8t2ktsYQqWLh5Yni7BYpVRkOAQ==
+  dependencies:
+    "@hypertheme-editor/chakra-ui-theme" "^0.1.2"
+    react-google-font-loader "^1.1.0"
+
+"@hypertheme-editor/chakra-ui-font-sizes@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@hypertheme-editor/chakra-ui-font-sizes/-/chakra-ui-font-sizes-0.1.2.tgz#a7c263909d1085a69eafd4b5d46498114140e8c4"
+  integrity sha512-EvWNWRXSCqx6vTQ1E7ov6CtqViIVbv/fLvO+Qm8jdnmaNi/c/kgaQRgtXoCBdQ9TFDTPPrB0DLOJldYAJ4hqog==
+
+"@hypertheme-editor/chakra-ui-theme@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@hypertheme-editor/chakra-ui-theme/-/chakra-ui-theme-0.1.2.tgz#7e1ea94c8246cf821afc56a83edc52988e6b09fa"
+  integrity sha512-Thf+mI7HMVyl/dbgMOHxtIDwtVeShub7a6FybSeDiMbWrdPYXLxt8gY019u2pPjDV3zV4d6Tweder8u3LgjnUA==
+
+"@hypertheme-editor/chakra-ui@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@hypertheme-editor/chakra-ui/-/chakra-ui-0.1.2.tgz#5279e3d8e93bb6904c6c5b57e34b2dcb3db179bb"
+  integrity sha512-8FJh1XKFnN4YYXz/xKOrRqUAKJ1EZVABNCJw2lQJZVSva2+Vlo2XzB5CpZmk9NPNti8n9EZ3DZj7S56vcHvL4w==
+  dependencies:
+    "@hypertheme-editor/chakra-ui-colors" "^0.1.2"
+    "@hypertheme-editor/chakra-ui-core" "^0.1.2"
+    "@hypertheme-editor/chakra-ui-font-sizes" "^0.1.2"
+    immer "^9.0.6"
+    react-icons "^4.2.0"
+    recoil "^0.4.1"
+    use-debouncy "^4.2.0"
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.npmjs.org/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz"
@@ -3596,7 +3635,7 @@ color-name@^1.1.4, color-name@~1.1.4:
   resolved "https://registry.npmjs.org/color-name/-/color-name-1.1.4.tgz"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
-colord@^2.9.1:
+colord@^2.1.0, colord@^2.9.1:
   version "2.9.2"
   resolved "https://registry.npmjs.org/colord/-/colord-2.9.2.tgz"
   integrity sha512-Uqbg+J445nc1TKn4FoDPS6ZZqAvEDnwrH42yo8B40JSOgSLxMZ/gt3h4nmCtPLQeXhjJJkqBx7SCY35WnIixaQ==
@@ -5273,6 +5312,11 @@ gzip-size@^6.0.0:
   integrity sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==
   dependencies:
     duplexer "^0.1.2"
+
+hamt_plus@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/hamt_plus/-/hamt_plus-1.0.2.tgz#e21c252968c7e33b20f6a1b094cd85787a265601"
+  integrity sha1-4hwlKWjH4zsg9qGwlM2FeHomVgE=
 
 handle-thing@^2.0.0:
   version "2.0.1"
@@ -8095,6 +8139,11 @@ react-clientside-effect@^1.2.5:
   dependencies:
     "@babel/runtime" "^7.12.13"
 
+react-colorful@^5.2.3:
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.5.1.tgz#29d9c4e496f2ca784dd2bb5053a3a4340cfaf784"
+  integrity sha512-M1TJH2X3RXEt12sWkpa6hLc/bbYS0H6F4rIqjQZ+RxNBstpY67d9TrFXtqdZwhpmBXcCwEi7stKqFue3ZRkiOg==
+
 react-dev-utils@^12.0.0:
   version "12.0.0"
   resolved "https://registry.npmjs.org/react-dev-utils/-/react-dev-utils-12.0.0.tgz"
@@ -8156,6 +8205,13 @@ react-focus-lock@2.5.2:
     use-callback-ref "^1.2.5"
     use-sidecar "^1.0.5"
 
+react-google-font-loader@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-google-font-loader/-/react-google-font-loader-1.1.0.tgz#9c9ae97aae3d2177e922c9bf4ab6312b903abc79"
+  integrity sha512-mnPYxBdhYEldTtREYPKllbmMvCGkTbpdmNjR6iTM3eTNWcg17OrfXjq9HRDZe+1+mhnUnI/AOcpvG0LIQPcLIw==
+  dependencies:
+    prop-types "^15.6.2"
+
 react-i18next@^11.15.1:
   version "11.15.1"
   resolved "https://registry.npmjs.org/react-i18next/-/react-i18next-11.15.1.tgz"
@@ -8165,7 +8221,7 @@ react-i18next@^11.15.1:
     html-escaper "^2.0.2"
     html-parse-stringify "^3.0.1"
 
-react-icons@^4.3.1:
+react-icons@^4.2.0, react-icons@^4.3.1:
   version "4.3.1"
   resolved "https://registry.npmjs.org/react-icons/-/react-icons-4.3.1.tgz"
   integrity sha512-cB10MXLTs3gVuXimblAdI71jrJx8njrJZmNMEMC+sQu5B/BIOmlsAjskdqpn81y8UBVEGuHODd7/ci5DvoSzTQ==
@@ -8387,6 +8443,13 @@ readdirp@~3.6.0:
   integrity sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==
   dependencies:
     picomatch "^2.2.1"
+
+recoil@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.4.1.tgz#1cb2171bc98d41361507131a059d7c3525d8c4fe"
+  integrity sha512-vp6KPwlHOjJ4bJofmdDchmgI9ilMTCoUisK8/WYLl8dThH7e7KmtZttiLgvDb2Em99dUfTEsk8vT8L1nUMgqXQ==
+  dependencies:
+    hamt_plus "1.0.2"
 
 recursive-readdir@^2.2.2:
   version "2.2.2"
@@ -9633,6 +9696,11 @@ use-callback-ref@^1.2.3, use-callback-ref@^1.2.5:
   version "1.2.5"
   resolved "https://registry.npmjs.org/use-callback-ref/-/use-callback-ref-1.2.5.tgz"
   integrity sha512-gN3vgMISAgacF7sqsLPByqoePooY3n2emTH59Ur5d/M8eg4WTWu1xp8i8DHjohftIyEx0S08RiYxbffr4j8Peg==
+
+use-debouncy@^4.2.0:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/use-debouncy/-/use-debouncy-4.2.1.tgz#77b7826074b707ca4ca92739f362e4301b58f02e"
+  integrity sha512-wvKcvmftk716UkRPC7+/W3AIWj0m4TKLkKTrgBeR+4/e1//turjZLlSIu8ix2AeeFK/3E4poCqN/eMr2qNApcQ==
 
 use-memo-one@^1.1.1:
   version "1.1.2"

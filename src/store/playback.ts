@@ -23,6 +23,10 @@ export interface PlaybackModel {
   _setPlaylist: Action<PlaybackModel, PlaylistFull>;
   _shufflePlaylist: Action<PlaybackModel, void>; // specifically if you want to shuffle again... probably not a public.
 
+  // ==== History:
+  history: Song[];
+  addSongToHistory: Action<PlaybackModel, Song>;
+
   // ==== Playback Mode:
   shuffleMode: boolean;
   repeatMode: "none" | "repeat" | "repeat-one";
@@ -100,6 +104,15 @@ const playbackModel: PlaybackModel = {
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
     state.playlistQueue2 = [];
+  }),
+
+  history: [],
+  addSongToHistory: action((state, s) => {
+    state.history = state.history.filter((x) => x.id !== s.id);
+    state.history.unshift(s);
+    if (state.history.length > 100) {
+      state.history.pop();
+    }
   }),
 
   shuffleMode: false,
