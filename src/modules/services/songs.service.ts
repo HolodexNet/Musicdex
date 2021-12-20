@@ -48,3 +48,40 @@ export const useTrendingSongs = (
 
   return { ...result };
 };
+
+export interface SongAPILookupObject {
+  org: string;
+  channel_id: string;
+  video_id: string;
+  // q: string; <q has been deprecated, use search API instead>
+  offset?: number;
+  limit?: number;
+  paginated?: any;
+}
+
+export const useSongAPI = (
+  target: SongAPILookupObject,
+  config: UseQueryOptions<
+    Song[],
+    unknown,
+    Song[],
+    [string, SongAPILookupObject]
+  > = {}
+) => {
+  const { AxiosInstance } = useClient();
+
+  const result = useQuery(
+    ["songlist", target],
+    async (q): Promise<Song[]> => {
+      return (
+        await AxiosInstance<Song[]>(`/songs/latest`, {
+          method: "POST",
+          data: q.queryKey[1],
+        })
+      ).data;
+    },
+    { ...config }
+  );
+
+  return { ...result };
+};
