@@ -4,11 +4,11 @@ module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: "https://staging2.holodex.net/",
+      target: "https://staging.holodex.net/",
       changeOrigin: true,
-      pathRewrite: {
-        "^/api/v2": "/v2",
-      },
+      // pathRewrite: {
+      //   "^/api/v2": "/v2",
+      // },
     })
   );
 };

@@ -196,7 +196,7 @@ interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
 const Nav = ({ onOpen, ...rest }: MobileProps) => {
-  const { AxiosInstance, isLoggedIn, logout } = useClient();
+  const { AxiosInstance, isLoggedIn, logout, user } = useClient();
   const { LoginButton } = useClientLogin();
 
   const bgColor = useColorModeValue("white", "gray.900");
@@ -242,7 +242,7 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
           icon={<FiBell />}
         /> */}
         <Flex alignItems={"center"}>
-          {isLoggedIn ? (
+          {isLoggedIn && user ? (
             <Menu>
               <MenuButton
                 py={2}
@@ -252,10 +252,8 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
                 <HStack>
                   <Avatar
                     size={"sm"}
-                    icon={<FiUser />}
-                    // src={
-                    //   "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                    // }
+                    src={`https://avatars.dicebear.com/api/jdenticon/${user?.id}.svg`}
+                    bg="transparent"
                   />
                   <VStack
                     display={{ base: "none", md: "flex" }}
@@ -264,10 +262,14 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
                     ml="2"
                   >
                     <Text fontSize="sm" color="gray.300">
-                      User #2
+                      User {user?.id}
                     </Text>
-                    <Text fontSize="xs" color="gray.600">
-                      Admin
+                    <Text
+                      textTransform="capitalize"
+                      fontSize="xs"
+                      color="gray.600"
+                    >
+                      {user?.role}
                     </Text>
                   </VStack>
                   <Box display={{ base: "none", md: "flex" }}>
