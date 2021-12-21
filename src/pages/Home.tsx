@@ -10,7 +10,7 @@ export function Home() {
   }
 
   return (
-    <Container pt={30}>
+    <Container maxW="container.xl">
       <Select placeholder="Select org" value={org} onChange={handle}>
         <option value="Hololive">Hololive</option>
         <option value="Nijisanji">Nijisanji</option>
