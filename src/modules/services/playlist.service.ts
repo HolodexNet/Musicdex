@@ -85,6 +85,47 @@ export const usePlaylistUpdater = (
   );
 };
 
+export const usePlaylistDeleter = (
+  config: UseMutationOptions<any, unknown, { playlistId: string }> = {}
+) => {
+  const { AxiosInstance } = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async ({ playlistId }) =>
+      await AxiosInstance(`/musicdex/playlist/${playlistId}`, {
+        method: "DELETE",
+      }),
+    {
+      ...config,
+      onSuccess: (data, payload, ...rest) => {
+        queryClient.cancelQueries(["playlist", payload.playlistId]);
+        // apparently start-ui has some support for querying the cache and doing stuff to it?... seems interesting.
+        // TODO (optional): modify the query cache for playlist if the song is a full Song object already.
+        // it seems this code is part of the Optimistic Updating: https://react-query.tanstack.com/guides/optimistic-updates
+        // queryClient
+        //     .getQueryCache()
+        //     .findAll('playlist')
+        //     .forEach(({ queryKey }) => {
+        //         queryClient.setQueryData(queryKey, (cachedData: UserList) => {
+        //             if (!cachedData) return;
+        //             return {
+        //                 ...cachedData,
+        //                 content: (cachedData.content || []).map((user) =>
+        //                     user.id === data.id ? data : user
+        //                 ),
+        //             };
+        //         });
+        //     });
+        queryClient.invalidateQueries(["playlist", payload.playlistId]);
+        if (config.onSuccess) {
+          config.onSuccess(data, payload, ...rest);
+        }
+      },
+    }
+  );
+};
+
 export const usePlaylist = (
   playlistId: string,
   config: UseQueryOptions<PlaylistFull, unknown, PlaylistFull, string[]> = {}
