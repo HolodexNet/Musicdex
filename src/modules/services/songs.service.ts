@@ -7,6 +7,7 @@ import {
 } from "react-query";
 import { useClient } from "../client";
 import { encodeUrl } from "../client/utils";
+import { DEFAULT_FETCH_CONFIG } from "./defaults";
 
 export const useSong = (
   songId: string,
@@ -19,7 +20,7 @@ export const useSong = (
     async (q): Promise<Song> => {
       return (await AxiosInstance<Song>(`/songs/${q.queryKey[1]}`)).data;
     },
-    { ...config }
+    { ...DEFAULT_FETCH_CONFIG, ...config }
   );
 
   return { ...result };
@@ -43,7 +44,7 @@ export const useTrendingSongs = (
         await AxiosInstance<Song[]>(encodeUrl(`/songs/hot`, q.queryKey[1]))
       ).data;
     },
-    { ...config }
+    { ...DEFAULT_FETCH_CONFIG, ...config }
   );
 
   return { ...result };
@@ -80,7 +81,7 @@ export const useSongAPI = (
         })
       ).data;
     },
-    { ...config }
+    { ...DEFAULT_FETCH_CONFIG, ...config }
   );
 
   return { ...result };

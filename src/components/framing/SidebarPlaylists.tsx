@@ -4,6 +4,6 @@ export const SidebarPlaylists = ({
   playlistStubs: PlaylistStub[];
 }) => {
   return playlistStubs.map((x) => {
-    return <div></div>;
+    return <div>{x.title}</div>;
   });
 };

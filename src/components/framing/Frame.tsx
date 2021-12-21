@@ -280,7 +280,7 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
               <MenuList bg={bgColor} borderColor={borderColor}>
                 <MenuItem>Profile</MenuItem>
                 <MenuItem>Settings</MenuItem>
-                <MenuItem>Billing</MenuItem>
+                {/* <MenuItem>Billing</MenuItem> */}
                 <MenuDivider />
                 <MenuItem onClick={logout}>Sign out</MenuItem>
               </MenuList>

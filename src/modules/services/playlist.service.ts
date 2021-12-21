@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from "react-query";
 import { useClient } from "../client";
+import { DEFAULT_FETCH_CONFIG } from "./defaults";
 
 export const usePlaylistWriter = (
   callbacks: UseMutationOptions<
@@ -110,6 +111,7 @@ export const usePlaylist = (
       ).data;
     },
     {
+      ...DEFAULT_FETCH_CONFIG,
       ...config,
     }
   );

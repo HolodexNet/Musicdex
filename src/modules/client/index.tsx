@@ -135,7 +135,10 @@ export async function getToken({
 }
 
 const LoginButton = styled(OAuth2Login)`
-  background: lightblue;
   padding: 5px 15px;
   border-radius: 4px;
+
+  &:hover {
+    outline: 1px solid #888;
+  }
 `;
