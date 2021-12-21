@@ -37,9 +37,14 @@ import {
   FiUser,
 } from "react-icons/fi";
 import { useClient, useClientLogin } from "../../modules/client";
-import Footer from "../Footer";
+import Footer from "./Footer";
 import { Searchbox } from "../header/Searchbox";
 import { Player } from "../player/Player";
+import {
+  usePlaylist,
+  usePlaylistWriter,
+} from "../../modules/services/playlist.service";
+import { SidebarPlaylists } from "./SidebarPlaylists";
 
 interface LinkItemProps {
   name: string;
@@ -120,6 +125,26 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const { user } = useClient();
+  const { mutate: writePlaylist, isSuccess, isError } = usePlaylistWriter();
+  const { data: playlistList, isLoading } = usePlaylist("");
+
+  const createNewPlaylistHandler = async () => {
+    if (!user?.id) return alert("You must be logged in to create Playlists");
+
+    const playlist: Partial<WriteablePlaylist> = {};
+    const name = prompt("Create Playlist: Title of Playlist:");
+    if (!name) return alert("Please enter a title.");
+    playlist.title = name;
+    const description = prompt("Create Playlist: Description of Playlist:");
+    playlist.description = description || "";
+    playlist.owner = user?.id;
+    playlist.type = "ugp";
+    playlist.content = [];
+
+    writePlaylist(playlist);
+  };
+
   return (
     <Box
       transition="3s ease"
@@ -149,9 +174,14 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </NavItem>
       ))}
       <Divider my={4} />
-      <NavItem key="playlist" icon={FiPlusCircle}>
+      <NavItem
+        key="playlist"
+        icon={FiPlusCircle}
+        onClick={createNewPlaylistHandler}
+      >
         Create New Playlist
       </NavItem>
+      {playlistList && <SidebarPlaylists playlistStubs={playlistList as any} />}
     </Box>
   );
 };
@@ -206,7 +236,9 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
     <Flex
       ml={{ base: 0 }}
       px={{ base: 4, md: 4 }}
-      height="64"
+      height="16"
+      flexGrow={0}
+      flexShrink={0}
       alignItems="center"
       bg={bgColor}
       borderBottomWidth="1px"
