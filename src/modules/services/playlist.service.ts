@@ -4,6 +4,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  QueryClient,
 } from "react-query";
 import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
@@ -16,6 +17,7 @@ export const usePlaylistWriter = (
   > = {}
 ) => {
   const { AxiosInstance } = useClient();
+  const queryClient = useQueryClient();
 
   return useMutation(
     async (payload) =>
@@ -27,6 +29,13 @@ export const usePlaylistWriter = (
       ).data,
     {
       ...callbacks,
+      onSuccess: (data, payload, ...rest) => {
+        queryClient.cancelQueries(["playlist", payload.id]);
+        queryClient.invalidateQueries(["playlist", payload.id]);
+        if (callbacks.onSuccess) {
+          callbacks.onSuccess(data, payload, ...rest);
+        }
+      },
     }
   );
 };
