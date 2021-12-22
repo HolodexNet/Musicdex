@@ -68,7 +68,7 @@ export default function FrameWithHeader({
     <Box
       h="100vh"
       w="100vw"
-      bg={useColorModeValue("gray.100", "gray.900")}
+      bg={useColorModeValue("bg.100", "bg.900")}
       overflow="hidden"
     >
       <Flex direction="column" h="100vh" overflow="hidden">
@@ -148,7 +148,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   return (
     <Box
       transition="3s ease"
-      bg={useColorModeValue("white", "gray.900")}
+      bg={useColorModeValue("bg.100", "bg.900")}
       borderRight="1px"
       borderRightColor={useColorModeValue("gray.200", "gray.700")}
       w={{ base: "full", md: 60 }}
@@ -229,7 +229,7 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
   const { AxiosInstance, isLoggedIn, logout, user } = useClient();
   const { LoginButton } = useClientLogin();
 
-  const bgColor = useColorModeValue("white", "gray.900");
+  // const bgColor = useColorModeValue("white", "gray.900");
   const borderColor = useColorModeValue("gray.200", "gray.700");
 
   return (
@@ -240,7 +240,7 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
       flexGrow={0}
       flexShrink={0}
       alignItems="center"
-      bg={bgColor}
+      // bg={bgColor}
       borderBottomWidth="1px"
       borderBottomColor={borderColor}
       justifyContent={{ base: "space-between", md: "space-between" }}
@@ -309,7 +309,10 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
                   </Box>
                 </HStack>
               </MenuButton>
-              <MenuList bg={bgColor} borderColor={borderColor}>
+              <MenuList
+                //bg={bgColor}
+                borderColor={borderColor}
+              >
                 <MenuItem>Profile</MenuItem>
                 <MenuItem>Settings</MenuItem>
                 {/* <MenuItem>Billing</MenuItem> */}
