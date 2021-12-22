@@ -8,46 +8,75 @@ import {
   Tfoot,
   VStack,
   Text,
-  chakra,
+  Box,
 } from "@chakra-ui/react";
 import React from "react";
 import { useTable, useSortBy } from "react-table";
 
+type IndexedSong = Song & { idx: number };
+
 export const SongTable = ({ songs }: { songs: Song[] }) => {
-  const s = songs.map((v: any, i) => {
-    v["idx"] = i;
-    return v;
-  });
-  const columns = [
-    {
-      Header: "#",
-      accessor: "idx",
-    },
-    {
-      Header: "Title",
-      accessor: "name",
-    },
-    {
-      Header: "Original Artist",
-      accessor: "original_artist",
-    },
-    {
-      id: "dur",
-      Header: "Duration",
-      accessor: (row: { end: number; start: number }) => {
-        return row.end - row.start;
+  const s: IndexedSong[] = React.useMemo(() => {
+    return songs.map((v, i) => {
+      return { ...v, idx: i };
+    });
+  }, [songs]);
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "#",
+        accessor: "idx",
       },
-      isNumeric: true,
-    },
-    {
-      id: "date",
-      Header: "Sang On",
-      accessor: (row: { available_at: Date }) => row?.available_at.toString,
-    },
-  ];
+      {
+        Header: "Title",
+        accessor: "name",
+        Cell: (cellInfo: any) => {
+          console.log(cellInfo);
+          return (
+            <VStack alignItems="start">
+              <span>{cellInfo.row.original?.name}</span>
+              <Text color="whiteAlpha.600" fontWeight={300} fontSize="sm">
+                {cellInfo.row.original.channel?.name}
+              </Text>
+            </VStack>
+          );
+        },
+      },
+      {
+        id: "channel",
+        Header: "ChannelName",
+        accessor: (row: IndexedSong) => row.channel.english_name,
+      },
+      {
+        Header: "Original Artist",
+        accessor: "original_artist",
+      },
+      {
+        id: "dur",
+        Header: "Duration",
+        accessor: (row: { end: number; start: number }) => {
+          return row.end - row.start;
+        },
+        isNumeric: true,
+      },
+      {
+        id: "date",
+        Header: "Sang On",
+        accessor: (row: { available_at: Date }) => row?.available_at.toString(),
+      },
+    ],
+    []
+  );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns: columns as any, data: s }, useSortBy);
+    useTable(
+      {
+        columns: columns as any,
+        data: s,
+        initialState: { hiddenColumns: ["channel"] },
+      },
+      useSortBy
+    );
 
   return (
     <Table {...getTableProps()}>
@@ -60,9 +89,9 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
                 isNumeric={(column as any).isNumeric}
               >
                 {column.render("Header")}
-                <chakra.span pl="4">
-                  {column.isSorted ? (column.isSortedDesc ? "v" : "^") : null}
-                </chakra.span>
+                <Box pl="4">
+                  {column.isSorted ? (column.isSortedDesc ? "v" : "^") : ""}
+                </Box>
               </Th>
             ))}
           </Tr>
@@ -85,6 +114,23 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
           );
         })}
       </Tbody>
+      <Tfoot>
+        {headerGroups.map((headerGroup) => (
+          <Tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column) => (
+              <Th
+                {...column.getHeaderProps(column.getSortByToggleProps())}
+                isNumeric={(column as any).isNumeric}
+              >
+                {column.render("Header")}
+                <Box pl="4">
+                  {column.isSorted ? (column.isSortedDesc ? "v" : "^") : ""}
+                </Box>
+              </Th>
+            ))}
+          </Tr>
+        ))}
+      </Tfoot>
     </Table>
   );
 };
