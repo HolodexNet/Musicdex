@@ -23,7 +23,7 @@ export const Top20: React.FC<{ org: string; type: "w" | "m" }> = ({
     <div>
       <h1>Top20</h1>
       {isLoading && <p>Loading...</p>}
-      {trendingSongs && SongTable(trendingSongs, undefined)}
+      {trendingSongs && <SongTable songs={trendingSongs} />}
     </div>
   );
 };

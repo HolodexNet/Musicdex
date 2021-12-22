@@ -81,7 +81,7 @@ export function Playlist() {
         </Button>
       </Box>
       {/* </HStack> */}
-      <Box>{playlist.content && SongTable(playlist.content, undefined)}</Box>
+      <Box>{playlist.content && <SongTable songs={playlist.content} />}</Box>
       {/* </VStack> */}
       {/* </SimpleGrid> */}
     </Container>
@@ -96,13 +96,13 @@ const BGImgContainer = styled.div`
   top: 0px;
   height: 120px;
   mask-image: radial-gradient(
-    ellipse farthest-side at 25% 12%,
+    ellipse farthest-side at 33% 12%,
     rgba(0, 0, 0, 1) 0%,
     rgba(64, 0, 126, 0.63) 88%,
     rgba(64, 0, 126, 0.58) 94%,
     rgba(0, 255, 160, 0) 100%
   );
-  mask-size: 200% 122%;
+  mask-size: 150% 122%;
   mask-position: left bottom;
 `;
 
