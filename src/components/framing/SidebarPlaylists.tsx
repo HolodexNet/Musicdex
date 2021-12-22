@@ -21,6 +21,7 @@ export const SidebarPlaylists = ({
               bg: "cyan.400",
               color: "white",
             }}
+            key={"sidebar" + x.id}
           >
             <Icon
               mr="4"

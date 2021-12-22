@@ -1,4 +1,14 @@
-import { Table, Thead, Tr, Th, Tbody, Td, Tfoot } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
+  Tfoot,
+  VStack,
+  Text,
+} from "@chakra-ui/react";
 
 export const SongTable = (
   songs: Song[],
@@ -10,11 +20,11 @@ export const SongTable = (
         <Tr>
           <Th isNumeric>#</Th>
           <Th>Title</Th>
-          <Th>Covered By</Th>
+          {/* <Th>Covered By</Th> */}
           <Th>Original Artist</Th>
           <Th isNumeric>Duration</Th>
           <Th isNumeric>Sang On</Th>
-          <Th> &gt; </Th>
+          <Th> Fn </Th>
         </Tr>
       </Thead>
       <Tbody>{songs.map((s, i) => SongTableItem(s, i))}</Tbody>
@@ -22,11 +32,11 @@ export const SongTable = (
         <Tr>
           <Th>#</Th>
           <Th>Title</Th>
-          <Th>Covered By</Th>
+          {/* <Th>Covered By</Th> */}
           <Th>Original Artist</Th>
           <Th isNumeric>Duration</Th>
           <Th isNumeric>Sang On</Th>
-          <Th> &gt; </Th>
+          <Th> Fn </Th>
         </Tr>
       </Tfoot>
     </Table>
@@ -34,11 +44,18 @@ export const SongTable = (
 };
 
 export const SongTableItem = (song: Song, idx: number) => {
+  if (!song) return <div> huh</div>;
   return (
     <Tr>
       <Td isNumeric>{idx}</Td>
-      <Td>{song.name}</Td>
-      <Td>{song.channel.name}</Td>
+      <Td>
+        <VStack alignItems="start">
+          <span>{song?.name}</span>
+          <Text color="whiteAlpha.600" fontWeight={300} fontSize="sm">
+            {song.channel?.name}{" "}
+          </Text>
+        </VStack>
+      </Td>
       <Td>{song.original_artist}</Td>
       <Td isNumeric>{song.end - song.start}</Td>
       <Td isNumeric>{song.available_at}</Td>
