@@ -106,7 +106,7 @@ export default function FrameWithHeader({
             overflowY="scroll"
             h="100%"
             position="relative"
-            p="4"
+            p="2"
             flexGrow={1}
             flexShrink={1}
           >

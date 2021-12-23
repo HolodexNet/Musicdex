@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import { FiMoreHorizontal, FiPlay } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
+import { PlaylistMoreControlsMenu } from "../components/playlist/PlaylistMoreControls";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 
@@ -40,7 +41,11 @@ export function Playlist() {
 
   if (!playlist) return <div> loading </div>;
   return (
-    <Container maxW={{ lg: "7xl" }} alignContent="stretch">
+    <Container
+      maxW={{ lg: "7xl" }}
+      alignContent="stretch"
+      p={{ base: 0, xl: 4 }}
+    >
       <BGImgContainer>
         <BGImg banner_url="https://yt3.ggpht.com/jPLOvKqsP7v3Pv6VIWkfZ0Z6UrAf0JywK_i6XvYoKem-MaZ0HLGeKeklL_oamTdwIviG1wKbuQ=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj"></BGImg>
       </BGImgContainer>
@@ -48,8 +53,8 @@ export function Playlist() {
         bgColor={bgColor}
         position="relative"
         mt="12"
-        p="4"
-        pt="8"
+        p={{ base: 2, xl: 4 }}
+        pt={{ base: 4, xl: 8 }}
         borderRadius={5}
       >
         <PlaylistHeading />
@@ -148,12 +153,7 @@ function Buttons({
       >
         Edit
       </Button>
-      <IconButton
-        variant="ghost"
-        aria-label="more"
-        colorScheme="n2"
-        icon={<FiMoreHorizontal />}
-      ></IconButton>
+      <PlaylistMoreControlsMenu></PlaylistMoreControlsMenu>
     </HStack>
   );
 }
