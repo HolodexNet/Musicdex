@@ -36,22 +36,14 @@ export function Playlist() {
     queueSongs({ songs: [song], immediatelyPlay: true });
   }
 
-  const colors = useColorModeValue("gray.700", "gray.400");
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
 
   if (!playlist) return <div> loading </div>;
   return (
-    <Container maxW={"7xl"} alignContent="stretch">
+    <Container maxW={{ lg: "7xl" }} alignContent="stretch">
       <BGImgContainer>
         <BGImg banner_url="https://yt3.ggpht.com/jPLOvKqsP7v3Pv6VIWkfZ0Z6UrAf0JywK_i6XvYoKem-MaZ0HLGeKeklL_oamTdwIviG1wKbuQ=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj"></BGImg>
       </BGImgContainer>
-      {/* <SimpleGrid
-        columns={{ base: 1 }}
-        spacing={{ base: 8, md: 10 }}
-        py={{ base: 10, md: 14 }}> */}
-
-      {/* <VStack> */}
-      {/* <HStack justifyContent="space-between"> */}
       <Box
         bgColor={bgColor}
         position="relative"
@@ -60,25 +52,11 @@ export function Playlist() {
         pt="8"
         borderRadius={5}
       >
-        <Box as={"header"} mb="2" position="relative">
-          <Heading
-            lineHeight={1.1}
-            fontWeight={600}
-            fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}
-          >
-            Daily Mix: Hakos Baelz
-          </Heading>
-          <Text color={colors} fontWeight={300} fontSize={"2xl"}>
-            Provided by Holodex
-          </Text>
-        </Box>
+        <PlaylistHeading />
         <Buttons onPlayClick={() => {}} onAddQueueClick={() => {}} />
-        {/* </HStack> */}
         <Box pt="4">
           {playlist.content && <SongTable songs={playlist.content} />}
         </Box>
-        {/* </VStack> */}
-        {/* </SimpleGrid> */}
       </Box>
     </Container>
   );
@@ -114,6 +92,25 @@ const BGImg = styled.div<{ banner_url: string }>`
 `;
 
 type ClickEventHandler = React.MouseEventHandler<HTMLButtonElement>;
+
+function PlaylistHeading() {
+  const colors = useColorModeValue("gray.700", "gray.400");
+
+  return (
+    <Box as={"header"} mb="2" position="relative">
+      <Heading
+        lineHeight={1.1}
+        fontWeight={600}
+        fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}
+      >
+        Daily Mix: Hakos Baelz
+      </Heading>
+      <Text color={colors} fontWeight={300} fontSize={"2xl"}>
+        Provided by Holodex
+      </Text>
+    </Box>
+  );
+}
 
 function Buttons({
   onPlayClick,

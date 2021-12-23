@@ -1,5 +1,5 @@
 // orgs.ts manages front page org settings
-import { action, Action, computed, Computed } from "easy-peasy";
+import { action, Action } from "easy-peasy";
 
 export interface Org {
   name: string;

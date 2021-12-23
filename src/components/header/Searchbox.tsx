@@ -6,11 +6,10 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { jsx } from "@emotion/react";
 import { useState } from "react";
 import { FiFilter, FiSearch } from "react-icons/fi";
 
-export const Searchbox: React.FC = () => {
+export function Searchbox(): JSX.Element {
   let [isFocused, setFocused] = useState(false);
   return (
     <Box w={"40%"}>
@@ -40,4 +39,4 @@ export const Searchbox: React.FC = () => {
       </InputGroup>
     </Box>
   );
-};
+}

@@ -96,8 +96,8 @@ export default function FrameWithHeader({
           overflow="hidden"
         >
           <SidebarContent
-            onClose={() => onClose}
-            display={{ base: "none", md: "block" }}
+            onClose={onClose}
+            display={{ base: "none", lg: "block" }}
             paddingTop="4"
           />
 
@@ -114,7 +114,7 @@ export default function FrameWithHeader({
             <Footer></Footer>
           </Box>
         </Flex>
-        <Player />
+        {/* <Player /> */}
       </Flex>
     </Box>
   );
@@ -151,7 +151,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       bg={useColorModeValue("bg.100", "bg.900")}
       borderRight="1px"
       borderRightColor={useColorModeValue("gray.200", "gray.700")}
-      w={{ base: "full", md: 60 }}
+      w={{ base: "full", lg: 60 }}
+      flexShrink={0}
       // pos="fixed"
       h="full"
       {...rest}
@@ -161,12 +162,12 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         alignItems="center"
         mx="8"
         justifyContent="space-between"
-        display={{ base: "flex", md: "none" }}
+        display={{ base: "flex", lg: "none" }}
       >
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
           Logo
         </Text>
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+        <CloseButton display={{ base: "flex", lg: "none" }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon}>
@@ -243,11 +244,11 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
       // bg={bgColor}
       borderBottomWidth="1px"
       borderBottomColor={borderColor}
-      justifyContent={{ base: "space-between", md: "space-between" }}
+      justifyContent={{ base: "space-between", lg: "space-between" }}
       {...rest}
     >
       <IconButton
-        display={{ base: "flex", md: "none" }}
+        display={{ base: "flex", lg: "none" }}
         onClick={onOpen}
         variant="outline"
         aria-label="open menu"
@@ -255,7 +256,7 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
       />
 
       <Text
-        display={{ base: "flex", md: "flex" }}
+        display={{ base: "flex", lg: "flex" }}
         fontSize="2xl"
         fontFamily="monospace"
         fontWeight="bold"
@@ -265,7 +266,7 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
 
       <Searchbox></Searchbox>
 
-      <HStack spacing={{ base: "0", md: "6" }}>
+      <HStack spacing={{ base: "0", lg: "6" }}>
         {/* You can put more icons in here tbh */}
         {/* <IconButton
           size="lg"
@@ -288,7 +289,7 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
                     bg="transparent"
                   />
                   <VStack
-                    display={{ base: "none", md: "flex" }}
+                    display={{ base: "none", lg: "flex" }}
                     alignItems="flex-start"
                     spacing="1px"
                     ml="2"
@@ -304,7 +305,7 @@ const Nav = ({ onOpen, ...rest }: MobileProps) => {
                       {user?.role}
                     </Text>
                   </VStack>
-                  <Box display={{ base: "none", md: "flex" }}>
+                  <Box display={{ base: "none", lg: "flex" }}>
                     <FiChevronDown />
                   </Box>
                 </HStack>
