@@ -52,7 +52,14 @@ export function Playlist() {
 
       {/* <VStack> */}
       {/* <HStack justifyContent="space-between"> */}
-      <Box bgColor={bgColor} position="relative" mt="12" p="4" borderRadius={5}>
+      <Box
+        bgColor={bgColor}
+        position="relative"
+        mt="12"
+        p="4"
+        pt="8"
+        borderRadius={5}
+      >
         <Box as={"header"} mb="2" position="relative">
           <Heading
             lineHeight={1.1}
@@ -65,24 +72,7 @@ export function Playlist() {
             Provided by Holodex
           </Text>
         </Box>
-        <Box>
-          <Button
-            aria-label="play"
-            leftIcon={<FiPlay />}
-            size="md"
-            colorScheme="red"
-          >
-            Play
-          </Button>
-          <Button
-            variant="ghost"
-            aria-label="add to queue"
-            size="md"
-            color="red.200"
-          >
-            Add to Queue
-          </Button>
-        </Box>
+        <Buttons onPlayClick={() => {}} onAddQueueClick={() => {}} />
         {/* </HStack> */}
         <Box pt="4">
           {playlist.content && <SongTable songs={playlist.content} />}
@@ -104,9 +94,9 @@ const BGImgContainer = styled.div`
   mask-image: radial-gradient(
     ellipse farthest-side at 33% 12%,
     rgba(0, 0, 0, 1) 0%,
-    rgba(64, 0, 126, 0.63) 48%,
-    rgba(64, 0, 126, 0.58) 74%,
-    rgba(0, 255, 160, 0) 100%
+    rgba(0, 0, 0, 0.63) 48%,
+    rgba(0, 0, 0, 0.58) 74%,
+    rgba(0, 0, 0, 0) 100%
   );
   mask-size: 150% 132%;
   mask-position: left bottom;
@@ -122,3 +112,36 @@ const BGImg = styled.div<{ banner_url: string }>`
   background: url(${({ banner_url }) => banner_url});
   background-position: center;
 `;
+
+type ClickEventHandler = React.MouseEventHandler<HTMLButtonElement>;
+
+function Buttons({
+  onPlayClick,
+  onAddQueueClick,
+}: {
+  onPlayClick: ClickEventHandler;
+  onAddQueueClick: ClickEventHandler;
+}): JSX.Element {
+  return (
+    <Box>
+      <Button
+        aria-label="play"
+        leftIcon={<FiPlay />}
+        size="md"
+        colorScheme="red"
+        onClick={onPlayClick}
+      >
+        Play
+      </Button>
+      <Button
+        variant="ghost"
+        aria-label="add to queue"
+        size="md"
+        color="red.200"
+        onClick={onAddQueueClick}
+      >
+        Add to Queue
+      </Button>
+    </Box>
+  );
+}
