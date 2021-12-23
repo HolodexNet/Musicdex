@@ -1,57 +1,55 @@
 import {
-  ContainerProps,
+  Box,
+  IconButton,
   Slider,
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
+  Tooltip,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { useCallback, useEffect, useState } from "react";
-import { FaExpand, FaPause, FaPlay } from "react-icons/fa";
-import { FiMinimize2 } from "react-icons/fi";
-import { IoMdClose } from "react-icons/io";
+import { useEffect, useMemo, useState } from "react";
+import { FaPause, FaPlay } from "react-icons/fa";
 import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
-import { useStoreActions, useStoreState } from "../../store";
-import { useKeyboardEvents } from "./PlayerKeyboardControls";
+import { useStoreState } from "../../store";
+import throttle from "lodash-es/throttle";
 
 export function Player() {
   const currentSong = useStoreState(
     (state) => state.playback.currentlyPlaying.song
   );
-  //   const [currentSong, setCurrentSong] = useState<Song | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
 
-  const [seconds, setSeconds] = useState<number>(0);
-  const [progress, setProgress] = useState<number>(0);
-  // bind React state and YouTube Player's state
-  useEffect(() => {
-    if (!player) return;
-    // isPlaying ? player.playVideo() : player.pauseVideo();
-  }, [isPlaying, player]);
+  // PlayerState
+  const [playerState, setPlayerState] = useState(-1);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const buffering = useMemo(() => playerState === 3, [playerState]);
 
-  //   useEffect(() => {
-  //       if(currentSong) {
-  //         setTimeout(() => {
-  //             player?.seekTo(currentSong.start, true)
-  //         }, 1000);
-  //       }
-  //   }, [currentSong]);
+  // const [seconds, setSeconds] = useState<number>(0);
+  const [progress, setProgress] = useState<number>(0);
+  const [seekAhead, setSeekAhead] = useState<number>(0);
+
+  const totalDuration = useMemo(
+    () => (currentSong ? currentSong.end - currentSong.start : 0),
+    [currentSong]
+  );
+
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [hovering, setHovering] = useState(false);
+  const [changing, setChanging] = useState(false);
+
+  useEffect(() => {
+    if (playerState === 1 || playerState === 2) setIsPlaying(playerState === 1);
+  }, [playerState]);
 
   useEffect(() => {
     let timer: NodeJS.Timer | null = null;
     if (player && currentSong) {
       timer = setInterval(() => {
         const s = player.getCurrentTime();
-        setSeconds(s);
-
-        const shiftedStart = s - currentSong.start;
-        const totalDuration = currentSong.end - currentSong.start;
-        const prog = Math.min(Math.max(shiftedStart / totalDuration, 0), 1);
-        console.log(prog);
-        setProgress(prog);
+        // setSeconds(s);
+        setProgress(getPlayerProgress(s));
       }, 200);
     }
     return () => {
@@ -63,17 +61,15 @@ export function Player() {
     setPlayer(event.target);
   }
 
-  function onPlay() {
-    setIsPlaying(true);
+  function onStateChange(e: { data: number }) {
+    setPlayerState(e.data);
   }
-
-  function onPause() {
-    setIsPlaying(false);
-  }
-
   // controls
   function togglePlay() {
     setIsPlaying((prev) => !prev);
+    if (player) {
+      isPlaying ? player.pauseVideo() : player.playVideo();
+    }
   }
 
   function toggleExpanded() {
@@ -89,9 +85,37 @@ export function Player() {
     setIsExpanded(true);
   }
 
+  function onChange(e: any) {
+    seekToProgress(e);
+    setSeekAhead(e);
+    setChanging(true);
+  }
+
+  function onChangeEnd() {
+    setChanging(false);
+  }
+
+  function getPlayerProgress(seconds: number) {
+    if (currentSong) {
+      const shiftedStart = seconds - currentSong.start;
+      return Math.min(Math.max(shiftedStart / totalDuration, 0), 1) * 100;
+    }
+    return 0;
+  }
+
+  const seekToProgress = throttle((percent: number) => {
+    if (player && currentSong) {
+      player.seekTo(currentSong.start + (percent / 100) * totalDuration, true);
+    }
+  }, 100);
+
+  function sliderTime() {
+    const p = buffering || changing ? seekAhead : progress;
+    return `${Math.round((p / 100) * totalDuration)}s`;
+  }
+
   return (
     <Container visible={true}>
-      {/* Time: { seconds } , { progress } */}
       {currentSong && (
         <YouTube
           containerClassName="yt-container"
@@ -108,24 +132,46 @@ export function Player() {
             },
           }}
           onReady={onReady}
-          onPlay={onPlay}
-          onPause={onPause}
+          onStateChange={onStateChange}
         />
       )}
 
       <Slider
         defaultValue={0}
+        step={0.1}
         min={0}
-        max={1}
-        value={progress}
+        max={100}
+        value={buffering || changing ? seekAhead : progress}
         className="progress-slider"
         colorScheme="blue"
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
+        onChange={onChange}
+        onChangeEnd={onChangeEnd}
       >
-        <SliderTrack>
+        <SliderTrack height={hovering ? "8px" : "6px"}>
           <SliderFilledTrack />
         </SliderTrack>
-        <SliderThumb />
+        <Tooltip
+          hasArrow
+          bg="teal.500"
+          color="white"
+          placement="top"
+          isOpen={hovering}
+          label={sliderTime()}
+        >
+          <SliderThumb visibility={hovering ? "visible" : "hidden"} />
+        </Tooltip>
       </Slider>
+
+      <Box padding="0px 20px" flex="1">
+        <IconButton
+          aria-label="Play"
+          icon={isPlaying ? <FaPause /> : <FaPlay />}
+          variant="outline"
+          onClick={togglePlay}
+        />
+      </Box>
     </Container>
   );
 }
@@ -160,8 +206,7 @@ const Container = styled.div<{ visible: boolean }>`
   .progress-slider,
   .chakra-slider {
     position: absolute !important;
-    top: 0;
-    transform: translateY(-50%);
+    top: -3px;
     width: 100%;
   }
 `;
