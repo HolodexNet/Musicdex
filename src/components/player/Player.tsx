@@ -8,12 +8,21 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { useEffect, useMemo, useState } from "react";
-import { FaPause, FaPlay } from "react-icons/fa";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaExpand,
+  FaPause,
+  FaPlay,
+  FaStepBackward,
+  FaStepForward,
+} from "react-icons/fa";
 import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
-import { useStoreState } from "../../store";
+import { useStoreState, useStoreActions } from "../../store";
 import throttle from "lodash-es/throttle";
+import { PlayerOverlay } from "./PlayerOverlay";
 
 export function Player() {
   const currentlyPlaying = useStoreState(
@@ -25,7 +34,7 @@ export function Player() {
   // PlayerState
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [playerState, setPlayerState] = useState(-1);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const buffering = useMemo(() => playerState === 3, [playerState]);
 
   // const [seconds, setSeconds] = useState<number>(0);
@@ -41,6 +50,8 @@ export function Player() {
   const [hovering, setHovering] = useState(false);
   const [changing, setChanging] = useState(false);
 
+  const next = useStoreActions((actions) => actions.playback.next);
+
   useEffect(() => {
     if (player && currentSong) {
       player.seekTo(currentSong.start, true);
@@ -53,9 +64,10 @@ export function Player() {
 
   useEffect(() => {
     let timer: NodeJS.Timer | null = null;
-    if (player && currentSong && isPlaying) {
+    if (player && currentSong) {
       timer = setInterval(() => {
         const s = player.getCurrentTime();
+        // Make sure player stays in bound
         if (s < currentSong.start || s > currentSong.end) {
           seekToProgress(0);
         }
@@ -126,80 +138,103 @@ export function Player() {
   }
 
   return (
-    <Container visible={true}>
-      {currentSong && (
-        <YouTube
-          containerClassName="yt-container"
-          className="yt-player"
-          videoId={currentSong.video_id}
-          opts={{
-            playerVars: {
-              // https://developers.google.com/youtube/player_parameters
-              autoplay: 1,
-              showinfo: 0,
-              rel: 0,
-              modestbranding: 1,
-            },
-          }}
-          onReady={onReady}
-          onStateChange={onStateChange}
-        />
-      )}
-
-      <Slider
-        defaultValue={0}
-        step={0.1}
-        min={0}
-        max={100}
-        value={buffering || changing ? seekAhead : progress}
-        className="progress-slider"
-        colorScheme="blue"
-        onMouseEnter={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
-        onChange={onChange}
-        onChangeEnd={onChangeEnd}
-      >
-        <SliderTrack height={hovering ? "8px" : "6px"}>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <Tooltip
-          hasArrow
-          bg="teal.500"
-          color="white"
-          placement="top"
-          isOpen={hovering}
-          label={sliderTime()}
-        >
-          <SliderThumb visibility={hovering ? "visible" : "hidden"} />
-        </Tooltip>
-      </Slider>
-
-      <PlayerMain>
-        <div className="left">
-          <span>
-            {currentSong?.name}
-            <br />
-            {currentSong?.channel.english_name || currentSong?.channel.name}
-          </span>
-        </div>
-        <div className="center">
-          <IconButton
-            aria-label="Play"
-            icon={isPlaying ? <FaPause /> : <FaPlay />}
-            variant="outline"
-            onClick={togglePlay}
+    <React.Fragment>
+      <Container visible={true} expanded={isExpanded}>
+        {currentSong && (
+          <YouTube
+            containerClassName="yt-container"
+            className="yt-player"
+            videoId={currentSong.video_id}
+            opts={{
+              playerVars: {
+                // https://developers.google.com/youtube/player_parameters
+                autoplay: 1,
+                showinfo: 0,
+                rel: 0,
+                modestbranding: 1,
+              },
+            }}
+            onReady={onReady}
+            onStateChange={onStateChange}
           />
-        </div>
-        <div className="right">
-          <span></span>
-        </div>
-      </PlayerMain>
-    </Container>
+        )}
+
+        <Slider
+          defaultValue={0}
+          step={0.1}
+          min={0}
+          max={100}
+          value={buffering || changing ? seekAhead : progress}
+          className="progress-slider"
+          colorScheme="blue"
+          onMouseEnter={() => setHovering(true)}
+          onMouseLeave={() => setHovering(false)}
+          onChange={onChange}
+          onChangeEnd={onChangeEnd}
+        >
+          <SliderTrack height={hovering ? "8px" : "6px"}>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <Tooltip
+            hasArrow
+            bg="teal.500"
+            color="white"
+            placement="top"
+            isOpen={hovering}
+            label={sliderTime()}
+          >
+            <SliderThumb visibility={hovering ? "visible" : "hidden"} />
+          </Tooltip>
+        </Slider>
+        <PlayerMain>
+          <div className="left">
+            <span>
+              {currentSong?.name}
+              <br />
+              {currentSong?.channel.english_name || currentSong?.channel.name}
+            </span>
+          </div>
+          <div className="center">
+            <IconButton
+              aria-label="Play"
+              icon={<FaStepBackward />}
+              variant="outline"
+              onClick={togglePlay}
+            />
+            <IconButton
+              aria-label="Play"
+              icon={isPlaying ? <FaPause /> : <FaPlay />}
+              variant="outline"
+              onClick={togglePlay}
+            />
+            <IconButton
+              aria-label="Play"
+              icon={<FaStepForward />}
+              variant="outline"
+              onClick={() => next({ count: 1, userSkipped: true })}
+            />
+          </div>
+          <div className="right">
+            <span>
+              <IconButton
+                aria-label="Play"
+                icon={isExpanded ? <FaChevronDown /> : <FaChevronUp />}
+                variant="outline"
+                onClick={toggleExpanded}
+              />
+            </span>
+          </div>
+        </PlayerMain>
+      </Container>
+
+      <PlayerOverlay visible={isExpanded}></PlayerOverlay>
+    </React.Fragment>
   );
 }
 
-const Container = styled.div<{ visible: boolean }>`
+const Container = styled.div<{ visible: boolean; expanded: boolean }>`
   width: 100%;
+  /* height: ${({ expanded }) => (expanded ? "100%" : "80px")}; */
   height: 80px;
   flex-basis: 1;
   flex-shrink: 0;
@@ -209,15 +244,16 @@ const Container = styled.div<{ visible: boolean }>`
   /* overflow: hidden; */
   flex-direction: row;
   display: flex;
-  align-items: center;
   visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
   opacity: ${({ visible }) => (visible ? "1" : "0")};
+  z-index: 10;
 
   .yt-container {
     width: 400px;
     height: 225px;
     position: absolute;
     bottom: 90px;
+    z-index: 10;
   }
 
   .yt-player {
@@ -234,17 +270,18 @@ const Container = styled.div<{ visible: boolean }>`
 `;
 
 const PlayerMain = styled.div`
-  padding: 0px 20px;
   display: flex;
-  /* flex: 1; */
-  /* justify-content: center; */
   width: 100%;
+  height: 80px;
+  align-items: center;
 
   .left > span {
     margin-right: auto;
+    padding-left: 20px;
   }
   .right > span {
     margin-left: auto;
+    padding-right: 20px;
   }
   .left,
   .right,

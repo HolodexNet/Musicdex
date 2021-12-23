@@ -17,7 +17,7 @@ export interface PlaybackModel {
 
   // ===== Playlist and Playlist Mutators:
   playlistQueue: Song[]; // a queue that is fed by the playlist.
-  playlistQueue2: Song[]; // a backup queue for songs ONLY if Shuffle + Repeat
+  playedPlaylistQueue: Song[]; // a backup queue for songs ONLY if Shuffle + Repeat
   currentPlaylist?: PlaylistFull;
 
   _setPlaylist: Action<PlaybackModel, PlaylistFull>;
@@ -26,6 +26,7 @@ export interface PlaybackModel {
   // ==== History:
   history: Song[];
   addSongToHistory: Action<PlaybackModel, Song>;
+  deleteIndexFromHistory: Action<PlaybackModel, number>;
 
   // ==== Playback Mode:
   shuffleMode: boolean;
@@ -53,12 +54,21 @@ export interface PlaybackModel {
   // queues songs up into the queue.
   queueSongs: Thunk<PlaybackModel, { songs: Song[]; immediatelyPlay: boolean }>;
   // adds a playlist into the queue
-  setPlaylist: Thunk<
-    PlaybackModel,
-    { playlist: PlaylistFull; immediatelyPlay: boolean }
-  >;
+  setPlaylist: Thunk<PlaybackModel, { playlist: PlaylistFull }>;
   // for pressing NEXT or pressing a item on up-next.
-  next: Thunk<PlaybackModel, { count: number; isSkip: boolean }>;
+  next: Thunk<PlaybackModel, { count: number; userSkipped: boolean }>;
+
+  // for going Back one song
+  previous: Thunk<PlaybackModel>;
+
+  clearAll: Action<PlaybackModel>;
+}
+
+function shuffleArray(arr: Array<any>) {
+  return arr
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
 }
 
 const playbackModel: PlaybackModel = {
@@ -77,19 +87,16 @@ const playbackModel: PlaybackModel = {
   }),
 
   playlistQueue: [],
-  playlistQueue2: [],
+  playedPlaylistQueue: [],
   currentPlaylist: undefined,
   _setPlaylist: action((state, playlist) => {
     state.currentPlaylist = playlist;
     if (state.shuffleMode) {
-      state.playlistQueue = (playlist.content || [])
-        .map((value) => ({ value, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ value }) => value);
+      state.playlistQueue = shuffleArray(playlist.content || []);
     } else {
       state.playlistQueue = [...(playlist.content || [])];
     }
-    state.playlistQueue2 = [];
+    state.playedPlaylistQueue = [];
   }),
   _shufflePlaylist: action((state) => {
     const mq = state.currentPlaylist?.content || [];
@@ -99,11 +106,8 @@ const playbackModel: PlaybackModel = {
         ? mq.filter((x) => x.id !== state.currentlyPlaying.song?.id)
         : mq;
     // shuffle the rest.
-    state.playlistQueue = nq
-      .map((value) => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value);
-    state.playlistQueue2 = [];
+    state.playlistQueue = shuffleArray(nq);
+    // state.playedPlaylistQueue = [];
   }),
 
   history: [],
@@ -113,6 +117,10 @@ const playbackModel: PlaybackModel = {
     if (state.history.length > 100) {
       state.history.pop();
     }
+  }),
+
+  deleteIndexFromHistory: action((state, idx) => {
+    state.history.splice(1, 0);
   }),
 
   shuffleMode: false,
@@ -147,21 +155,16 @@ const playbackModel: PlaybackModel = {
     if (state.repeatMode !== "repeat-one") {
       if (state.repeatMode === "repeat") {
         // if it's repeat, then:
-        if (
-          state.currentlyPlaying.from === "playlist" &&
-          state.currentlyPlaying.song
-        ) {
-          if (state.shuffleMode) {
-            state.playlistQueue2.push(state.currentlyPlaying.song);
-          } else {
-            state.playlistQueue.push(state.currentlyPlaying.song);
-          }
-        }
       } // if it's not repeat, then just get rid of the currently playing thing.
-      state.currentlyPlaying.from = "none";
-      state.currentlyPlaying.song = undefined;
-      state.currentlyPlaying.repeat = Math.floor(Math.random() * 1000);
+      // if (state.currentlyPlaying.song) {
+      //   if(state.currentlyPlaying.from === "playlist"){
+      //     state.playedPlaylistQueue.push(state.currentlyPlaying.song);
+      //   }
+      // }
     }
+    state.currentlyPlaying.from = "none";
+    state.currentlyPlaying.song = undefined;
+    state.currentlyPlaying.repeat = Math.floor(Math.random() * 1000);
     // decline to eject if repeat-one, since you just want to play the current one again..
   }),
 
@@ -173,14 +176,13 @@ const playbackModel: PlaybackModel = {
       state.currentlyPlaying.song = state.queue.shift();
       state.currentlyPlaying.repeat++;
     } else if (src === "playlist") {
+      if (state.playlistQueue.length === 0) {
+        state.playlistQueue = state.playedPlaylistQueue;
+        state.playedPlaylistQueue = [];
+      }
       state.currentlyPlaying.from = "playlist";
       state.currentlyPlaying.song = state.playlistQueue.shift();
       state.currentlyPlaying.repeat++;
-
-      if (state.playlistQueue.length === 0) {
-        state.playlistQueue = state.playlistQueue2;
-        state.playlistQueue2 = [];
-      }
     }
   }),
 
@@ -194,6 +196,12 @@ const playbackModel: PlaybackModel = {
 
   _detachCurrentlyPlayingToQueue: action((state) => {
     if (state.currentlyPlaying.song) state.currentlyPlaying.from = "queue";
+  }),
+
+  clearAll: action((state) => {
+    state.queue = [];
+    state.playlistQueue = [];
+    state.playedPlaylistQueue = [];
   }),
 
   queueSongs: thunk((actions, { songs, immediatelyPlay }, h) => {
@@ -211,25 +219,24 @@ const playbackModel: PlaybackModel = {
     }
   }),
 
-  setPlaylist: thunk((actions, { playlist, immediatelyPlay }, h) => {
+  setPlaylist: thunk((actions, { playlist }, h) => {
+    actions._queueClear();
+    actions._ejectCurrentlyPlaying();
     actions._setPlaylist(playlist);
-    if (h.getState().currentlyPlaying.from === "playlist") {
-      actions._detachCurrentlyPlayingToQueue();
-    }
-    if (immediatelyPlay) {
-      actions._queueClear();
-      actions._ejectCurrentlyPlaying();
-      actions._insertCurrentlyPlaying("playlist");
-    }
+    actions._insertCurrentlyPlaying("playlist");
+    // if (h.getState().currentlyPlaying.from === "playlist") {
+    //   actions._detachCurrentlyPlayingToQueue();
+    // }
+    // if (immediatelyPlay) {
+    //   actions._queueClear();
+    //   actions._ejectCurrentlyPlaying();
+    //   actions._insertCurrentlyPlaying("playlist");
+    // }
   }),
 
-  next: thunk((actions, { count, isSkip }, h) => {
-    if (isSkip) {
-      let isRepeatOne = false;
-      if (h.getState().repeatMode === "repeat-one") {
-        isRepeatOne = true;
-        actions.toggleRepeat();
-      }
+  next: thunk((actions, { count, userSkipped }, h) => {
+    // User initiated skip, ignore repeat-one mode
+    if (userSkipped) {
       while (count > 0) {
         actions._ejectCurrentlyPlaying();
         const src =
@@ -240,10 +247,6 @@ const playbackModel: PlaybackModel = {
             : undefined;
         if (src) actions._insertCurrentlyPlaying(src);
         count--;
-      }
-      if (isRepeatOne) {
-        actions.toggleRepeat();
-        actions.toggleRepeat();
       }
     } else {
       actions._ejectCurrentlyPlaying();
@@ -257,6 +260,11 @@ const playbackModel: PlaybackModel = {
           : undefined;
       if (src) actions._insertCurrentlyPlaying(src);
     }
+  }),
+
+  previous: thunk((actions, opt, h) => {
+    const prevSong = h.getState().history[0];
+    actions.deleteIndexFromHistory(0);
   }),
 };
 

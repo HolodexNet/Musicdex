@@ -32,6 +32,9 @@ export function Playlist() {
   } = usePlaylist(playlistId);
 
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
+  const setPlaylist = useStoreActions(
+    (actions) => actions.playback.setPlaylist
+  );
 
   function handleClick(song: Song) {
     queueSongs({ songs: [song], immediatelyPlay: true });
@@ -58,7 +61,18 @@ export function Playlist() {
         borderRadius={5}
       >
         <PlaylistHeading />
-        <Buttons onPlayClick={() => {}} onAddQueueClick={() => {}} />
+        <Buttons
+          onPlayClick={() => {
+            setPlaylist({ playlist });
+          }}
+          onAddQueueClick={() => {
+            playlist.content &&
+              queueSongs({
+                songs: [...playlist.content],
+                immediatelyPlay: false,
+              });
+          }}
+        />
         <Box pt="4">
           {playlist.content && <SongTable songs={playlist.content} />}
         </Box>

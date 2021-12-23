@@ -61,7 +61,8 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
       {
         id: "channel",
         Header: "ChannelName",
-        accessor: (row: IndexedSong) => row.channel.english_name,
+        accessor: (row: IndexedSong) =>
+          row.channel?.english_name || row.channel?.name,
       },
       {
         Header: "Original Artist",
