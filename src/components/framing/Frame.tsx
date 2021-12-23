@@ -114,7 +114,7 @@ export default function FrameWithHeader({
             <Footer></Footer>
           </Box>
         </Flex>
-        {/* <Player /> */}
+        <Player />
       </Flex>
     </Box>
   );

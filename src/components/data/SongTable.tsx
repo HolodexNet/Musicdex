@@ -16,11 +16,13 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useTable, useSortBy, Column } from "react-table";
+import { useStoreActions } from "../../store";
 
 type IndexedSong = Song & { idx: number };
 
 export const SongTable = ({ songs }: { songs: Song[] }) => {
   const { t, i18n } = useTranslation();
+  const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const s: IndexedSong[] = React.useMemo(() => {
     return songs.map((v, i) => {
       return { ...v, idx: i };
@@ -39,7 +41,16 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
           console.log(cellInfo);
           return (
             <VStack alignItems="start" spacing={1}>
-              <span>{cellInfo.row.original?.name}</span>
+              <span
+                onClick={() =>
+                  queueSongs({
+                    songs: [cellInfo.row.original],
+                    immediatelyPlay: true,
+                  })
+                }
+              >
+                {cellInfo.row.original?.name}
+              </span>
               <Text color="whiteAlpha.600" fontWeight={300} fontSize="sm">
                 {cellInfo.row.original.channel?.name}
               </Text>

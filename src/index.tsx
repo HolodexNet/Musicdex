@@ -26,7 +26,7 @@ store.persist.resolveRehydration().then(() => {
       <StoreProvider store={store}>
         <ChakraProvider theme={theme}>
           <ThemeEditorProvider>
-            <HyperThemeEditor pos="fixed" bottom={4} right={2} zIndex={12} />
+            <HyperThemeEditor pos="fixed" bottom={20} right={5} zIndex={12} />
           </ThemeEditorProvider>
 
           <QueryClientProvider client={queryClient}>

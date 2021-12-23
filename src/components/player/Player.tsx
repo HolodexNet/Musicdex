@@ -16,12 +16,14 @@ import { useStoreState } from "../../store";
 import throttle from "lodash-es/throttle";
 
 export function Player() {
-  const currentSong = useStoreState(
-    (state) => state.playback.currentlyPlaying.song
+  const currentlyPlaying = useStoreState(
+    (state) => state.playback.currentlyPlaying
   );
-  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
+  const currentSong = useMemo(() => currentlyPlaying.song, [currentlyPlaying]);
+  const repeat = useMemo(() => currentlyPlaying.repeat, [currentlyPlaying]);
 
   // PlayerState
+  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [playerState, setPlayerState] = useState(-1);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const buffering = useMemo(() => playerState === 3, [playerState]);
@@ -40,15 +42,23 @@ export function Player() {
   const [changing, setChanging] = useState(false);
 
   useEffect(() => {
+    if (player && currentSong) {
+      player.seekTo(currentSong.start, true);
+    }
+  }, [currentSong, repeat, player]);
+
+  useEffect(() => {
     if (playerState === 1 || playerState === 2) setIsPlaying(playerState === 1);
   }, [playerState]);
 
   useEffect(() => {
     let timer: NodeJS.Timer | null = null;
-    if (player && currentSong) {
+    if (player && currentSong && isPlaying) {
       timer = setInterval(() => {
         const s = player.getCurrentTime();
-        // setSeconds(s);
+        if (s < currentSong.start || s > currentSong.end) {
+          seekToProgress(0);
+        }
         setProgress(getPlayerProgress(s));
       }, 200);
     }
@@ -59,6 +69,7 @@ export function Player() {
 
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
+    if (player && currentSong) player.seekTo(currentSong?.start, true);
   }
 
   function onStateChange(e: { data: number }) {
@@ -128,7 +139,6 @@ export function Player() {
               showinfo: 0,
               rel: 0,
               modestbranding: 1,
-              start: currentSong.start,
             },
           }}
           onReady={onReady}
@@ -164,14 +174,26 @@ export function Player() {
         </Tooltip>
       </Slider>
 
-      <Box padding="0px 20px" flex="1">
-        <IconButton
-          aria-label="Play"
-          icon={isPlaying ? <FaPause /> : <FaPlay />}
-          variant="outline"
-          onClick={togglePlay}
-        />
-      </Box>
+      <PlayerMain>
+        <div className="left">
+          <span>
+            {currentSong?.name}
+            <br />
+            {currentSong?.channel.english_name || currentSong?.channel.name}
+          </span>
+        </div>
+        <div className="center">
+          <IconButton
+            aria-label="Play"
+            icon={isPlaying ? <FaPause /> : <FaPlay />}
+            variant="outline"
+            onClick={togglePlay}
+          />
+        </div>
+        <div className="right">
+          <span></span>
+        </div>
+      </PlayerMain>
     </Container>
   );
 }
@@ -192,10 +214,10 @@ const Container = styled.div<{ visible: boolean }>`
   opacity: ${({ visible }) => (visible ? "1" : "0")};
 
   .yt-container {
-    width: 600px;
-    height: 300px;
+    width: 400px;
+    height: 225px;
     position: absolute;
-    bottom: 100px;
+    bottom: 90px;
   }
 
   .yt-player {
@@ -208,5 +230,27 @@ const Container = styled.div<{ visible: boolean }>`
     position: absolute !important;
     top: -3px;
     width: 100%;
+  }
+`;
+
+const PlayerMain = styled.div`
+  padding: 0px 20px;
+  display: flex;
+  /* flex: 1; */
+  /* justify-content: center; */
+  width: 100%;
+
+  .left > span {
+    margin-right: auto;
+  }
+  .right > span {
+    margin-left: auto;
+  }
+  .left,
+  .right,
+  .center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
   }
 `;
