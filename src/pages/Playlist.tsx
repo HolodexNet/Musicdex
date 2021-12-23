@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React, { useState } from "react";
-import { FiPlay } from "react-icons/fi";
+import { FiMoreHorizontal, FiPlay } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
 import { usePlaylist } from "../modules/services/playlist.service";
@@ -120,12 +120,12 @@ function Buttons({
   onAddQueueClick: ClickEventHandler;
 }): JSX.Element {
   return (
-    <Box>
+    <HStack spacing={4}>
       <Button
         aria-label="play"
         leftIcon={<FiPlay />}
         size="md"
-        colorScheme="red"
+        colorScheme="n2"
         onClick={onPlayClick}
       >
         Play
@@ -134,11 +134,26 @@ function Buttons({
         variant="ghost"
         aria-label="add to queue"
         size="md"
-        color="red.200"
+        colorScheme="n2"
         onClick={onAddQueueClick}
       >
         Add to Queue
       </Button>
-    </Box>
+      <Button
+        variant="ghost"
+        aria-label="add to queue"
+        size="md"
+        colorScheme="n2"
+        onClick={onAddQueueClick}
+      >
+        Edit
+      </Button>
+      <IconButton
+        variant="ghost"
+        aria-label="more"
+        colorScheme="n2"
+        icon={<FiMoreHorizontal />}
+      ></IconButton>
+    </HStack>
   );
 }

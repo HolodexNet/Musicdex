@@ -10,20 +10,23 @@ import {
   Text,
   Box,
   useBreakpointValue,
+  IconButton,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useTable, useSortBy } from "react-table";
+import { FiMoreHorizontal } from "react-icons/fi";
+import { useTable, useSortBy, Column } from "react-table";
 
 type IndexedSong = Song & { idx: number };
 
 export const SongTable = ({ songs }: { songs: Song[] }) => {
+  const { t, i18n } = useTranslation();
   const s: IndexedSong[] = React.useMemo(() => {
     return songs.map((v, i) => {
       return { ...v, idx: i };
     });
   }, [songs]);
-  const columns = React.useMemo(
+  const columns: Column<IndexedSong>[] = React.useMemo<Column<IndexedSong>[]>(
     () => [
       {
         Header: "#",
@@ -64,7 +67,23 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
       {
         id: "date",
         Header: "Sang On",
-        accessor: (row: { available_at: Date }) => row?.available_at.toString(),
+        accessor: (row: { available_at: Date }) =>
+          t("shortDateTime", { date: new Date(row?.available_at) }),
+      },
+      {
+        id: "...",
+        Header: "",
+        disableSortBy: true,
+        accessor: "idx",
+        Cell: (cellInfo: any) => {
+          console.log(cellInfo);
+          return (
+            <IconButton
+              aria-label="more"
+              icon={<FiMoreHorizontal />}
+            ></IconButton>
+          );
+        },
       },
     ],
     []
@@ -94,7 +113,7 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
   }, [isXL]);
 
   return (
-    <Table {...getTableProps()}>
+    <Table {...getTableProps()} size={isXL ? "md" : "sm"}>
       <Thead>
         {headerGroups.map((headerGroup) => (
           <Tr {...headerGroup.getHeaderGroupProps()}>
