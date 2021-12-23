@@ -38,6 +38,7 @@ export function Playlist() {
 
   const colors = useColorModeValue("gray.700", "gray.400");
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
+
   if (!playlist) return <div> loading </div>;
   return (
     <Container maxW={"7xl"} alignContent="stretch">
