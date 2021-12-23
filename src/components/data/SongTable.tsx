@@ -9,8 +9,10 @@ import {
   VStack,
   Text,
   Box,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useTable, useSortBy } from "react-table";
 
 type IndexedSong = Song & { idx: number };
@@ -68,15 +70,28 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
     []
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable(
-      {
-        columns: columns as any,
-        data: s,
-        initialState: { hiddenColumns: ["channel"] },
-      },
-      useSortBy
-    );
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    toggleHideColumn,
+  } = useTable(
+    {
+      columns: columns as any,
+      data: s,
+      initialState: { hiddenColumns: ["channel"] },
+    },
+    useSortBy
+  );
+
+  const isXL = useBreakpointValue({ base: false, xl: true });
+
+  useEffect(() => {
+    toggleHideColumn("original_artist", !isXL);
+    toggleHideColumn("idx", !isXL);
+  }, [isXL]);
 
   return (
     <Table {...getTableProps()}>
