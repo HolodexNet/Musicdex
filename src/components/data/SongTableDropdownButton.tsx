@@ -14,26 +14,25 @@ import {
 } from "@chakra-ui/react";
 import { FiChevronDown, FiMoreHorizontal } from "react-icons/fi";
 
-export function PlaylistMoreControlsMenu({
+export function SongTableDropDownMenu({
   ...rest
 }: Omit<MenuProps, "children">) {
   return (
     <Menu {...rest} isLazy>
       <MenuButton
-        py={2}
-        transition="all 0.3s"
+        //   py={2}
         icon={<FiMoreHorizontal />}
         as={IconButton}
+        rounded="full"
         variant="ghost"
         colorScheme="n2"
         aria-label="More"
       ></MenuButton>
       <MenuList>
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>Settings</MenuItem>
-        {/* <MenuItem>Billing</MenuItem> */}
+        <MenuItem>Add to Queue</MenuItem>
+        <MenuItem>Share Link</MenuItem>
         <MenuDivider />
-        <MenuItem onClick={() => {}}>Sign out</MenuItem>
+        <MenuItem onClick={() => {}}>Delete</MenuItem>
       </MenuList>
     </Menu>
   );

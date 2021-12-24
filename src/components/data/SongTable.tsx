@@ -16,7 +16,14 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useTable, useSortBy, Column } from "react-table";
+import {
+  ContextMenuItem,
+  ContextMenuList,
+  ContextMenuTrigger,
+  useContextTrigger,
+} from "../context-menu";
 import { useStoreActions } from "../../store";
+import { SongTableDropDownMenu } from "./SongTableDropdownButton";
 
 type IndexedSong = Song & { idx: number };
 
@@ -89,12 +96,7 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
         accessor: "idx",
         Cell: (cellInfo: any) => {
           console.log(cellInfo);
-          return (
-            <IconButton
-              aria-label="more"
-              icon={<FiMoreHorizontal />}
-            ></IconButton>
-          );
+          return <SongTableDropDownMenu />;
         },
       },
     ],
@@ -124,8 +126,15 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
     toggleHideColumn("idx", !isXL);
   }, [isXL]);
 
+  const contextMenuTrigger = useContextTrigger({ menuId: "songMenu" });
+
   return (
     <Table {...getTableProps()} size={isXL ? "md" : "sm"}>
+      <ContextMenuList menuId="songMenu">
+        <ContextMenuItem onClick={({ passData }) => console.log(passData)}>
+          Action
+        </ContextMenuItem>
+      </ContextMenuList>
       <Thead>
         {headerGroups.map((headerGroup) => (
           <Tr {...headerGroup.getHeaderGroupProps()}>
@@ -147,7 +156,12 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
         {rows.map((row) => {
           prepareRow(row);
           return (
-            <Tr {...row.getRowProps()}>
+            <Tr
+              {...row.getRowProps()}
+              onContextMenu={(e) => {
+                contextMenuTrigger(e, row.original);
+              }}
+            >
               {row.cells.map((cell) => (
                 <Td
                   {...cell.getCellProps()}

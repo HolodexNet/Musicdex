@@ -1,5 +1,6 @@
 import { createTypedHooks } from "easy-peasy";
 import authModel, { AuthModel } from "./auth";
+import { contextMenusAtom, ContextMenuStore } from "./contextMenu";
 import orgModel, { OrgModel } from "./org";
 import playbackModel, { PlaybackModel } from "./playback";
 import playerModel, { PlayerModel } from "./player";
@@ -9,6 +10,7 @@ export interface StoreModel {
   player: PlayerModel;
   playback: PlaybackModel;
   org: OrgModel;
+  contextMenu: ContextMenuStore;
 }
 
 const storeModel: StoreModel = {
@@ -16,6 +18,7 @@ const storeModel: StoreModel = {
   player: playerModel,
   playback: playbackModel,
   org: orgModel,
+  contextMenu: contextMenusAtom,
 };
 
 export default storeModel;
