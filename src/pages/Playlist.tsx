@@ -1,26 +1,22 @@
 import {
   Box,
-  Button,
   Container,
   Heading,
-  HStack,
   IconButton,
   Input,
-  SimpleGrid,
   Text,
   useColorModeValue,
-  VStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import React, { FormEventHandler, useMemo, useState } from "react";
-import { FiEdit3, FiMoreHorizontal, FiPlay } from "react-icons/fi";
+import { FormEventHandler, useMemo, useState } from "react";
+import { FiEdit3 } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
-import { PlaylistMoreControlsMenu } from "../components/playlist/PlaylistMoreControls";
 import { useClient } from "../modules/client";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 import { identifyPlaylistBannerImage } from "../utils/PlaylistHelper";
+import { PlaylistButtonArray } from "./PlaylistButtonArray";
 
 export function Playlist() {
   let { playlistId }: { playlistId: string } = useParams();
@@ -132,8 +128,6 @@ const BGImg = styled.div<{ banner_url: string }>`
   background-size: cover;
 `;
 
-type ClickEventHandler = React.MouseEventHandler<HTMLButtonElement>;
-
 type PlaylistHeadingProps = {
   title: string;
   description: string;
@@ -223,69 +217,5 @@ function PlaylistHeading({
         ></IconButton>
       </Text>
     </Box>
-  );
-}
-
-function PlaylistButtonArray({
-  onPlayClick,
-  onAddQueueClick,
-  onEditClick,
-  onFinishEditClick,
-  editMode,
-  canEdit,
-}: {
-  onPlayClick: ClickEventHandler;
-  onAddQueueClick: ClickEventHandler;
-  onEditClick?: ClickEventHandler;
-  onFinishEditClick?: ClickEventHandler;
-  editMode: boolean;
-  canEdit: boolean;
-}): JSX.Element {
-  return (
-    <HStack spacing={4}>
-      <Button
-        aria-label="play"
-        leftIcon={<FiPlay />}
-        size="md"
-        colorScheme="n2"
-        onClick={onPlayClick}
-      >
-        Play
-      </Button>
-      <Button
-        variant="ghost"
-        aria-label="add to queue"
-        size="md"
-        colorScheme="n2"
-        onClick={onAddQueueClick}
-      >
-        Add to Queue
-      </Button>
-      <Button
-        display={!editMode && canEdit ? "block" : "none"}
-        variant="ghost"
-        aria-label="edit"
-        size="md"
-        colorScheme="n2"
-        onClick={(e) => {
-          onEditClick && onEditClick(e);
-        }}
-      >
-        Edit
-      </Button>
-      <Button
-        display={editMode && canEdit ? "block" : "none"}
-        variant="ghost"
-        aria-label="edit"
-        size="md"
-        colorScheme="green"
-        onClick={(e) => {
-          onFinishEditClick && onFinishEditClick(e);
-        }}
-      >
-        Done Editing
-      </Button>
-      <PlaylistMoreControlsMenu></PlaylistMoreControlsMenu>
-    </HStack>
   );
 }

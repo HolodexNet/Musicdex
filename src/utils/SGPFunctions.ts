@@ -57,11 +57,9 @@ export function extractUsingFn<Out>(
   return transformers[type](
     playlist,
     params,
-    <any>(
-      (playlist?.description
-        ? SGPDefinitions[type].descParser(playlist?.description)
-        : undefined)
-    )
+    (playlist?.description
+      ? SGPDefinitions[type].descParser(playlist?.description)
+      : undefined) as any
   );
 }
 
@@ -69,7 +67,7 @@ export function isSGPPlaylist(playlistId: string) {
   return playlistId.startsWith(":");
 }
 
-const IDSplitter = /[\[\]]/;
+const IDSplitter = /[[\]]/;
 
 /**
  * Parses a SGP id
@@ -82,7 +80,7 @@ export function parsePlaylistID(id: string): {
 } {
   const [type, paramString] = id.split(IDSplitter);
   return {
-    type: <any>type,
+    type: type as any,
     params: paramString ? qs.parse(paramString) : {},
   };
 }
