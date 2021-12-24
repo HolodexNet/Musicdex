@@ -35,7 +35,7 @@ interface SGPTransformer<Out> {
   ":dailyrandom": (
     playlist: PlaylistLike,
     id: { ch: string },
-    data: Channel | undefined
+    data: { channel: Channel } | undefined
   ) => Out;
   ":weekly": (
     playlist: PlaylistLike,
@@ -54,7 +54,7 @@ export function extractUsingFn<Out>(
   transformers: SGPTransformer<Out>
 ) {
   const { type, params } = parsePlaylistID(playlist.id!);
-  transformers[type](
+  return transformers[type](
     playlist,
     params,
     <any>(

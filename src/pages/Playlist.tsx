@@ -12,7 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import React, { FormEventHandler, useState } from "react";
+import React, { FormEventHandler, useMemo, useState } from "react";
 import { FiEdit3, FiMoreHorizontal, FiPlay } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
@@ -20,6 +20,7 @@ import { PlaylistMoreControlsMenu } from "../components/playlist/PlaylistMoreCon
 import { useClient } from "../modules/client";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
+import { identifyPlaylistBannerImage } from "../utils/PlaylistHelper";
 
 export function Playlist() {
   let { playlistId }: { playlistId: string } = useParams();
@@ -34,6 +35,9 @@ export function Playlist() {
   } = usePlaylist(playlistId);
 
   const [editMode, setEditMode] = useState(false);
+  const banner = useMemo(() => {
+    return playlist && identifyPlaylistBannerImage(playlist);
+  }, [playlist]);
 
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const setPlaylist = useStoreActions(
@@ -48,6 +52,7 @@ export function Playlist() {
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
 
   if (!playlist) return <div> loading </div>;
+
   return (
     <Container
       maxW={{ lg: "7xl" }}
@@ -55,7 +60,7 @@ export function Playlist() {
       p={{ base: 0, xl: 4 }}
     >
       <BGImgContainer>
-        <BGImg banner_url="https://yt3.ggpht.com/jPLOvKqsP7v3Pv6VIWkfZ0Z6UrAf0JywK_i6XvYoKem-MaZ0HLGeKeklL_oamTdwIviG1wKbuQ=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj"></BGImg>
+        <BGImg banner_url={banner || ""}></BGImg>
       </BGImgContainer>
       <Box
         bgColor={bgColor}
@@ -124,6 +129,7 @@ const BGImg = styled.div<{ banner_url: string }>`
   height: 190px;
   background: url(${({ banner_url }) => banner_url});
   background-position: center;
+  background-size: cover;
 `;
 
 type ClickEventHandler = React.MouseEventHandler<HTMLButtonElement>;
