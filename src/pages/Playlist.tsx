@@ -15,7 +15,11 @@ import { SongTable } from "../components/data/SongTable";
 import { useClient } from "../modules/client";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
-import { identifyPlaylistBannerImage } from "../utils/PlaylistHelper";
+import {
+  identifyDescription,
+  identifyPlaylistBannerImage,
+  identifyTitle,
+} from "../utils/PlaylistHelper";
 import { PlaylistButtonArray } from "./PlaylistButtonArray";
 
 export function Playlist() {
@@ -31,8 +35,15 @@ export function Playlist() {
   } = usePlaylist(playlistId);
 
   const [editMode, setEditMode] = useState(false);
-  const banner = useMemo(() => {
-    return playlist && identifyPlaylistBannerImage(playlist);
+  const { banner, title, description } = useMemo(() => {
+    return (
+      (playlist && {
+        banner: identifyPlaylistBannerImage(playlist),
+        title: identifyTitle(playlist),
+        description: identifyDescription(playlist),
+      }) ||
+      {}
+    );
   }, [playlist]);
 
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
@@ -67,8 +78,8 @@ export function Playlist() {
         borderRadius={5}
       >
         <PlaylistHeading
-          title="Test Title"
-          description="Test Description"
+          title={title || "..."}
+          description={description || "..."}
           canEdit={isLoggedIn && playlist.owner == user?.id}
           editMode={false}
         />
