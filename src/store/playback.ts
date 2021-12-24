@@ -1,13 +1,13 @@
-import { StatHelpText } from "@chakra-ui/react";
-import { action, Action, thunk, Thunk } from "easy-peasy";
+import { action, Action, thunk, Thunk, debug } from "easy-peasy";
 
+interface SongPlayback {
+  from: "queue" | "playlist" | "none";
+  song?: Song;
+  repeat: number;
+}
 export interface PlaybackModel {
   // ==== Currently Playing. It is separate from queue and playlistQueue.
-  currentlyPlaying: {
-    from: "queue" | "playlist" | "none";
-    song?: Song;
-    repeat: number;
-  };
+  currentlyPlaying: SongPlayback;
 
   // ==== Queue and Queue Mutators
   queue: Song[]; // a high priority queue of song. This plays 'next'.
@@ -24,9 +24,8 @@ export interface PlaybackModel {
   _shufflePlaylist: Action<PlaybackModel, void>; // specifically if you want to shuffle again... probably not a public.
 
   // ==== History:
-  history: Song[];
-  addSongToHistory: Action<PlaybackModel, Song>;
-  deleteIndexFromHistory: Action<PlaybackModel, number>;
+  history: SongPlayback[];
+  addSongToHistory: Action<PlaybackModel, SongPlayback>;
 
   // ==== Playback Mode:
   shuffleMode: boolean;
@@ -40,6 +39,7 @@ export interface PlaybackModel {
   // ==== Lifecycle:
   // Ejects the currently playing song and puts it somewhere appropriate / throws it out.
   _ejectCurrentlyPlaying: Action<PlaybackModel, void>;
+  _undoEject: Action<PlaybackModel, void>;
   // Adds a new song to now playing.
   _insertCurrentlyPlaying: Action<
     PlaybackModel,
@@ -112,15 +112,13 @@ const playbackModel: PlaybackModel = {
 
   history: [],
   addSongToHistory: action((state, s) => {
-    state.history = state.history.filter((x) => x.id !== s.id);
+    state.history = state.history.filter(
+      (x) => x.song && s.song && x.song.id !== s.song.id
+    );
     state.history.unshift(s);
     if (state.history.length > 100) {
       state.history.pop();
     }
-  }),
-
-  deleteIndexFromHistory: action((state, idx) => {
-    state.history.splice(1, 0);
   }),
 
   shuffleMode: false,
@@ -156,16 +154,42 @@ const playbackModel: PlaybackModel = {
       if (state.repeatMode === "repeat") {
         // if it's repeat, then:
       } // if it's not repeat, then just get rid of the currently playing thing.
-      // if (state.currentlyPlaying.song) {
-      //   if(state.currentlyPlaying.from === "playlist"){
-      //     state.playedPlaylistQueue.push(state.currentlyPlaying.song);
-      //   }
-      // }
     }
+
+    const s = state.currentlyPlaying;
+    if (s.song) {
+      // Add to history
+      state.history = state.history.filter(
+        (x) => x.song && s.song && x.song.id !== s.song.id
+      );
+      state.history.unshift({ ...s });
+      // Trim history
+      if (state.history.length > 100) {
+        state.history.pop();
+      }
+
+      // Add to play queue if needed
+      if (state.currentlyPlaying.from === "playlist") {
+        state.playedPlaylistQueue.push(s.song);
+      }
+    }
+
     state.currentlyPlaying.from = "none";
     state.currentlyPlaying.song = undefined;
     state.currentlyPlaying.repeat = Math.floor(Math.random() * 1000);
     // decline to eject if repeat-one, since you just want to play the current one again..
+  }),
+
+  _undoEject: action((state) => {
+    const playback = state.history.shift();
+    if (playback) {
+      if (playback?.from === "playlist" && state.currentPlaylist) {
+        const lastSong = state.playedPlaylistQueue.pop();
+        lastSong && state.playlistQueue.unshift(lastSong);
+      }
+      state.currentlyPlaying = playback;
+      console.log(debug(playback));
+    }
   }),
 
   _insertCurrentlyPlaying: action((state, src) => {
@@ -199,6 +223,7 @@ const playbackModel: PlaybackModel = {
   }),
 
   clearAll: action((state) => {
+    state.history = [];
     state.queue = [];
     state.playlistQueue = [];
     state.playedPlaylistQueue = [];
@@ -220,18 +245,10 @@ const playbackModel: PlaybackModel = {
   }),
 
   setPlaylist: thunk((actions, { playlist }, h) => {
-    actions._queueClear();
     actions._ejectCurrentlyPlaying();
+    actions.clearAll();
     actions._setPlaylist(playlist);
     actions._insertCurrentlyPlaying("playlist");
-    // if (h.getState().currentlyPlaying.from === "playlist") {
-    //   actions._detachCurrentlyPlayingToQueue();
-    // }
-    // if (immediatelyPlay) {
-    //   actions._queueClear();
-    //   actions._ejectCurrentlyPlaying();
-    //   actions._insertCurrentlyPlaying("playlist");
-    // }
   }),
 
   next: thunk((actions, { count, userSkipped }, h) => {
@@ -246,25 +263,22 @@ const playbackModel: PlaybackModel = {
             ? "playlist"
             : undefined;
         if (src) actions._insertCurrentlyPlaying(src);
+
+        if (
+          h.getState().playlistQueue.length === 0 &&
+          h.getState().repeatMode === "repeat"
+        ) {
+          const playlist = h.getState().currentPlaylist;
+          playlist && actions.setPlaylist({ playlist });
+        }
         count--;
       }
-    } else {
-      actions._ejectCurrentlyPlaying();
-      const src =
-        h.getState().repeatMode === "repeat-one"
-          ? "repeat-one"
-          : h.getState().queue.length > 0
-          ? "queue"
-          : h.getState().playlistQueue.length > 0
-          ? "playlist"
-          : undefined;
-      if (src) actions._insertCurrentlyPlaying(src);
     }
   }),
 
   previous: thunk((actions, opt, h) => {
-    const prevSong = h.getState().history[0];
-    actions.deleteIndexFromHistory(0);
+    // const prevPlayback = h.getState().history[0];
+    actions._undoEject();
   }),
 };
 

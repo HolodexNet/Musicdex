@@ -23,6 +23,7 @@ import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState, useStoreActions } from "../../store";
 import throttle from "lodash-es/throttle";
 import { PlayerOverlay } from "./PlayerOverlay";
+import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 
 export function Player() {
   const currentlyPlaying = useStoreState(
@@ -51,10 +52,39 @@ export function Player() {
   const [changing, setChanging] = useState(false);
 
   const next = useStoreActions((actions) => actions.playback.next);
+  const previous = useStoreActions((actions) => actions.playback.previous);
 
+  const shuffleMode = useStoreState((state) => state.playback.shuffleMode);
+  const toggleShuffleMode = useStoreActions(
+    (actions) => actions.playback.toggleShuffle
+  );
+
+  const repeatMode = useStoreState((state) => state.playback.repeatMode);
+  const toggleRepeatMode = useStoreActions(
+    (actions) => actions.playback.toggleRepeat
+  );
+
+  function RepeatIcon() {
+    switch (repeatMode) {
+      case "repeat":
+        return <MdRepeat size={24} />;
+      case "repeat-one":
+        return <MdRepeatOne size={24} />;
+      default:
+        return <MdRepeat size={24} color="grey" />;
+    }
+  }
+  function ShuffleIcon() {
+    return <MdShuffle size={24} color={shuffleMode ? "" : "grey"} />;
+  }
   useEffect(() => {
     if (player && currentSong) {
-      player.seekTo(currentSong.start, true);
+      try {
+        player.seekTo(currentSong.start, true);
+      } catch (e) {
+        console.log("uh oh");
+        console.error(e);
+      }
     }
   }, [currentSong, repeat, player]);
 
@@ -196,30 +226,46 @@ export function Player() {
           </div>
           <div className="center">
             <IconButton
-              aria-label="Play"
+              aria-label="Previous Song"
               icon={<FaStepBackward />}
-              variant="outline"
-              onClick={togglePlay}
+              variant="ghost"
+              onClick={() => {
+                previous();
+              }}
             />
             <IconButton
               aria-label="Play"
-              icon={isPlaying ? <FaPause /> : <FaPlay />}
-              variant="outline"
+              icon={isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
+              variant="ghost"
               onClick={togglePlay}
             />
             <IconButton
-              aria-label="Play"
+              aria-label="Next Song"
               icon={<FaStepForward />}
-              variant="outline"
+              variant="ghost"
               onClick={() => next({ count: 1, userSkipped: true })}
             />
           </div>
           <div className="right">
             <span>
               <IconButton
-                aria-label="Play"
+                aria-label="Shuffle"
+                icon={<ShuffleIcon />}
+                variant="ghost"
+                onClick={() => toggleShuffleMode()}
+                size="lg"
+              />
+              <IconButton
+                aria-label="Shuffle"
+                icon={<RepeatIcon />}
+                variant="ghost"
+                onClick={() => toggleRepeatMode()}
+                size="lg"
+              />
+              <IconButton
+                aria-label="Expand"
                 icon={isExpanded ? <FaChevronDown /> : <FaChevronUp />}
-                variant="outline"
+                variant="ghost"
                 onClick={toggleExpanded}
               />
             </span>
@@ -289,5 +335,6 @@ const PlayerMain = styled.div`
     flex: 1;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 `;
