@@ -11,6 +11,8 @@ import {
   Box,
   useBreakpointValue,
   IconButton,
+  CSSObject,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -45,7 +47,7 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
         Header: "Title",
         accessor: "name",
         Cell: (cellInfo: any) => {
-          console.log(cellInfo);
+          // console.log(cellInfo);
           return (
             <VStack alignItems="start" spacing={1}>
               <span
@@ -128,6 +130,10 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
 
   const contextMenuTrigger = useContextTrigger({ menuId: "songMenu" });
 
+  const HOVER_ROW_STYLE: CSSObject = {
+    backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
+  };
+
   return (
     <Table {...getTableProps()} size={isXL ? "md" : "sm"}>
       <ContextMenuList menuId="songMenu">
@@ -161,6 +167,7 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
               onContextMenu={(e) => {
                 contextMenuTrigger(e, row.original);
               }}
+              _hover={HOVER_ROW_STYLE}
             >
               {row.cells.map((cell) => (
                 <Td
