@@ -26,7 +26,7 @@ export interface ContextMenuStore {
 
 // Context Menus
 export const contextMenusAtom: ContextMenuStore = {
-  menu: <IContextMenus>{
+  menu: {
     position: {
       x: 0,
       y: 0,

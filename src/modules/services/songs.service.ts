@@ -1,10 +1,4 @@
-import {
-  UseMutationOptions,
-  UseQueryOptions,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "react-query";
+import { UseQueryOptions, useQuery } from "react-query";
 import { useClient } from "../client";
 import { encodeUrl } from "../client/utils";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
