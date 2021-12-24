@@ -11,13 +11,11 @@ import ReactDOM from "react-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import App from "./App";
 import "./modules/i18n";
-import storeModel from "./store";
+import { store } from "./store";
 import { theme } from "./theme";
 import reportWebVitals from "./utils/reportWebVitals";
 
 // https://easy-peasy.dev/docs/api/persist.html
-const store = createStore(persist(storeModel, { storage: "localStorage" }));
-
 const queryClient = new QueryClient();
 
 store.persist.resolveRehydration().then(() => {
