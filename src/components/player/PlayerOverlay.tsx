@@ -45,4 +45,5 @@ const Overlay = styled.div`
   width: 100%;
   height: calc(100% - 64px - 80px);
   overflow: auto;
+  pointer-events: none;
 `;
