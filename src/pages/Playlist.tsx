@@ -71,7 +71,8 @@ export function Playlist() {
           canEdit={isLoggedIn && playlist.owner == user?.id}
           editMode={false}
         />
-        <Buttons
+        <PlaylistButtonArray
+          canEdit={isLoggedIn && playlist.owner == user?.id}
           editMode={editMode}
           onPlayClick={() => {
             setPlaylist({ playlist });
@@ -219,18 +220,20 @@ function PlaylistHeading({
   );
 }
 
-function Buttons({
+function PlaylistButtonArray({
   onPlayClick,
   onAddQueueClick,
   onEditClick,
   onFinishEditClick,
   editMode,
+  canEdit,
 }: {
   onPlayClick: ClickEventHandler;
   onAddQueueClick: ClickEventHandler;
   onEditClick?: ClickEventHandler;
   onFinishEditClick?: ClickEventHandler;
   editMode: boolean;
+  canEdit: boolean;
 }): JSX.Element {
   return (
     <HStack spacing={4}>
@@ -253,7 +256,7 @@ function Buttons({
         Add to Queue
       </Button>
       <Button
-        display={!editMode ? "block" : "none"}
+        display={!editMode && canEdit ? "block" : "none"}
         variant="ghost"
         aria-label="edit"
         size="md"
@@ -265,7 +268,7 @@ function Buttons({
         Edit
       </Button>
       <Button
-        display={editMode ? "block" : "none"}
+        display={editMode && canEdit ? "block" : "none"}
         variant="ghost"
         aria-label="edit"
         size="md"
