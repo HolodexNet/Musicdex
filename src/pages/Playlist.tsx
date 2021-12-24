@@ -23,7 +23,8 @@ import {
 import { PlaylistButtonArray } from "./PlaylistButtonArray";
 
 export function Playlist() {
-  let { playlistId }: { playlistId: string } = useParams();
+  let params = useParams();
+  let playlistId = params.playlistId!;
   let { user, isLoggedIn } = useClient();
 
   const {

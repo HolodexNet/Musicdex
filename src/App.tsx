@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Playlist } from "./pages/Playlist";
 
@@ -10,23 +10,28 @@ function App(this: any) {
   return (
     <Router>
       <FrameWithHeader>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/playlists/:playlistId">
-            <Playlist />
-          </Route>
-          <Route path="/playlists">
-            <InProgress>My Playlists page under construction</InProgress>
-          </Route>
-          <Route path="/liked">
-            <InProgress>Liked page under construction</InProgress>
-          </Route>
-          <Route path="/history">
-            <InProgress>History page under construction</InProgress>
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/playlists/:playlistId" element={<Playlist />}></Route>
+          <Route
+            path="/playlists"
+            element={
+              <InProgress>My Playlists page under construction</InProgress>
+            }
+          />
+          <Route
+            path="/liked"
+            element={
+              <InProgress>My Playlists page under construction</InProgress>
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              <InProgress>My Playlists page under construction</InProgress>
+            }
+          />
+        </Routes>
       </FrameWithHeader>
     </Router>
   );
