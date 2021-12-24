@@ -5,14 +5,15 @@ import {
   Heading,
   HStack,
   IconButton,
+  Input,
   SimpleGrid,
   Text,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import React, { useState } from "react";
-import { FiMoreHorizontal, FiPlay } from "react-icons/fi";
+import React, { FormEventHandler, useState } from "react";
+import { FiEdit3, FiMoreHorizontal, FiPlay } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
 import { PlaylistMoreControlsMenu } from "../components/playlist/PlaylistMoreControls";
@@ -30,6 +31,8 @@ export function Playlist() {
     error,
     isError,
   } = usePlaylist(playlistId);
+
+  const [editMode, setEditMode] = useState(false);
 
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const setPlaylist = useStoreActions(
@@ -60,7 +63,12 @@ export function Playlist() {
         pt={{ base: 4, xl: 8 }}
         borderRadius={5}
       >
-        <PlaylistHeading />
+        <PlaylistHeading
+          title="Test Title"
+          description="Test Description"
+          canEdit={true}
+          editMode={false}
+        />
         <Buttons
           onPlayClick={() => {
             setPlaylist({ playlist });
@@ -112,8 +120,37 @@ const BGImg = styled.div<{ banner_url: string }>`
 
 type ClickEventHandler = React.MouseEventHandler<HTMLButtonElement>;
 
-function PlaylistHeading() {
+type PlaylistHeadingProps = {
+  title: string;
+  description: string;
+  canEdit: boolean;
+  editMode: boolean;
+  setTitle?: (text: string) => {};
+  setDescription?: (text: string) => {};
+};
+
+function PlaylistHeading({
+  title,
+  description,
+  canEdit,
+  editMode,
+  setTitle,
+  setDescription,
+}: PlaylistHeadingProps) {
   const colors = useColorModeValue("gray.700", "gray.400");
+
+  const [editTitle, setEditTitle] = useState(canEdit && editMode);
+  const [editDescription, setEditDescription] = useState(canEdit && editMode);
+
+  const submitHandlerTitle: FormEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    if (setTitle) setTitle((e.currentTarget as any).value as string);
+  };
+  const submitHandlerDesc: FormEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    if (setDescription)
+      setDescription((e.currentTarget as any).value as string);
+  };
 
   return (
     <Box as={"header"} mb="2" position="relative">
@@ -122,10 +159,36 @@ function PlaylistHeading() {
         fontWeight={600}
         fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}
       >
-        Daily Mix: Hakos Baelz
+        {editTitle ? (
+          <Input
+            placeholder="Playlist Title"
+            size="lg"
+            onSubmit={submitHandlerTitle}
+          />
+        ) : (
+          title
+        )}
+        <IconButton
+          aria-label="edit title"
+          variant="link"
+          icon={<FiEdit3 />}
+        ></IconButton>
       </Heading>
       <Text color={colors} fontWeight={300} fontSize={"2xl"}>
-        Provided by Holodex
+        {editDescription ? (
+          <Input
+            placeholder="Playlist Title"
+            size="lg"
+            onSubmit={submitHandlerDesc}
+          />
+        ) : (
+          description
+        )}
+        <IconButton
+          aria-label="edit title"
+          variant="link"
+          icon={<FiEdit3 />}
+        ></IconButton>
       </Text>
     </Box>
   );
