@@ -10,9 +10,9 @@ export function PlayerOverlay({ visible }: { visible: boolean }) {
   const playlistQueue = useStoreState((state) => state.playback.playlistQueue);
   const queue = useStoreState((state) => state.playback.queue);
   const clearAll = useStoreActions((actions) => actions.playback.clearAll);
-  const currentlyPlaying = useStoreState(
-    (state) => state.playback.currentlyPlaying
-  );
+  //   const currentlyPlaying = useStoreState(
+  //     (state) => state.playback.currentlyPlaying
+  //   );
   if (!visible) return <div />;
   return (
     <Overlay>
