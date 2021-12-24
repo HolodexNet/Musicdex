@@ -134,9 +134,11 @@ function PlaylistHeading() {
 function Buttons({
   onPlayClick,
   onAddQueueClick,
+  onEditClick,
 }: {
   onPlayClick: ClickEventHandler;
   onAddQueueClick: ClickEventHandler;
+  onEditClick?: ClickEventHandler;
 }): JSX.Element {
   return (
     <HStack spacing={4}>
@@ -160,10 +162,12 @@ function Buttons({
       </Button>
       <Button
         variant="ghost"
-        aria-label="add to queue"
+        aria-label="edit"
         size="md"
         colorScheme="n2"
-        onClick={onAddQueueClick}
+        onClick={(e) => {
+          onEditClick && onEditClick(e);
+        }}
       >
         Edit
       </Button>
