@@ -36,11 +36,23 @@ export default function Footer() {
         justify={{ base: "center", md: "space-between" }}
         align={{ base: "center", md: "center" }}
       >
-        <Text>© 2019 Holodex</Text>
+        <Text>© 2020 Holodex</Text>
         <Stack direction={"row"} spacing={6}>
-          <SocialButton aria-label="Twitter" icon={<FaTwitter />} />
-          <SocialButton aria-label="Kofi" icon={<SiKofi />} />
-          <SocialButton aria-label="Discord" icon={<FaDiscord />} />
+          <SocialButton
+            aria-label="Twitter"
+            icon={<FaTwitter />}
+            title="Twitter"
+          />
+          <SocialButton
+            aria-label="Kofi"
+            icon={<SiKofi />}
+            title="Ko-Fi (Support Holodex)"
+          />
+          <SocialButton
+            aria-label="Discord"
+            icon={<FaDiscord />}
+            title="Discord"
+          />
         </Stack>
       </Container>
     </Box>
