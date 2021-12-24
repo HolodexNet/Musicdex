@@ -142,14 +142,15 @@ function PlaylistHeading({
   const [editTitle, setEditTitle] = useState(canEdit && editMode);
   const [editDescription, setEditDescription] = useState(canEdit && editMode);
 
-  const submitHandlerTitle: FormEventHandler<HTMLInputElement> = (e) => {
+  const submitHandlerTitle: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    if (setTitle) setTitle((e.currentTarget as any).value as string);
+    setEditTitle(false);
+    if (setTitle) setTitle((e.target as any)[0].value as string);
   };
-  const submitHandlerDesc: FormEventHandler<HTMLInputElement> = (e) => {
+  const submitHandlerDesc: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    if (setDescription)
-      setDescription((e.currentTarget as any).value as string);
+    setEditDescription(false);
+    if (setDescription) setDescription((e.target as any)[0].value as string);
   };
 
   return (
@@ -160,15 +161,23 @@ function PlaylistHeading({
         fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}
       >
         {editTitle ? (
-          <Input
-            placeholder="Playlist Title"
-            size="lg"
-            onSubmit={submitHandlerTitle}
-          />
+          <form onSubmit={submitHandlerTitle}>
+            <Input
+              placeholder="Playlist Title"
+              size="lg"
+              autoFocus
+              value={title}
+              enterKeyHint="done"
+            />
+          </form>
         ) : (
           title
         )}
         <IconButton
+          display={editTitle ? "none" : "inline-block"}
+          onClick={() => {
+            setEditTitle(true);
+          }}
           aria-label="edit title"
           variant="link"
           icon={<FiEdit3 />}
@@ -176,15 +185,22 @@ function PlaylistHeading({
       </Heading>
       <Text color={colors} fontWeight={300} fontSize={"2xl"}>
         {editDescription ? (
-          <Input
-            placeholder="Playlist Title"
-            size="lg"
-            onSubmit={submitHandlerDesc}
-          />
+          <form onSubmit={submitHandlerDesc}>
+            <Input
+              placeholder="Playlist Description"
+              value={description}
+              autoFocus
+              enterKeyHint="done"
+            />
+          </form>
         ) : (
           description
         )}
         <IconButton
+          display={editDescription ? "none" : "inline-block"}
+          onClick={() => {
+            setEditDescription(true);
+          }}
           aria-label="edit title"
           variant="link"
           icon={<FiEdit3 />}
