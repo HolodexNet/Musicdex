@@ -1,15 +1,10 @@
 import {
-  Avatar,
-  Box,
-  HStack,
   Menu,
   MenuButton,
-  Text,
   MenuDivider,
   MenuItem,
   MenuList,
   MenuProps,
-  VStack,
   IconButton,
 } from "@chakra-ui/react";
 import { FiChevronDown, FiMoreHorizontal } from "react-icons/fi";

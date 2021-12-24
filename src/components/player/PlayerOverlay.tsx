@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/button";
 import { Container } from "@chakra-ui/layout";
-import { Divider } from "@chakra-ui/react";
+import { Divider, Fade } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useStoreState, useStoreActions } from "../../store";
 import { SongTable } from "../data/SongTable";
@@ -13,22 +13,28 @@ export function PlayerOverlay({ visible }: { visible: boolean }) {
   //   const currentlyPlaying = useStoreState(
   //     (state) => state.playback.currentlyPlaying
   //   );
-  if (!visible) return <div />;
+  // if (!visible) return <div />;
   return (
-    <Overlay>
-      <Container alignContent="stretch" maxW={{ lg: "5xl" }} paddingTop="20px">
-        <Button onClick={() => clearAll()}>Clear All</Button>
-        <Text fontSize="3xl">Queue</Text>
-        <Divider />
-        <br />
-        <SongTable songs={queue} />
-        <br />
-        <Text fontSize="3xl">Playlist</Text>
-        <Divider />
-        <br />
-        <SongTable songs={playlistQueue} />
-      </Container>
-    </Overlay>
+    <Fade in={visible}>
+      <Overlay>
+        <Container
+          alignContent="stretch"
+          maxW={{ lg: "5xl" }}
+          paddingTop="20px"
+        >
+          <Button onClick={() => clearAll()}>Clear All</Button>
+          <Text fontSize="3xl">Queue</Text>
+          <Divider />
+          <br />
+          <SongTable songs={queue} />
+          <br />
+          <Text fontSize="3xl">Playlist</Text>
+          <Divider />
+          <br />
+          <SongTable songs={playlistQueue} />
+        </Container>
+      </Overlay>
+    </Fade>
   );
 }
 

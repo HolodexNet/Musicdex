@@ -1,5 +1,3 @@
-import { UseQueryOptions } from "react-query";
-
 export const DEFAULT_FETCH_CONFIG = {
   refetchOnWindowFocus: false,
   retry: 1,
