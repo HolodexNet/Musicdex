@@ -17,13 +17,14 @@ import { FiEdit3, FiMoreHorizontal, FiPlay } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
 import { PlaylistMoreControlsMenu } from "../components/playlist/PlaylistMoreControls";
+import { useClient } from "../modules/client";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 
 export function Playlist() {
   let { playlistId }: { playlistId: string } = useParams();
-  console.log("rendering...");
-  console.log(playlistId);
+  let { user, isLoggedIn } = useClient();
+
   const {
     data: playlist,
     isLoading,
@@ -43,6 +44,7 @@ export function Playlist() {
     queueSongs({ songs: [song], immediatelyPlay: true });
   }
 
+  console.log(playlist, user?.id);
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
 
   if (!playlist) return <div> loading </div>;
@@ -66,10 +68,11 @@ export function Playlist() {
         <PlaylistHeading
           title="Test Title"
           description="Test Description"
-          canEdit={true}
+          canEdit={isLoggedIn && playlist.owner == user?.id}
           editMode={false}
         />
         <Buttons
+          editMode={editMode}
           onPlayClick={() => {
             setPlaylist({ playlist });
           }}
@@ -80,6 +83,10 @@ export function Playlist() {
                 immediatelyPlay: false,
               });
           }}
+          onEditClick={() => {
+            setEditMode(true);
+          }}
+          onFinishEditClick={() => setEditMode(false)}
         />
         <Box pt="4">
           {playlist.content && <SongTable songs={playlist.content} />}
@@ -139,8 +146,10 @@ function PlaylistHeading({
 }: PlaylistHeadingProps) {
   const colors = useColorModeValue("gray.700", "gray.400");
 
-  const [editTitle, setEditTitle] = useState(canEdit && editMode);
-  const [editDescription, setEditDescription] = useState(canEdit && editMode);
+  const [editTitle, setEditTitle] = useState(() => canEdit && editMode);
+  const [editDescription, setEditDescription] = useState(
+    () => canEdit && editMode
+  );
 
   const submitHandlerTitle: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -174,7 +183,7 @@ function PlaylistHeading({
           title
         )}
         <IconButton
-          display={editTitle ? "none" : "inline-block"}
+          display={!editTitle && canEdit ? "inline-block" : "none"}
           onClick={() => {
             setEditTitle(true);
           }}
@@ -197,7 +206,7 @@ function PlaylistHeading({
           description
         )}
         <IconButton
-          display={editDescription ? "none" : "inline-block"}
+          display={!editDescription && canEdit ? "inline-block" : "none"}
           onClick={() => {
             setEditDescription(true);
           }}
@@ -214,10 +223,14 @@ function Buttons({
   onPlayClick,
   onAddQueueClick,
   onEditClick,
+  onFinishEditClick,
+  editMode,
 }: {
   onPlayClick: ClickEventHandler;
   onAddQueueClick: ClickEventHandler;
   onEditClick?: ClickEventHandler;
+  onFinishEditClick?: ClickEventHandler;
+  editMode: boolean;
 }): JSX.Element {
   return (
     <HStack spacing={4}>
@@ -240,6 +253,7 @@ function Buttons({
         Add to Queue
       </Button>
       <Button
+        display={!editMode ? "block" : "none"}
         variant="ghost"
         aria-label="edit"
         size="md"
@@ -249,6 +263,18 @@ function Buttons({
         }}
       >
         Edit
+      </Button>
+      <Button
+        display={editMode ? "block" : "none"}
+        variant="ghost"
+        aria-label="edit"
+        size="md"
+        colorScheme="green"
+        onClick={(e) => {
+          onFinishEditClick && onFinishEditClick(e);
+        }}
+      >
+        Done Editing
       </Button>
       <PlaylistMoreControlsMenu></PlaylistMoreControlsMenu>
     </HStack>
