@@ -7,10 +7,12 @@ import {
   Text,
   Link,
   Flex,
+  HStack,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
+import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { Loading } from "../components/common/Loading";
 import { useSong } from "../modules/services/songs.service";
 import { resizeArtwork } from "../modules/songs/utils";
@@ -49,12 +51,18 @@ export function Song() {
               <Text fontSize="3xl" fontWeight={600}>
                 {song.name}
               </Text>
-              <Link>
-                <Text fontSize="2xl" color="n2.300">
-                  {song.channel.english_name || song.channel.name}
-                </Text>
-              </Link>
-              <Text color="whiteAlpha.600">{song.original_artist}</Text>
+
+              <HStack py={2}>
+                <ChannelPhoto channelId={song.channel_id} size={40} />
+                <Link>
+                  <Text fontSize="2xl" color="n2.300">
+                    {song.channel.english_name || song.channel.name}
+                  </Text>
+                </Link>
+              </HStack>
+              <Text color="whiteAlpha.600" fontSize="lg">
+                {song.original_artist}
+              </Text>
               <Text fontSize="md" color="whiteAlpha.600">
                 {`${song.end - song.start}s`} •{" "}
                 {t("relativeDate", { date: new Date(song.available_at) })}
