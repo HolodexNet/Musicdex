@@ -26,7 +26,7 @@ import {
   useContextTrigger,
 } from "../context-menu";
 import { useStoreActions } from "../../store";
-import { SongTableDropDownMenu } from "./SongTableDropdownButton";
+import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 type IndexedSong = Song & { idx: number };
@@ -116,7 +116,7 @@ export const SongTable = ({
         accessor: "idx",
         Cell: (cellInfo: any) => {
           // console.log(cellInfo);
-          return <SongTableDropDownMenu />;
+          return <PlaylistSongTableDropDownMenu song={cellInfo.row.original} />;
         },
       },
     ],
@@ -179,9 +179,45 @@ export const SongTable = ({
             });
 
           return (
-            <ContextMenuItem onClick={({ passData }) => {}}>
-              Action {passData?.name}
-            </ContextMenuItem>
+            <>
+              <ContextMenuItem
+                onClick={({ passData }) => {}}
+                colorScheme="gray"
+              >
+                Play Now
+              </ContextMenuItem>
+              <ContextMenuItem
+                onClick={({ passData }) => {}}
+                colorScheme="gray"
+              >
+                Copy Song Link
+              </ContextMenuItem>
+              <ContextMenuItem
+                onClick={({ passData }) => {}}
+                colorScheme="gray"
+              >
+                Add To Playlist...
+              </ContextMenuItem>
+              <hr style={{ marginTop: "0.4rem", marginBottom: "0.4rem" }} />
+              <ContextMenuItem
+                onClick={({ passData }) => {}}
+                colorScheme="gray"
+              >
+                Go To Song Page
+              </ContextMenuItem>
+              <ContextMenuItem
+                onClick={({ passData }) => {}}
+                colorScheme="gray"
+              >
+                Go To Video Page
+              </ContextMenuItem>
+              <ContextMenuItem
+                onClick={({ passData }) => {}}
+                colorScheme="gray"
+              >
+                Go To Channel Page
+              </ContextMenuItem>
+            </>
           );
         }}
       ></ContextMenuList>

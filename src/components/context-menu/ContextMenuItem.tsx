@@ -51,7 +51,9 @@ export const ContextMenuItem: React.FC<Props> = ({
       size="sm"
       overflow="hidden"
       textOverflow="ellipsis"
+      variant="ghost"
       colorScheme={colorScheme}
+      fontWeight="normal"
       disabled={disabled}
       {...buttonProps}
     >
