@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/button";
 import { Container } from "@chakra-ui/layout";
-import { Divider, Fade, Collapse } from "@chakra-ui/react";
+import { Divider } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useStoreState, useStoreActions } from "../../store";
 import { SongTable } from "../data/SongTable";

@@ -1,4 +1,4 @@
-import { action, Action, thunk, Thunk, debug } from "easy-peasy";
+import { action, Action, thunk, Thunk } from "easy-peasy";
 
 interface SongPlayback {
   from: "queue" | "playlist" | "none";
