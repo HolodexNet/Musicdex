@@ -28,6 +28,7 @@ import {
 import { useStoreActions } from "../../store";
 import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { useClipboardWithToast } from "../../modules/common/clipboard";
 
 type IndexedSong = Song & { idx: number };
 
@@ -123,6 +124,12 @@ export const SongTable = ({
     [t]
   );
 
+  const showAddDialog = useStoreActions(
+    (action) => action.addPlaylist.showPlaylistAddDialog
+  );
+
+  const copyToClipboard = useClipboardWithToast();
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -170,30 +177,36 @@ export const SongTable = ({
     <>
       <ContextMenuList
         menuId={menuIdStat}
-        render={({ menuId, closeContextMenus, passData }) => {
+        render={({ menuId, closeContextMenus, passData: song }) => {
           if (songRightClickContextMenuRenderer)
             return songRightClickContextMenuRenderer({
               menuId,
               closeContextMenu: closeContextMenus,
-              song: passData,
+              song,
             });
 
           return (
             <>
               <ContextMenuItem
-                onClick={({ passData }) => {}}
+                onClick={() => {
+                  queueSongs({ songs: [song], immediatelyPlay: true });
+                }}
                 colorScheme="gray"
               >
                 Play Now
               </ContextMenuItem>
               <ContextMenuItem
-                onClick={({ passData }) => {}}
+                onClick={() => {
+                  copyToClipboard(`${window.location.origin}/song/${song.id}`);
+                }}
                 colorScheme="gray"
               >
                 Copy Song Link
               </ContextMenuItem>
               <ContextMenuItem
-                onClick={({ passData }) => {}}
+                onClick={() => {
+                  showAddDialog(song);
+                }}
                 colorScheme="gray"
               >
                 Add To Playlist...
