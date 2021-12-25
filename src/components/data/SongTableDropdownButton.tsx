@@ -11,8 +11,11 @@ import {
   MenuProps,
   VStack,
   IconButton,
+  useClipboard,
+  useToast,
 } from "@chakra-ui/react";
 import { FiChevronDown, FiMoreHorizontal } from "react-icons/fi";
+import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions } from "../../store";
 
 export function PlaylistSongTableDropDownMenu({
@@ -23,6 +26,7 @@ export function PlaylistSongTableDropDownMenu({
   const addPlaylist = useStoreActions(
     (store) => store.addPlaylist.showPlaylistAddDialog
   );
+  const copyToClipboard = useClipboardWithToast();
 
   return (
     <Menu {...rest} isLazy>
@@ -50,7 +54,13 @@ export function PlaylistSongTableDropDownMenu({
         >
           Add to Queue
         </MenuItem>
-        <MenuItem>Copy Song Link</MenuItem>
+        <MenuItem
+          onClick={() =>
+            copyToClipboard(`${window.location.origin}/song/${song.id}`)
+          }
+        >
+          Copy Song Link
+        </MenuItem>
         <MenuItem
           onClick={() => {
             addPlaylist(song);

@@ -5,6 +5,7 @@ import { Playlist } from "./pages/Playlist";
 
 import FrameWithHeader from "./components/framing/Frame";
 import styled from "@emotion/styled";
+import { Song } from "./pages/Song";
 
 function App(this: any) {
   return (
@@ -13,6 +14,7 @@ function App(this: any) {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/playlists/:playlistId" element={<Playlist />}></Route>
+          <Route path="/song/:songId" element={<Song />}></Route>
           <Route
             path="/playlists"
             element={
