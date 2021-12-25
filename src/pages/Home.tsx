@@ -2,6 +2,7 @@ import { Container, Select } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Loading } from "../components/common/Loading";
 import { SongTable } from "../components/data/SongTable";
+import { PageContainer } from "../components/layout/PageContainer";
 import { useTrendingSongs } from "../modules/services/songs.service";
 
 export function Home() {
@@ -13,7 +14,7 @@ export function Home() {
   }
 
   return (
-    <Container maxW="container.xl">
+    <PageContainer>
       <Select placeholder="Select org" value={org} onChange={handle}>
         <option value="Hololive">Hololive</option>
         <option value="Nijisanji">Nijisanji</option>
@@ -24,6 +25,6 @@ export function Home() {
         {isLoading && <Loading />}
         {trendingSongs && <SongTable songs={trendingSongs} />}
       </div>
-    </Container>
+    </PageContainer>
   );
 }

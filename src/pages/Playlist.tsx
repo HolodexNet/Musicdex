@@ -1,8 +1,9 @@
-import { Box, Container, useColorModeValue } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
+import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { useClient } from "../modules/client";
 import {
@@ -67,11 +68,7 @@ export function Playlist() {
   if (!playlist) return <div> loading </div>;
 
   return (
-    <Container
-      maxW={{ lg: "7xl" }}
-      alignContent="stretch"
-      p={{ base: 0, xl: 4 }}
-    >
+    <PageContainer>
       <BGImgContainer>
         <BGImg banner_url={banner || ""}></BGImg>
       </BGImgContainer>
@@ -117,7 +114,7 @@ export function Playlist() {
           {playlist.content && <SongTable songs={playlist.content} />}
         </Box>
       </Box>
-    </Container>
+    </PageContainer>
   );
 }
 

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Playlist } from "./pages/Playlist";
 
-import FrameWithHeader from "./components/framing/Frame";
+import FrameWithHeader from "./components/layout/Frame";
 import styled from "@emotion/styled";
 import { Song } from "./pages/Song";
 

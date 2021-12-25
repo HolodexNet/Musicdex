@@ -20,7 +20,7 @@ import {
 } from "../../modules/services/playlist.service";
 import { useStoreActions, useStoreState } from "../../store";
 
-export function AddToPlaylist(): JSX.Element {
+export function AddToPlaylistModal(): JSX.Element {
   const song = useStoreState((state) => state.addPlaylist.songToAdd);
   const showDialog = useStoreState((state) => state.addPlaylist.dialogShow);
   const close = useStoreActions(

@@ -16,6 +16,7 @@ export const SidebarPlaylists = ({
               align="center"
               px="4"
               mx="4"
+              py="2"
               borderRadius="lg"
               role="group"
               cursor="pointer"

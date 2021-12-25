@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Container,
   Image,
   useBreakpointValue,
   Text,
@@ -14,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { Loading } from "../components/common/Loading";
+import { PageContainer } from "../components/layout/PageContainer";
 import { useSong } from "../modules/services/songs.service";
 import { resizeArtwork } from "../modules/songs/utils";
 import { useStoreActions } from "../store";
@@ -37,11 +37,7 @@ export function Song() {
   const queueSong = useStoreActions((actions) => actions.playback.queueSongs);
 
   return (
-    <Container
-      alignContent="stretch"
-      maxW={{ lg: "7xl" }}
-      p={{ base: 0, xl: 4 }}
-    >
+    <PageContainer>
       {isLoading && <Loading />}
       {song && (
         <Flex>
@@ -80,6 +76,6 @@ export function Song() {
           </Flex>
         </Flex>
       )}
-    </Container>
+    </PageContainer>
   );
 }
