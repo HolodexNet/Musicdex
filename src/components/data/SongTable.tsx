@@ -13,6 +13,7 @@ import {
   IconButton,
   CSSObject,
   useColorModeValue,
+  Icon,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -26,6 +27,7 @@ import {
 } from "../context-menu";
 import { useStoreActions } from "../../store";
 import { SongTableDropDownMenu } from "./SongTableDropdownButton";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 type IndexedSong = Song & { idx: number };
 
@@ -193,10 +195,13 @@ export const SongTable = ({
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   isNumeric={(column as any).isNumeric}
                 >
+                  {column.isSorted &&
+                    (column.isSortedDesc ? (
+                      <Icon as={FaChevronDown} display="inline" mr="2" />
+                    ) : (
+                      <Icon as={FaChevronUp} display="inline" mr="2" />
+                    ))}
                   {column.render("Header")}
-                  <Box pl="4">
-                    {column.isSorted ? (column.isSortedDesc ? "v" : "^") : ""}
-                  </Box>
                 </Th>
               ))}
             </Tr>
