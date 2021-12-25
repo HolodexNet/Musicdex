@@ -11,7 +11,7 @@ export const SidebarPlaylists = ({
     <div>
       {playlistStubs.map((x) => {
         return (
-          <Link to={"/playlists/" + x.id}>
+          <Link to={"/playlists/" + x.id} key={"sidebar-pl" + x.id}>
             <Flex
               align="center"
               px="4"
@@ -23,7 +23,6 @@ export const SidebarPlaylists = ({
                 bg: "cyan.400",
                 color: "white",
               }}
-              key={"sidebar" + x.id}
             >
               <Icon
                 mr="4"
