@@ -13,10 +13,14 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { FiChevronDown, FiMoreHorizontal } from "react-icons/fi";
+import { useStoreActions } from "../../store";
 
-export function SongTableDropDownMenu({
+export function PlaylistSongTableDropDownMenu({
+  song,
   ...rest
-}: Omit<MenuProps, "children">) {
+}: Omit<MenuProps, "children"> & { song: Song }) {
+  const queue = useStoreActions((store) => store.playback.queueSongs);
+
   return (
     <Menu {...rest} isLazy>
       <MenuButton
@@ -29,10 +33,26 @@ export function SongTableDropDownMenu({
         aria-label="More"
       ></MenuButton>
       <MenuList>
-        <MenuItem>Add to Queue</MenuItem>
-        <MenuItem>Share Link</MenuItem>
+        <MenuItem
+          onClick={() => {
+            queue({ songs: [song], immediatelyPlay: true });
+          }}
+        >
+          Play Now
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            queue({ songs: [song], immediatelyPlay: false });
+          }}
+        >
+          Add to Queue
+        </MenuItem>
+        <MenuItem>Copy Song Link</MenuItem>
         <MenuDivider />
-        <MenuItem onClick={() => {}}>Delete</MenuItem>
+        <MenuItem>Go To Song Page</MenuItem>
+        <MenuItem>Go To Video Page</MenuItem>
+        <MenuItem>Go to Channel Page</MenuItem>
+        {/* <MenuDivider /> */}
       </MenuList>
     </Menu>
   );

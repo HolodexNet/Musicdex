@@ -26,7 +26,7 @@ import {
   useContextTrigger,
 } from "../context-menu";
 import { useStoreActions } from "../../store";
-import { SongTableDropDownMenu } from "./SongTableDropdownButton";
+import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 type IndexedSong = Song & { idx: number };
@@ -116,7 +116,7 @@ export const SongTable = ({
         accessor: "idx",
         Cell: (cellInfo: any) => {
           // console.log(cellInfo);
-          return <SongTableDropDownMenu />;
+          return <PlaylistSongTableDropDownMenu song={cellInfo.row.original} />;
         },
       },
     ],
