@@ -84,6 +84,9 @@ export function PlaylistHeading({
           onClick={() => {
             setEditTitle(true);
           }}
+          ml={2}
+          size="lg"
+          verticalAlign="baseline"
           aria-label="edit title"
           variant="link"
           icon={<FiEdit3 />}
@@ -110,10 +113,12 @@ export function PlaylistHeading({
           description
         )}
         <IconButton
-          display={!editDescription && canEdit ? "inline-block" : "none"}
+          display={!editDescription && canEdit ? "inline" : "none"}
+          verticalAlign="middle"
           onClick={() => {
             setEditDescription(true);
           }}
+          ml={2}
           aria-label="edit title"
           variant="link"
           icon={<FiEdit3 />}

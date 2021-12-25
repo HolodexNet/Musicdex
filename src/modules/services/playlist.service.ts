@@ -142,8 +142,8 @@ export const usePlaylist = (
         playlistId,
       ]);
       if (cached) {
-        const newdata = (
-          await AxiosInstance<PlaylistFull>(
+        try {
+          const newdata = await AxiosInstance<PlaylistFull>(
             `/musicdex/playlist/${q.queryKey[1]}`,
             {
               headers: {
@@ -151,10 +151,12 @@ export const usePlaylist = (
                   cached.updated_at?.toString() ?? cached.updated_at,
               },
             }
-          )
-        ).data; // try fetching with If-Modified-Since, Server returns 304 if not modified.
-        if (!newdata) return cached;
-        else return newdata;
+          ); // try fetching with If-Modified-Since, Server returns 304 if not modified.
+          if (!newdata.data?.id) return cached;
+          else return newdata.data;
+        } catch (e) {
+          return cached;
+        }
       }
       // cache miss:
       return (
