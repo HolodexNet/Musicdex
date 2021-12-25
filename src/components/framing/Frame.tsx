@@ -24,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import React, { ReactNode, ReactText } from "react";
 import { IconType } from "react-icons";
+import { Link as RouterLink } from "react-router-dom";
 import {
   FiMenu,
   FiBell,
@@ -49,13 +50,14 @@ import { SidebarPlaylists } from "./SidebarPlaylists";
 interface LinkItemProps {
   name: string;
   icon: IconType;
+  path: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", icon: FiHome },
-  { name: "Recently Played", icon: FiClock },
-  { name: "Liked Songs", icon: FiHeart },
-  { name: "My Playlists", icon: FiServer },
-  { name: "Settings", icon: FiSettings },
+  { name: "Home", icon: FiHome, path: "/" },
+  { name: "Recently Played", icon: FiClock, path: "/" },
+  { name: "Liked Songs", icon: FiHeart, path: "/" },
+  { name: "My Playlists", icon: FiServer, path: "/" },
+  { name: "Settings", icon: FiSettings, path: "/" },
 ];
 
 export default function FrameWithHeader({
@@ -170,9 +172,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{ base: "flex", lg: "none" }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
-          {link.name}
-        </NavItem>
+        <NavItem {...link}>{link.name}</NavItem>
       ))}
       <Divider my={4} />
       <NavItem
@@ -189,11 +189,12 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
+  path?: string;
   children: ReactText;
 }
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, children, path, ...rest }: NavItemProps) => {
   return (
-    <Link href="#" style={{ textDecoration: "none" }}>
+    <Link as={RouterLink} to={path || "#"} style={{ textDecoration: "none" }}>
       <Flex
         align="center"
         p="4"
