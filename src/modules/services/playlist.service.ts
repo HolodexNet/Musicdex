@@ -147,7 +147,8 @@ export const usePlaylist = (
             `/musicdex/playlist/${q.queryKey[1]}`,
             {
               headers: {
-                "If-Modified-Since": cached.updated_at.toISOString(),
+                "If-Modified-Since":
+                  cached.updated_at?.toString() ?? cached.updated_at,
               },
             }
           )

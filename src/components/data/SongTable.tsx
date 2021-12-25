@@ -14,7 +14,7 @@ import {
   CSSObject,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useTable, useSortBy, Column } from "react-table";
@@ -43,6 +43,8 @@ export interface SongTableProps {
 
   // table controls:
   isSortable?: boolean; // default true
+
+  menuId?: string;
 }
 
 export const SongTable = ({
@@ -51,6 +53,7 @@ export const SongTable = ({
   songDropdownMenuRenderer,
   songRightClickContextMenuRenderer,
   isSortable = true,
+  menuId,
 }: SongTableProps) => {
   const { t, i18n } = useTranslation();
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
@@ -142,7 +145,11 @@ export const SongTable = ({
     toggleHideColumn("idx", !isXL);
   }, [isXL, toggleHideColumn]);
 
-  const contextMenuTrigger = useContextTrigger({ menuId: "songMenu" });
+  const [menuIdStat] = useState(
+    () => menuId || Math.floor(Math.random() * 10000).toString()
+  );
+
+  const contextMenuTrigger = useContextTrigger({ menuId: menuIdStat });
 
   const HOVER_ROW_STYLE: CSSObject = {
     backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
@@ -158,9 +165,9 @@ export const SongTable = ({
     });
 
   return (
-    <Table {...getTableProps()} size={isXL ? "md" : "sm"}>
+    <>
       <ContextMenuList
-        menuId="songMenu"
+        menuId={menuIdStat}
         render={({ menuId, closeContextMenus, passData }) => {
           if (songRightClickContextMenuRenderer)
             return songRightClickContextMenuRenderer({
@@ -176,72 +183,75 @@ export const SongTable = ({
           );
         }}
       ></ContextMenuList>
-      <Thead>
-        {headerGroups.map((headerGroup) => (
-          <Tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <Th
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                isNumeric={(column as any).isNumeric}
-              >
-                {column.render("Header")}
-                <Box pl="4">
-                  {column.isSorted ? (column.isSortedDesc ? "v" : "^") : ""}
-                </Box>
-              </Th>
-            ))}
-          </Tr>
-        ))}
-      </Thead>
-      <Tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <Tr
-              {...row.getRowProps()}
-              onContextMenu={(e) => {
-                contextMenuTrigger(e, row.original);
-              }}
-              _hover={HOVER_ROW_STYLE}
-            >
-              {row.cells.map((cell) => (
-                <Td
-                  {...cell.getCellProps()}
-                  isNumeric={(cell.column as any).isNumeric}
-                  {...(cell.column.id !== "..."
-                    ? {
-                        onClick: (e) => {
-                          songClicked
-                            ? songClicked(e, row.original)
-                            : defaultClickBehavior(e as any, row.original);
-                        },
-                      }
-                    : {})}
+
+      <Table {...getTableProps()} size={isXL ? "md" : "sm"}>
+        <Thead>
+          {headerGroups.map((headerGroup) => (
+            <Tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <Th
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  isNumeric={(column as any).isNumeric}
                 >
-                  {cell.render("Cell")}
-                </Td>
+                  {column.render("Header")}
+                  <Box pl="4">
+                    {column.isSorted ? (column.isSortedDesc ? "v" : "^") : ""}
+                  </Box>
+                </Th>
               ))}
             </Tr>
-          );
-        })}
-      </Tbody>
-      <Tfoot>
-        {headerGroups.map((headerGroup) => (
-          <Tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <Th
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                isNumeric={(column as any).isNumeric}
+          ))}
+        </Thead>
+        <Tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              <Tr
+                {...row.getRowProps()}
+                onContextMenu={(e) => {
+                  contextMenuTrigger(e, row.original);
+                }}
+                _hover={HOVER_ROW_STYLE}
               >
-                {column.render("Header")}
-                <Box pl="4">
-                  {column.isSorted ? (column.isSortedDesc ? "v" : "^") : ""}
-                </Box>
-              </Th>
-            ))}
-          </Tr>
-        ))}
-      </Tfoot>
-    </Table>
+                {row.cells.map((cell) => (
+                  <Td
+                    {...cell.getCellProps()}
+                    isNumeric={(cell.column as any).isNumeric}
+                    {...(cell.column.id !== "..."
+                      ? {
+                          onClick: (e) => {
+                            songClicked
+                              ? songClicked(e, row.original)
+                              : defaultClickBehavior(e as any, row.original);
+                          },
+                        }
+                      : {})}
+                  >
+                    {cell.render("Cell")}
+                  </Td>
+                ))}
+              </Tr>
+            );
+          })}
+        </Tbody>
+        <Tfoot>
+          {headerGroups.map((headerGroup) => (
+            <Tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <Th
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  isNumeric={(column as any).isNumeric}
+                >
+                  {column.render("Header")}
+                  <Box pl="4">
+                    {column.isSorted ? (column.isSortedDesc ? "v" : "^") : ""}
+                  </Box>
+                </Th>
+              ))}
+            </Tr>
+          ))}
+        </Tfoot>
+      </Table>
+    </>
   );
 };

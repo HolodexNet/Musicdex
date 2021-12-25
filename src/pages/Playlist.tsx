@@ -1,20 +1,14 @@
-import {
-  Box,
-  Container,
-  Heading,
-  IconButton,
-  Input,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Container, useColorModeValue } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { FormEventHandler, useMemo, useState } from "react";
-import { FiEdit3 } from "react-icons/fi";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { useClient } from "../modules/client";
-import { usePlaylist } from "../modules/services/playlist.service";
+import {
+  usePlaylist,
+  usePlaylistWriter,
+} from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 import {
   identifyDescription,
@@ -35,6 +29,8 @@ export function Playlist() {
     error,
     isError,
   } = usePlaylist(playlistId);
+
+  const { mutateAsync: writeNewPlaylist } = usePlaylistWriter();
 
   const [editMode, setEditMode] = useState(false);
   const { banner, title, description } = useMemo(() => {
@@ -60,6 +56,14 @@ export function Playlist() {
   console.log(playlist, user?.id);
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
 
+  const writablePlaylist: Partial<WriteablePlaylist> = useMemo(() => {
+    let c: Partial<WriteablePlaylist> = {
+      ...playlist,
+      content: playlist?.content?.map((x) => x.id),
+    };
+    return c;
+  }, [playlist]);
+
   if (!playlist) return <div> loading </div>;
 
   return (
@@ -84,6 +88,12 @@ export function Playlist() {
           description={description || "..."}
           canEdit={isLoggedIn && playlist.owner == user?.id}
           editMode={false}
+          setDescription={(text) => {
+            writeNewPlaylist({ ...writablePlaylist, description: text });
+          }}
+          setTitle={(text) => {
+            writeNewPlaylist({ ...writablePlaylist, title: text });
+          }}
         />
         <PlaylistButtonArray
           canEdit={isLoggedIn && playlist.owner == user?.id}
