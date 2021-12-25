@@ -29,7 +29,29 @@ import { SongTableDropDownMenu } from "./SongTableDropdownButton";
 
 type IndexedSong = Song & { idx: number };
 
-export const SongTable = ({ songs }: { songs: Song[] }) => {
+export interface SongTableProps {
+  songs: Song[];
+
+  // reactive hooks:
+  songClicked?: (e: React.MouseEvent, s: Song) => void;
+  songDropdownMenuRenderer?: (cellInfo: any) => JSX.Element;
+  songRightClickContextMenuRenderer?: (_: {
+    song: Song;
+    menuId: string;
+    closeContextMenu: () => void;
+  }) => JSX.Element;
+
+  // table controls:
+  isSortable?: boolean; // default true
+}
+
+export const SongTable = ({
+  songs,
+  songClicked,
+  songDropdownMenuRenderer,
+  songRightClickContextMenuRenderer,
+  isSortable = true,
+}: SongTableProps) => {
   const { t, i18n } = useTranslation();
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const s: IndexedSong[] = React.useMemo(() => {
@@ -50,16 +72,7 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
           // console.log(cellInfo);
           return (
             <VStack alignItems="start" spacing={1}>
-              <span
-                onClick={() =>
-                  queueSongs({
-                    songs: [cellInfo.row.original],
-                    immediatelyPlay: true,
-                  })
-                }
-              >
-                {cellInfo.row.original?.name}
-              </span>
+              <span>{cellInfo.row.original?.name}</span>
               <Text color="whiteAlpha.600" fontWeight={300} fontSize="sm">
                 {cellInfo.row.original.channel?.name}
               </Text>
@@ -102,7 +115,7 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
         },
       },
     ],
-    []
+    [t]
   );
 
   const {
@@ -117,6 +130,7 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
       columns: columns as any,
       data: s,
       initialState: { hiddenColumns: ["channel"] },
+      disableSortBy: !isSortable,
     },
     useSortBy
   );
@@ -126,7 +140,7 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
   useEffect(() => {
     toggleHideColumn("original_artist", !isXL);
     toggleHideColumn("idx", !isXL);
-  }, [isXL]);
+  }, [isXL, toggleHideColumn]);
 
   const contextMenuTrigger = useContextTrigger({ menuId: "songMenu" });
 
@@ -134,13 +148,34 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
     backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
   };
 
+  const defaultClickBehavior = (
+    e: React.MouseEvent<any, MouseEvent>,
+    song: Song
+  ) =>
+    queueSongs({
+      songs: [song],
+      immediatelyPlay: true,
+    });
+
   return (
     <Table {...getTableProps()} size={isXL ? "md" : "sm"}>
-      <ContextMenuList menuId="songMenu">
-        <ContextMenuItem onClick={({ passData }) => console.log(passData)}>
-          Action
-        </ContextMenuItem>
-      </ContextMenuList>
+      <ContextMenuList
+        menuId="songMenu"
+        render={({ menuId, closeContextMenus, passData }) => {
+          if (songRightClickContextMenuRenderer)
+            return songRightClickContextMenuRenderer({
+              menuId,
+              closeContextMenu: closeContextMenus,
+              song: passData,
+            });
+
+          return (
+            <ContextMenuItem onClick={({ passData }) => console.log(passData)}>
+              Action {passData?.name}
+            </ContextMenuItem>
+          );
+        }}
+      ></ContextMenuList>
       <Thead>
         {headerGroups.map((headerGroup) => (
           <Tr {...headerGroup.getHeaderGroupProps()}>
@@ -173,6 +208,15 @@ export const SongTable = ({ songs }: { songs: Song[] }) => {
                 <Td
                   {...cell.getCellProps()}
                   isNumeric={(cell.column as any).isNumeric}
+                  {...(cell.column.id !== "..."
+                    ? {
+                        onClick: (e) => {
+                          songClicked
+                            ? songClicked(e, row.original)
+                            : defaultClickBehavior(e as any, row.original);
+                        },
+                      }
+                    : {})}
                 >
                   {cell.render("Cell")}
                 </Td>

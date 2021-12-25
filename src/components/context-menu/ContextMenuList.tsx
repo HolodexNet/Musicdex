@@ -1,12 +1,23 @@
 import { useColorModeValue, useOutsideClick } from "@chakra-ui/react";
 import { Variants } from "framer-motion";
-import React, { RefObject, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  ReactNode,
+  RefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useStoreActions, useStoreState } from "../../store";
 import { MotionBox, MotionBoxProps } from "./MotionBox";
 
 type Props = {
   menuId: string;
-  render?: Function;
+  render?: (x: {
+    menuId: string;
+    closeContextMenus: () => void;
+    passData: any;
+  }) => ReactNode;
 };
 
 const motionVariants: Variants = {
