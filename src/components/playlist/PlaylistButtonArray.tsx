@@ -1,7 +1,7 @@
 import { Button, HStack } from "@chakra-ui/react";
 import React from "react";
 import { FiPlay } from "react-icons/fi";
-import { PlaylistMoreControlsMenu } from "../components/playlist/PlaylistMoreControls";
+import { PlaylistMoreControlsMenu } from "./PlaylistMoreControls";
 
 type ClickEventHandler = React.MouseEventHandler<HTMLButtonElement>;
 

@@ -16,7 +16,7 @@ import {
   identifyPlaylistBannerImage,
   identifyTitle,
 } from "../utils/PlaylistHelper";
-import { PlaylistButtonArray } from "./PlaylistButtonArray";
+import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 
 export function Playlist() {
   let params = useParams();
