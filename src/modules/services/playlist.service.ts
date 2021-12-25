@@ -45,7 +45,7 @@ export const usePlaylistUpdater = (
   config: UseMutationOptions<
     any,
     unknown,
-    { playlist: string; song: string; action: "add" | "delete" }
+    { playlist: string; song: number | string; action: "add" | "delete" }
   > = {}
 ) => {
   const { AxiosInstance } = useClient();

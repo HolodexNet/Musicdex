@@ -46,6 +46,7 @@ import {
   usePlaylistWriter,
 } from "../../modules/services/playlist.service";
 import { SidebarPlaylists } from "./SidebarPlaylists";
+import { AddToPlaylist } from "./AddToPlaylist";
 
 interface LinkItemProps {
   name: string;
@@ -117,6 +118,7 @@ export default function FrameWithHeader({
           </Box>
         </Flex>
         <Player />
+        <AddToPlaylist />
       </Flex>
     </Box>
   );

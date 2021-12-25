@@ -20,6 +20,9 @@ export function PlaylistSongTableDropDownMenu({
   ...rest
 }: Omit<MenuProps, "children"> & { song: Song }) {
   const queue = useStoreActions((store) => store.playback.queueSongs);
+  const addPlaylist = useStoreActions(
+    (store) => store.addPlaylist.showPlaylistAddDialog
+  );
 
   return (
     <Menu {...rest} isLazy>
@@ -48,7 +51,13 @@ export function PlaylistSongTableDropDownMenu({
           Add to Queue
         </MenuItem>
         <MenuItem>Copy Song Link</MenuItem>
-        <MenuItem>Add To Playlist...</MenuItem>
+        <MenuItem
+          onClick={() => {
+            addPlaylist(song);
+          }}
+        >
+          Add To Playlist...
+        </MenuItem>
         <MenuDivider />
         <MenuItem>Go To Song Page</MenuItem>
         <MenuItem>Go To Video Page</MenuItem>
