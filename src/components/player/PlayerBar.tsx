@@ -23,9 +23,10 @@ import throttle from "lodash-es/throttle";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 
 export function PlayerBar() {
-  const { song: currentSong, repeat } = useStoreState(
+  const currentlyPlaying = useStoreState(
     (state) => state.playback.currentlyPlaying
   );
+  const { song: currentSong, repeat } = currentlyPlaying;
 
   // PlayerState
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
