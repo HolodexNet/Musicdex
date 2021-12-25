@@ -130,9 +130,9 @@ export function PlayerBar() {
     }
   }, 100);
 
-  function slideLabel() {
+  function SliderLabel() {
     const p = buffering || changing ? seekAhead : progress;
-    return `${Math.round((p / 100) * totalDuration)}s`;
+    return <span>{`${Math.round((p / 100) * totalDuration)}s`}</span>;
   }
 
   function RepeatIcon() {
@@ -191,7 +191,7 @@ export function PlayerBar() {
           color="white"
           placement="top"
           isOpen={hovering}
-          label={slideLabel}
+          label={<SliderLabel />}
         >
           <SliderThumb visibility={hovering ? "visible" : "hidden"} />
         </Tooltip>
