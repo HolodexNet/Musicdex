@@ -110,7 +110,7 @@ export const SongTable = ({
         disableSortBy: true,
         accessor: "idx",
         Cell: (cellInfo: any) => {
-          console.log(cellInfo);
+          // console.log(cellInfo);
           return <SongTableDropDownMenu />;
         },
       },
@@ -170,7 +170,7 @@ export const SongTable = ({
             });
 
           return (
-            <ContextMenuItem onClick={({ passData }) => console.log(passData)}>
+            <ContextMenuItem onClick={({ passData }) => {}}>
               Action {passData?.name}
             </ContextMenuItem>
           );
