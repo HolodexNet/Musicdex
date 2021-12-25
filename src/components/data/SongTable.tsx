@@ -154,7 +154,7 @@ export const SongTable = ({
   ) =>
     queueSongs({
       songs: [song],
-      immediatelyPlay: true,
+      immediatelyPlay: false,
     });
 
   return (
