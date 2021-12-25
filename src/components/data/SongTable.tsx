@@ -192,6 +192,12 @@ export const SongTable = ({
               >
                 Copy Song Link
               </ContextMenuItem>
+              <ContextMenuItem
+                onClick={({ passData }) => {}}
+                colorScheme="gray"
+              >
+                Add To Playlist...
+              </ContextMenuItem>
               <hr style={{ marginTop: "0.4rem", marginBottom: "0.4rem" }} />
               <ContextMenuItem
                 onClick={({ passData }) => {}}

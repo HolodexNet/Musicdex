@@ -48,6 +48,7 @@ export function PlaylistSongTableDropDownMenu({
           Add to Queue
         </MenuItem>
         <MenuItem>Copy Song Link</MenuItem>
+        <MenuItem>Add To Playlist...</MenuItem>
         <MenuDivider />
         <MenuItem>Go To Song Page</MenuItem>
         <MenuItem>Go To Video Page</MenuItem>
