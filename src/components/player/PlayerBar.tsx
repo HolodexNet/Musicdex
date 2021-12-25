@@ -97,6 +97,7 @@ export function PlayerBar() {
     return () => {
       timer && clearInterval(timer);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, currentSong]);
 
   function onReady(event: { target: YouTubePlayer }) {
