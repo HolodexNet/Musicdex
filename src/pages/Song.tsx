@@ -24,8 +24,10 @@ export function Song() {
 
   const { t, i18n } = useTranslation();
   const breakpoint = useBreakpointValue({
-    base: 200,
-    lg: 300,
+    sm: 200,
+    base: 300,
+    md: 400,
+    lg: 400,
   });
 
   const { data: song, isLoading, isFetching, error, isError } = useSong(songId);
@@ -40,9 +42,17 @@ export function Song() {
     <PageContainer>
       {isLoading && <Loading />}
       {song && (
-        <Flex>
-          <Image p={3} src={resizedArt} alt={song.name} />
-          <Flex flexDirection="column" p={3}>
+        <Flex wrap="wrap">
+          <Flex shrink={1} minW={breakpoint + "px"}>
+            <Image
+              p={3}
+              src={resizedArt}
+              alt={song.name}
+              width={breakpoint + "px"}
+              height={breakpoint + "px"}
+            />
+          </Flex>
+          <Flex flexDirection="column" p={3} minW="300px" shrink={0}>
             <Box marginTop="auto">
               <Text fontSize="3xl" fontWeight={600}>
                 {song.name}

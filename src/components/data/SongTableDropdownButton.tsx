@@ -15,6 +15,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { FiChevronDown, FiMoreHorizontal } from "react-icons/fi";
+import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions } from "../../store";
 
@@ -27,6 +28,7 @@ export function PlaylistSongTableDropDownMenu({
     (store) => store.addPlaylist.showPlaylistAddDialog
   );
   const copyToClipboard = useClipboardWithToast();
+  const navigate = useNavigate();
 
   return (
     <Menu {...rest} isLazy>
@@ -69,7 +71,13 @@ export function PlaylistSongTableDropDownMenu({
           Add To Playlist...
         </MenuItem>
         <MenuDivider />
-        <MenuItem>Go To Song Page</MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate("/song/" + song.id);
+          }}
+        >
+          Go To Song Page
+        </MenuItem>
         <MenuItem>Go To Video Page</MenuItem>
         <MenuItem>Go to Channel Page</MenuItem>
         {/* <MenuDivider /> */}

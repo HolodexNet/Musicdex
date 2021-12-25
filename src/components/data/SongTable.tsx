@@ -29,6 +29,7 @@ import { useStoreActions } from "../../store";
 import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
+import { useNavigate } from "react-router";
 
 type IndexedSong = Song & { idx: number };
 
@@ -130,6 +131,8 @@ export const SongTable = ({
 
   const copyToClipboard = useClipboardWithToast();
 
+  const navigate = useNavigate();
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -213,7 +216,9 @@ export const SongTable = ({
               </ContextMenuItem>
               <hr style={{ marginTop: "0.4rem", marginBottom: "0.4rem" }} />
               <ContextMenuItem
-                onClick={({ passData }) => {}}
+                onClick={() => {
+                  navigate("/song/" + song.id);
+                }}
                 colorScheme="gray"
               >
                 Go To Song Page
