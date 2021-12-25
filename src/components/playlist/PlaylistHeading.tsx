@@ -32,17 +32,24 @@ export function PlaylistHeading({
   const [editDescription, setEditDescription] = useState(
     () => canEdit && editMode
   );
+  const [descInvalid, setDescInvalid] = useState(false);
+  const [titleInvalid, setTitleInvalid] = useState(false);
 
   const submitHandlerTitle: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     setEditTitle(false);
-    if (setTitle) setTitle((e.target as any)[0].value as string);
+    if (setTitle && !titleInvalid)
+      setTitle((e.target as any)[0].value as string);
   };
   const submitHandlerDesc: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     setEditDescription(false);
-    if (setDescription) setDescription((e.target as any)[0].value as string);
+    if (setDescription && !titleInvalid)
+      setDescription((e.target as any)[0].value as string);
   };
+
+  const isValid = (t: string, min: number, max: number) =>
+    t.length > min && t.length < max;
 
   return (
     <Box as={"header"} mb="2" position="relative">
@@ -57,7 +64,11 @@ export function PlaylistHeading({
               placeholder="Playlist Title"
               size="lg"
               autoFocus
-              value={title}
+              isInvalid={titleInvalid}
+              defaultValue={title}
+              onChange={(e) =>
+                setTitleInvalid(!isValid(e.currentTarget.value, 5, 70))
+              }
               enterKeyHint="done"
             />
           </form>
@@ -79,9 +90,13 @@ export function PlaylistHeading({
           <form onSubmit={submitHandlerDesc}>
             <Input
               placeholder="Playlist Description"
-              value={description}
+              defaultValue={description}
               autoFocus
+              isInvalid={descInvalid}
               enterKeyHint="done"
+              onChange={(e) =>
+                setDescInvalid(!isValid(e.currentTarget.value, 0, 200))
+              }
             />
           </form>
         ) : (
