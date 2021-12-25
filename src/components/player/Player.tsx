@@ -1,12 +1,12 @@
-import { useStoreState } from "../../store";
+import { Fragment } from "react";
 import { PlayerBar } from "./PlayerBar";
 import { PlayerOverlay } from "./PlayerOverlay";
 
 export function Player() {
   return (
-    <div>
+    <Fragment>
       <PlayerBar />
       <PlayerOverlay />
-    </div>
+    </Fragment>
   );
 }
