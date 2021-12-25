@@ -107,7 +107,7 @@ export const SongTable = ({
         id: "date",
         Header: "Sang On",
         accessor: (row: { available_at: Date }) =>
-          t("shortDateTime", { date: new Date(row?.available_at) }),
+          t("relativeDate", { date: new Date(row?.available_at) }),
       },
       {
         id: "...",

@@ -1,7 +1,12 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import { format as formatDate, isDate } from "date-fns";
+import {
+  format as formatDate,
+  formatDistanceToNow,
+  formatRelative,
+  isDate,
+} from "date-fns";
 import { enUS, ja, zhTW } from "date-fns/locale"; // import all locales we need
 
 const locales: { [key: string]: Locale } = { "en-US": enUS, ja, zhTW }; // used to look up the required locale
@@ -19,7 +24,7 @@ const resources = {
       shortDate: "{{date, short}}",
       shortDateTime: "{{date, datetime}}",
       longDate: "{{date, long}}",
-      relativeDate: "{{date, relative}}",
+      relativeDate: "{{date, ago}}",
     },
   },
   ja: {
@@ -52,10 +57,16 @@ i18n
           if (format === "relative")
             return formatRelative(value, new Date(), { locale });
           if (format === "ago")
-            return formatDistance(value, new Date(), {
-              locale,
-              addSuffix: true,
-            });
+            if (
+              new Date().valueOf() - value.valueOf() >
+              60 * 24 * 60 * 30 * 1000
+            ) {
+              return formatDate(value, "P", { locale });
+            }
+          return formatDistanceToNow(value, {
+            locale,
+            addSuffix: true,
+          });
           if (format === "datetime") return formatDate(value, "Pp", { locale });
           return formatDate(value, format!, { locale });
         }
@@ -67,14 +78,3 @@ i18n
       order: ["navigator", "localStorage"],
     },
   });
-function formatRelative(value: any, arg1: Date, arg2: { locale: any }): string {
-  throw new Error("Function not implemented.");
-}
-
-function formatDistance(
-  value: any,
-  arg1: Date,
-  arg2: { locale: any; addSuffix: boolean }
-): string {
-  throw new Error("Function not implemented.");
-}
