@@ -42,7 +42,7 @@ import Footer from "./Footer";
 import { Searchbox } from "../header/Searchbox";
 import { Player } from "../player/Player";
 import {
-  usePlaylist,
+  useMyPlaylists,
   usePlaylistWriter,
 } from "../../modules/services/playlist.service";
 import { SidebarPlaylists } from "./SidebarPlaylists";
@@ -129,7 +129,7 @@ interface SidebarProps extends BoxProps {
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const { user } = useClient();
   const { mutate: writePlaylist, isSuccess, isError } = usePlaylistWriter();
-  const { data: playlistList, isLoading } = usePlaylist("");
+  const { data: playlistList, isLoading } = useMyPlaylists();
 
   const createNewPlaylistHandler = async () => {
     if (!user?.id) return alert("You must be logged in to create Playlists");

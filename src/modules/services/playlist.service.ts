@@ -32,6 +32,7 @@ export const usePlaylistWriter = (
       onSuccess: (data, payload, ...rest) => {
         queryClient.cancelQueries(["playlist", payload.id]);
         queryClient.invalidateQueries(["playlist", payload.id]);
+        queryClient.invalidateQueries(["allPlaylists"]);
         if (callbacks.onSuccess) {
           callbacks.onSuccess(data, payload, ...rest);
         }
@@ -118,6 +119,8 @@ export const usePlaylistDeleter = (
         //         });
         //     });
         queryClient.invalidateQueries(["playlist", payload.playlistId]);
+        queryClient.invalidateQueries(["allPlaylists"]);
+
         if (config.onSuccess) {
           config.onSuccess(data, payload, ...rest);
         }
@@ -169,8 +172,32 @@ export const usePlaylist = (
     }
   );
 
-  return {
-    playlist: result.data,
-    ...result,
-  };
+  return result;
+};
+
+export const useMyPlaylists = (
+  config: UseQueryOptions<
+    PlaylistStub[],
+    unknown,
+    PlaylistStub[],
+    string[]
+  > = {}
+) => {
+  const queryClient = useQueryClient();
+  const { AxiosInstance, isLoggedIn } = useClient();
+
+  const result = useQuery(
+    ["allPlaylists"],
+    async (q): Promise<PlaylistStub[]> => {
+      // fetch cached
+      if (!isLoggedIn) return [];
+      return (await AxiosInstance<PlaylistStub[]>(`/musicdex/playlist/`)).data;
+    },
+    {
+      ...DEFAULT_FETCH_CONFIG,
+      ...config,
+    }
+  );
+
+  return result;
 };
