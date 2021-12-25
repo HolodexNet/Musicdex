@@ -13,9 +13,8 @@ export function PlayerOverlay({ visible }: { visible: boolean }) {
   //   const currentlyPlaying = useStoreState(
   //     (state) => state.playback.currentlyPlaying
   //   );
-  // if (!visible) return <div />;
   return (
-    <Fade in={visible}>
+    <Fade in={visible} unmountOnExit={true}>
       <Overlay>
         <Container
           alignContent="stretch"
@@ -23,10 +22,14 @@ export function PlayerOverlay({ visible }: { visible: boolean }) {
           paddingTop="20px"
         >
           <Button onClick={() => clearAll()}>Clear All</Button>
-          <Text fontSize="3xl">Queue</Text>
-          <Divider />
-          <br />
-          <SongTable songs={queue} />
+          {queue.length > 0 && (
+            <div>
+              <Text fontSize="3xl">Queue</Text>
+              <Divider />
+              <br />
+              <SongTable songs={queue} />
+            </div>
+          )}
           <br />
           <Text fontSize="3xl">Playlist</Text>
           <Divider />
@@ -45,5 +48,4 @@ const Overlay = styled.div`
   width: 100%;
   height: calc(100% - 64px - 80px);
   overflow: auto;
-  pointer-events: none;
 `;
