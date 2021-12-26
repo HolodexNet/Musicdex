@@ -25,6 +25,7 @@ export interface LinkItemProps {
   name: string;
   icon: IconType;
   path: string;
+  disabled?: boolean;
 }
 
 export function SidebarContent({ linkItems, onClose, ...rest }: SidebarProps) {

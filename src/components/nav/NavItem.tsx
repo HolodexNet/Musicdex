@@ -12,10 +12,19 @@ import { NavLink, useLocation } from "react-router-dom";
 interface NavItemProps extends FlexProps {
   icon: IconType;
   path?: string;
+  // name: string;
+  disabled?: boolean;
+
   children: ReactText;
 }
 
-export function NavItem({ icon, children, path, ...rest }: NavItemProps) {
+export function NavItem({
+  icon,
+  children,
+  path,
+  disabled,
+  ...rest
+}: NavItemProps) {
   const bgc = useColorModeValue("n2.600", "n2.400");
   const bgcBrand = useColorModeValue("brand.200", "brand.700");
 
@@ -31,7 +40,7 @@ export function NavItem({ icon, children, path, ...rest }: NavItemProps) {
         borderRadius="lg"
         role="group"
         cursor="pointer"
-        color={pathname === path ? bgc : "auto"}
+        color={pathname === path ? bgc : disabled ? "bg.400" : "auto"}
         _hover={{
           bg: bgcBrand,
           // color: "white",

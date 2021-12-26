@@ -154,7 +154,8 @@ export const SongEditableTable = ({
       ...newSongIds.slice(0, idx),
       ...newSongIds.slice(idx + 1),
     ];
-    if (toIdx) arrayAroundDragged.splice(toIdx, 0, newSongIds[idx]);
+    if (toIdx !== undefined)
+      arrayAroundDragged.splice(toIdx, 0, newSongIds[idx]);
     setNewSongIds(arrayAroundDragged);
     songsEdited(arrayAroundDragged);
   };

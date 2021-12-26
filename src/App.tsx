@@ -24,11 +24,13 @@ function App(this: any) {
           />
           <Route
             path="/liked"
-            element={
-              <InProgress>My Playlists page under construction</InProgress>
-            }
+            element={<InProgress>Liked page under construction</InProgress>}
           />
           <Route path="/history" element={<History />} />
+          <Route
+            path="/settings"
+            element={<InProgress>Settings page under construction</InProgress>}
+          />
         </Routes>
       </FrameWithHeader>
     </Router>
