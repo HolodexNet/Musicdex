@@ -12,35 +12,6 @@ import I18NextHttpBackend from "i18next-http-backend";
 
 const locales: { [key: string]: Locale } = { "en-US": enUS, ja, zhTW }; // used to look up the required locale
 
-const resources = {
-  en: {
-    translation: {
-      add: "Add",
-      load: "Load",
-      save: "Save",
-      close: "Close",
-      edit: "Edit",
-      remove: "Remove",
-      set: "Set",
-      shortDate: "{{date, short}}",
-      shortDateTime: "{{date, datetime}}",
-      longDate: "{{date, long}}",
-      relativeDate: "{{date, ago}}",
-    },
-  },
-  ja: {
-    translation: {
-      add: "追加",
-      load: "ロード",
-      save: "保存",
-      close: "閉じる",
-      edit: "編集",
-      remove: "削除",
-      set: "確定",
-    },
-  },
-};
-
 i18n
   .use(I18NextHttpBackend)
   .use(LanguageDetector)
@@ -50,6 +21,7 @@ i18n
     debug: true,
     fallbackLng: "en",
     saveMissing: true,
+    supportedLngs: ["en", "ja"],
     interpolation: {
       escapeValue: false,
       format: (value, format, lng, options) => {
@@ -78,7 +50,10 @@ i18n
       },
     },
     detection: {
-      order: ["navigator", "localStorage"],
+      order: ["localStorage", "querystring", "navigator"], // local storage first. then querystring for incoming users?
+    },
+    backend: {
+      reloadInterval: 5000,
     },
   });
 
