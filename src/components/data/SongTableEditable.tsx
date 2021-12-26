@@ -188,11 +188,11 @@ export const SongEditableTable = ({
             prepareRow(row);
             return (
               <SRow
-                index={idx}
+                index={row.original.idx}
                 row={row}
                 moveRow={moveRow}
                 {...row.getRowProps()}
-                key={"rc" + row.original.id}
+                key={"rc" + row.original.id + "idx" + idx}
               />
             );
           })}
@@ -282,9 +282,12 @@ const SRow = ({
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: DND_ITEM_TYPE,
     item: { type: DND_ITEM_TYPE, index },
-    collect: ((monitor: { isDragging: () => any }) => ({
-      isDragging: monitor.isDragging(),
-    })) as any,
+    collect: ((monitor: { isDragging: () => any }) => {
+      if (monitor.isDragging()) console.log(index);
+      return {
+        isDragging: monitor.isDragging(),
+      };
+    }) as any,
   }));
 
   const opacity = isDragging ? 0 : 1;
@@ -302,7 +305,7 @@ const SRow = ({
     >
       {row.cells.map((cell: any) => {
         if (cell.column.id === "idx") {
-          return <Td ref={drag}>Move</Td>;
+          return <Td ref={drag}>Move {index}</Td>;
         }
         return (
           <Td
