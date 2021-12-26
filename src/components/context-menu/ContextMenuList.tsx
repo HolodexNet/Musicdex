@@ -69,10 +69,10 @@ export const ContextMenuList: React.FC<Props & MotionBoxProps> = ({
   // where should the menu be shown?
   // the ContextMenuTrigger sets this
   const [position, setPosition] = useState<Position>({
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
+    left: -3000,
+    right: "auto",
+    top: -3000,
+    bottom: "auto",
   });
 
   // TODO: Any less manual way to do this
@@ -126,8 +126,8 @@ export const ContextMenuList: React.FC<Props & MotionBoxProps> = ({
     setContextMenusState({
       passData: contextMenusState.passData,
       position: {
-        x: -100,
-        y: -100,
+        x: -10000,
+        y: -10000,
       },
       menus: contextMenusState.menus.map((m) => ({
         ...m,

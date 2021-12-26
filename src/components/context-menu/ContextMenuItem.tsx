@@ -39,7 +39,7 @@ export const ContextMenuItem: React.FC<Props> = ({
         // close all menus
         setContextMenusState({
           ...contextMenusState,
-          position: { x: -100, y: -100 },
+          position: { x: -10000, y: -10000 },
           menus: contextMenusState.menus.map((m) => ({
             ...m,
             isOpen: false,
