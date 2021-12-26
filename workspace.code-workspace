@@ -5,11 +5,12 @@
     }
   ],
   "settings": {
-    "i18n-ally.localesPaths": [
-      "src/modules/i18n",
-      "public/locales",
-      "../../../../../Users/Xiaonan/VTubers/Musicdex/public/locales"
-    ],
-    "i18n-ally.keystyle": "nested"
+    "i18n-ally.localesPaths": ["public/locales"],
+    "i18n-ally.pathMatcher": "{locale}/translation.json",
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.dirStructure": "auto",
+    "i18n-ally.extract.keyMaxLength": 120,
+    "i18n-ally.sortKeys": true,
+    "i18n-ally.keepFulfilled": true
   }
 }
