@@ -72,6 +72,9 @@ export const SongTable = ({
       {
         Header: "#",
         accessor: "idx",
+        maxWidth: 40,
+        minWidth: 40,
+        width: 40,
       },
       {
         Header: "Title",
@@ -278,6 +281,7 @@ export const SongTable = ({
                   <Td
                     {...cell.getCellProps()}
                     isNumeric={(cell.column as any).isNumeric}
+                    {...{ width: cell.column.id === "idx" ? "40px" : "auto" }}
                     {...(cell.column.id !== "..."
                       ? {
                           onClick: (e) => {
@@ -295,7 +299,7 @@ export const SongTable = ({
             );
           })}
         </Tbody>
-        <Tfoot>
+        {/* <Tfoot>
           {headerGroups.map((headerGroup) => (
             <Tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
@@ -311,7 +315,7 @@ export const SongTable = ({
               ))}
             </Tr>
           ))}
-        </Tfoot>
+        </Tfoot> */}
       </Table>
     </>
   );

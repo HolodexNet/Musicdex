@@ -55,7 +55,6 @@ export function Playlist() {
     queueSongs({ songs: [song], immediatelyPlay: true });
   }
 
-  console.log(playlist, user?.id);
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
 
   const writablePlaylist: Partial<WriteablePlaylist> = useMemo(() => {
