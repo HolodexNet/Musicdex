@@ -126,7 +126,7 @@ export const SongEditableTable = ({
       data: s,
       initialState: { hiddenColumns: ["channel"] },
       disableSortBy: true,
-      getRowId: (or, idx) => idx.toString(),
+      //   getRowId: (or, idx) => idx.toString(),
     },
     useSortBy
   );
@@ -177,7 +177,7 @@ export const SongEditableTable = ({
                     ) : (
                       <Icon as={FaChevronUp} display="inline" mr="2" />
                     ))}
-                  {column.render("Header")}
+                  {column.render("Header")} {newSongIds.join(" ")}
                 </Th>
               ))}
             </Tr>
@@ -191,8 +191,8 @@ export const SongEditableTable = ({
                 index={idx}
                 row={row}
                 moveRow={moveRow}
-                // key={"rc"+row.original.id}
                 {...row.getRowProps()}
+                key={"rc" + row.original.id}
               />
             );
           })}
@@ -279,18 +279,18 @@ const SRow = ({
     },
   });
 
-  const [{ isDragging }, drag, preview] = useDrag({
+  const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: DND_ITEM_TYPE,
     item: { type: DND_ITEM_TYPE, index },
     collect: ((monitor: { isDragging: () => any }) => ({
       isDragging: monitor.isDragging(),
     })) as any,
-  });
+  }));
 
   const opacity = isDragging ? 0 : 1;
 
   preview(drop(dropRef));
-  drag(dragRef);
+  //   drag(dragRef);
 
   return (
     <Tr
@@ -302,7 +302,7 @@ const SRow = ({
     >
       {row.cells.map((cell: any) => {
         if (cell.column.id === "idx") {
-          return <Td ref={dragRef}>Move</Td>;
+          return <Td ref={drag}>Move</Td>;
         }
         return (
           <Td
