@@ -1,35 +1,19 @@
 import {
+  CSSObject,
+  Icon,
+  IconButton,
   Table,
-  Thead,
-  Tr,
-  Th,
   Tbody,
   Td,
-  Tfoot,
-  VStack,
   Text,
-  Box,
+  Th,
+  Thead,
+  Tr,
   useBreakpointValue,
-  IconButton,
-  CSSObject,
   useColorModeValue,
-  Icon,
+  VStack,
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { FiMoreHorizontal, FiTrash } from "react-icons/fi";
-import { useTable, useSortBy, Column } from "react-table";
-import {
-  ContextMenuItem,
-  ContextMenuList,
-  ContextMenuTrigger,
-  useContextTrigger,
-} from "../context-menu";
-import { useStoreActions } from "../../store";
-import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { useClipboardWithToast } from "../../modules/common/clipboard";
-import { useNavigate } from "react-router";
 import {
   DragDropContext,
   Draggable,
@@ -39,6 +23,10 @@ import {
   DroppableProvided,
   DropResult,
 } from "react-beautiful-dnd";
+import { useTranslation } from "react-i18next";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FiTrash } from "react-icons/fi";
+import { Column, useSortBy, useTable } from "react-table";
 
 type IndexedSong = Song & { idx: number };
 interface SongEditableTableProps {

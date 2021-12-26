@@ -121,6 +121,11 @@ export function Playlist() {
           setTitle={(text) => {
             writeNewPlaylist({ ...writablePlaylist, title: text });
           }}
+          count={
+            (editMode
+              ? newSongIds?.length ?? playlist?.content?.length
+              : playlist?.content?.length) || ""
+          }
         />
         <PlaylistButtonArray
           canEdit={isLoggedIn && playlist.owner == user?.id}

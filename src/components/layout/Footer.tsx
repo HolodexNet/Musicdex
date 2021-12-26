@@ -36,7 +36,13 @@ export default function Footer() {
         justify={{ base: "center", md: "space-between" }}
         align={{ base: "center", md: "center" }}
       >
-        <Text>© 2020 Holodex</Text>
+        <Text>
+          © 2020 Holodex.{" "}
+          <small>
+            Musicdex is still under development, bugs and wipes may occur during
+            Alpha.
+          </small>
+        </Text>
         <Stack direction={"row"} spacing={6}>
           <SocialButton
             aria-label="Twitter"

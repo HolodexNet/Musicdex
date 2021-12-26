@@ -18,6 +18,7 @@ type PlaylistHeadingProps = {
   editMode: boolean;
   setTitle?: (text: string) => void;
   setDescription?: (text: string) => void;
+  count: string | number;
 };
 
 export function PlaylistHeading({
@@ -27,6 +28,7 @@ export function PlaylistHeading({
   editMode,
   setTitle,
   setDescription,
+  count,
 }: PlaylistHeadingProps) {
   const colors = useColorModeValue("gray.700", "gray.400");
 
@@ -58,11 +60,14 @@ export function PlaylistHeading({
       <Heading
         lineHeight={1.1}
         fontWeight={600}
-        fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}
+        fontSize={{ base: "3xl", sm: "4xl", md: "5xl", lg: "5xl" }}
       >
         {editTitle ? (
           <form onSubmit={submitHandlerTitle}>
-            <InputGroup colorScheme={titleInvalid ? "red" : "brand"} size="lg">
+            <InputGroup
+              colorScheme={titleInvalid ? "red" : "brand"}
+              size={"lg"}
+            >
               <Input
                 placeholder="Playlist Title"
                 autoFocus
@@ -92,7 +97,11 @@ export function PlaylistHeading({
           icon={<FiEdit3 />}
         ></IconButton>
       </Heading>
-      <Text color={colors} fontWeight={300} fontSize={"2xl"}>
+      <Text
+        color={colors}
+        fontWeight={300}
+        fontSize={{ base: "1xl", sm: "1.5xl", md: "2xl", lg: "2xl" }}
+      >
         {editDescription ? (
           <form onSubmit={submitHandlerDesc}>
             <InputGroup colorScheme={descInvalid ? "red" : "brand"}>
@@ -110,7 +119,7 @@ export function PlaylistHeading({
             </InputGroup>
           </form>
         ) : (
-          description
+          <span>{description}</span>
         )}
         <IconButton
           display={!editDescription && canEdit ? "inline" : "none"}
@@ -122,7 +131,10 @@ export function PlaylistHeading({
           aria-label="edit title"
           variant="link"
           icon={<FiEdit3 />}
-        ></IconButton>
+        ></IconButton>{" "}
+        <Text color="bg.400" float="right">
+          {count}/500
+        </Text>
       </Text>
     </Box>
   );

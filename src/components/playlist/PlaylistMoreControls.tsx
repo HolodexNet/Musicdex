@@ -24,11 +24,13 @@ export function PlaylistMoreControlsMenu({
         aria-label="More"
       ></MenuButton>
       <MenuList>
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>Settings</MenuItem>
+        <MenuItem color="red">Menu Under Construction</MenuItem>
         {/* <MenuItem>Billing</MenuItem> */}
         <MenuDivider />
-        <MenuItem onClick={() => {}}>Sign out</MenuItem>
+        <MenuItem onClick={() => {}}>Make Private</MenuItem>
+        <MenuItem _hover={{ backgroundColor: "red.700" }}>
+          Delete Playlist
+        </MenuItem>
       </MenuList>
     </Menu>
   );

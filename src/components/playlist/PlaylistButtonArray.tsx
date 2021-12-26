@@ -1,4 +1,10 @@
-import { Button, HStack } from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  Spacer,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import React from "react";
 import { FiPlay } from "react-icons/fi";
 import { PlaylistMoreControlsMenu } from "./PlaylistMoreControls";
@@ -20,8 +26,9 @@ export function PlaylistButtonArray({
   editMode: boolean;
   canEdit: boolean;
 }): JSX.Element {
+  // useColorModeValue('bg.400')
   return (
-    <HStack spacing={4}>
+    <HStack spacing={4} flexShrink={1} flexWrap="wrap">
       <Button
         aria-label="play"
         leftIcon={<FiPlay />}

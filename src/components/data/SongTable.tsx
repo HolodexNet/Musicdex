@@ -1,35 +1,31 @@
 import {
+  CSSObject,
+  Icon,
   Table,
-  Thead,
-  Tr,
-  Th,
   Tbody,
   Td,
-  Tfoot,
-  VStack,
   Text,
-  Box,
+  Th,
+  Thead,
+  Tr,
+  useBreakpoint,
   useBreakpointValue,
-  IconButton,
-  CSSObject,
   useColorModeValue,
-  Icon,
+  VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FiMoreHorizontal } from "react-icons/fi";
-import { useTable, useSortBy, Column } from "react-table";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { useNavigate } from "react-router";
+import { Column, useSortBy, useTable } from "react-table";
+import { useClipboardWithToast } from "../../modules/common/clipboard";
+import { useStoreActions } from "../../store";
 import {
   ContextMenuItem,
   ContextMenuList,
-  ContextMenuTrigger,
   useContextTrigger,
 } from "../context-menu";
-import { useStoreActions } from "../../store";
 import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { useClipboardWithToast } from "../../modules/common/clipboard";
-import { useNavigate } from "react-router";
 
 type IndexedSong = Song & { idx: number };
 
@@ -154,11 +150,14 @@ export const SongTable = ({
     useSortBy
   );
 
-  const isXL = useBreakpointValue({ base: false, xl: true });
+  const isXL = useBreakpointValue({ base: 0, xs: 0, sm: 1, md: 2, xl: 3 });
 
   useEffect(() => {
-    toggleHideColumn("original_artist", !isXL);
-    toggleHideColumn("idx", !isXL);
+    if (isXL === undefined) return;
+    toggleHideColumn("original_artist", isXL < 3);
+    toggleHideColumn("idx", isXL < 3);
+    toggleHideColumn("date", isXL < 2);
+    toggleHideColumn("dur", isXL < 1);
   }, [isXL, toggleHideColumn]);
 
   const [menuIdStat] = useState(
@@ -244,7 +243,7 @@ export const SongTable = ({
         }}
       ></ContextMenuList>
 
-      <Table {...getTableProps()} size={isXL ? "md" : "sm"}>
+      <Table {...getTableProps()} size={isXL && isXL >= 1 ? "md" : "sm"}>
         <Thead>
           {headerGroups.map((headerGroup) => (
             <Tr {...headerGroup.getHeaderGroupProps()}>
