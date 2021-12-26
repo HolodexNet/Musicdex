@@ -174,7 +174,7 @@ export const SongTable = ({
   ) =>
     queueSongs({
       songs: [song],
-      immediatelyPlay: false,
+      immediatelyPlay: true,
     });
 
   return (
@@ -193,11 +193,11 @@ export const SongTable = ({
             <>
               <ContextMenuItem
                 onClick={() => {
-                  queueSongs({ songs: [song], immediatelyPlay: true });
+                  queueSongs({ songs: [song], immediatelyPlay: false });
                 }}
                 colorScheme="gray"
               >
-                Play Now
+                Add to queue
               </ContextMenuItem>
               <ContextMenuItem
                 onClick={() => {
