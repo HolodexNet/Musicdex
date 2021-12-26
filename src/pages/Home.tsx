@@ -27,7 +27,7 @@ export function Home() {
         {trendingSongs && (
           <Flex flexDirection="row" mx="-6px" py="8px">
             {trendingSongs.slice(0, 4).map((song) => (
-              <SongItem song={song} mx="6px" />
+              <SongItem song={song} mx="6px" key={song.id} />
             ))}
           </Flex>
         )}

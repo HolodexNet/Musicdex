@@ -1,4 +1,5 @@
 import {
+  Flex,
   IconButton,
   Slider,
   SliderFilledTrack,
@@ -19,8 +20,8 @@ import {
 import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState, useStoreActions } from "../../store";
-import throttle from "lodash-es/throttle";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
+import { debounce, throttle } from "lodash-es";
 
 export function PlayerBar() {
   const currentlyPlaying = useStoreState(
@@ -45,6 +46,8 @@ export function PlayerBar() {
   const [hovering, setHovering] = useState(false);
   const [changing, setChanging] = useState(false);
 
+  const [firstPlay, setFirstPlay] = useState(true);
+
   const next = useStoreActions((actions) => actions.playback.next);
   const previous = useStoreActions((actions) => actions.playback.previous);
 
@@ -63,6 +66,7 @@ export function PlayerBar() {
     (actions) => actions.player.toggledExpanded
   );
 
+  // Set start time when song/repeat/player changes
   useEffect(() => {
     if (player && currentSong) {
       try {
@@ -74,6 +78,13 @@ export function PlayerBar() {
     }
   }, [currentSong, repeat, player]);
 
+  // Debounce Player next
+  const debouncedNext = debounce(() => {
+    console.log("going next");
+    next({ count: 1, userSkipped: false });
+  }, 50);
+
+  // Sync isPlaying
   useEffect(() => {
     if (playerState === 1 || playerState === 2) setIsPlaying(playerState === 1);
   }, [playerState]);
@@ -85,8 +96,12 @@ export function PlayerBar() {
         const s = player.getCurrentTime();
 
         // Make sure player stays in bound
-        if (s < currentSong.start || s > currentSong.end) {
+        if (s < currentSong.start) {
           seekToProgress(0);
+        }
+        if (s > currentSong.end) {
+          debouncedNext();
+          return;
         }
         const shiftedStart = s - currentSong.start;
         const progress =
@@ -150,13 +165,16 @@ export function PlayerBar() {
   function ShuffleIcon() {
     return <MdShuffle size={24} color={shuffleMode ? "" : "grey"} />;
   }
+
   return (
     <PlayerContainer>
-      {currentSong && (
+      <Flex
+        className="yt-container"
+        visibility={currentSong ? "visible" : "hidden"}
+      >
         <YouTube
-          containerClassName="yt-container"
           className="yt-player"
-          videoId={currentSong.video_id}
+          videoId={currentSong?.video_id}
           opts={{
             playerVars: {
               // https://developers.google.com/youtube/player_parameters
@@ -164,12 +182,13 @@ export function PlayerBar() {
               showinfo: 0,
               rel: 0,
               modestbranding: 1,
+              // start: currentSong?.start || undefined,
             },
           }}
           onReady={onReady}
           onStateChange={onStateChange}
         />
-      )}
+      </Flex>
 
       <Slider
         defaultValue={0}
@@ -276,7 +295,7 @@ const PlayerContainer = styled.div`
     z-index: 10;
   }
 
-  .yt-player {
+  .yt-container * {
     width: 100%;
     height: 100%;
   }
@@ -286,6 +305,7 @@ const PlayerContainer = styled.div`
     position: absolute !important;
     top: -3px;
     width: 100%;
+    overflow: hidden;
   }
 `;
 

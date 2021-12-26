@@ -39,6 +39,9 @@ export interface PlaybackModel {
   // ==== Lifecycle:
   // Ejects the currently playing song and puts it somewhere appropriate / throws it out.
   _ejectCurrentlyPlaying: Action<PlaybackModel, void>;
+
+  // Eject without setting currently play
+  _prepareEject: Action<PlaybackModel, void>;
   _undoEject: Action<PlaybackModel, void>;
   // Adds a new song to now playing.
   _insertCurrentlyPlaying: Action<
@@ -174,6 +177,28 @@ const playbackModel: PlaybackModel = {
     // decline to eject if repeat-one, since you just want to play the current one again..
   }),
 
+  // Update history/playedPlaylistQueue without setting currentlyPlaying
+  // Each executed action will cause a rerender of playerBar, so for one frame the currentsong will be undefined
+  _prepareEject: action((state) => {
+    const s = state.currentlyPlaying;
+    if (s.song) {
+      // Add to history
+      state.history = state.history.filter(
+        (x) => x.song && s.song && x.song.id !== s.song.id
+      );
+      state.history.unshift({ ...s });
+      // Trim history
+      if (state.history.length > 100) {
+        state.history.pop();
+      }
+
+      // Add to play queue if needed
+      if (state.currentlyPlaying.from === "playlist") {
+        state.playedPlaylistQueue.push(s.song);
+      }
+    }
+  }),
+
   _undoEject: action((state) => {
     const playback = state.history.shift();
     if (!playback) return;
@@ -268,14 +293,18 @@ const playbackModel: PlaybackModel = {
   next: thunk((actions, { count, userSkipped }, h) => {
     // User initiated skip, ignore repeat-one mode
     while (count > 0) {
-      actions._ejectCurrentlyPlaying();
       const src =
         h.getState().queue.length > 0
           ? "queue"
           : h.getState().playlistQueue.length > 0
           ? "playlist"
           : undefined;
-      if (src) actions._insertCurrentlyPlaying(src);
+      if (src) {
+        actions._prepareEject();
+        actions._insertCurrentlyPlaying(src);
+      } else {
+        actions._ejectCurrentlyPlaying();
+      }
 
       if (
         h.getState().playlistQueue.length === 0 &&
