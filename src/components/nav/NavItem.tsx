@@ -23,7 +23,7 @@ export function NavItem({ icon, children, path, ...rest }: NavItemProps) {
   console.log(pathname);
 
   return (
-    <Link to={path || "#"} style={{ textDecoration: "none" }}>
+    <Link as={NavLink} to={path || "#"} style={{ textDecoration: "none" }}>
       <Flex
         align="center"
         p="4"

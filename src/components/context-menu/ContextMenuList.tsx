@@ -124,7 +124,11 @@ export const ContextMenuList: React.FC<Props & MotionBoxProps> = ({
 
   const closeContextMenus = () => {
     setContextMenusState({
-      ...contextMenusState,
+      passData: contextMenusState.passData,
+      position: {
+        x: -100,
+        y: -100,
+      },
       menus: contextMenusState.menus.map((m) => ({
         ...m,
         isOpen: false,
