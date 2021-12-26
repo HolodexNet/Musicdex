@@ -1,7 +1,13 @@
-import { FlexProps, Flex, Icon, Link } from "@chakra-ui/react";
+import {
+  FlexProps,
+  Flex,
+  Icon,
+  Link,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { ReactText } from "react";
 import { IconType } from "react-icons";
-import { Link as RouterLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
@@ -10,8 +16,14 @@ interface NavItemProps extends FlexProps {
 }
 
 export function NavItem({ icon, children, path, ...rest }: NavItemProps) {
+  const bgc = useColorModeValue("n2.600", "n2.400");
+  const bgcBrand = useColorModeValue("brand.200", "brand.700");
+
+  const { pathname } = useLocation();
+  console.log(pathname);
+
   return (
-    <Link as={RouterLink} to={path || "#"} style={{ textDecoration: "none" }}>
+    <Link to={path || "#"} style={{ textDecoration: "none" }}>
       <Flex
         align="center"
         p="4"
@@ -19,9 +31,10 @@ export function NavItem({ icon, children, path, ...rest }: NavItemProps) {
         borderRadius="lg"
         role="group"
         cursor="pointer"
+        color={pathname === path ? bgc : "auto"}
         _hover={{
-          bg: "cyan.400",
-          color: "white",
+          bg: bgcBrand,
+          // color: "white",
         }}
         {...rest}
       >
@@ -29,9 +42,11 @@ export function NavItem({ icon, children, path, ...rest }: NavItemProps) {
           <Icon
             mr="4"
             fontSize="16"
-            _groupHover={{
-              color: "white",
-            }}
+            _groupHover={
+              {
+                // color: "white",
+              }
+            }
             as={icon}
           />
         )}

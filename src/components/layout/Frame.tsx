@@ -16,7 +16,7 @@ import { LinkItemProps, SidebarContent } from "../nav/Sidebar";
 
 const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, path: "/" },
-  { name: "Recently Played", icon: FiClock, path: "/" },
+  { name: "Recently Played", icon: FiClock, path: "/history" },
   { name: "Liked Songs", icon: FiHeart, path: "/" },
   { name: "My Playlists", icon: FiServer, path: "/" },
   { name: "Settings", icon: FiSettings, path: "/" },

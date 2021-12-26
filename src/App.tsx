@@ -6,6 +6,7 @@ import { Playlist } from "./pages/Playlist";
 import FrameWithHeader from "./components/layout/Frame";
 import styled from "@emotion/styled";
 import { Song } from "./pages/Song";
+import { History } from "./pages/History";
 
 function App(this: any) {
   return (
@@ -27,12 +28,7 @@ function App(this: any) {
               <InProgress>My Playlists page under construction</InProgress>
             }
           />
-          <Route
-            path="/history"
-            element={
-              <InProgress>My Playlists page under construction</InProgress>
-            }
-          />
+          <Route path="/history" element={<History />} />
         </Routes>
       </FrameWithHeader>
     </Router>
