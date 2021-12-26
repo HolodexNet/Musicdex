@@ -23,8 +23,9 @@ export const SongItem = ({ song, ...rest }: SongItemProps) => {
         marginLeft="-16px"
         border="2px"
         borderColor="gray.800"
+        boxSizing="content-box"
       />
-      <Text size="md" marginLeft={2} fontWeight="600" noOfLines={2}>
+      <Text marginLeft={2} fontWeight="600" noOfLines={2}>
         {song.name}
       </Text>
     </Flex>
