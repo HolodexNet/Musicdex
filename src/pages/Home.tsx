@@ -1,8 +1,9 @@
-import { Container, Select } from "@chakra-ui/react";
+import { Container, Flex, Select } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Loading } from "../components/common/Loading";
 import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
+import { SongItem } from "../components/song/SongItem";
 import { useTrendingSongs } from "../modules/services/songs.service";
 
 export function Home() {
@@ -23,6 +24,13 @@ export function Home() {
       <div>
         <h1>Top20</h1>
         {isLoading && <Loading />}
+        {trendingSongs && (
+          <Flex flexDirection="row" mx="-6px" py="8px">
+            {trendingSongs.slice(0, 4).map((song) => (
+              <SongItem song={song} mx="6px" />
+            ))}
+          </Flex>
+        )}
         {trendingSongs && <SongTable songs={trendingSongs} />}
       </div>
     </PageContainer>
