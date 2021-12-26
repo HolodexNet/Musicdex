@@ -62,7 +62,7 @@ export function PlaylistButtonArray({
           onFinishEditClick && onFinishEditClick(e);
         }}
       >
-        Done Editing
+        Save Changes
       </Button>
       <PlaylistMoreControlsMenu></PlaylistMoreControlsMenu>
     </HStack>
