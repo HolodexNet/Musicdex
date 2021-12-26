@@ -115,6 +115,9 @@ export const SongEditableTable = ({
           // console.log(cellInfo);
           return (
             <IconButton
+              onClick={() => {
+                moveOrDeleteItem(cellInfo.row.original.idx, undefined);
+              }}
               variant="outline"
               aria-label="delete"
               colorScheme="red"
@@ -157,14 +160,15 @@ export const SongEditableTable = ({
     backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
   };
 
-  const moveRow = (dragIndex: number, hoverIndex: number) => {
-    // console.log(dragIndex, hoverIndex);
+  const moveOrDeleteItem = (idx: number, toIdx: number | undefined) => {
+    // console.log(idx, toIdx);
     const arrayAroundDragged = [
-      ...newSongIds.slice(0, dragIndex),
-      ...newSongIds.slice(dragIndex + 1),
+      ...newSongIds.slice(0, idx),
+      ...newSongIds.slice(idx + 1),
     ];
-    arrayAroundDragged.splice(hoverIndex, 0, newSongIds[dragIndex]);
+    if (toIdx) arrayAroundDragged.splice(toIdx, 0, newSongIds[idx]);
     setNewSongIds(arrayAroundDragged);
+    songsEdited(arrayAroundDragged);
   };
 
   const onDragEnd = (result: DropResult) => {
@@ -181,7 +185,7 @@ export const SongEditableTable = ({
       return;
     }
 
-    moveRow(result.source.index, result.destination.index);
+    moveOrDeleteItem(result.source.index, result.destination.index);
   };
 
   return (

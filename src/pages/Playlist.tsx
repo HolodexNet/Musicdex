@@ -1,4 +1,4 @@
-import { Box, useColorModeValue } from "@chakra-ui/react";
+import { Box, useColorModeValue, useToast } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -65,6 +65,36 @@ export function Playlist() {
     return c;
   }, [playlist]);
 
+  // Editing:
+  const [newSongIds, setNewSongIds] = useState<number[] | null>(null);
+
+  const toast = useToast();
+
+  const finishSongEditing = async () => {
+    if (newSongIds !== null) {
+      const newWritable: Partial<WriteablePlaylist> = {
+        ...playlist,
+        content: newSongIds,
+      };
+      writeNewPlaylist(newWritable).then(
+        (_) => {
+          //success:
+          toast({ variant: "subtle", status: "success", title: "Saved" });
+          setEditMode(false);
+        },
+        (err) => {
+          toast({
+            variant: "solid",
+            status: "error",
+            title: "Failed to Save",
+            description: err,
+          });
+          setEditMode(false);
+        }
+      );
+    }
+  };
+
   if (!playlist) return <div> loading </div>;
 
   return (
@@ -108,14 +138,14 @@ export function Playlist() {
           onEditClick={() => {
             setEditMode(true);
           }}
-          onFinishEditClick={() => setEditMode(false)}
+          onFinishEditClick={finishSongEditing}
         />
         <Box pt="4">
           {playlist.content &&
             (editMode ? (
               <SongEditableTable
                 songs={playlist.content}
-                songsEdited={(ids) => console.log(ids)}
+                songsEdited={setNewSongIds}
               />
             ) : (
               <SongTable songs={playlist.content} />
