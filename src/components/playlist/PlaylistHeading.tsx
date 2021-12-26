@@ -133,7 +133,7 @@ export function PlaylistHeading({
           icon={<FiEdit3 />}
         ></IconButton>{" "}
         <Text color="bg.400" float="right">
-          {count}/500
+          {count || 0}/500
         </Text>
       </Text>
     </Box>
