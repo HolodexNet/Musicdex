@@ -50,7 +50,7 @@ export function Song() {
                 {song.name}
               </Text>
               <HStack py={2}>
-                <ChannelPhoto channelId={song.channel_id} size={40} />
+                <ChannelPhoto channelId={song.channel_id} resizePhoto={30} />
                 <Link>
                   <Text fontSize="2xl" color="n2.300">
                     {song.channel.english_name || song.channel.name}
