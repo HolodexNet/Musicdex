@@ -14,6 +14,7 @@ import { useParams } from "react-router";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { Loading } from "../components/common/Loading";
 import { PageContainer } from "../components/layout/PageContainer";
+import { SongArtwork } from "../components/song/SongArtwork";
 import { useSong } from "../modules/services/songs.service";
 import { resizeArtwork } from "../modules/songs/utils";
 import { useStoreActions } from "../store";
@@ -23,18 +24,15 @@ export function Song() {
   let songId = params.songId!;
 
   const { t, i18n } = useTranslation();
-  const breakpoint = useBreakpointValue({
-    sm: 200,
-    base: 300,
-    md: 400,
-    lg: 400,
-  });
+  const imageSize =
+    useBreakpointValue({
+      sm: 200,
+      base: 300,
+      md: 400,
+      lg: 400,
+    }) || 300;
 
   const { data: song, isLoading, isFetching, error, isError } = useSong(songId);
-  const resizedArt = useMemo(
-    () => (song ? resizeArtwork(song.art, breakpoint) : undefined),
-    [song, breakpoint]
-  );
 
   const queueSong = useStoreActions((actions) => actions.playback.queueSongs);
 
@@ -43,21 +41,12 @@ export function Song() {
       {isLoading && <Loading />}
       {song && (
         <Flex wrap="wrap">
-          <Flex shrink={1} minW={breakpoint + "px"}>
-            <Image
-              p={3}
-              src={resizedArt}
-              alt={song.name}
-              width={breakpoint + "px"}
-              height={breakpoint + "px"}
-            />
-          </Flex>
-          <Flex flexDirection="column" p={3} minW="300px" shrink={0}>
+          <SongArtwork song={song} size={imageSize} p={3} />
+          <Flex flexDirection="column" px={3} py={5} flex="1 1 300px">
             <Box marginTop="auto">
               <Text fontSize="3xl" fontWeight={600}>
                 {song.name}
               </Text>
-
               <HStack py={2}>
                 <ChannelPhoto channelId={song.channel_id} size={40} />
                 <Link>
