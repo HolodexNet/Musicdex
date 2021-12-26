@@ -17,6 +17,7 @@ import {
   identifyTitle,
 } from "../utils/PlaylistHelper";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
+import { SongEditableTable } from "../components/data/SongTableEditable";
 
 export function Playlist() {
   let params = useParams();
@@ -111,7 +112,15 @@ export function Playlist() {
           onFinishEditClick={() => setEditMode(false)}
         />
         <Box pt="4">
-          {playlist.content && <SongTable songs={playlist.content} />}
+          {playlist.content &&
+            (editMode ? (
+              <SongEditableTable
+                songs={playlist.content}
+                songsEdited={(ids) => console.log(ids)}
+              />
+            ) : (
+              <SongTable songs={playlist.content} />
+            ))}
         </Box>
       </Box>
     </PageContainer>

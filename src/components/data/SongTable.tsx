@@ -159,7 +159,7 @@ export const SongTable = ({
   }, [isXL, toggleHideColumn]);
 
   const [menuIdStat] = useState(
-    () => menuId || Math.floor(Math.random() * 10000).toString()
+    () => menuId || "st" + Math.floor(Math.random() * 100000).toString()
   );
 
   const contextMenuTrigger = useContextTrigger({ menuId: menuIdStat });
@@ -271,6 +271,7 @@ export const SongTable = ({
                 onContextMenu={(e) => {
                   contextMenuTrigger(e, row.original);
                 }}
+                key={menuIdStat + "st" + row.original.id}
                 _hover={HOVER_ROW_STYLE}
               >
                 {row.cells.map((cell) => (
