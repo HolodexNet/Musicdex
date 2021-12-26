@@ -1,0 +1,13 @@
+{
+  "add": "Add",
+  "load": "Load",
+  "save": "Save",
+  "close": "Close",
+  "edit": "Edit",
+  "remove": "Remove",
+  "set": "Set",
+  "shortDate": "{{date, short}}",
+  "shortDateTime": "{{date, datetime}}",
+  "longDate": "{{date, long}}",
+  "relativeDate": "{{date, ago}}"
+}

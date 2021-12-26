@@ -23,7 +23,9 @@ export function Song() {
   let params = useParams();
   let songId = params.songId!;
 
-  const { t, i18n } = useTranslation();
+  // const { t, i18n } = useTranslation();
+  const t = (str: string, ..._: any) => str;
+
   const imageSize =
     useBreakpointValue({
       sm: 200,

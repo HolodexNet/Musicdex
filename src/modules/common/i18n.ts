@@ -8,6 +8,7 @@ import {
   isDate,
 } from "date-fns";
 import { enUS, ja, zhTW } from "date-fns/locale"; // import all locales we need
+import I18NextHttpBackend from "i18next-http-backend";
 
 const locales: { [key: string]: Locale } = { "en-US": enUS, ja, zhTW }; // used to look up the required locale
 
@@ -41,12 +42,14 @@ const resources = {
 };
 
 i18n
+  .use(I18NextHttpBackend)
   .use(LanguageDetector)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
-    resources,
-    debug: false,
+    // resources,
+    debug: true,
     fallbackLng: "en",
+    saveMissing: true,
     interpolation: {
       escapeValue: false,
       format: (value, format, lng, options) => {
@@ -62,11 +65,11 @@ i18n
               60 * 24 * 60 * 30 * 1000
             ) {
               return formatDate(value, "P", { locale });
-            }
-          return formatDistanceToNow(value, {
-            locale,
-            addSuffix: true,
-          });
+            } else
+              return formatDistanceToNow(value, {
+                locale,
+                addSuffix: true,
+              });
           if (format === "datetime") return formatDate(value, "Pp", { locale });
           return formatDate(value, format!, { locale });
         }
@@ -78,3 +81,9 @@ i18n
       order: ["navigator", "localStorage"],
     },
   });
+
+i18n.on("missingKey", (lngs, namespace, key, res) => {
+  console.error(
+    `Missing i18N Key / TL: lng=${lngs}, namespace=${namespace}, key=${key}, res=${res};`
+  );
+});

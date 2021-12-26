@@ -59,7 +59,8 @@ export const SongTable = ({
   isSortable = true,
   menuId,
 }: SongTableProps) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  // const t = (str: string, ..._: { date: Date; }[]) => str;
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const s: IndexedSong[] = React.useMemo(() => {
     return songs.map((v, i) => {
@@ -122,7 +123,7 @@ export const SongTable = ({
         },
       },
     ],
-    [t]
+    []
   );
 
   const showAddDialog = useStoreActions(

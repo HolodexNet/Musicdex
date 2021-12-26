@@ -6,11 +6,11 @@ import {
 import { createStore, persist, StoreProvider } from "easy-peasy";
 // https://chakra-ui.com/docs/migration#css-reset
 import "focus-visible/dist/focus-visible";
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import App from "./App";
-import "./modules/i18n";
+import "./modules/common/i18n";
 import { store } from "./store";
 import { theme } from "./theme";
 import reportWebVitals from "./utils/reportWebVitals";
@@ -28,7 +28,9 @@ store.persist.resolveRehydration().then(() => {
           </ThemeEditorProvider> */}
 
           <QueryClientProvider client={queryClient}>
-            <App />
+            <Suspense fallback="...">
+              <App />
+            </Suspense>
           </QueryClientProvider>
         </ChakraProvider>
       </StoreProvider>

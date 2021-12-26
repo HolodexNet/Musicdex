@@ -1,12 +1,15 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"i18n-ally.localesPaths": [
-			"src/modules/i18n"
-		]
-	}
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "i18n-ally.localesPaths": [
+      "src/modules/i18n",
+      "public/locales",
+      "../../../../../Users/Xiaonan/VTubers/Musicdex/public/locales"
+    ],
+    "i18n-ally.keystyle": "nested"
+  }
 }
