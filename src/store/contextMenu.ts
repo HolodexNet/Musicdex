@@ -28,8 +28,8 @@ export interface ContextMenuStore {
 export const contextMenusAtom: ContextMenuStore = {
   menu: {
     position: {
-      x: -100,
-      y: -100,
+      x: -10000,
+      y: -10000,
     },
     menus: [],
     passData: undefined,
