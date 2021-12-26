@@ -123,7 +123,7 @@ export const SongTable = ({
         },
       },
     ],
-    []
+    [t]
   );
 
   const showAddDialog = useStoreActions(
