@@ -7,6 +7,7 @@ import FrameWithHeader from "./components/layout/Frame";
 import styled from "@emotion/styled";
 import { Song } from "./pages/Song";
 import { History } from "./pages/History";
+import { Search } from "./pages/Search";
 
 function App(this: any) {
   return (
@@ -27,6 +28,8 @@ function App(this: any) {
             element={<InProgress>Liked page under construction</InProgress>}
           />
           <Route path="/history" element={<History />} />
+          <Route path="/search" element={<Search></Search>} />
+
           <Route
             path="/settings"
             element={<InProgress>Settings page under construction</InProgress>}
