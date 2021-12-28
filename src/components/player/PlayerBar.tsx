@@ -21,7 +21,7 @@ import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState, useStoreActions } from "../../store";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
-import { debounce, throttle } from "lodash-es";
+import { debounce } from "lodash-es";
 
 export function PlayerBar() {
   const currentlyPlaying = useStoreState(
@@ -32,11 +32,10 @@ export function PlayerBar() {
   // PlayerState
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [playerState, setPlayerState] = useState(-1);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const buffering = useMemo(() => playerState === 3, [playerState]);
 
   const [progress, setProgress] = useState<number>(0);
-  const [seekAhead, setSeekAhead] = useState<number>(0);
 
   const totalDuration = useMemo(
     () => (currentSong ? currentSong.end - currentSong.start : 0),
@@ -44,9 +43,6 @@ export function PlayerBar() {
   );
 
   const [hovering, setHovering] = useState(false);
-  const [changing, setChanging] = useState(false);
-
-  const [firstPlay, setFirstPlay] = useState(true);
 
   const next = useStoreActions((actions) => actions.playback.next);
   const previous = useStoreActions((actions) => actions.playback.previous);
@@ -68,56 +64,64 @@ export function PlayerBar() {
 
   // Set start time when song/repeat/player changes
   useEffect(() => {
-    if (player && currentSong) {
-      try {
-        player.seekTo(currentSong.start, true);
-      } catch (e) {
-        console.log("uh oh");
-        console.error(e);
-      }
-    }
+    setProgress(0);
   }, [currentSong, repeat, player]);
 
   // Debounce Player next
   const debouncedNext = debounce(() => {
-    console.log("going next");
     next({ count: 1, userSkipped: false });
   }, 50);
 
-  // Sync isPlaying
-  useEffect(() => {
-    if (playerState === 1 || playerState === 2) setIsPlaying(playerState === 1);
-  }, [playerState]);
-
   useEffect(() => {
     let timer: NodeJS.Timer | null = null;
-    if (player && currentSong) {
+    // Increase progress by 200ms if it fufills the conditions
+    if (player && currentSong && isPlaying && !buffering) {
       timer = setInterval(() => {
-        const s = player.getCurrentTime();
-
-        // Make sure player stays in bound
-        if (s < currentSong.start) {
-          seekToProgress(0);
-        }
-        if (s > currentSong.end) {
-          debouncedNext();
-          return;
-        }
-        const shiftedStart = s - currentSong.start;
-        const progress =
-          Math.min(Math.max(shiftedStart / totalDuration, 0), 1) * 100;
-        setProgress(progress);
+        setProgress((prev) => {
+          // const s = ((prev/100) * totalDuration);
+          // return (((s + .2) / totalDuration) * 100);
+          return prev + (0.2 * 100) / totalDuration;
+        });
       }, 200);
     }
     return () => {
       timer && clearInterval(timer);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, currentSong]);
+  }, [player, currentSong, isPlaying, totalDuration, buffering]);
+
+  const SYNC_THRESHOLD_SECONDS = 0.5;
+  useEffect(() => {
+    if (!player || !currentSong) return;
+    const playerTime = player.getCurrentTime();
+    const expectedTime = currentSong.start + (progress / 100) * totalDuration;
+
+    // Sync progress with player time, when it desyncs by a threshold
+    if (Math.abs(playerTime - expectedTime) > SYNC_THRESHOLD_SECONDS) {
+      player.seekTo(expectedTime, true);
+    }
+
+    // Sync isPlaying state
+    if ((playerState === 1 && !isPlaying) || (playerState === 2 && isPlaying)) {
+      isPlaying ? player.playVideo() : player.pauseVideo();
+    }
+
+    // Proceeed to next song
+    if (progress >= 100) {
+      debouncedNext();
+      return;
+    }
+  }, [
+    player,
+    isPlaying,
+    progress,
+    totalDuration,
+    currentSong,
+    playerState,
+    debouncedNext,
+  ]);
 
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
-    if (player && currentSong) player.seekTo(currentSong?.start, true);
   }
 
   function onStateChange(e: { data: number }) {
@@ -125,31 +129,16 @@ export function PlayerBar() {
   }
   // controls
   function togglePlay() {
+    if (player) isPlaying ? player.pauseVideo() : player.playVideo();
     setIsPlaying((prev) => !prev);
-    if (player) {
-      isPlaying ? player.pauseVideo() : player.playVideo();
-    }
   }
 
   function onChange(e: any) {
-    seekToProgress(e);
-    setSeekAhead(e);
-    setChanging(true);
+    setProgress(e);
   }
-
-  function onChangeEnd() {
-    setChanging(false);
-  }
-
-  const seekToProgress = throttle((percent: number) => {
-    if (player && currentSong) {
-      player.seekTo(currentSong.start + (percent / 100) * totalDuration, true);
-    }
-  }, 100);
 
   function SliderLabel() {
-    const p = buffering || changing ? seekAhead : progress;
-    return <span>{`${Math.round((p / 100) * totalDuration)}s`}</span>;
+    return <span>{`${Math.round((progress / 100) * totalDuration)}s`}</span>;
   }
 
   function RepeatIcon() {
@@ -178,11 +167,10 @@ export function PlayerBar() {
           opts={{
             playerVars: {
               // https://developers.google.com/youtube/player_parameters
-              autoplay: 1,
+              autoplay: 0,
               showinfo: 0,
               rel: 0,
               modestbranding: 1,
-              // start: currentSong?.start || undefined,
             },
           }}
           onReady={onReady}
@@ -195,13 +183,12 @@ export function PlayerBar() {
         step={0.1}
         min={0}
         max={100}
-        value={buffering || changing ? seekAhead : progress}
+        value={progress}
         className="progress-slider"
         colorScheme="blue"
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
         onChange={onChange}
-        onChangeEnd={onChangeEnd}
       >
         <SliderTrack height={hovering ? "8px" : "6px"}>
           <SliderFilledTrack />
