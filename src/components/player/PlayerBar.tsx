@@ -6,6 +6,9 @@ import {
   SliderThumb,
   SliderTrack,
   Tooltip,
+  Text,
+  HStack,
+  Box,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
@@ -22,6 +25,7 @@ import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState, useStoreActions } from "../../store";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 import { debounce } from "lodash-es";
+import { SongArtwork } from "../song/SongArtwork";
 
 export function PlayerBar() {
   // Current song
@@ -41,7 +45,7 @@ export function PlayerBar() {
 
   // Internal state
   const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState<number>(0);
+  const [progress, setProgress] = useState(0);
   const [hovering, setHovering] = useState(false);
 
   const next = useStoreActions((actions) => actions.playback.next);
@@ -196,8 +200,8 @@ export function PlayerBar() {
         onMouseLeave={() => setHovering(false)}
         onChange={onChange}
       >
-        <SliderTrack height={hovering ? "8px" : "6px"}>
-          <SliderFilledTrack />
+        <SliderTrack height={hovering ? "10px" : "6px"}>
+          <SliderFilledTrack background="linear-gradient(to right, #5D75F2, #F06292)" />
         </SliderTrack>
         <Tooltip
           hasArrow
@@ -213,9 +217,18 @@ export function PlayerBar() {
       <PlayerMain>
         <div className="left">
           <span>
-            {currentSong?.name}
-            <br />
-            {currentSong?.channel.english_name || currentSong?.channel.name}
+            {currentSong && (
+              <HStack>
+                <SongArtwork song={currentSong} size={50} />
+                <Box>
+                  <Text noOfLines={1}>{currentSong.name}</Text>
+                  <Text noOfLines={1} color="whiteAlpha.600">
+                    {currentSong.channel.english_name ||
+                      currentSong.channel.name}
+                  </Text>
+                </Box>
+              </HStack>
+            )}
           </span>
         </div>
         <div className="center">
