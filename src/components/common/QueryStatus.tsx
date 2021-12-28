@@ -24,7 +24,9 @@ export function QueryStatus({
           <Text fontSize="3xl" colorScheme="red">
             Error occured
           </Text>
-          <Text>{JSON.stringify(queryStatus.error as AxiosError)}</Text>
+          <Text maxWidth="100%">
+            {JSON.stringify(queryStatus.error as AxiosError)}
+          </Text>
           {/* <Button onClick={reset}>Retry</Button> */}
         </Fragment>
       )}
