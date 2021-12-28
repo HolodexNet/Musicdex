@@ -24,24 +24,24 @@ import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 import { debounce } from "lodash-es";
 
 export function PlayerBar() {
+  // Current song
   const currentlyPlaying = useStoreState(
     (state) => state.playback.currentlyPlaying
   );
   const { song: currentSong, repeat } = currentlyPlaying;
-
-  // PlayerState
-  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
-  const [playerState, setPlayerState] = useState(-1);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const buffering = useMemo(() => playerState === 3, [playerState]);
-
-  const [progress, setProgress] = useState<number>(0);
-
   const totalDuration = useMemo(
     () => (currentSong ? currentSong.end - currentSong.start : 0),
     [currentSong]
   );
 
+  // PlayerState
+  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
+  const [playerState, setPlayerState] = useState(-1);
+  const buffering = useMemo(() => playerState === 3, [playerState]);
+
+  // Internal state
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState<number>(0);
   const [hovering, setHovering] = useState(false);
 
   const next = useStoreActions((actions) => actions.playback.next);
@@ -72,6 +72,9 @@ export function PlayerBar() {
     next({ count: 1, userSkipped: false });
   }, 50);
 
+  /**
+   * Internal timer to increment progress if playing
+   */
   useEffect(() => {
     let timer: NodeJS.Timer | null = null;
     // Increase progress by 200ms if it fufills the conditions
@@ -89,6 +92,9 @@ export function PlayerBar() {
     };
   }, [player, currentSong, isPlaying, totalDuration, buffering]);
 
+  /**
+   * Sync player state with internal values
+   */
   const SYNC_THRESHOLD_SECONDS = 0.5;
   useEffect(() => {
     if (!player || !currentSong) return;
