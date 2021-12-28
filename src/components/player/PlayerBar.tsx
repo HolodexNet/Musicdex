@@ -24,7 +24,6 @@ import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState, useStoreActions } from "../../store";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
-import { debounce } from "lodash-es";
 import { SongArtwork } from "../song/SongArtwork";
 
 export function PlayerBar() {
@@ -71,11 +70,6 @@ export function PlayerBar() {
     setProgress(0);
   }, [currentSong, repeat, player]);
 
-  // Debounce Player next
-  const debouncedNext = debounce(() => {
-    next({ count: 1, userSkipped: false });
-  }, 50);
-
   /**
    * Internal timer to increment progress if playing
    */
@@ -117,7 +111,8 @@ export function PlayerBar() {
 
     // Proceeed to next song
     if (progress >= 100) {
-      debouncedNext();
+      setProgress(0);
+      next({ count: 1, userSkipped: false });
       return;
     }
   }, [
@@ -127,7 +122,7 @@ export function PlayerBar() {
     totalDuration,
     currentSong,
     playerState,
-    debouncedNext,
+    next,
   ]);
 
   function onReady(event: { target: YouTubePlayer }) {
@@ -217,7 +212,7 @@ export function PlayerBar() {
       <PlayerMain>
         <div className="left">
           <span>
-            {currentSong && (
+            {!!currentSong && (
               <HStack>
                 <SongArtwork song={currentSong} size={50} />
                 <Box>
