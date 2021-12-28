@@ -28,10 +28,14 @@ export default function FrameWithHeader({
   children?: ReactNode;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const colorMode = useColorModeValue("applight", "appdark");
+
   return (
     <Box
       h="100vh"
       w="100vw"
+      className={colorMode}
       bg={useColorModeValue("bg.100", "bg.900")}
       overflow="hidden"
     >

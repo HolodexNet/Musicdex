@@ -1,0 +1,48 @@
+/* Works on Firefox
+.appdark * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(233, 233, 233, 0.856) rgba(133, 133, 133, 0.459);
+}
+
+/* Works on Chrome, Edge, and Safari 
+.appdark *::-webkit-scrollbar {
+  width: 12px;
+}
+
+.appdark *::-webkit-scrollbar-track {
+  background: rgba(75, 75, 75, 0.582);
+}
+
+.appdark *::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.425);
+  border-radius: 20px;
+  border: 3px solid rgba(94, 94, 94, 0.582);
+} */
+
+* {
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar,
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.appdark::-webkit-scrollbar-track,
+::-webkit-scrollbar-track {
+  background: #181818;
+}
+
+.appdark::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb {
+  background: #575757;
+}
+
+.applight ::-webkit-scrollbar-track {
+  background: #d6d6d6;
+}
+
+.applight ::-webkit-scrollbar-thumb {
+  background: #858585;
+}

@@ -14,6 +14,7 @@ import "./modules/common/i18n";
 import { store } from "./store";
 import { theme } from "./theme";
 import reportWebVitals from "./utils/reportWebVitals";
+import "./global.css";
 
 // https://easy-peasy.dev/docs/api/persist.html
 const queryClient = new QueryClient();
