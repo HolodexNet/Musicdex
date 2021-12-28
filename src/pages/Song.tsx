@@ -12,7 +12,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
-import { Loading } from "../components/common/Loading";
+import { QueryStatus } from "../components/common/QueryStatus";
 import { PageContainer } from "../components/layout/PageContainer";
 import { SongArtwork } from "../components/song/SongArtwork";
 import { useSong } from "../modules/services/songs.service";
@@ -34,13 +34,13 @@ export function Song() {
       lg: 400,
     }) || 300;
 
-  const { data: song, isLoading, isFetching, error, isError } = useSong(songId);
+  const { data: song, ...rest } = useSong(songId);
 
   const queueSong = useStoreActions((actions) => actions.playback.queueSongs);
 
   return (
     <PageContainer>
-      {isLoading && <Loading />}
+      <QueryStatus queryStatus={rest} />
       {song && (
         <Flex wrap="wrap">
           <SongArtwork song={song} size={imageSize} p={3} />

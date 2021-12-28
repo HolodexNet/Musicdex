@@ -1,6 +1,6 @@
 import { Container, Flex, Select } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Loading } from "../components/common/Loading";
+import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
 import { SongItem } from "../components/song/SongItem";
@@ -8,7 +8,7 @@ import { useTrendingSongs } from "../modules/services/songs.service";
 
 export function Home() {
   const [org, setOrg] = useState<string>("Hololive");
-  const { data: trendingSongs, isLoading } = useTrendingSongs({ org });
+  const { data: trendingSongs, ...rest } = useTrendingSongs({ org });
 
   function handle(e: any) {
     setOrg(e.target.value);
@@ -23,7 +23,7 @@ export function Home() {
       </Select>
       <div>
         <h1>Top20</h1>
-        {isLoading && <Loading />}
+        <QueryStatus queryStatus={rest} />
         {trendingSongs && (
           <Flex flexDirection="row" mx="-6px" py="8px">
             {trendingSongs.slice(0, 4).map((song) => (
