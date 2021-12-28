@@ -1,4 +1,4 @@
-import { Container, Flex, Select } from "@chakra-ui/react";
+import { Container, Flex, Heading, Select, VStack } from "@chakra-ui/react";
 import React, { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Loading } from "../components/common/Loading";
@@ -27,16 +27,11 @@ export function Search() {
 
   return (
     <PageContainer>
-      {isLoading && <Loading />}
-      {songs && (
-        //   <Flex flexDirection="row" mx="-6px" py="8px">
-        //     {songs.slice(0, 4).map((song) => (
-        //       <SongItem song={song} mx="6px" key={song.id} />
-        //     ))}
-        //   </Flex>
-        <div>Hi</div>
-      )}
-      {songs && <SongTable songs={songs} />}
+      <VStack spacing={5}>
+        {isLoading && <Loading />}
+        <Heading size="lg">Search: "{qObj.q || ""}"</Heading>
+        {songs && <SongTable songs={songs} />}
+      </VStack>
     </PageContainer>
   );
 }
