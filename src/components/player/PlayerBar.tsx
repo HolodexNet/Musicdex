@@ -218,7 +218,7 @@ export function PlayerBar() {
           <span>
             {!!currentSong && (
               <HStack>
-                <SongArtwork song={currentSong} size={70} marginRight={2} />
+                <SongArtwork song={currentSong} size={50} marginRight={2} />
                 <Box>
                   <Text noOfLines={1}>{currentSong.name}</Text>
                   <Text noOfLines={1} color="whiteAlpha.600">
