@@ -218,7 +218,7 @@ export function PlayerBar() {
           <span>
             {!!currentSong && (
               <HStack>
-                <SongArtwork song={currentSong} size={50} />
+                <SongArtwork song={currentSong} size={70} marginRight={2} />
                 <Box>
                   <Text noOfLines={1}>{currentSong.name}</Text>
                   <Text noOfLines={1} color="whiteAlpha.600">
@@ -319,10 +319,13 @@ const PlayerMain = styled.div`
   width: 100%;
   height: 80px;
   align-items: center;
+  padding-top: 5px;
 
   .left > span {
     margin-right: auto;
     padding-left: 20px;
+    margin-top: auto;
+    bottom: 0px;
   }
   .right > span {
     margin-left: auto;
