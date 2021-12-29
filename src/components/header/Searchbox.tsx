@@ -4,6 +4,7 @@ import {
   IconButton,
   Input,
   InputGroup,
+  InputRightAddon,
   InputRightElement,
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
@@ -38,12 +39,13 @@ export function Searchbox(): JSX.Element {
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onChange={(e) => setValue(e.currentTarget.value)}
+            paddingRight="80px"
           />
           <InputRightElement width="80px">
             <HStack>
               <IconButton
-                color="green.400"
-                bgColor={isFocused ? "green.100" : "whiteAlpha.200"}
+                color="green.500"
+                bgColor={isFocused ? "green.200" : "whiteAlpha.200"}
                 size="sm"
                 aria-label="Search"
                 icon={<FiSearch />}
@@ -52,6 +54,8 @@ export function Searchbox(): JSX.Element {
               <IconButton
                 size="sm"
                 aria-label="Advanced Search"
+                colorScheme={isFocused ? "n2" : "bgAlpha"}
+                variant="outline"
                 icon={<FiFilter />}
               ></IconButton>
             </HStack>
