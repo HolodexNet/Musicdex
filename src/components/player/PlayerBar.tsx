@@ -238,6 +238,7 @@ export function PlayerBar() {
             onClick={() => previous()}
           />
           <IconButton
+            size="lg"
             aria-label="Play"
             icon={isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
             variant="ghost"
