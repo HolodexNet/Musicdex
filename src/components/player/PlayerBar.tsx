@@ -28,10 +28,12 @@ import { SongArtwork } from "../song/SongArtwork";
 
 export function PlayerBar() {
   // Current song
-  const currentlyPlaying = useStoreState(
-    (state) => state.playback.currentlyPlaying
+  const currentSong = useStoreState(
+    (state) => state.playback.currentlyPlaying.song
   );
-  const { song: currentSong, repeat } = currentlyPlaying;
+  const repeat = useStoreState(
+    (state) => state.playback.currentlyPlaying.repeat
+  );
   const totalDuration = useMemo(
     () => (currentSong ? currentSong.end - currentSong.start : 0),
     [currentSong]
@@ -196,7 +198,9 @@ export function PlayerBar() {
         onChange={onChange}
       >
         <SliderTrack height={hovering ? "10px" : "6px"}>
-          <SliderFilledTrack background="linear-gradient(to right, #5D75F2, #F06292)" />
+          <SliderFilledTrack
+            background={`linear-gradient(to right, var(--chakra-colors-brand-400), var(--chakra-colors-n2-400))`}
+          />
         </SliderTrack>
         <Tooltip
           hasArrow

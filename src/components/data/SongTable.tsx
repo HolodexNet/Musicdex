@@ -173,11 +173,13 @@ export const SongTable = ({
   const defaultClickBehavior = (
     e: React.MouseEvent<any, MouseEvent>,
     song: Song
-  ) =>
+  ) => {
+    console.log("click");
     queueSongs({
       songs: [song],
       immediatelyPlay: true,
     });
+  };
 
   return (
     <>
@@ -284,6 +286,11 @@ export const SongTable = ({
                     {...(cell.column.id !== "..."
                       ? {
                           onClick: (e) => {
+                            console.log(
+                              window.getSelection()?.toString()?.length
+                            );
+                            if (window.getSelection()?.toString()?.length)
+                              return e.preventDefault();
                             songClicked
                               ? songClicked(e, row.original)
                               : defaultClickBehavior(e as any, row.original);
