@@ -51,6 +51,10 @@ export const useLikeSongChecker = (songId: string) => {
         `/musicdex/like/check?song_id=${songId}`
       );
       return req.data === "TRUE";
+    },
+    {
+      cacheTime: 24000,
+      staleTime: 24000,
     }
   );
   return result;
