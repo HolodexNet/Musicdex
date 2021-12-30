@@ -132,6 +132,7 @@ export function Playlist() {
           }
         />
         <PlaylistButtonArray
+          playlist={playlist}
           canEdit={isLoggedIn && playlist.owner == user?.id}
           editMode={editMode}
           onPlayClick={() => {

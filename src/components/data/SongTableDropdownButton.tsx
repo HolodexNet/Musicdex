@@ -1,20 +1,13 @@
 import {
-  Avatar,
-  Box,
-  HStack,
+  IconButton,
   Menu,
   MenuButton,
-  Text,
   MenuDivider,
   MenuItem,
   MenuList,
   MenuProps,
-  VStack,
-  IconButton,
-  useClipboard,
-  useToast,
 } from "@chakra-ui/react";
-import { FiChevronDown, FiMoreHorizontal } from "react-icons/fi";
+import { FiMoreHorizontal } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions } from "../../store";

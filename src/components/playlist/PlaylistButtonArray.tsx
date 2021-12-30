@@ -18,6 +18,7 @@ export function PlaylistButtonArray({
   onFinishEditClick,
   editMode,
   canEdit,
+  playlist,
 }: {
   onPlayClick: ClickEventHandler;
   onAddQueueClick: ClickEventHandler;
@@ -25,6 +26,7 @@ export function PlaylistButtonArray({
   onFinishEditClick?: ClickEventHandler;
   editMode: boolean;
   canEdit: boolean;
+  playlist: PlaylistFull;
 }): JSX.Element {
   // useColorModeValue('bg.400')
   return (
@@ -71,7 +73,7 @@ export function PlaylistButtonArray({
       >
         Save Changes
       </Button>
-      <PlaylistMoreControlsMenu></PlaylistMoreControlsMenu>
+      <PlaylistMoreControlsMenu playlist={playlist}></PlaylistMoreControlsMenu>
     </HStack>
   );
 }
