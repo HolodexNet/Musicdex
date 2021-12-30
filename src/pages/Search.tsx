@@ -1,4 +1,12 @@
-import { Container, Flex, Heading, Select, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Container,
+  Flex,
+  Heading,
+  HStack,
+  Select,
+  VStack,
+} from "@chakra-ui/react";
 import React, { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { QueryStatus } from "../components/common/QueryStatus";
@@ -31,6 +39,9 @@ export function Search() {
         <QueryStatus queryStatus={rest} />
         <Heading size="lg">Search: "{qObj.q || ""}"</Heading>
         {songs && <SongTable songs={songs} />}
+        <HStack>
+          <Button disabled>Prev</Button>(WIP)<Button disabled>Next</Button>
+        </HStack>
       </VStack>
     </PageContainer>
   );

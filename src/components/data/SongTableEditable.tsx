@@ -41,7 +41,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
     return newSongIds.map((id, idx) => {
       return {
         ...songs.find((x) => x.id === id)!,
-        idx,
+        idx: idx + 1,
       };
     });
   }, [newSongIds, songs]);

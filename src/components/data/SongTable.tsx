@@ -63,7 +63,7 @@ export const SongTable = ({
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const s: IndexedSong[] = React.useMemo(() => {
     return songs.map((v, i) => {
-      return { ...v, idx: i };
+      return { ...v, idx: i + 1 };
     });
   }, [songs]);
   const currentId = useStoreState(
