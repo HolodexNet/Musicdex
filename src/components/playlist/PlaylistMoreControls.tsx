@@ -18,8 +18,9 @@ import {
 
 export function PlaylistMoreControlsMenu({
   playlist,
+  canEdit,
   ...rest
-}: Omit<MenuProps, "children"> & { playlist: PlaylistFull }) {
+}: Omit<MenuProps, "children"> & { playlist: PlaylistFull; canEdit: boolean }) {
   const { mutateAsync: write, isLoading } = usePlaylistWriter();
   const { mutateAsync: del } = usePlaylistDeleter();
 

@@ -40,7 +40,7 @@ export const useSongLikeUpdater = (
   );
 };
 
-export const useLikeSongChecker = (songId: string) => {
+export const useLikeSongChecker = (songId: string, enabled: boolean) => {
   // const queryClient = useQueryClient();
   const { AxiosInstance } = useClient();
   const result = useQuery(
@@ -55,6 +55,7 @@ export const useLikeSongChecker = (songId: string) => {
     {
       cacheTime: 24000,
       staleTime: 24000,
+      enabled,
     }
   );
   return result;

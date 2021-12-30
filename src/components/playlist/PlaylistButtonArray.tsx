@@ -6,7 +6,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
-import { FiPlay } from "react-icons/fi";
+import { FiPlay, FiShare, FiShare2 } from "react-icons/fi";
+import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { PlaylistMoreControlsMenu } from "./PlaylistMoreControls";
 
 type ClickEventHandler = React.MouseEventHandler<HTMLButtonElement>;
@@ -29,6 +30,7 @@ export function PlaylistButtonArray({
   playlist: PlaylistFull;
 }): JSX.Element {
   // useColorModeValue('bg.400')
+  const clip = useClipboardWithToast();
   return (
     <HStack spacing={4} flexShrink={1} flexWrap="wrap">
       <Button
@@ -73,7 +75,19 @@ export function PlaylistButtonArray({
       >
         Save Changes
       </Button>
-      <PlaylistMoreControlsMenu playlist={playlist}></PlaylistMoreControlsMenu>
+      <Button
+        variant="ghost"
+        aria-label="share link"
+        size="md"
+        onClick={() => clip(window.location.toString(), false)}
+        colorScheme="n2"
+      >
+        <FiShare2 />
+      </Button>
+      <PlaylistMoreControlsMenu
+        playlist={playlist}
+        canEdit={canEdit}
+      ></PlaylistMoreControlsMenu>
     </HStack>
   );
 }

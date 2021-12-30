@@ -6,8 +6,14 @@ import {
   useSongLikeUpdater,
 } from "../../modules/services/like.service";
 
-export function SongLikeButton({ songId }: { songId: string }) {
-  const { data: liked } = useLikeSongChecker(songId);
+export function SongLikeButton({
+  songId,
+  active,
+}: {
+  songId: string;
+  active: boolean;
+}) {
+  const { data: liked, isFetched } = useLikeSongChecker(songId, active);
   // const like = useSongLikeUpdater({ song_id: songId, action: "add" });
   const { mutate: updateLike, isSuccess, isError } = useSongLikeUpdater();
   const toast = useToast();
@@ -21,6 +27,23 @@ export function SongLikeButton({ songId }: { songId: string }) {
       isClosable: true,
     });
   }, [isSuccess, isError, toast]);
+
+  if (!active) {
+    return (
+      <IconButton
+        icon={<FaRegHeart />}
+        aria-label="Like Song"
+        variant="ghost"
+        colorScheme="whiteAlpha"
+        // style={{
+        //   backgroundClip: 'text',
+        //   color:'transparent',
+        //   backgroundColor: '#444',
+        //   backgroundImage: '-webkit-linear-gradient(45deg, rgba(0, 0, 0, .3) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, .3) 50%, rgba(0, 0, 0, .3) 75%, transparent 75%, transparent)',
+        // }}
+      ></IconButton>
+    );
+  }
 
   function toggleLike() {
     updateLike({

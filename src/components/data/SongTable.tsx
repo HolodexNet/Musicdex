@@ -310,8 +310,11 @@ export const SongTable = ({
                         }
                       : {})}
                   >
-                    {cell.column.id === "..." && index === hoverIndex && (
-                      <SongLikeButton songId={row.original.id} />
+                    {cell.column.id === "..." && (
+                      <SongLikeButton
+                        songId={row.original.id}
+                        active={index === hoverIndex}
+                      />
                     )}
                     {cell.render("Cell")}
                   </Td>
