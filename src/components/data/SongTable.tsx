@@ -249,7 +249,7 @@ export const SongTable = ({
                 Go To Song Page
               </ContextMenuItem>
               <ContextMenuItem
-                onClick={({ passData }) => {}}
+                onClick={() => navigate("/video/" + song.video_id)}
                 colorScheme="gray"
               >
                 Go To Video Page

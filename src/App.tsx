@@ -9,6 +9,7 @@ import { Song } from "./pages/Song";
 import { History } from "./pages/History";
 import { Search } from "./pages/Search";
 import { LikedSongs } from "./pages/LikedSongs";
+import { Video } from "./pages/Video";
 
 function App(this: any) {
   return (
@@ -27,7 +28,7 @@ function App(this: any) {
           <Route path="/liked" element={<LikedSongs />} />
           <Route path="/history" element={<History />} />
           <Route path="/search" element={<Search></Search>} />
-
+          <Route path="/video/:id" element={<Video></Video>} />
           <Route
             path="/settings"
             element={<InProgress>Settings page under construction</InProgress>}

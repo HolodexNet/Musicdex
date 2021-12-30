@@ -73,7 +73,13 @@ export function PlaylistSongTableDropDownMenu({
         >
           Go To Song Page
         </MenuItem>
-        <MenuItem>Go To Video Page</MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate("/video/" + song.video_id);
+          }}
+        >
+          Go To Video Page
+        </MenuItem>
         <MenuItem>Go to Channel Page</MenuItem>
         {/* <MenuDivider /> */}
       </MenuList>
