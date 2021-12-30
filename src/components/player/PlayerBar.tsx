@@ -94,7 +94,7 @@ export function PlayerBar() {
       ((status.currentTime - currentSong.start) * 100) /
         (currentSong.end - currentSong.start)
     );
-  }, [currentSong, isRefetching, player, status, totalDuration]);
+  }, [currentSong, player, status, totalDuration]);
 
   /**
    * Sync player state with internal values
