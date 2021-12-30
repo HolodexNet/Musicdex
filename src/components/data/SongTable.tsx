@@ -19,7 +19,8 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { Column, useSortBy, useTable } from "react-table";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
-import { useStoreActions } from "../../store";
+import { useStoreActions, useStoreState } from "../../store";
+import { MTHolodex, MTHolodexIcon } from "../common/MTHolodex";
 import {
   ContextMenuItem,
   ContextMenuList,
@@ -63,6 +64,10 @@ export const SongTable = ({
       return { ...v, idx: i };
     });
   }, [songs]);
+  const currentId = useStoreState(
+    (state) => state.playback.currentlyPlaying?.song?.id
+  );
+  console.log(currentId);
   const columns: Column<IndexedSong>[] = React.useMemo<Column<IndexedSong>[]>(
     () => [
       {
@@ -71,6 +76,13 @@ export const SongTable = ({
         maxWidth: 40,
         minWidth: 40,
         width: 40,
+        Cell: (cellInfo: any) => {
+          return cellInfo.row.original.id === currentId ? (
+            <Icon width="12px" height="12px" as={MTHolodexIcon}></Icon>
+          ) : (
+            cellInfo.row.original.idx
+          );
+        },
       },
       {
         Header: "Title",
@@ -122,7 +134,7 @@ export const SongTable = ({
         },
       },
     ],
-    [t]
+    [t, currentId]
   );
 
   const showAddDialog = useStoreActions(
