@@ -11,7 +11,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   FaChevronDown,
   FaChevronUp,
@@ -148,6 +148,24 @@ export function PlayerBar() {
     setProgress(0);
   }, [currentSong, repeat]);
 
+  const calledOnce = useRef(false);
+
+  useEffect(() => {
+    if (calledOnce.current) {
+      return;
+    }
+
+    if (player && currentSong) {
+      changeVideo({
+        id: currentSong?.video_id,
+        start: currentSong.start,
+      });
+
+      calledOnce.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [player, currentSong]);
+
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
   }
@@ -201,7 +219,7 @@ export function PlayerBar() {
           opts={{
             playerVars: {
               // https://developers.google.com/youtube/player_parameters
-              autoplay: 1,
+              autoplay: 0,
               showinfo: 0,
               rel: 0,
               modestbranding: 1,

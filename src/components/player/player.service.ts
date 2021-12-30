@@ -68,8 +68,8 @@ export const usePlayerMutateChangeVideo = (player: YouTubePlayer | null) => {
       }
       if (player.getPlayerState() !== PlayerStates.PLAYING) {
         // if it's not playing, play it.
+        player.seekTo(start, true);
         player.playVideoAt(start);
-        player.playVideo();
         throw new Error("wrong state");
       }
       if (Math.abs(player.getCurrentTime() - start) > 2.0) {
