@@ -94,6 +94,7 @@ export const usePlayerMutateChangeVideo = (player: YouTubePlayer | null) => {
     {
       retry: 5,
       retryDelay: 250,
+      onError() {},
     }
   );
 };

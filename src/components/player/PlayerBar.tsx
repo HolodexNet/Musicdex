@@ -86,7 +86,6 @@ export function PlayerBar() {
       status?.error ||
       status?.currentTime === undefined ||
       currentSong === undefined ||
-      isRefetching ||
       currentSong.video_id !== status.currentVideo
     )
       return setProgress(0);
