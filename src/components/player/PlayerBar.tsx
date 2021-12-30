@@ -25,6 +25,7 @@ import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState, useStoreActions } from "../../store";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 import { SongArtwork } from "../song/SongArtwork";
+import { usePlayerMutateChangeVideo, usePlayerState } from "./player.service";
 
 export function PlayerBar() {
   // Current song
@@ -47,6 +48,18 @@ export function PlayerBar() {
   // Internal state
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+
+  const {
+    mutateAsync: changeVideo,
+    isLoading,
+    isError: videoChangeError,
+  } = usePlayerMutateChangeVideo(player);
+  const {
+    data: status,
+    isRefetching,
+    isSuccess,
+  } = usePlayerState(player, !isLoading);
+
   const [hovering, setHovering] = useState(false);
 
   const next = useStoreActions((actions) => actions.playback.next);
@@ -69,42 +82,23 @@ export function PlayerBar() {
 
   // Set start time when song/repeat/player changes
   useEffect(() => {
-    setProgress(0);
-  }, [currentSong, repeat, player]);
-
-  /**
-   * Internal timer to increment progress if playing
-   */
-  useEffect(() => {
-    let timer: NodeJS.Timer | null = null;
-    // Increase progress by 200ms if it fufills the conditions
-    if (player && currentSong && isPlaying && !buffering) {
-      timer = setInterval(() => {
-        setProgress((prev) => {
-          // const s = ((prev/100) * totalDuration);
-          // return (((s + .2) / totalDuration) * 100);
-          return prev + (0.2 * 100) / totalDuration;
-        });
-      }, 200);
-    }
-    return () => {
-      timer && clearInterval(timer);
-    };
-  }, [player, currentSong, isPlaying, totalDuration, buffering]);
+    if (
+      status?.error ||
+      status?.currentTime === undefined ||
+      currentSong === undefined
+    )
+      return setProgress(0);
+    setProgress(
+      ((status.currentTime - currentSong.start) * 100) / totalDuration
+    );
+  }, [currentSong, player, status, totalDuration]);
 
   /**
    * Sync player state with internal values
    */
-  const SYNC_THRESHOLD_SECONDS = 0.5;
   useEffect(() => {
     if (!player || !currentSong) return;
     const playerTime = player.getCurrentTime();
-    const expectedTime = currentSong.start + (progress / 100) * totalDuration;
-
-    // Sync progress with player time, when it desyncs by a threshold
-    if (Math.abs(playerTime - expectedTime) > SYNC_THRESHOLD_SECONDS) {
-      player.seekTo(expectedTime, true);
-    }
 
     // Sync isPlaying state
     if ((playerState === 1 && !isPlaying) || (playerState === 2 && isPlaying)) {
@@ -112,20 +106,12 @@ export function PlayerBar() {
     }
 
     // Proceeed to next song
-    if (progress >= 100) {
+    if (progress >= 100 || playerTime >= player.getDuration() - 1) {
       setProgress(0);
       next({ count: 1, userSkipped: false });
       return;
     }
-  }, [
-    player,
-    isPlaying,
-    progress,
-    totalDuration,
-    currentSong,
-    playerState,
-    next,
-  ]);
+  }, [player, isPlaying, progress, currentSong, playerState, next]);
 
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
@@ -141,6 +127,12 @@ export function PlayerBar() {
   }
 
   function onChange(e: any) {
+    if (!currentSong) return;
+    if (!isPlaying) setIsPlaying(true);
+    changeVideo({
+      id: currentSong.video_id,
+      start: currentSong.start + (e / 100) * totalDuration,
+    });
     setProgress(e);
   }
 
