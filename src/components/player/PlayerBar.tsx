@@ -86,13 +86,17 @@ export function PlayerBar() {
     if (
       status?.error ||
       status?.currentTime === undefined ||
-      currentSong === undefined
+      currentSong === undefined ||
+      isRefetching ||
+      currentSong.video_id !== status.currentVideo
     )
       return setProgress(0);
+
     setProgress(
-      ((status.currentTime - currentSong.start) * 100) / totalDuration
+      ((status.currentTime - currentSong.start) * 100) /
+        (currentSong.end - currentSong.start)
     );
-  }, [currentSong, player, status, totalDuration]);
+  }, [currentSong, isRefetching, player, status, totalDuration]);
 
   /**
    * Sync player state with internal values
@@ -106,13 +110,43 @@ export function PlayerBar() {
       isPlaying ? player.playVideo() : player.pauseVideo();
     }
 
+    if (currentSong.video_id !== status?.currentVideo) {
+      return;
+    }
     // Proceeed to next song
-    if (progress >= 100 || playerTime >= player.getDuration() - 1) {
+    if (
+      progress >= 100 ||
+      (playerTime >= player.getDuration() - 1 && playerTime > 0)
+    ) {
+      console.log("finish", progress, playerTime);
       setProgress(0);
       next({ count: 1, userSkipped: false });
       return;
     }
-  }, [player, isPlaying, progress, currentSong, playerState, next]);
+  }, [
+    player,
+    isPlaying,
+    progress,
+    currentSong,
+    playerState,
+    next,
+    status?.currentVideo,
+  ]);
+
+  useEffect(() => {
+    if (
+      status?.error ||
+      status?.currentTime === undefined ||
+      currentSong === undefined
+    )
+      return;
+
+    changeVideo({
+      id: currentSong.video_id,
+      start: currentSong.start,
+    });
+    setProgress(0);
+  }, [currentSong, repeat]);
 
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
@@ -167,7 +201,7 @@ export function PlayerBar() {
           opts={{
             playerVars: {
               // https://developers.google.com/youtube/player_parameters
-              autoplay: 0,
+              autoplay: 1,
               showinfo: 0,
               rel: 0,
               modestbranding: 1,
