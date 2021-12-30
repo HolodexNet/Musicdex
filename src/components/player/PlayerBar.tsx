@@ -197,7 +197,7 @@ export function PlayerBar() {
       >
         <YouTube
           className="yt-player"
-          videoId={currentSong?.video_id || ""}
+          videoId={""}
           opts={{
             playerVars: {
               // https://developers.google.com/youtube/player_parameters
