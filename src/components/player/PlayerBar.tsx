@@ -26,6 +26,7 @@ import { useStoreState, useStoreActions } from "../../store";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 import { SongArtwork } from "../song/SongArtwork";
 import { usePlayerMutateChangeVideo, usePlayerState } from "./player.service";
+import { formatSeconds } from "../../utils/SongHelper";
 
 export function PlayerBar() {
   // Current song
@@ -136,8 +137,8 @@ export function PlayerBar() {
     setProgress(e);
   }
 
-  function SliderLabel() {
-    return <span>{`${Math.round((progress / 100) * totalDuration)}s`}</span>;
+  function ElapsedLabel() {
+    return <span>{formatSeconds((progress / 100) * totalDuration)}</span>;
   }
 
   function RepeatIcon() {
@@ -162,7 +163,7 @@ export function PlayerBar() {
       >
         <YouTube
           className="yt-player"
-          videoId={currentSong?.video_id}
+          videoId={currentSong?.video_id || ""}
           opts={{
             playerVars: {
               // https://developers.google.com/youtube/player_parameters
@@ -200,7 +201,7 @@ export function PlayerBar() {
           color="white"
           placement="top"
           isOpen={hovering}
-          label={<SliderLabel />}
+          label={<ElapsedLabel />}
         >
           <SliderThumb visibility={hovering ? "visible" : "hidden"} />
         </Tooltip>
@@ -245,6 +246,13 @@ export function PlayerBar() {
         </div>
         <div className="right">
           <span>
+            <Text
+              color="whiteAlpha.600"
+              fontSize=".85em"
+              display="inline-block"
+            >
+              <ElapsedLabel /> / <span>{formatSeconds(totalDuration)}</span>
+            </Text>
             <IconButton
               aria-label="Shuffle"
               icon={<ShuffleIcon />}
@@ -287,6 +295,7 @@ const PlayerContainer = styled.div`
 
   .yt-container {
     width: 400px;
+    max-width: 100%;
     height: 225px;
     position: absolute;
     bottom: 90px;
@@ -298,27 +307,23 @@ const PlayerContainer = styled.div`
     height: 100%;
   }
 
-  .progress-slider,
   .chakra-slider {
-    position: absolute !important;
-    top: -3px;
+    position: fixed !important;
+    margin-top: -3px;
     width: 100%;
-    overflow: hidden;
   }
 `;
 
 const PlayerMain = styled.div`
   display: flex;
   width: 100%;
-  height: 80px;
   align-items: center;
   padding-top: 5px;
+  /* flex-direction: column; */
 
   .left > span {
     margin-right: auto;
     padding-left: 20px;
-    margin-top: auto;
-    bottom: 0px;
   }
   .right > span {
     margin-left: auto;

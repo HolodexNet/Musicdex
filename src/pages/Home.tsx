@@ -25,9 +25,9 @@ export function Home() {
         <h1>Top20</h1>
         <QueryStatus queryStatus={rest} />
         {trendingSongs && (
-          <Flex flexDirection="row" mx="-6px" py="8px">
+          <Flex flexDirection="row" mx="-6px" py="8px" flexWrap="wrap">
             {trendingSongs.slice(0, 4).map((song) => (
-              <SongItem song={song} mx="6px" key={song.id} />
+              <SongItem song={song} mx="2px" key={song.id} />
             ))}
           </Flex>
         )}

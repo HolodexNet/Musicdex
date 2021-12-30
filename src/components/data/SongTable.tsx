@@ -20,6 +20,7 @@ import { useNavigate } from "react-router";
 import { Column, useSortBy, useTable } from "react-table";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions, useStoreState } from "../../store";
+import { formatSeconds } from "../../utils/SongHelper";
 import { MTHolodex, MTHolodexIcon } from "../common/MTHolodex";
 import { NowPlayingIcon } from "../common/NowPlayingIcon";
 import {
@@ -113,7 +114,7 @@ export const SongTable = ({
         id: "dur",
         Header: "Duration",
         accessor: (row: { end: number; start: number }) => {
-          return row.end - row.start;
+          return formatSeconds(row.end - row.start);
         },
         isNumeric: true,
       },
