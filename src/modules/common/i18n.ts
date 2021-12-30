@@ -53,7 +53,7 @@ i18n
       order: ["localStorage", "querystring", "navigator"], // local storage first. then querystring for incoming users?
     },
     backend: {
-      reloadInterval: 5000,
+      // reloadInterval: 5000,
     },
   });
 
