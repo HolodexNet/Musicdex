@@ -21,6 +21,7 @@ import { Column, useSortBy, useTable } from "react-table";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions, useStoreState } from "../../store";
 import { MTHolodex, MTHolodexIcon } from "../common/MTHolodex";
+import { NowPlayingIcon } from "../common/NowPlayingIcon";
 import {
   ContextMenuItem,
   ContextMenuList,
@@ -68,6 +69,7 @@ export const SongTable = ({
     (state) => state.playback.currentlyPlaying?.song?.id
   );
   console.log(currentId);
+  // const [front,front2] = useCOlorMode
   const columns: Column<IndexedSong>[] = React.useMemo<Column<IndexedSong>[]>(
     () => [
       {
@@ -78,7 +80,7 @@ export const SongTable = ({
         width: 40,
         Cell: (cellInfo: any) => {
           return cellInfo.row.original.id === currentId ? (
-            <Icon width="12px" height="12px" as={MTHolodexIcon}></Icon>
+            <NowPlayingIcon style={{ color: "var(--chakra-colors-n2-400)" }} />
           ) : (
             cellInfo.row.original.idx
           );
