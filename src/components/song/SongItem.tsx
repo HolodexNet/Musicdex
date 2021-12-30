@@ -11,7 +11,8 @@ export const SongItem = ({ song, ...rest }: SongItemProps) => {
     <Flex
       height="72px"
       padding={3}
-      width={324}
+      width={310}
+      minWidth={200}
       background="gray.800"
       borderRadius="lg"
       alignItems="center"
