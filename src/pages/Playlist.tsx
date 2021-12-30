@@ -66,7 +66,7 @@ export function Playlist() {
   }, [playlist]);
 
   // Editing:
-  const [newSongIds, setNewSongIds] = useState<number[] | null>(null);
+  const [newSongIds, setNewSongIds] = useState<string[] | null>(null);
 
   const toast = useToast();
 

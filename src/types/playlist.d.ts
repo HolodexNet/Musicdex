@@ -7,7 +7,7 @@ interface WriteablePlaylist {
   type: string;
   owner: string | number;
   listed: boolean;
-  content?: number[];
+  content?: string[];
 }
 
 interface PlaylistStub {
@@ -40,7 +40,7 @@ interface Song {
   creator_id: number;
   approver_id: number;
   is_mv: boolean;
-  id: number;
+  id: string;
   status: string;
   channel: {
     name: string;

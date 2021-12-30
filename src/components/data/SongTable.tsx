@@ -28,6 +28,7 @@ import {
   ContextMenuList,
   useContextTrigger,
 } from "../context-menu";
+import { SongLikeButton } from "../song/SongLikeButton";
 import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";
 
 type IndexedSong = Song & { idx: number };
@@ -164,6 +165,7 @@ export const SongTable = ({
 
   const isXL = useBreakpointValue({ base: 0, xs: 0, sm: 1, md: 2, xl: 3 });
 
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   useEffect(() => {
     if (isXL === undefined) return;
     toggleHideColumn("original_artist", isXL < 3);
@@ -278,7 +280,7 @@ export const SongTable = ({
           ))}
         </Thead>
         <Tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
+          {rows.map((row, index) => {
             prepareRow(row);
             return (
               <Tr
@@ -288,6 +290,8 @@ export const SongTable = ({
                 }}
                 key={menuIdStat + "st" + row.original.id}
                 _hover={HOVER_ROW_STYLE}
+                onMouseEnter={() => setHoverIndex(index)}
+                onMouseLeave={() => setHoverIndex(null)}
               >
                 {row.cells.map((cell) => (
                   <Td
@@ -306,6 +310,9 @@ export const SongTable = ({
                         }
                       : {})}
                   >
+                    {cell.column.id === "..." && index === hoverIndex && (
+                      <SongLikeButton songId={row.original.id} />
+                    )}
                     {cell.render("Cell")}
                   </Td>
                 ))}

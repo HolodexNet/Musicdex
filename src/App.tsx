@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 import { Song } from "./pages/Song";
 import { History } from "./pages/History";
 import { Search } from "./pages/Search";
+import { LikedSongs } from "./pages/LikedSongs";
 
 function App(this: any) {
   return (
@@ -23,10 +24,7 @@ function App(this: any) {
               <InProgress>My Playlists page under construction</InProgress>
             }
           />
-          <Route
-            path="/liked"
-            element={<InProgress>Liked page under construction</InProgress>}
-          />
+          <Route path="/liked" element={<LikedSongs />} />
           <Route path="/history" element={<History />} />
           <Route path="/search" element={<Search></Search>} />
 

@@ -31,7 +31,7 @@ import { Column, useSortBy, useTable } from "react-table";
 type IndexedSong = Song & { idx: number };
 interface SongEditableTableProps {
   songs: Song[];
-  songsEdited: (songIds: number[]) => void;
+  songsEdited: (songIds: string[]) => void;
 }
 
 const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
