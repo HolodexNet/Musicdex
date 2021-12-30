@@ -44,7 +44,6 @@ export function PlayerBar() {
   // PlayerState
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [playerState, setPlayerState] = useState(-1);
-  const buffering = useMemo(() => playerState === 3, [playerState]);
 
   // Internal state
   const [isPlaying, setIsPlaying] = useState(false);
@@ -102,8 +101,8 @@ export function PlayerBar() {
    * Sync player state with internal values
    */
   useEffect(() => {
-    if (!player || !currentSong) return;
-    const playerTime = player.getCurrentTime();
+    if (!player || !currentSong || !status || status.error) return;
+    const playerTime = status.currentTime;
 
     // Sync isPlaying state
     if ((playerState === 1 && !isPlaying) || (playerState === 2 && isPlaying)) {
@@ -138,9 +137,13 @@ export function PlayerBar() {
       status?.error ||
       status?.currentTime === undefined ||
       currentSong === undefined
-    )
+    ) {
+      changeVideo({
+        id: "",
+        start: 0,
+      });
       return;
-
+    }
     changeVideo({
       id: currentSong.video_id,
       start: currentSong.start,

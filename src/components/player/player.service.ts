@@ -66,16 +66,21 @@ export const usePlayerMutateChangeVideo = (player: YouTubePlayer | null) => {
         player.loadVideoById(id, start);
         throw new Error("wrong vid");
       }
-      if (player.getPlayerState() !== PlayerStates.PLAYING) {
-        // if it's not playing, play it.
-        player.seekTo(start, true);
-        player.playVideoAt(start);
-        throw new Error("wrong state");
-      }
       if (Math.abs(player.getCurrentTime() - start) > 2.0) {
         // if the time is wrong, seek to the right time.
         player.seekTo(start, true);
         throw new Error("wrong time");
+      }
+      if (
+        player.getPlayerState() !== PlayerStates.PLAYING &&
+        player.getPlayerState() !== PlayerStates.BUFFERING
+      ) {
+        // if it's not playing, play it.
+        // player.seekTo(start, true);
+        player.playVideoAt(start);
+        throw new Error(
+          "wrong state" + player.getPlayerState() + "!=" + PlayerStates.PLAYING
+        );
       }
       return {
         currentTime: player.getCurrentTime(),
@@ -87,7 +92,7 @@ export const usePlayerMutateChangeVideo = (player: YouTubePlayer | null) => {
       } as PlayerStatus;
     },
     {
-      retry: 8,
+      retry: 5,
       retryDelay: 250,
     }
   );
