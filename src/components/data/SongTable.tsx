@@ -51,6 +51,12 @@ export interface SongTableProps {
   menuId?: string;
 }
 
+const COLUMN_MIN_WIDTHS: { [key: string]: string } = {
+  idx: "40px",
+  // 'dur': '20px',
+  "...": "100px",
+};
+
 export const SongTable = ({
   songs,
   songClicked,
@@ -71,6 +77,8 @@ export const SongTable = ({
     (state) => state.playback.currentlyPlaying?.song?.id
   );
   // const [front,front2] = useCOlorMode
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+
   const columns: Column<IndexedSong>[] = React.useMemo<Column<IndexedSong>[]>(
     () => [
       {
@@ -165,7 +173,6 @@ export const SongTable = ({
 
   const isXL = useBreakpointValue({ base: 0, xs: 0, sm: 1, md: 2, xl: 3 });
 
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   useEffect(() => {
     if (isXL === undefined) return;
     toggleHideColumn("original_artist", isXL < 3);
@@ -261,11 +268,12 @@ export const SongTable = ({
       <Table {...getTableProps()} size={isXL && isXL >= 1 ? "md" : "sm"}>
         <Thead>
           {headerGroups.map((headerGroup) => (
-            <Tr {...headerGroup.getHeaderGroupProps()}>
+            <Tr {...headerGroup.getHeaderGroupProps()} px={2}>
               {headerGroup.headers.map((column) => (
                 <Th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   isNumeric={(column as any).isNumeric}
+                  px={{ xl: 3, base: 2 }}
                 >
                   {column.isSorted &&
                     (column.isSortedDesc ? (
@@ -297,7 +305,9 @@ export const SongTable = ({
                   <Td
                     {...cell.getCellProps()}
                     isNumeric={(cell.column as any).isNumeric}
-                    {...{ width: cell.column.id === "idx" ? "40px" : "auto" }}
+                    {...{
+                      width: COLUMN_MIN_WIDTHS?.[cell.column.id] || "auto",
+                    }}
                     {...(cell.column.id !== "..."
                       ? {
                           onClick: (e) => {
@@ -309,6 +319,7 @@ export const SongTable = ({
                           },
                         }
                       : {})}
+                    px={{ xl: 3, base: 2 }}
                   >
                     {cell.column.id === "..." && (
                       <SongLikeButton

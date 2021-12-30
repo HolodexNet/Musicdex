@@ -28,23 +28,6 @@ export function SongLikeButton({
     });
   }, [isSuccess, isError, toast]);
 
-  if (!active) {
-    return (
-      <IconButton
-        icon={<FaRegHeart />}
-        aria-label="Like Song"
-        variant="ghost"
-        colorScheme="whiteAlpha"
-        // style={{
-        //   backgroundClip: 'text',
-        //   color:'transparent',
-        //   backgroundColor: '#444',
-        //   backgroundImage: '-webkit-linear-gradient(45deg, rgba(0, 0, 0, .3) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, .3) 50%, rgba(0, 0, 0, .3) 75%, transparent 75%, transparent)',
-        // }}
-      ></IconButton>
-    );
-  }
-
   function toggleLike() {
     updateLike({
       song_id: songId,
@@ -54,10 +37,14 @@ export function SongLikeButton({
 
   return (
     <IconButton
+      size="sm"
       icon={liked ? <FaHeart /> : <FaRegHeart />}
       aria-label="Like Song"
       onClick={toggleLike}
+      colorScheme={active ? "brand" : "whiteAlpha"}
       variant="ghost"
+      mr={2}
+      ml={-1}
     ></IconButton>
   );
 }

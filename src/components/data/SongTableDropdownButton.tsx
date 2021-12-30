@@ -30,6 +30,8 @@ export function PlaylistSongTableDropDownMenu({
         icon={<FiMoreHorizontal />}
         as={IconButton}
         rounded="full"
+        size="sm"
+        mr={-2}
         variant="ghost"
         colorScheme="n2"
         aria-label="More"
