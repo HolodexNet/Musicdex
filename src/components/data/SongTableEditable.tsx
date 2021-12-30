@@ -34,10 +34,7 @@ interface SongEditableTableProps {
   songsEdited: (songIds: number[]) => void;
 }
 
-export const SongEditableTable = ({
-  songs,
-  songsEdited,
-}: SongEditableTableProps) => {
+const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
   const { t } = useTranslation();
   const [newSongIds, setNewSongIds] = useState(() => songs.map((x) => x.id));
   const s: IndexedSong[] = useMemo(() => {
@@ -264,3 +261,5 @@ export const SongEditableTable = ({
     </DragDropContext>
   );
 };
+
+export default SongEditableTable;

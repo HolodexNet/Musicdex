@@ -1,6 +1,6 @@
 import { Box, useColorModeValue, useToast } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
@@ -17,7 +17,7 @@ import {
   identifyTitle,
 } from "../utils/PlaylistHelper";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
-import { SongEditableTable } from "../components/data/SongTableEditable";
+import React from "react";
 
 export function Playlist() {
   let params = useParams();
@@ -95,6 +95,10 @@ export function Playlist() {
     }
   };
 
+  const SongEditableTable = React.lazy(
+    () => import("../components/data/SongTableEditable")
+  );
+
   if (!playlist) return <div> loading </div>;
 
   return (
@@ -148,10 +152,12 @@ export function Playlist() {
         <Box pt="4">
           {playlist.content &&
             (editMode ? (
-              <SongEditableTable
-                songs={playlist.content}
-                songsEdited={setNewSongIds}
-              />
+              <Suspense fallback={<div>Loading...</div>}>
+                <SongEditableTable
+                  songs={playlist.content}
+                  songsEdited={setNewSongIds}
+                />
+              </Suspense>
             ) : (
               <SongTable songs={playlist.content} />
             ))}

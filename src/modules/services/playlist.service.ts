@@ -4,7 +4,6 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-  QueryClient,
 } from "react-query";
 import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
