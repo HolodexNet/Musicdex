@@ -68,7 +68,6 @@ export const SongTable = ({
   const currentId = useStoreState(
     (state) => state.playback.currentlyPlaying?.song?.id
   );
-  console.log(currentId);
   // const [front,front2] = useCOlorMode
   const columns: Column<IndexedSong>[] = React.useMemo<Column<IndexedSong>[]>(
     () => [
@@ -90,7 +89,6 @@ export const SongTable = ({
         Header: "Title",
         accessor: "name",
         Cell: (cellInfo: any) => {
-          // console.log(cellInfo);
           return (
             <VStack alignItems="start" spacing={1}>
               <span>{cellInfo.row.original?.name}</span>
@@ -131,7 +129,6 @@ export const SongTable = ({
         disableSortBy: true,
         accessor: "idx",
         Cell: (cellInfo: any) => {
-          // console.log(cellInfo);
           return <PlaylistSongTableDropDownMenu song={cellInfo.row.original} />;
         },
       },
@@ -188,7 +185,6 @@ export const SongTable = ({
     e: React.MouseEvent<any, MouseEvent>,
     song: Song
   ) => {
-    console.log("click");
     queueSongs({
       songs: [song],
       immediatelyPlay: true,
@@ -300,9 +296,6 @@ export const SongTable = ({
                     {...(cell.column.id !== "..."
                       ? {
                           onClick: (e) => {
-                            console.log(
-                              window.getSelection()?.toString()?.length
-                            );
                             if (window.getSelection()?.toString()?.length)
                               return e.preventDefault();
                             songClicked
