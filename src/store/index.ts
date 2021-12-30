@@ -24,13 +24,21 @@ const storeModel: StoreModel = {
   addPlaylist: addPlaylistModel,
 };
 
-export default storeModel;
-
 const typedHooks = createTypedHooks<StoreModel>();
 export const useStoreActions = typedHooks.useStoreActions;
 export const useStoreDispatch = typedHooks.useStoreDispatch;
 export const useStoreState = typedHooks.useStoreState;
 
-export const store = createStore(
+const storeM = createStore(
   persist(storeModel, { storage: "localStorage", deny: ["contextMenu"] })
 );
+
+if (process.env.NODE_ENV === "development") {
+  if ((module as any).hot) {
+    (module as any).hot.accept("./index", () => {
+      storeM.reconfigure(storeModel); // 👈 Here is the magic
+    });
+  }
+}
+
+export const store = storeM;
