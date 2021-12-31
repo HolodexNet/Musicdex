@@ -13,7 +13,10 @@ export function SongLikeButton({
   songId: string;
   active: boolean;
 }) {
-  const { data: liked, isFetched } = useLikeSongChecker(songId, active);
+  const { data: liked, isSuccess: hasData } = useLikeSongChecker(
+    songId,
+    active
+  );
   // const like = useSongLikeUpdater({ song_id: songId, action: "add" });
   const { mutate: updateLike, isSuccess, isError } = useSongLikeUpdater();
   const toast = useToast();
@@ -43,6 +46,7 @@ export function SongLikeButton({
       onClick={toggleLike}
       colorScheme={active ? "brand" : "whiteAlpha"}
       variant="ghost"
+      opacity={hasData ? 1 : 0.5}
       mr={2}
       ml={-1}
     ></IconButton>
