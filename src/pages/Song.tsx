@@ -56,7 +56,7 @@ export function Song() {
             m={3}
             style={{
               WebkitBoxReflect:
-                "below 0px linear-gradient(to bottom, rgba(0,0,0,0.0) 80%, rgba(0,0,0,0.4))",
+                "below 0px linear-gradient(to bottom, rgba(0,0,0,0.0) 80%, rgba(0,0,0,0.3))",
             }}
           />
           <Flex flexDirection="column" px={3} py={5} flex="1 1 300px">
