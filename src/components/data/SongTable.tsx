@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { BiMovie } from "react-icons/bi";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { Column, useSortBy, useTable } from "react-table";
@@ -126,6 +127,22 @@ export const SongTable = ({
           return formatSeconds(row.end - row.start);
         },
         isNumeric: true,
+        Cell: (cellInfo: any) => {
+          return (
+            <>
+              {cellInfo.row.original.is_mv && (
+                <Icon
+                  mb="-3px"
+                  mr={3}
+                  as={BiMovie}
+                  title="MV"
+                  color="gray.500"
+                ></Icon>
+              )}{" "}
+              {cellInfo.value}
+            </>
+          );
+        },
       },
       {
         id: "date",

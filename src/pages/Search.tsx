@@ -58,7 +58,6 @@ export function Search() {
 
   return (
     <PageContainer>
-      {/* <VStack spacing={5}> */}
       <QueryStatus queryStatus={rest} />
       <Suspense fallback={<div></div>}>
         <HStack align="end">
@@ -70,31 +69,32 @@ export function Search() {
           </Text>
         </HStack>
         {songs && <SongTable songs={songs} />}
-        <HStack spacing={3} my={3}>
-          <Button
-            disabled={(searchResult?.page || 1) <= 1}
-            onClick={() =>
-              (searchResult?.page || 0) > 1 &&
-              doSearch({ page: (searchResult?.page || 1) - 1 })
-            }
-          >
-            Prev
-          </Button>
-          <Button
-            disabled={
-              (searchResult?.page || 1) * 10 + (songs?.length || 0) - 10 >=
-              (searchResult?.found || 0)
-            }
-            onClick={() =>
-              (searchResult?.page || 1) >= 1 &&
-              doSearch({ page: (searchResult?.page || 1) + 1 })
-            }
-          >
-            Next
-          </Button>
-        </HStack>
+        {searchResult && (
+          <HStack spacing={3} my={3}>
+            <Button
+              disabled={searchResult?.page <= 1}
+              onClick={() =>
+                searchResult?.page > 1 &&
+                doSearch({ page: searchResult?.page - 1 })
+              }
+            >
+              Prev
+            </Button>
+            <Button
+              disabled={
+                searchResult?.page * 10 + (songs?.length || 0) - 10 >=
+                searchResult?.found
+              }
+              onClick={() =>
+                searchResult?.page >= 1 &&
+                doSearch({ page: searchResult?.page + 1 })
+              }
+            >
+              Next
+            </Button>
+          </HStack>
+        )}
       </Suspense>
-      {/* </VStack> */}
     </PageContainer>
   );
 }
