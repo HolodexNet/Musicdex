@@ -8,7 +8,10 @@ import { createStore, persist, StoreProvider } from "easy-peasy";
 import "focus-visible/dist/focus-visible";
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+import {
+  queryClient,
+  QueryClientProvider,
+} from "./modules/services/queryClient";
 import App from "./App";
 import "./modules/common/i18n";
 import { store } from "./store";
@@ -16,8 +19,8 @@ import { theme } from "./theme";
 import reportWebVitals from "./utils/reportWebVitals";
 import "./global.css";
 
-// https://easy-peasy.dev/docs/api/persist.html
-const queryClient = new QueryClient();
+console.log(`${process.env.REACT_APP_NAME} ${process.env.REACT_APP_VERSION}`);
+(window as any)["App_Version"] = process.env.REACT_APP_VERSION;
 
 store.persist.resolveRehydration().then(() => {
   ReactDOM.render(
