@@ -10,6 +10,7 @@ import { History } from "./pages/History";
 import { Search } from "./pages/Search";
 import { LikedSongs } from "./pages/LikedSongs";
 import { Video } from "./pages/Video";
+import { Settings } from "./pages/Settings";
 
 function App(this: any) {
   return (
@@ -29,10 +30,7 @@ function App(this: any) {
           <Route path="/history" element={<History />} />
           <Route path="/search" element={<Search></Search>} />
           <Route path="/video/:id" element={<Video></Video>} />
-          <Route
-            path="/settings"
-            element={<InProgress>Settings page under construction</InProgress>}
-          />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </FrameWithHeader>
     </Router>
