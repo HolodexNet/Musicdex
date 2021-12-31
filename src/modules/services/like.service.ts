@@ -40,17 +40,17 @@ export const useSongLikeUpdater = (
   );
 };
 
-export const useLikeSongChecker = (songId: string, enabled: boolean) => {
+export const useLikeSongChecker = (songId: string[], enabled: boolean) => {
   // const queryClient = useQueryClient();
   const { AxiosInstance } = useClient();
   const result = useQuery(
     [`likeSongStatus-${songId}`],
-    async (q): Promise<boolean> => {
+    async (q): Promise<boolean[]> => {
       // queryClient.getQueryData([`likeSongStatus-${songId}`]);
-      const req = await AxiosInstance<string>(
+      const req = await AxiosInstance<boolean[]>(
         `/musicdex/like/check?song_id=${songId}`
       );
-      return req.data === "TRUE";
+      return req.data;
     },
     {
       cacheTime: 24000,

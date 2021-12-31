@@ -1,4 +1,4 @@
-import { Container, Flex, Select } from "@chakra-ui/react";
+import { Container, Flex, Select, SimpleGrid } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
@@ -25,11 +25,11 @@ export function Home() {
         <h1>Top20</h1>
         <QueryStatus queryStatus={rest} />
         {trendingSongs && (
-          <Flex flexDirection="row" mx="-6px" py="8px" flexWrap="wrap">
+          <SimpleGrid minChildWidth="305px" spacing={2} autoFlow="row">
             {trendingSongs.slice(0, 4).map((song) => (
-              <SongItem song={song} mx="2px" key={song.id} />
+              <SongItem song={song} key={song.id} />
             ))}
-          </Flex>
+          </SimpleGrid>
         )}
         {trendingSongs && <SongTable songs={trendingSongs} />}
       </div>

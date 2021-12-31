@@ -8,15 +8,18 @@ import {
 
 export function SongLikeButton({
   songId,
+  //   song,
   active,
 }: {
   songId: string;
+  //   song: Song;
   active: boolean;
 }) {
-  const { data: liked, isSuccess: hasData } = useLikeSongChecker(
-    songId,
+  const { data: likedData, isSuccess: hasData } = useLikeSongChecker(
+    [songId],
     active
   );
+  const liked = likedData?.[0];
   // const like = useSongLikeUpdater({ song_id: songId, action: "add" });
   const { mutate: updateLike, isSuccess, isError } = useSongLikeUpdater();
   const toast = useToast();
