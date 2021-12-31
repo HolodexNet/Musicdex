@@ -9,6 +9,7 @@ import {
   Text,
   HStack,
   Box,
+  Link,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -27,6 +28,7 @@ import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 import { SongArtwork } from "../song/SongArtwork";
 import { usePlayerMutateChangeVideo, usePlayerState } from "./player.service";
 import { formatSeconds } from "../../utils/SongHelper";
+import { NavLink } from "react-router-dom";
 
 export function PlayerBar() {
   // Current song
@@ -267,11 +269,17 @@ export function PlayerBar() {
               <HStack>
                 <SongArtwork song={currentSong} size={50} marginRight={2} />
                 <Box>
-                  <Text noOfLines={1}>{currentSong.name}</Text>
-                  <Text noOfLines={1} color="whiteAlpha.600">
-                    {currentSong.channel.english_name ||
-                      currentSong.channel.name}
-                  </Text>
+                  <Link as={NavLink} to={`/song/${currentSong.id}`}>
+                    <Text fontWeight={500} noOfLines={1}>
+                      {currentSong.name}
+                    </Text>
+                  </Link>
+                  <Link as={NavLink} to={`/`}>
+                    <Text noOfLines={1} color="whiteAlpha.600">
+                      {currentSong.channel.english_name ||
+                        currentSong.channel.name}
+                    </Text>
+                  </Link>
                 </Box>
               </HStack>
             )}
