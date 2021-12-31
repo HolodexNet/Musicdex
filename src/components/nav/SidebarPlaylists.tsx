@@ -1,4 +1,4 @@
-import { Flex, Icon } from "@chakra-ui/react";
+import { Flex, Icon, Text } from "@chakra-ui/react";
 import { FiFolder } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
@@ -10,6 +10,8 @@ export const SidebarPlaylists = ({
   return (
     <div>
       {playlistStubs.map((x) => {
+        const emoji = x.title.match(/^\p{Emoji}/gu);
+        const rest = x.title.match(/(?!\p{Emoji})(.*)$/gu);
         return (
           <Link to={"/playlists/" + x.id} key={"sidebar-pl" + x.id}>
             <Flex
@@ -25,15 +27,21 @@ export const SidebarPlaylists = ({
                 color: "white",
               }}
             >
-              <Icon
-                mr="4"
-                fontSize="16"
-                _groupHover={{
-                  color: "white",
-                }}
-                as={FiFolder}
-              />
-              {x.title}
+              {emoji ? (
+                <Text fontSize="16" mr="4" maxW="16px">
+                  {emoji?.[0] || ""}
+                </Text>
+              ) : (
+                <Icon
+                  mr="4"
+                  fontSize="16"
+                  _groupHover={{
+                    color: "white",
+                  }}
+                  as={FiFolder}
+                />
+              )}
+              {rest?.[0]}
             </Flex>
           </Link>
         );

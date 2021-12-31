@@ -59,7 +59,7 @@ export function PlaylistHeading({
     <Box as={"header"} mb="2" position="relative">
       <Heading
         lineHeight={1.1}
-        fontWeight={600}
+        fontWeight={500}
         fontSize={{ base: "3xl", sm: "4xl", md: "5xl", lg: "5xl" }}
       >
         {editTitle ? (
