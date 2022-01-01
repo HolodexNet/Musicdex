@@ -25,15 +25,7 @@
     "@fontsource/assistant": "^4.5.1",
     "@fontsource/manrope": "^4.5.1",
     "@hypertheme-editor/chakra-ui": "^0.1.2",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^12.1.2",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/lodash-es": "^4.17.5",
-    "@types/react-table": "^7.7.9",
     "axios": "^0.24.0",
-    "color": "^4.1.0",
-    "cross-env": "^7.0.3",
-    "cross-fetch": "^3.1.4",
     "date-fns": "^2.28.0",
     "easy-peasy": "^5.0.4",
     "fast-average-color": "^7.0.1",
@@ -58,11 +50,18 @@
     "react-simple-oauth2-login": "^0.5.1",
     "react-table": "^7.7.0",
     "react-youtube": "^7.13.1",
-    "source-map-explorer": "^2.5.2",
-    "typescript": "4.5.4",
-    "web-vitals": "^2.1.2"
+    "typescript": "4.5.4"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.5",
+    "@types/react-table": "^7.7.9",
+    "eslint-config-prettier": "^8.3.0",
+    "source-map-explorer": "^2.5.2",
+    "cross-env": "^7.0.3",
+    "web-vitals": "^2.1.2",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.0.3",
     "@types/node": "^16.11.17",
     "@types/react": "^17.0.38",
@@ -90,7 +89,8 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "prettier"
     ]
   },
   "private": true
