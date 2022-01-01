@@ -57,7 +57,10 @@ export const usePlayerState = (
 export const usePlayerMutateChangeVideo = (player: YouTubePlayer | null) => {
   return useMutation(
     ["videoChange"],
-    async ({ id, start }: { id: string; start: number }) => {
+    async ({ id, start, ts }: { id: string; start: number; ts: number }) => {
+      // ts is to provide a timestamp for when javascript gets suspended in the background. if a ts is too far back, we ignore it.
+      if (Date.now() - ts > 3000)
+        return { error: "too old, probably okay to ignore" };
       if (!player) return { error: "No Player" };
       // attempt to mutate:
       const currentId = getID(player.getVideoUrl());

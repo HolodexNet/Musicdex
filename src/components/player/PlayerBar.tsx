@@ -152,12 +152,14 @@ export function PlayerBar({
       changeVideo({
         id: "",
         start: 0,
+        ts: Date.now(),
       });
       return;
     }
     changeVideo({
       id: currentSong.video_id,
       start: currentSong.start,
+      ts: Date.now(),
     });
     setProgress(0);
   }, [currentSong, repeat]);
@@ -172,6 +174,7 @@ export function PlayerBar({
       changeVideo({
         id: currentSong?.video_id,
         start: currentSong.start,
+        ts: Date.now(),
       });
 
       calledOnce.current = true;
@@ -190,6 +193,7 @@ export function PlayerBar({
     changeVideo({
       id: currentSong.video_id,
       start: currentSong.start + (e / 100) * totalDuration,
+      ts: Date.now(),
     });
     setProgress(e);
   }

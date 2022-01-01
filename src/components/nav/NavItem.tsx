@@ -29,7 +29,6 @@ export function NavItem({
   const bgcBrand = useColorModeValue("brand.200", "brand.700");
 
   const { pathname } = useLocation();
-  console.log(pathname);
 
   return (
     <Link as={NavLink} to={path || "#"} style={{ textDecoration: "none" }}>
