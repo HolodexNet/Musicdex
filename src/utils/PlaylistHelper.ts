@@ -83,7 +83,7 @@ export function identifyTitle(playlist: Partial<PlaylistFull>) {
         return `${org} Weekly Mix`;
       },
       ":history": (p, _, __) => {
-        return undefined;
+        return "Recently Played";
       },
     });
   } else {
@@ -104,7 +104,7 @@ export function identifyDescription(playlist: Partial<PlaylistFull>) {
         return `Generated every week by Holodex.`;
       },
       ":history": (p, _, __) => {
-        return undefined;
+        return "Your recently played songs";
       },
     });
   } else {
