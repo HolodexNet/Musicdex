@@ -25,7 +25,7 @@ export function Home() {
         <h1>Top20</h1>
         <QueryStatus queryStatus={rest} />
         {trendingSongs && (
-          <SimpleGrid minChildWidth="305px" spacing={2} autoFlow="row">
+          <SimpleGrid minChildWidth="290px" spacing={2} paddingX={3}>
             {trendingSongs.slice(0, 4).map((song) => (
               <SongItem song={song} key={song.id} />
             ))}

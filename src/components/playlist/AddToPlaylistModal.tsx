@@ -74,7 +74,7 @@ export function AddToPlaylistModal(): JSX.Element {
               if (selectedPlaylistId !== "_" && song && song.id)
                 await mutateAsync({
                   action: "add",
-                  playlist: selectedPlaylistId,
+                  playlistId: selectedPlaylistId,
                   song: song.id,
                 });
               close();

@@ -10,6 +10,7 @@ interface SGPDefMap {
   ":dailyrandom": SGPDef<Channel, { ch: string }>;
   ":weekly": SGPDef<{ org: string }, { org: string }>;
   ":userweekly": SGPDef<{ user: string | number }, { user: string | number }>;
+  ":history": SGPDef<{ user: string | number }, { user: string | number }>;
 }
 
 const DEFAULT_PARAM_PARSER = (id: string) => parsePlaylistID(id).params;
@@ -29,6 +30,10 @@ const SGPDefinitions: SGPDefMap = {
     descParser: DEFAULT_DISC_PARSER,
     paramParser: DEFAULT_PARAM_PARSER,
   },
+  ":history": {
+    descParser: DEFAULT_DISC_PARSER,
+    paramParser: DEFAULT_PARAM_PARSER,
+  },
 };
 
 interface SGPTransformer<Out> {
@@ -43,6 +48,11 @@ interface SGPTransformer<Out> {
     data: { org: string } | undefined
   ) => Out;
   ":userweekly": (
+    playlist: PlaylistLike,
+    id: { user: string | number },
+    data: { user: string | number } | undefined
+  ) => Out;
+  ":history": (
     playlist: PlaylistLike,
     id: { user: string | number },
     data: { user: string | number } | undefined

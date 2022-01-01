@@ -23,6 +23,9 @@ export function identifyPlaylistBannerImage(playlist: Partial<PlaylistFull>) {
           return undefined;
         }
       },
+      ":history": (p, _, __) => {
+        return undefined;
+      },
     });
   } else {
     console.log(playlist);
@@ -54,6 +57,9 @@ export function identifyPlaylistChannelImage(playlist: Partial<PlaylistFull>) {
           return undefined;
         }
       },
+      ":history": (p, _, __) => {
+        return undefined;
+      },
     });
   } else {
     if (playlist.content && playlist.content[0]) {
@@ -76,6 +82,9 @@ export function identifyTitle(playlist: Partial<PlaylistFull>) {
       ":weekly": (p, { org }, _) => {
         return `${org} Weekly Mix`;
       },
+      ":history": (p, _, __) => {
+        return undefined;
+      },
     });
   } else {
     return playlist.title;
@@ -93,6 +102,9 @@ export function identifyDescription(playlist: Partial<PlaylistFull>) {
       },
       ":weekly": (p, { org }, _) => {
         return `Generated every week by Holodex.`;
+      },
+      ":history": (p, _, __) => {
+        return undefined;
       },
     });
   } else {

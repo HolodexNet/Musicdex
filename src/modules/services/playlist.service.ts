@@ -31,6 +31,8 @@ export const usePlaylistWriter = (
       onSuccess: (data, payload, ...rest) => {
         queryClient.cancelQueries(["playlist", payload.id]);
         queryClient.invalidateQueries(["playlist", payload.id]);
+        queryClient.cancelQueries(["playlist-like", payload.id]);
+        queryClient.invalidateQueries(["playlist-like", payload.id]);
         queryClient.invalidateQueries(["allPlaylists"]);
         if (callbacks.onSuccess) {
           callbacks.onSuccess(data, payload, ...rest);
@@ -44,21 +46,22 @@ export const usePlaylistUpdater = (
   config: UseMutationOptions<
     any,
     unknown,
-    { playlist: string; song: number | string; action: "add" | "delete" }
+    { playlistId: string; song: number | string; action: "add" | "delete" }
   > = {}
 ) => {
   const { AxiosInstance } = useClient();
   const queryClient = useQueryClient();
 
   return useMutation(
-    async ({ playlist, song, action }) =>
-      await AxiosInstance(`/musicdex/playlist/${playlist}/${song}`, {
+    async ({ playlistId, song, action }) =>
+      await AxiosInstance(`/musicdex/playlist/${playlistId}/${song}`, {
         method: action === "add" ? "GET" : "DELETE",
       }),
     {
       ...config,
       onSuccess: (data, payload, ...rest) => {
-        queryClient.cancelQueries(["playlist", payload.playlist]);
+        queryClient.cancelQueries(["playlist", payload.playlistId]);
+        queryClient.cancelQueries(["playlist-like", payload.playlistId]);
         // apparently start-ui has some support for querying the cache and doing stuff to it?... seems interesting.
         // TODO (optional): modify the query cache for playlist if the song is a full Song object already.
         // it seems this code is part of the Optimistic Updating: https://react-query.tanstack.com/guides/optimistic-updates
@@ -76,7 +79,8 @@ export const usePlaylistUpdater = (
         //             };
         //         });
         //     });
-        queryClient.invalidateQueries(["playlist", payload.playlist]);
+        queryClient.invalidateQueries(["playlist", payload.playlistId]);
+        queryClient.invalidateQueries(["playlist-like", payload.playlistId]);
         if (config.onSuccess) {
           config.onSuccess(data, payload, ...rest);
         }
@@ -100,6 +104,7 @@ export const usePlaylistDeleter = (
       ...config,
       onSuccess: (data, payload, ...rest) => {
         queryClient.cancelQueries(["playlist", payload.playlistId]);
+        queryClient.cancelQueries(["playlist-like", payload.playlistId]);
         // apparently start-ui has some support for querying the cache and doing stuff to it?... seems interesting.
         // TODO (optional): modify the query cache for playlist if the song is a full Song object already.
         // it seems this code is part of the Optimistic Updating: https://react-query.tanstack.com/guides/optimistic-updates
@@ -118,6 +123,7 @@ export const usePlaylistDeleter = (
         //         });
         //     });
         queryClient.invalidateQueries(["playlist", payload.playlistId]);
+        queryClient.invalidateQueries(["playlist-like", payload.playlistId]);
         queryClient.invalidateQueries(["allPlaylists"]);
 
         if (config.onSuccess) {
@@ -133,7 +139,7 @@ export const usePlaylist = (
   config: UseQueryOptions<PlaylistFull, unknown, PlaylistFull, string[]> = {}
 ) => {
   const queryClient = useQueryClient();
-  const { AxiosInstance } = useClient();
+  const { AxiosInstance, isLoggedIn } = useClient();
 
   const result = useQuery(
     ["playlist", playlistId],
@@ -143,6 +149,7 @@ export const usePlaylist = (
         "playlist",
         playlistId,
       ]);
+
       if (cached) {
         try {
           const newdata = await AxiosInstance<PlaylistFull>(
@@ -160,6 +167,7 @@ export const usePlaylist = (
           return cached;
         }
       }
+
       // cache miss:
       return (
         await AxiosInstance<PlaylistFull>(`/musicdex/playlist/${q.queryKey[1]}`)
@@ -170,6 +178,43 @@ export const usePlaylist = (
       ...config,
     }
   );
+
+  const likeResult = useQuery<boolean[], unknown, boolean[], string[]>(
+    ["playlist-like", playlistId],
+    async (q): Promise<boolean[]> => {
+      if (!isLoggedIn) {
+        return [];
+      }
+      // fetch cached
+      // const cached: boolean[] | undefined = queryClient.getQueryData([
+      //   "playlist-like",
+      //   playlistId,
+      // ]);
+
+      // if (cached) {
+      //   return cached;
+      // }
+      // cache miss:
+      return (
+        await AxiosInstance<boolean[]>(
+          `/musicdex/playlist/${q.queryKey[1]}/likeCheck`
+        )
+      ).data;
+    },
+    {
+      ...DEFAULT_FETCH_CONFIG,
+    }
+  );
+
+  if (result.data && likeResult.data && result.data.content) {
+    if (result.data.content.length !== likeResult.data.length) {
+      console.log("like and playlsit content has WRONG LENGTHS");
+      return result;
+    }
+    result.data.content.forEach((x, index) => {
+      x.liked = likeResult.data[index];
+    });
+  }
 
   return result;
 };
