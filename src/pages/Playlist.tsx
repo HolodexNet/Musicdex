@@ -19,6 +19,7 @@ import {
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import React from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
+import { ContainerInlay } from "../components/layout/ContainerInlay";
 
 export function Playlist() {
   let params = useParams();
@@ -104,14 +105,7 @@ export function Playlist() {
       <BGImgContainer>
         <BGImg banner_url={banner || ""}></BGImg>
       </BGImgContainer>
-      <Box
-        bgColor={bgColor}
-        position="relative"
-        mt="12"
-        p={{ base: 2, xl: 4 }}
-        pt={{ base: 4, xl: 8 }}
-        borderRadius={5}
-      >
+      <ContainerInlay mt="12">
         <PlaylistHeading
           title={title || "..."}
           description={description || "..."}
@@ -161,7 +155,7 @@ export function Playlist() {
               <SongTable songs={playlist.content} />
             ))}
         </Box>
-      </Box>
+      </ContainerInlay>
     </PageContainer>
   );
 }

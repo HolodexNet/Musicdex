@@ -194,7 +194,6 @@ export const SongTable = ({
   );
 
   useEffect(() => {
-    console.log("xl", isXL);
     if (isXL === undefined) return;
     toggleHideColumn("original_artist", isXL < 3);
     toggleHideColumn("idx", isXL < 3);

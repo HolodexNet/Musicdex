@@ -14,68 +14,34 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
+import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 
 export function Settings() {
   return (
     <PageContainer>
-      <Heading size="lg" py={5}>
-        Settings
-      </Heading>
-      <Accordion allowMultiple defaultIndex={[0, 1, 2]}>
-        <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Heading size="md" flex="1" textAlign="left">
-                Language Preferences (yeah i know it's not working)
-              </Heading>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <Divider />
+      <ContainerInlay>
+        <Heading size="lg" py={5}>
+          Settings
+        </Heading>
+        <Accordion allowMultiple defaultIndex={[0, 1, 2]} mb={12}>
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Heading size="md" flex="1" textAlign="left">
+                  Language Preferences (yeah i know it's not working)
+                </Heading>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <Divider />
 
-          <AccordionPanel pb={4}>
-            <LanguagePrefs />
-          </AccordionPanel>
-        </AccordionItem>
-
-        <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Heading size="md" flex="1" textAlign="left">
-                Playback Preferences
-              </Heading>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <Divider />
-
-          <AccordionPanel pb={4}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </AccordionPanel>
-        </AccordionItem>
-
-        <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Heading size="md" flex="1" textAlign="left">
-                I can't really think of anything...
-              </Heading>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <Divider />
-          <AccordionPanel pb={4}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+            <AccordionPanel pb={4}>
+              <LanguagePrefs />
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </ContainerInlay>
     </PageContainer>
   );
 }
