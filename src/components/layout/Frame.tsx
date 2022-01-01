@@ -81,6 +81,10 @@ export default function FrameWithHeader({
 
   const props = useMemo(() => POSITIONS[pos], [pos]);
 
+  const currentSong = useStoreState(
+    (state) => state.playback.currentlyPlaying.song
+  );
+
   return (
     <Box
       h="100vh"
@@ -134,7 +138,14 @@ export default function FrameWithHeader({
               {children}
               <Footer></Footer>
             </Flex>
-            <Box {...props}>
+            <Box
+              {...props}
+              visibility={
+                pos === "hidden" || currentSong === undefined
+                  ? "hidden"
+                  : "visible"
+              }
+            >
               <Box
                 visibility={pos === "background" ? "visible" : "hidden"}
                 width="100%"

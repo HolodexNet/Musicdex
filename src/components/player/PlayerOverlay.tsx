@@ -64,5 +64,6 @@ const OverlayWrapper = styled.div<{ visible: boolean }>`
     height: calc(100% - 64px - 80px);
     transition: top 0.4s ease, opacity 0.5s ease;
     width: 100%;
+    z-index: 11;
   }
 `;
