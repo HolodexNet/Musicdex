@@ -1,17 +1,17 @@
-import { VStack, Text, Spinner, Button } from "@chakra-ui/react";
+import { VStack, Text, Spinner, StackProps } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { Fragment } from "react";
 import { useQueryErrorResetBoundary } from "react-query";
 import { UseQueryResult } from "react-query/types/react/types";
 
-export function QueryStatus({
-  queryStatus,
-}: {
+interface QueryStatusProps extends StackProps {
   queryStatus: Partial<UseQueryResult>;
-}) {
+}
+
+export function QueryStatus({ queryStatus, ...rest }: QueryStatusProps) {
   // const { reset } = useQueryErrorResetBoundary();
   return (
-    <VStack textAlign="center">
+    <VStack textAlign="center" {...rest}>
       {queryStatus.isLoading && (
         <Fragment>
           <Spinner size="xl" />

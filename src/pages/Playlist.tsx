@@ -18,19 +18,14 @@ import {
 } from "../utils/PlaylistHelper";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import React from "react";
+import { QueryStatus } from "../components/common/QueryStatus";
 
 export function Playlist() {
   let params = useParams();
   let playlistId = params.playlistId!;
   let { user, isLoggedIn } = useClient();
 
-  const {
-    data: playlist,
-    isLoading,
-    isFetching,
-    error,
-    isError,
-  } = usePlaylist(playlistId);
+  const { data: playlist, ...status } = usePlaylist(playlistId);
 
   const { mutateAsync: writeNewPlaylist } = usePlaylistWriter();
 
@@ -99,7 +94,10 @@ export function Playlist() {
     () => import("../components/data/SongTableEditable")
   );
 
-  if (!playlist) return <div> loading </div>;
+  if (!playlist)
+    return (
+      <QueryStatus queryStatus={status} height="100%" justifyContent="center" />
+    );
 
   return (
     <PageContainer>

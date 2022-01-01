@@ -27,7 +27,7 @@ const LinkItems: Array<LinkItemProps> = [
 
 const POSITIONS: { [key: string]: ChakraProps } = {
   background: {
-    position: "fixed",
+    position: "absolute",
     h: "100%",
     w: "100%",
     zIndex: -1,
@@ -94,19 +94,17 @@ export default function FrameWithHeader({
             // ml={{ base: 0, md: 60 }}
             direction="column"
             alignItems="stretch"
-            overflowY="scroll"
             h="100%"
             position="relative"
             flexGrow={1}
             flexShrink={1}
             zIndex={2}
           >
-            {children}
-            <Footer></Footer>
-            <Box
-              {...POSITIONS["background"]}
-              // visibility={currentSong?"visible":"hidden"}
-            >
+            <Flex overflowY="scroll" flex="1" direction="column">
+              {children}
+              <Footer></Footer>
+            </Flex>
+            <Box {...POSITIONS["background"]}>
               <Box
                 width="100%"
                 height="100%"
