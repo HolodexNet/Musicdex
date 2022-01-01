@@ -59,8 +59,6 @@ export const usePlayerMutateChangeVideo = (player: YouTubePlayer | null) => {
     ["videoChange"],
     async ({ id, start, ts }: { id: string; start: number; ts: number }) => {
       // ts is to provide a timestamp for when javascript gets suspended in the background. if a ts is too far back, we ignore it.
-      if (Date.now() - ts > 3000)
-        return { error: "too old, probably okay to ignore" };
       if (!player) return { error: "No Player" };
       // attempt to mutate:
       const currentId = getID(player.getVideoUrl());
@@ -69,6 +67,8 @@ export const usePlayerMutateChangeVideo = (player: YouTubePlayer | null) => {
         player.loadVideoById(id, start);
         throw new Error("wrong vid");
       }
+      if (Date.now() - ts > 3000)
+        return { error: "too old, probably okay to ignore" };
       if (Math.abs(player.getCurrentTime() - start) > 2.0) {
         // if the time is wrong, seek to the right time.
         player.seekTo(start, true);
