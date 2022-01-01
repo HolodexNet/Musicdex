@@ -2,6 +2,7 @@ import { UseQueryOptions, useQuery } from "react-query";
 import { useClient } from "../client";
 import { encodeUrl } from "../client/utils";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
+import { mergeSongsWithLikeCheck, useLikedCheckSongs } from "./like.service";
 
 export const useSong = (
   songId: string,
@@ -40,6 +41,12 @@ export const useTrendingSongs = (
     },
     { ...DEFAULT_FETCH_CONFIG, ...config }
   );
+
+  const likeCheck = useLikedCheckSongs(result.data?.map((x) => x.id) || []);
+
+  if (result.data?.length && likeCheck.data?.length) {
+    mergeSongsWithLikeCheck(result.data, likeCheck.data);
+  }
 
   return { ...result };
 };
