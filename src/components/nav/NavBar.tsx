@@ -9,6 +9,7 @@ import {
   Avatar,
   VStack,
   Box,
+  Heading,
   MenuList,
   MenuItem,
   MenuDivider,
@@ -85,14 +86,14 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
             </linearGradient>
           </defs>
         </Icon>
-        <Text
+        <Heading
           display={{ base: "flex", lg: "flex" }}
           fontSize="2xl"
-          fontFamily="monospace"
+          // fontFamily="monospace"
           // fontWeight="bold"
         >
           Musicdex
-        </Text>
+        </Heading>
       </HStack>
 
       <Searchbox></Searchbox>

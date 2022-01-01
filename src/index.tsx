@@ -18,6 +18,8 @@ import { store } from "./store";
 import { theme } from "./theme";
 import reportWebVitals from "./utils/reportWebVitals";
 import "./global.css";
+import "@fontsource/manrope/400.css";
+import "@fontsource/manrope/500.css";
 
 console.log(`${process.env.REACT_APP_NAME} ${process.env.REACT_APP_VERSION}`);
 (window as any)["App_Version"] = process.env.REACT_APP_VERSION;

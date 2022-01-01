@@ -14,6 +14,10 @@ export const theme = extendTheme(
   {
     config: { initialColorMode: "dark", useSystemColorMode: false },
     colors: localColors,
+    fonts: {
+      heading: "Manrope",
+      body: "Manrope",
+    },
   },
   withDefaultColorScheme({ colorScheme: "brand" })
 );

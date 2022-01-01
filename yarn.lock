@@ -1746,6 +1746,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fontsource/manrope@^4.5.1":
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/manrope/-/manrope-4.5.1.tgz#ec437babc5253e08f350d26f43806202b5d7c9e0"
+  integrity sha512-7xOBcv1deyVD8w/z69ofdFBWWbAJ3IJ4ntcgJEDffBt8u4SgvTWQo9FmCRrQGphAVlbGymRUsM8OuUbVsGZLzA==
+
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.2"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.9.2.tgz"
