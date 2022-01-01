@@ -31,6 +31,7 @@ export const useSongLikeUpdater = (
       onSuccess: (data, payload, ...rest) => {
         queryClient.cancelQueries(["likedSongList"]);
         queryClient.invalidateQueries(["likedSongList"]);
+        queryClient.invalidateQueries(["playlist-like"]);
         queryClient.invalidateQueries([`likeSongStatus-${payload.song_id}`]);
         if (callbacks.onSuccess) {
           callbacks.onSuccess(data, payload, ...rest);
@@ -91,9 +92,11 @@ export const useLikedSongs = (
       //   }
       // }
       // cache miss:
-      return (
-        await AxiosInstance<Song[]>(`/musicdex/like?offset=${offset ?? 0}`)
-      ).data;
+      const songs =
+        (await AxiosInstance<Song[]>(`/musicdex/like?offset=${offset ?? 0}`))
+          .data || [];
+      songs.forEach((x) => (x.liked = true));
+      return songs;
     },
     {
       ...DEFAULT_FETCH_CONFIG,

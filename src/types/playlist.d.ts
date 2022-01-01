@@ -42,6 +42,7 @@ interface Song {
   is_mv: boolean;
   id: string;
   status: string;
+  liked?: boolean;
   channel: {
     name: string;
     english_name?: string;

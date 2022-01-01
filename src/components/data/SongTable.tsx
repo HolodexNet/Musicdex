@@ -344,7 +344,7 @@ export const SongTable = ({
                   >
                     {cell.column.id === "..." && (
                       <SongLikeButton
-                        songId={row.original.id}
+                        song={row.original}
                         active={index === hoverIndex}
                       />
                     )}

@@ -1,42 +1,36 @@
 import { IconButton, useToast } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import {
-  useLikeSongChecker,
-  useSongLikeUpdater,
-} from "../../modules/services/like.service";
+import { useSongLikeUpdater } from "../../modules/services/like.service";
 
 export function SongLikeButton({
-  songId,
-  //   song,
+  song,
   active,
 }: {
-  songId: string;
-  //   song: Song;
+  song: Song;
   active: boolean;
 }) {
-  const { data: likedData, isSuccess: hasData } = useLikeSongChecker(
-    [songId],
-    active
-  );
-  const liked = likedData?.[0];
-  // const like = useSongLikeUpdater({ song_id: songId, action: "add" });
+  const [changed, setChanged] = useState(false);
   const { mutate: updateLike, isSuccess, isError } = useSongLikeUpdater();
+
+  const liked = changed ? !song.liked : song.liked;
   const toast = useToast();
 
   useEffect(() => {
-    if (!(isSuccess && isError)) return;
+    if (!isSuccess && !isError) return;
     toast({
       title: isSuccess ? "Changed like status" : "Failed to change like status",
       status: isSuccess ? "success" : "error",
       duration: 1000,
       isClosable: true,
     });
+
+    if (isSuccess) setChanged((prev) => !prev);
   }, [isSuccess, isError, toast]);
 
   function toggleLike() {
     updateLike({
-      song_id: songId,
+      song_id: song.id,
       action: liked ? "delete" : "add",
     });
   }
@@ -47,9 +41,9 @@ export function SongLikeButton({
       icon={liked ? <FaHeart /> : <FaRegHeart />}
       aria-label="Like Song"
       onClick={toggleLike}
-      colorScheme={active ? "brand" : "whiteAlpha"}
+      colorScheme={"brand"}
       variant="ghost"
-      opacity={hasData ? 1 : 0.5}
+      opacity={liked ? 1 : 0.3}
       mr={2}
       ml={-1}
     ></IconButton>
