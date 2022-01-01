@@ -7,14 +7,16 @@ import { SongTable } from "../data/SongTable";
 import { Text } from "@chakra-ui/react";
 import React from "react";
 
-export function PlayerOverlay() {
+export function PlayerOverlay({
+  isExpanded,
+  toggleExpanded,
+}: {
+  isExpanded: boolean;
+  toggleExpanded: () => void;
+}) {
   const playlistQueue = useStoreState((state) => state.playback.playlistQueue);
   const queue = useStoreState((state) => state.playback.queue);
   const clearAll = useStoreActions((actions) => actions.playback.clearAll);
-  const isExpanded = useStoreState((state) => state.player.isExpanded);
-  //   const currentlyPlaying = useStoreState(
-  //     (state) => state.playback.currentlyPlaying
-  //   );
 
   return (
     <OverlayWrapper visible={isExpanded}>

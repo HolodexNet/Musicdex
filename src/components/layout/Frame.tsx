@@ -5,14 +5,17 @@ import {
   Drawer,
   DrawerContent,
   Flex,
+  ChakraProps,
 } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { FiHome, FiHeart, FiClock, FiServer, FiSettings } from "react-icons/fi";
 import Footer from "./Footer";
 import { Player } from "../player/Player";
 import { AddToPlaylistModal } from "../playlist/AddToPlaylistModal";
 import { NavBar } from "../nav/NavBar";
 import { LinkItemProps, SidebarContent } from "../nav/Sidebar";
+import { YoutubePlayer } from "../player/YoutubePlayer";
+import { YouTubePlayer } from "youtube-player/dist/types";
 
 const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, path: "/" },
@@ -22,6 +25,18 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Settings", icon: FiSettings, path: "/settings", disabled: true },
 ];
 
+const POSITIONS: { [key: string]: ChakraProps } = {
+  background: {
+    position: "fixed",
+    h: "100%",
+    w: "100%",
+    zIndex: -1,
+  },
+  sidebar: {
+    position: "fixed",
+  },
+};
+
 export default function FrameWithHeader({
   children,
 }: {
@@ -30,6 +45,11 @@ export default function FrameWithHeader({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const colorMode = useColorModeValue("applight", "appdark");
+
+  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
+  function onReady(event: { target: YouTubePlayer }) {
+    setPlayer(event.target);
+  }
 
   return (
     <Box
@@ -79,12 +99,26 @@ export default function FrameWithHeader({
             position="relative"
             flexGrow={1}
             flexShrink={1}
+            zIndex={2}
           >
             {children}
             <Footer></Footer>
+            <Box
+              {...POSITIONS["background"]}
+              // visibility={currentSong?"visible":"hidden"}
+            >
+              <Box
+                width="100%"
+                height="100%"
+                position="absolute"
+                float="initial"
+                bgColor="bgAlpha.900"
+              ></Box>
+              {YoutubePlayer(onReady)}
+            </Box>
           </Flex>
         </Flex>
-        <Player />
+        <Player player={player} />
         <AddToPlaylistModal />
       </Flex>
     </Box>

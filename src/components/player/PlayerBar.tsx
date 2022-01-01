@@ -10,9 +10,16 @@ import {
   HStack,
   Box,
   Link,
+  useDisclosure,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  StyleHTMLAttributes,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   FaChevronDown,
   FaChevronUp,
@@ -21,7 +28,6 @@ import {
   FaStepBackward,
   FaStepForward,
 } from "react-icons/fa";
-import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState, useStoreActions } from "../../store";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
@@ -29,8 +35,18 @@ import { SongArtwork } from "../song/SongArtwork";
 import { usePlayerMutateChangeVideo, usePlayerState } from "./player.service";
 import { formatSeconds } from "../../utils/SongHelper";
 import { NavLink } from "react-router-dom";
+import ReactDOM from "react-dom";
+import { YoutubePlayer } from "./YoutubePlayer";
 
-export function PlayerBar() {
+export function PlayerBar({
+  isExpanded,
+  toggleExpanded,
+  player,
+}: {
+  isExpanded: boolean;
+  toggleExpanded: () => void;
+  player: YouTubePlayer | null;
+}) {
   // Current song
   const currentSong = useStoreState(
     (state) => state.playback.currentlyPlaying.song
@@ -43,11 +59,7 @@ export function PlayerBar() {
     [currentSong]
   );
 
-  // PlayerState
-  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
-  const [playerState, setPlayerState] = useState(-1);
-
-  // Internal state
+  // UI state
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -62,6 +74,8 @@ export function PlayerBar() {
     isSuccess,
   } = usePlayerState(player, !isLoading);
 
+  const playerState = useMemo(() => status?.state, [status]);
+
   const [hovering, setHovering] = useState(false);
 
   const next = useStoreActions((actions) => actions.playback.next);
@@ -75,11 +89,6 @@ export function PlayerBar() {
   const repeatMode = useStoreState((state) => state.playback.repeatMode);
   const toggleRepeatMode = useStoreActions(
     (actions) => actions.playback.toggleRepeat
-  );
-
-  const isExpanded = useStoreState((state) => state.player.isExpanded);
-  const toggleExpanded = useStoreActions(
-    (actions) => actions.player.toggledExpanded
   );
 
   // Set start time when song/repeat/player changes
@@ -153,7 +162,6 @@ export function PlayerBar() {
   }, [currentSong, repeat]);
 
   const calledOnce = useRef(false);
-
   useEffect(() => {
     if (calledOnce.current) {
       return;
@@ -170,18 +178,10 @@ export function PlayerBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, currentSong]);
 
-  function onReady(event: { target: YouTubePlayer }) {
-    setPlayer(event.target);
-  }
-
-  function onStateChange(e: { data: number }) {
-    setPlayerState(e.data);
-  }
+  // function onStateChange(e: { data: number }) {
+  //   setPlayerState(e.data);
+  // }
   // controls
-  function togglePlay() {
-    if (player) isPlaying ? player.pauseVideo() : player.playVideo();
-    setIsPlaying((prev) => !prev);
-  }
 
   function onChange(e: any) {
     if (!currentSong) return;
@@ -193,47 +193,24 @@ export function PlayerBar() {
     setProgress(e);
   }
 
-  function ElapsedLabel() {
+  const ElapsedLabel = useMemo(() => {
     return <span>{formatSeconds((progress / 100) * totalDuration)}</span>;
-  }
+  }, [progress, totalDuration]);
 
-  function RepeatIcon() {
-    switch (repeatMode) {
-      case "repeat":
-        return <MdRepeat size={24} />;
-      case "repeat-one":
-        return <MdRepeatOne size={24} />;
-      default:
-        return <MdRepeat size={24} color="grey" />;
-    }
-  }
-  function ShuffleIcon() {
-    return <MdShuffle size={24} color={shuffleMode ? "" : "grey"} />;
+  const ref1 = useRef<HTMLDivElement>(null);
+  const ref2 = useRef<HTMLDivElement>(null);
+
+  const [refLoc, setLoc] = useState<HTMLDivElement>();
+
+  function togglePlay() {
+    if (player) isPlaying ? player.pauseVideo() : player.playVideo();
+
+    setIsPlaying((prev) => !prev);
+    setLoc(Math.random() > 0.5 ? ref1.current! : ref2.current!);
   }
 
   return (
     <PlayerContainer>
-      <Flex
-        className="yt-container"
-        visibility={currentSong ? "visible" : "hidden"}
-      >
-        <YouTube
-          className="yt-player"
-          videoId={""}
-          opts={{
-            playerVars: {
-              // https://developers.google.com/youtube/player_parameters
-              autoplay: 0,
-              showinfo: 0,
-              rel: 0,
-              modestbranding: 1,
-            },
-          }}
-          onReady={onReady}
-          onStateChange={onStateChange}
-        />
-      </Flex>
-
       <Slider
         defaultValue={0}
         step={0.1}
@@ -257,7 +234,7 @@ export function PlayerBar() {
           color="white"
           placement="top"
           isOpen={hovering}
-          label={<ElapsedLabel />}
+          label={ElapsedLabel}
         >
           <SliderThumb visibility={hovering ? "visible" : "hidden"} />
         </Tooltip>
@@ -313,18 +290,18 @@ export function PlayerBar() {
               fontSize=".85em"
               display="inline-block"
             >
-              <ElapsedLabel /> / <span>{formatSeconds(totalDuration)}</span>
+              {ElapsedLabel} / <span>{formatSeconds(totalDuration)}</span>
             </Text>
             <IconButton
               aria-label="Shuffle"
-              icon={<ShuffleIcon />}
+              icon={ShuffleIcon(shuffleMode)}
               variant="ghost"
               onClick={() => toggleShuffleMode()}
               size="lg"
             />
             <IconButton
               aria-label="Shuffle"
-              icon={<RepeatIcon />}
+              icon={RepeatIcon(repeatMode)}
               variant="ghost"
               onClick={() => toggleRepeatMode()}
               size="lg"
@@ -363,10 +340,14 @@ const PlayerContainer = styled.div`
     bottom: 90px;
     z-index: 10;
   }
-
-  .yt-container * {
-    width: 100%;
-    height: 100%;
+  .yt-container2 {
+    width: 400px;
+    max-width: 100%;
+    height: 225px;
+    position: absolute;
+    bottom: 90px;
+    right: 30px;
+    z-index: 10;
   }
 
   .chakra-slider {
@@ -400,3 +381,17 @@ const PlayerMain = styled.div`
     align-items: center;
   }
 `;
+function RepeatIcon(repeatMode: string) {
+  switch (repeatMode) {
+    case "repeat":
+      return <MdRepeat size={24} />;
+    case "repeat-one":
+      return <MdRepeatOne size={24} />;
+    default:
+      return <MdRepeat size={24} color="grey" />;
+  }
+}
+
+function ShuffleIcon(shuffleMode: boolean) {
+  return <MdShuffle size={24} color={shuffleMode ? "" : "grey"} />;
+}
