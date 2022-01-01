@@ -188,9 +188,13 @@ export const SongTable = ({
     useSortBy
   );
 
-  const isXL = useBreakpointValue({ base: 0, xs: 0, sm: 1, md: 2, xl: 3 });
+  const isXL = useBreakpointValue(
+    { base: 0, xs: 0, sm: 1, md: 2, xl: 3 },
+    "md"
+  );
 
   useEffect(() => {
+    console.log("xl", isXL);
     if (isXL === undefined) return;
     toggleHideColumn("original_artist", isXL < 3);
     toggleHideColumn("idx", isXL < 3);
@@ -282,7 +286,7 @@ export const SongTable = ({
         }}
       ></ContextMenuList>
 
-      <Table {...getTableProps()} size={isXL && isXL >= 1 ? "md" : "sm"}>
+      <Table {...getTableProps()} size={isXL! >= 1 ? "md" : "sm"}>
         <Thead>
           {headerGroups.map((headerGroup) => (
             <Tr {...headerGroup.getHeaderGroupProps()} px={2}>
