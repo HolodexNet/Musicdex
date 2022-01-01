@@ -7,6 +7,7 @@ import {
 } from "react-query";
 import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
+import { mergeSongsWithLikeCheck, useLikedCheckPlaylist } from "./like.service";
 
 export const usePlaylistWriter = (
   callbacks: UseMutationOptions<
@@ -139,7 +140,7 @@ export const usePlaylist = (
   config: UseQueryOptions<PlaylistFull, unknown, PlaylistFull, string[]> = {}
 ) => {
   const queryClient = useQueryClient();
-  const { AxiosInstance, isLoggedIn } = useClient();
+  const { AxiosInstance } = useClient();
 
   const result = useQuery(
     ["playlist", playlistId],
@@ -179,41 +180,10 @@ export const usePlaylist = (
     }
   );
 
-  const likeResult = useQuery<boolean[], unknown, boolean[], string[]>(
-    ["playlist-like", playlistId],
-    async (q): Promise<boolean[]> => {
-      if (!isLoggedIn) {
-        return [];
-      }
-      // fetch cached
-      // const cached: boolean[] | undefined = queryClient.getQueryData([
-      //   "playlist-like",
-      //   playlistId,
-      // ]);
+  const likeCheck = useLikedCheckPlaylist(playlistId);
 
-      // if (cached) {
-      //   return cached;
-      // }
-      // cache miss:
-      return (
-        await AxiosInstance<boolean[]>(
-          `/musicdex/playlist/${q.queryKey[1]}/likeCheck`
-        )
-      ).data;
-    },
-    {
-      ...DEFAULT_FETCH_CONFIG,
-    }
-  );
-
-  if (result.data && likeResult.data && result.data.content) {
-    if (result.data.content.length !== likeResult.data.length) {
-      console.log("like and playlsit content has WRONG LENGTHS");
-      return result;
-    }
-    result.data.content.forEach((x, index) => {
-      x.liked = likeResult.data[index];
-    });
+  if (result.data?.content?.length && likeCheck.data?.length) {
+    mergeSongsWithLikeCheck(result.data.content, likeCheck.data);
   }
 
   return result;

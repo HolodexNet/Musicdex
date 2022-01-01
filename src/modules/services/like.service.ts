@@ -32,7 +32,7 @@ export const useSongLikeUpdater = (
         queryClient.cancelQueries(["likedSongList"]);
         queryClient.invalidateQueries(["likedSongList"]);
         queryClient.invalidateQueries(["playlist-like"]);
-        queryClient.invalidateQueries([`likeSongStatus-${payload.song_id}`]);
+        queryClient.invalidateQueries(["likedSongs"]);
         if (callbacks.onSuccess) {
           callbacks.onSuccess(data, payload, ...rest);
         }
@@ -41,15 +41,17 @@ export const useSongLikeUpdater = (
   );
 };
 
-export const useLikeSongChecker = (songId: string[], enabled: boolean) => {
+export const useLikedCheckSongs = (songIds: string[], enabled?: boolean) => {
   // const queryClient = useQueryClient();
-  const { AxiosInstance } = useClient();
+  const { AxiosInstance, isLoggedIn } = useClient();
   const result = useQuery(
-    [`likeSongStatus-${songId}`],
+    ["likedSongs", songIds],
     async (q): Promise<boolean[]> => {
-      // queryClient.getQueryData([`likeSongStatus-${songId}`]);
+      if (!isLoggedIn || !songIds.length) {
+        return [];
+      }
       const req = await AxiosInstance<boolean[]>(
-        `/musicdex/like/check?song_id=${songId}`
+        `/musicdex/like/check?song_id=${songIds.join(",")}`
       );
       return req.data;
     },
@@ -60,6 +62,37 @@ export const useLikeSongChecker = (songId: string[], enabled: boolean) => {
     }
   );
   return result;
+};
+
+export const useLikedCheckPlaylist = (playlistId: string) => {
+  const { AxiosInstance, isLoggedIn } = useClient();
+  const results = useQuery<boolean[], unknown, boolean[], string[]>(
+    ["playlist-like", playlistId],
+    async (q): Promise<boolean[]> => {
+      if (!isLoggedIn) {
+        return [];
+      }
+      // fetch cached
+      // const cached: boolean[] | undefined = queryClient.getQueryData([
+      //   "playlist-like",
+      //   playlistId,
+      // ]);
+
+      // if (cached) {
+      //   return cached;
+      // }
+      // cache miss:
+      return (
+        await AxiosInstance<boolean[]>(
+          `/musicdex/playlist/${q.queryKey[1]}/likeCheck`
+        )
+      ).data;
+    },
+    {
+      ...DEFAULT_FETCH_CONFIG,
+    }
+  );
+  return results;
 };
 
 export const useLikedSongs = (
@@ -106,3 +139,12 @@ export const useLikedSongs = (
 
   return result;
 };
+
+// This might not trigger a hook update, since editing nested object :akisweat:
+export function mergeSongsWithLikeCheck(songs: Song[], likeStatus: boolean[]) {
+  if (songs.length !== likeStatus.length) {
+    console.warn("Like status and songs did not match");
+    return;
+  }
+  songs.forEach((x, index) => (x.liked = likeStatus[index]));
+}
