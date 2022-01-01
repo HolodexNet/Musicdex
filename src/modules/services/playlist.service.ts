@@ -200,3 +200,52 @@ export const useMyPlaylists = (
 
   return result;
 };
+
+export const useStarredPlaylists = () => {
+  const { AxiosInstance, isLoggedIn } = useClient();
+
+  return useQuery(
+    ["starredPlaylists"],
+    async (): Promise<PlaylistStub[]> => {
+      // fetch cached
+      if (!isLoggedIn) return [];
+      return (await AxiosInstance<PlaylistStub[]>(`/musicdex/star/`)).data;
+    },
+    {
+      ...DEFAULT_FETCH_CONFIG,
+      cacheTime: 1000 * 60 * 60 * 24,
+    }
+  );
+};
+
+export const usePlaylistStarUpdater = (
+  callbacks: UseMutationOptions<
+    any,
+    unknown,
+    { playlist_id: string; action: "add" | "delete" }
+  > = {}
+) => {
+  const { AxiosInstance } = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (payload) =>
+      (
+        await AxiosInstance("/musicdex/star/", {
+          method: payload.action === "delete" ? "DELETE" : "POST",
+          data: { playlist_id: payload.playlist_id },
+        })
+      ).data,
+    {
+      ...callbacks,
+      onSuccess: (data, payload, ...rest) => {
+        queryClient.cancelQueries(["starredPlaylists"]);
+        queryClient.invalidateQueries(["starredPlaylists"]);
+        // queryClient.invalidateQueries([`likeSongStatus-${payload.song_id}`]);
+        if (callbacks.onSuccess) {
+          callbacks.onSuccess(data, payload, ...rest);
+        }
+      },
+    }
+  );
+};

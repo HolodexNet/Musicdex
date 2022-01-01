@@ -13,6 +13,7 @@ import { useClient } from "../../modules/client";
 import {
   usePlaylistWriter,
   useMyPlaylists,
+  useStarredPlaylists,
 } from "../../modules/services/playlist.service";
 import { SidebarPlaylists } from "./SidebarPlaylists";
 import { NavItem } from "./NavItem";
@@ -31,7 +32,8 @@ export interface LinkItemProps {
 export function SidebarContent({ linkItems, onClose, ...rest }: SidebarProps) {
   const { user } = useClient();
   const { mutate: writePlaylist, isSuccess, isError } = usePlaylistWriter();
-  const { data: playlistList, isLoading } = useMyPlaylists();
+  const { data: playlistList, isLoading: loadingMine } = useMyPlaylists();
+  const { data: starredList, isLoading: loadingStars } = useStarredPlaylists();
 
   const createNewPlaylistHandler = async () => {
     if (!user?.id) return alert("You must be logged in to create Playlists");
@@ -64,7 +66,7 @@ export function SidebarContent({ linkItems, onClose, ...rest }: SidebarProps) {
       <Flex
         h="20"
         alignItems="center"
-        mx="8"
+        mx="4"
         justifyContent="space-between"
         display={{ base: "flex", lg: "none" }}
       >
@@ -74,11 +76,11 @@ export function SidebarContent({ linkItems, onClose, ...rest }: SidebarProps) {
         <CloseButton display={{ base: "flex", lg: "none" }} onClick={onClose} />
       </Flex>
       {linkItems.map((link) => (
-        <NavItem {...link} key={link.name}>
+        <NavItem {...link} key={link.name} mb={4}>
           {link.name}
         </NavItem>
       ))}
-      <Divider my={4} />
+      <Divider mb={2} />
       <NavItem
         key="playlist"
         icon={FiPlusCircle}
@@ -87,6 +89,8 @@ export function SidebarContent({ linkItems, onClose, ...rest }: SidebarProps) {
         Create New Playlist
       </NavItem>
       {playlistList && <SidebarPlaylists playlistStubs={playlistList as any} />}
+      <Divider my={2} />
+      {starredList && <SidebarPlaylists playlistStubs={starredList as any} />}
     </Box>
   );
 }
