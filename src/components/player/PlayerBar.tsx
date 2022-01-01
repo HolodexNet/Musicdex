@@ -37,6 +37,7 @@ import { formatSeconds } from "../../utils/SongHelper";
 import { NavLink } from "react-router-dom";
 import ReactDOM from "react-dom";
 import { YoutubePlayer } from "./YoutubePlayer";
+import { ChangePlayerLocationButton } from "./ChangePlayerLocationButton";
 
 export function PlayerBar({
   isExpanded,
@@ -306,6 +307,8 @@ export function PlayerBar({
               onClick={() => toggleRepeatMode()}
               size="lg"
             />
+            <ChangePlayerLocationButton />
+
             <IconButton
               aria-label="Expand"
               icon={isExpanded ? <FaChevronDown /> : <FaChevronUp />}

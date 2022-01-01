@@ -1,8 +1,14 @@
 import { action, Action, computed, Computed } from "easy-peasy";
 
+export type PlayerPosition =
+  | "hover-top"
+  | "hover-bottom"
+  | "background"
+  | "sidebar";
+
 export interface PlayerModel {
-  position: "hover-left" | "hover-right" | "background" | "sidebar";
-  setPosition: Action<PlayerModel, typeof playerModel.position>;
+  position: PlayerPosition;
+  setPosition: Action<PlayerModel, PlayerPosition>;
 
   // target: string | null;
 
@@ -14,7 +20,7 @@ export interface PlayerModel {
 }
 
 const playerModel: PlayerModel = {
-  position: "hover-right",
+  position: "hover-top",
   setPosition: action((state, newloc) => {
     state.position = newloc;
   }),

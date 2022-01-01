@@ -7,7 +7,7 @@ import {
   Flex,
   ChakraProps,
 } from "@chakra-ui/react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { FiHome, FiHeart, FiClock, FiServer, FiSettings } from "react-icons/fi";
 import Footer from "./Footer";
 import { Player } from "../player/Player";
@@ -16,6 +16,7 @@ import { NavBar } from "../nav/NavBar";
 import { LinkItemProps, SidebarContent } from "../nav/Sidebar";
 import { YoutubePlayer } from "../player/YoutubePlayer";
 import { YouTubePlayer } from "youtube-player/dist/types";
+import { useStoreState } from "../../store";
 
 const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, path: "/" },
@@ -33,7 +34,29 @@ const POSITIONS: { [key: string]: ChakraProps } = {
     zIndex: -1,
   },
   sidebar: {
-    position: "fixed",
+    position: "absolute",
+    zIndex: 1,
+    bottom: "0px",
+    ml: -60,
+    w: 60,
+  },
+  "hover-top": {
+    width: "400px",
+    maxWidth: "100%",
+    height: "225px",
+    position: "absolute",
+    top: "20px",
+    right: "20px",
+    zIndex: 10,
+  },
+  "hover-bottom": {
+    width: "400px",
+    maxWidth: "100%",
+    height: "225px",
+    position: "absolute",
+    bottom: "20px",
+    right: "20px",
+    zIndex: 10,
   },
 };
 
@@ -46,10 +69,14 @@ export default function FrameWithHeader({
 
   const colorMode = useColorModeValue("applight", "appdark");
 
+  const pos = useStoreState((state) => state.player.position);
+
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
   }
+
+  const props = useMemo(() => POSITIONS[pos], [pos]);
 
   return (
     <Box
@@ -104,8 +131,9 @@ export default function FrameWithHeader({
               {children}
               <Footer></Footer>
             </Flex>
-            <Box {...POSITIONS["background"]}>
+            <Box {...props}>
               <Box
+                visibility={pos === "background" ? "visible" : "hidden"}
                 width="100%"
                 height="100%"
                 position="absolute"
