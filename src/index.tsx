@@ -3,7 +3,7 @@ import {
   HyperThemeEditor,
   ThemeEditorProvider,
 } from "@hypertheme-editor/chakra-ui";
-import { createStore, persist, StoreProvider } from "easy-peasy";
+import { StoreProvider } from "easy-peasy";
 // https://chakra-ui.com/docs/migration#css-reset
 import "focus-visible/dist/focus-visible";
 import React, { Suspense } from "react";

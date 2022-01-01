@@ -1,6 +1,6 @@
 // API Player as a service
 
-import { UseQueryOptions, useQuery, useMutation } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 import { YouTubePlayer } from "youtube-player/dist/types";
 

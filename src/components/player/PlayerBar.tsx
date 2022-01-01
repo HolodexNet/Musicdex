@@ -1,25 +1,17 @@
 import {
-  Flex,
+  Box,
+  HStack,
   IconButton,
+  Link,
   Slider,
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
-  Tooltip,
   Text,
-  HStack,
-  Box,
-  Link,
-  useDisclosure,
+  Tooltip,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import {
-  StyleHTMLAttributes,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   FaChevronDown,
   FaChevronUp,
@@ -28,16 +20,14 @@ import {
   FaStepBackward,
   FaStepForward,
 } from "react-icons/fa";
-import { YouTubePlayer } from "youtube-player/dist/types";
-import { useStoreState, useStoreActions } from "../../store";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
-import { SongArtwork } from "../song/SongArtwork";
-import { usePlayerMutateChangeVideo, usePlayerState } from "./player.service";
-import { formatSeconds } from "../../utils/SongHelper";
 import { NavLink } from "react-router-dom";
-import ReactDOM from "react-dom";
-import { YoutubePlayer } from "./YoutubePlayer";
+import { YouTubePlayer } from "youtube-player/dist/types";
+import { useStoreActions, useStoreState } from "../../store";
+import { formatSeconds } from "../../utils/SongHelper";
+import { SongArtwork } from "../song/SongArtwork";
 import { ChangePlayerLocationButton } from "./ChangePlayerLocationButton";
+import { usePlayerMutateChangeVideo, usePlayerState } from "./player.service";
 
 export function PlayerBar({
   isExpanded,

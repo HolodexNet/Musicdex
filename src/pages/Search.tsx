@@ -1,14 +1,5 @@
-import {
-  Button,
-  Container,
-  Flex,
-  Heading,
-  HStack,
-  Text,
-  Spacer,
-  VStack,
-} from "@chakra-ui/react";
-import React, { Suspense, useMemo, useState } from "react";
+import { Button, Heading, HStack, Spacer, Text } from "@chakra-ui/react";
+import { Suspense, useMemo } from "react";
 import {
   createSearchParams,
   useNavigate,
@@ -17,12 +8,10 @@ import {
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
-import { SongItem } from "../components/song/SongItem";
 import {
   SearchParams,
   useSongSearch,
 } from "../modules/services/search.service";
-import { useTrendingSongs } from "../modules/services/songs.service";
 
 export function Search() {
   const [search] = useSearchParams();

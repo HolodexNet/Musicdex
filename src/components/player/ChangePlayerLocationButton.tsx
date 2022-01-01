@@ -4,17 +4,13 @@ import {
   Popover,
   PopoverArrow,
   PopoverBody,
-  PopoverCloseButton,
   PopoverContent,
-  PopoverHeader,
   PopoverTrigger,
 } from "@chakra-ui/react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { CgInpicture } from "react-icons/cg";
-import { useStoreActions, useStoreState } from "../../store";
-import { PlayerPosition } from "../../store/player";
 import { FiEyeOff, FiMaximize, FiSidebar } from "react-icons/fi";
 import { MdPictureInPicture, MdPictureInPictureAlt } from "react-icons/md";
+import { useStoreActions, useStoreState } from "../../store";
+import { PlayerPosition } from "../../store/player";
 
 const LocationIcons: Record<PlayerPosition, JSX.Element> = {
   "hover-top": <MdPictureInPicture />,

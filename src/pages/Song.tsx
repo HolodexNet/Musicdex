@@ -1,16 +1,15 @@
 import {
   Box,
   Button,
-  Image,
-  useBreakpointValue,
-  Text,
-  Link,
   Flex,
   HStack,
   Icon,
+  Link,
+  Text,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { BiMovie } from "react-icons/bi";
 import { FiShare2 } from "react-icons/fi";
 import { useParams } from "react-router";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
@@ -20,9 +19,7 @@ import { SongArtwork } from "../components/song/SongArtwork";
 import { SongLikeButton } from "../components/song/SongLikeButton";
 import { useClipboardWithToast } from "../modules/common/clipboard";
 import { useSong } from "../modules/services/songs.service";
-import { resizeArtwork } from "../modules/songs/utils";
 import { useStoreActions } from "../store";
-import { BiMovie } from "react-icons/bi";
 import { formatSeconds } from "../utils/SongHelper";
 
 export function Song() {

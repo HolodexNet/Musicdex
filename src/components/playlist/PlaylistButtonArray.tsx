@@ -1,13 +1,7 @@
-import {
-  Button,
-  HStack,
-  Spacer,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Button, HStack } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
-import { FiPlay, FiShare, FiShare2 } from "react-icons/fi";
+import { FiPlay, FiShare2 } from "react-icons/fi";
 import { useClient } from "../../modules/client";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import {
