@@ -63,11 +63,7 @@ const POSITIONS: { [key: string]: ChakraProps } = {
   },
 };
 
-export default function FrameWithHeader({
-  children,
-}: {
-  children?: ReactNode;
-}) {
+export default function Frame({ children }: { children?: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const colorMode = useColorModeValue("applight", "appdark");
