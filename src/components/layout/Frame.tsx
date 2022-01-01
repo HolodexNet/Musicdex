@@ -132,7 +132,7 @@ export default function FrameWithHeader({
             position="relative"
             flexGrow={1}
             flexShrink={1}
-            zIndex={2}
+            zIndex={0}
           >
             <Flex overflowY="scroll" flex="1" direction="column">
               {children}
