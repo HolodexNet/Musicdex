@@ -13,7 +13,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { CgInpicture } from "react-icons/cg";
 import { useStoreActions, useStoreState } from "../../store";
 import { PlayerPosition } from "../../store/player";
-import { FiMaximize, FiSidebar } from "react-icons/fi";
+import { FiEyeOff, FiMaximize, FiSidebar } from "react-icons/fi";
 import { MdPictureInPicture, MdPictureInPictureAlt } from "react-icons/md";
 
 const LocationIcons: Record<PlayerPosition, JSX.Element> = {
@@ -21,6 +21,7 @@ const LocationIcons: Record<PlayerPosition, JSX.Element> = {
   "hover-bottom": <MdPictureInPictureAlt />,
   background: <FiMaximize />,
   sidebar: <FiSidebar />,
+  hidden: <FiEyeOff />,
 };
 
 export function ChangePlayerLocationButton() {

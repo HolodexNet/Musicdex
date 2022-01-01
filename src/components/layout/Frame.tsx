@@ -58,6 +58,9 @@ const POSITIONS: { [key: string]: ChakraProps } = {
     right: "20px",
     zIndex: 10,
   },
+  hidden: {
+    visibility: "hidden",
+  },
 };
 
 export default function FrameWithHeader({

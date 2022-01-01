@@ -4,7 +4,8 @@ export type PlayerPosition =
   | "hover-top"
   | "hover-bottom"
   | "background"
-  | "sidebar";
+  | "sidebar"
+  | "hidden";
 
 export interface PlayerModel {
   position: PlayerPosition;
