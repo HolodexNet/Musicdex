@@ -20,6 +20,7 @@ import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray"
 import React from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
+import SongEditableTable from "../components/data/SongTableEditable";
 
 export function Playlist() {
   let params = useParams();
@@ -91,9 +92,9 @@ export function Playlist() {
     }
   };
 
-  const SongEditableTable = React.lazy(
-    () => import("../components/data/SongTableEditable")
-  );
+  // const SongEditableTable = React.lazy(
+  //   () => import("../components/data/SongTableEditable")
+  // );
 
   if (!playlist)
     return (
@@ -145,12 +146,10 @@ export function Playlist() {
         <Box pt="4">
           {playlist.content &&
             (editMode ? (
-              <Suspense fallback={<div>Loading...</div>}>
-                <SongEditableTable
-                  songs={playlist.content}
-                  songsEdited={setNewSongIds}
-                />
-              </Suspense>
+              <SongEditableTable
+                songs={playlist.content}
+                songsEdited={setNewSongIds}
+              />
             ) : (
               <SongTable songs={playlist.content} />
             ))}
