@@ -16,7 +16,7 @@ export const theme = extendTheme(
     colors: localColors,
     fonts: {
       heading: "Manrope",
-      body: "Manrope",
+      body: "Assistant",
     },
   },
   withDefaultColorScheme({ colorScheme: "brand" })

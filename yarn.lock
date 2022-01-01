@@ -1746,6 +1746,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fontsource/assistant@^4.5.1":
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/assistant/-/assistant-4.5.1.tgz#0ff5b0d76edc764ce4c83fe0cb50180635ba6caf"
+  integrity sha512-xjf5aXXxfpiK0840h21tk6je32ePnVXYCD/+i8YI8F+4AvqudJApJoXGkmnonPMMJAqolex7nef7HHc9mMlUuw==
+
 "@fontsource/manrope@^4.5.1":
   version "4.5.1"
   resolved "https://registry.yarnpkg.com/@fontsource/manrope/-/manrope-4.5.1.tgz#ec437babc5253e08f350d26f43806202b5d7c9e0"
