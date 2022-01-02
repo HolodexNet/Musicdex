@@ -316,7 +316,7 @@ export const SongTable = ({
                 onContextMenu={(e) => {
                   contextMenuTrigger(e, row.original);
                 }}
-                key={menuIdStat + "st" + row.original.id}
+                key={menuIdStat + "_" + row.original.id + "_" + index}
                 _hover={HOVER_ROW_STYLE}
                 onMouseEnter={() => setHoverIndex(index)}
                 onMouseLeave={() => setHoverIndex(null)}

@@ -51,7 +51,7 @@ function changeVideo(
   // ts is to provide a timestamp for when javascript gets suspended in the background. if a ts is too far back, we ignore it.
   const { id, start, ts } = args;
   if (!player) return args.success();
-  console.log("changing video layer");
+  // console.log("changing video layer");
   if (attempt > 4) return args.err("too many tries");
   // attempt to mutate:
   const currentId = getID(player.getVideoUrl());
@@ -74,11 +74,11 @@ function changeVideo(
       return args.err("took too long");
     }
   }
-  console.log("seeking", player.getCurrentTime(), start);
+  // console.log("seeking", player.getCurrentTime(), start);
 
   if (Math.abs(player.getCurrentTime() - start) > 5.0) {
     // if the time is wrong, seek to the right time.
-    console.log("seeking");
+    // console.log("seeking");
     player.seekTo(start, true);
     return setTimeout(() => {
       changeVideo(player, args, attempt + 1);
@@ -156,7 +156,7 @@ export function PlayerBar({
     return () => {
       timer && clearInterval(timer);
     };
-  }, []);
+  }, [player]);
 
   const playerState = useMemo(() => status?.state, [status]);
   const toast = useToast();
@@ -177,7 +177,7 @@ export function PlayerBar({
   );
 
   const nextSongWhenPlaybackErr = (err: string) => {
-    console.error(err, status.currentVideo, currentSong?.video_id);
+    // console.error(err, status.currentVideo, currentSong?.video_id);
     if (
       getID(player?.getVideoUrl()) === currentSong?.video_id // using videoID here is a bit sus, but since VIDEOS break and not SONGS, it should be fine.
     ) {
@@ -215,7 +215,7 @@ export function PlayerBar({
    * Sync player state with internal values
    */
   useEffect(() => {
-    console.log("check if song over effect");
+    // console.log("check if song over effect");
 
     const playerTime = status.currentTime;
     if (!player || !currentSong || playerTime === undefined) return;
@@ -229,9 +229,10 @@ export function PlayerBar({
       return;
     }
     // Proceeed to next song
+    // console.log("t", playerTime, player.getDuration());
     if (
       progress >= 100 ||
-      (playerTime >= player.getDuration() - 1 && playerTime > 0)
+      (playerTime >= player.getDuration() - 2 && playerTime > 0)
     ) {
       console.log("finish", progress, playerTime);
       setProgress(0);
@@ -249,7 +250,7 @@ export function PlayerBar({
   ]);
 
   useEffect(() => {
-    console.log("song & repeat effect");
+    // console.log("song & repeat effect");
     if (status?.currentTime === undefined || currentSong === undefined) {
       changeVideo(player, {
         id: "",
