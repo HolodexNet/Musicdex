@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Playlist } from "./pages/Playlist";
 
-import FrameWithHeader from "./components/layout/Frame";
+import Frame from "./components/layout/Frame";
 import styled from "@emotion/styled";
 import { Song } from "./pages/Song";
 import { History } from "./pages/History";
@@ -15,7 +15,7 @@ import { Settings } from "./pages/Settings";
 function App(this: any) {
   return (
     <Router>
-      <FrameWithHeader>
+      <Frame>
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/playlists/:playlistId" element={<Playlist />}></Route>
@@ -32,7 +32,7 @@ function App(this: any) {
           <Route path="/video/:id" element={<Video></Video>} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
-      </FrameWithHeader>
+      </Frame>
     </Router>
   );
 }

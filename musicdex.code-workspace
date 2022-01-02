@@ -12,6 +12,7 @@
     "i18n-ally.extract.keyMaxLength": 120,
     "i18n-ally.sortKeys": true,
     "i18n-ally.keepFulfilled": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
   }
 }
