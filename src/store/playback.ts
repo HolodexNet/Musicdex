@@ -35,6 +35,7 @@ export interface PlaybackModel {
   toggleShuffle: Thunk<PlaybackModel, void>;
   _setShuffleMode: Action<PlaybackModel, boolean>;
   toggleRepeat: Action<PlaybackModel, void>;
+  _setRepeatMode: Action<PlaybackModel, "none" | "repeat" | "repeat-one">;
 
   // ==== Lifecycle:
   // Ejects the currently playing song and puts it somewhere appropriate / throws it out.
@@ -129,6 +130,9 @@ const playbackModel: PlaybackModel = {
     state.shuffleMode = b;
   }),
   repeatMode: "none",
+  _setRepeatMode: action((state, b) => {
+    state.repeatMode = b;
+  }),
 
   toggleShuffle: thunk((actions, _, helpers) => {
     const shuf = !helpers.getState().shuffleMode;
@@ -168,6 +172,11 @@ const playbackModel: PlaybackModel = {
       // Add to play queue if needed
       if (state.currentlyPlaying.from === "playlist") {
         state.playedPlaylistQueue.push(s.song);
+      } else if (
+        state.currentlyPlaying.from === "queue" &&
+        state.repeatMode === "repeat"
+      ) {
+        state.queue.push(s.song);
       }
     }
 
@@ -189,13 +198,21 @@ const playbackModel: PlaybackModel = {
       );
       state.history.unshift({ ...s });
       // Trim history
-      if (state.history.length > 100) {
+      while (state.history.length > 100) {
         state.history.pop();
       }
 
-      // Add to play queue if needed
-      if (s.from === "playlist") {
-        state.playedPlaylistQueue.push(s.song);
+      // Add to play queue if needed (repeat mode is on)
+      console.log(state.repeatMode);
+      if (state.repeatMode === "repeat") {
+        if (s.from === "playlist") {
+          state.playedPlaylistQueue.push(s.song);
+        } else if (
+          state.currentlyPlaying.from === "queue" &&
+          state.repeatMode === "repeat"
+        ) {
+          state.queue.push(s.song);
+        }
       }
     }
   }),
@@ -226,20 +243,22 @@ const playbackModel: PlaybackModel = {
   }),
 
   _insertCurrentlyPlaying: action((state, src) => {
-    if (src === "repeat-one") {
+    if (state.repeatMode === "repeat-one") {
       state.currentlyPlaying.repeat++;
-    } else if (src === "queue") {
-      state.currentlyPlaying.from = "queue";
-      state.currentlyPlaying.song = state.queue.shift();
-      state.currentlyPlaying.repeat++;
-    } else if (src === "playlist") {
-      if (state.playlistQueue.length === 0) {
-        state.playlistQueue = state.playedPlaylistQueue;
-        state.playedPlaylistQueue = [];
+    } else {
+      if (src === "queue") {
+        state.currentlyPlaying.from = "queue";
+        state.currentlyPlaying.song = state.queue.shift();
+        state.currentlyPlaying.repeat++;
+      } else if (src === "playlist") {
+        if (state.playlistQueue.length === 0) {
+          state.playlistQueue = state.playedPlaylistQueue;
+          state.playedPlaylistQueue = [];
+        }
+        state.currentlyPlaying.from = "playlist";
+        state.currentlyPlaying.song = state.playlistQueue.shift();
+        state.currentlyPlaying.repeat++;
       }
-      state.currentlyPlaying.from = "playlist";
-      state.currentlyPlaying.song = state.playlistQueue.shift();
-      state.currentlyPlaying.repeat++;
     }
     // console.log(debug(state.playlistQueue), debug(state.playedPlaylistQueue))
     console.log("next: now playing", state.currentlyPlaying.song?.name);
@@ -293,6 +312,10 @@ const playbackModel: PlaybackModel = {
 
   next: thunk((actions, { count, userSkipped }, h) => {
     // User initiated skip, ignore repeat-one mode
+    let oldRepeatMode = h.getState().repeatMode;
+    if (userSkipped) {
+      actions._setRepeatMode(oldRepeatMode === "none" ? "none" : "repeat");
+    }
     while (count > 0) {
       const src =
         h.getState().queue.length > 0
@@ -318,6 +341,9 @@ const playbackModel: PlaybackModel = {
       //   playlist && actions.setPlaylist({ playlist });
       // }
       count--;
+    }
+    if (userSkipped) {
+      actions._setRepeatMode(oldRepeatMode);
     }
   }),
 
