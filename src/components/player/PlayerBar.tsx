@@ -156,7 +156,7 @@ export function PlayerBar({
     return () => {
       timer && clearInterval(timer);
     };
-  }, [player]);
+  }, [player, currentSong]);
 
   const playerState = useMemo(() => status?.state, [status]);
   const toast = useToast();
