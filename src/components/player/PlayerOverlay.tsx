@@ -80,15 +80,16 @@ const OverlayWrapper = styled.div<{ visible: boolean }>`
   width: 100vw;
   height: 100vh;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: ${({ visible }) => (visible ? "scroll" : "hidden")};
   position: absolute;
   top: 0;
   pointer-events: ${({ visible }) => (visible ? "" : "none")};
+  visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
 
   .overlay {
     position: relative;
     top: ${({ visible }) => (visible ? "64px" : "100vh")};
-    opacity: ${({ visible }) => (visible ? "1" : "0")};
+    visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
     height: calc(100% - 64px - 80px);
     transition: top 0.4s ease, opacity 0.5s ease;
     width: 100%;
@@ -96,7 +97,7 @@ const OverlayWrapper = styled.div<{ visible: boolean }>`
   }
   .bgOver {
     top: ${({ visible }) => (visible ? "64px" : "100vh")};
-    opacity: ${({ visible }) => (visible ? "1" : "0")};
+    visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
     height: calc(100% - 64px - 80px);
     transition: top 0.4s ease, opacity 0.5s ease;
 

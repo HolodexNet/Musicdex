@@ -110,7 +110,7 @@ const playbackModel: PlaybackModel = {
         : mq;
     // shuffle the rest.
     state.playlistQueue = shuffleArray(nq);
-    // state.playedPlaylistQueue = [];
+    state.playedPlaylistQueue = [];
   }),
 
   history: [],
