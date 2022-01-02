@@ -1,32 +1,43 @@
-import { Box, Heading, Stack, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  HStack,
+  Stack,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
+import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
+import { useDiscoveryChannel } from "../modules/services/discovery.service";
 import { useHistory } from "../modules/services/history.service";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 
-export function Video() {
+export function Channel() {
   // const history = useStoreState((store) => store.playback.history);
   let params = useParams();
-  let videoId = params.id!;
+  let channelId = params.id!;
 
-  const { data: playlist, ...status } = usePlaylist(`:video[id=${videoId}]`);
+  //const { data: playlist, ...status } = usePlaylist(`:video[id=${channelId}]`);
 
-  const { data: video, ...videoStatus } = useQuery(
-    ["video", videoId],
+  const { data: channel, ...channelStatus } = useQuery(
+    ["channel", channelId],
     async (q) => {
-      return (await axios.get("/api/v2/videos/" + q.queryKey[1])).data;
+      return (await axios.get("/api/v2/channels/" + q.queryKey[1])).data;
     },
     { cacheTime: 600000 /* 10 mins */ }
   );
+
+  const { data: discovery, ...discoveryStatus } =
+    useDiscoveryChannel(channelId);
 
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
   // const {description, }
@@ -35,42 +46,34 @@ export function Video() {
     (actions) => actions.playback.setPlaylist
   );
 
+  console.log(channel);
   // useEffect(() => console.log(playlist), [playlist])
 
-  if (!status.isSuccess) return <QueryStatus queryStatus={status} />;
+  // if (!status.isSuccess)
+  //   return <QueryStatus queryStatus={status} /> ;
 
-  if (!videoStatus.isSuccess) return <QueryStatus queryStatus={videoStatus} />;
-
+  if (!channelStatus.isSuccess)
+    return <QueryStatus queryStatus={channelStatus} />;
   return (
     <PageContainer>
       <ContainerInlay>
-        <PlaylistHeading
-          title={video.title}
-          description={
-            video.channel.name + ". Streamed on:" + video.available_at
-          }
-          canEdit={false}
-          editMode={false}
-          count={playlist?.content?.length || ""}
-        />
-        {playlist?.content && (
-          <PlaylistButtonArray
-            playlist={playlist}
+        <HStack>
+          <ChannelPhoto
+            channelId={channel.id}
+            resizePhoto={150}
+            size="2xl"
+            borderRadius={4}
+            mr={4}
+          ></ChannelPhoto>
+          <PlaylistHeading
+            title={channel.name}
+            description={channel.org}
             canEdit={false}
             editMode={false}
-            onPlayClick={() => {
-              setPlaylist({ playlist });
-            }}
-            onAddQueueClick={() => {
-              playlist.content &&
-                queueSongs({
-                  songs: [...playlist.content],
-                  immediatelyPlay: false,
-                });
-            }}
+            count={0}
           />
-        )}
-        {playlist?.content && <SongTable songs={playlist.content} />}
+        </HStack>
+        <Box>{JSON.stringify(discovery)}</Box>
       </ContainerInlay>
     </PageContainer>
   );

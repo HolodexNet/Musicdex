@@ -11,6 +11,7 @@ import { Search } from "./pages/Search";
 import { LikedSongs } from "./pages/LikedSongs";
 import { Video } from "./pages/Video";
 import { Settings } from "./pages/Settings";
+import { Channel } from "./pages/Channel";
 
 function App(this: any) {
   return (
@@ -30,6 +31,7 @@ function App(this: any) {
           <Route path="/history" element={<History />} />
           <Route path="/search" element={<Search></Search>} />
           <Route path="/video/:id" element={<Video></Video>} />
+          <Route path="/channel/:id" element={<Channel />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </Frame>
