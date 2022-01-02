@@ -45,6 +45,8 @@ export function PlayerOverlay({
 
   const clearAll = useStoreActions((actions) => actions.playback.clearAll);
 
+  const next = useStoreActions((actions) => actions.playback.next);
+
   return (
     <OverlayWrapper visible={isExpanded}>
       <div className="bgOver"></div>
@@ -61,14 +63,24 @@ export function PlayerOverlay({
                 <Text fontSize="3xl">Queue</Text>
                 <Divider />
                 <br />
-                <SongTable songs={currentQueue} />
+                <SongTable
+                  songs={currentQueue}
+                  songClicked={(e, s) =>
+                    next({ count: (s as any).idx - 1, userSkipped: true })
+                  }
+                />
               </React.Fragment>
             )}
             <br />
             <Text fontSize="3xl">Playlist</Text>
             <Divider />
             <br />
-            <SongTable songs={playlistTotalQueue} />
+            <SongTable
+              songs={playlistTotalQueue}
+              songClicked={(e, s) =>
+                next({ count: (s as any).idx - 1, userSkipped: true })
+              }
+            />
           </Container>
         )}
       </div>
