@@ -9,9 +9,10 @@ import {
   SliderTrack,
   Text,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   FaChevronDown,
   FaChevronUp,
@@ -22,12 +23,90 @@ import {
 } from "react-icons/fa";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 import { NavLink } from "react-router-dom";
+import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreActions, useStoreState } from "../../store";
 import { formatSeconds } from "../../utils/SongHelper";
 import { SongArtwork } from "../song/SongArtwork";
 import { ChangePlayerLocationButton } from "./ChangePlayerLocationButton";
-import { usePlayerMutateChangeVideo, usePlayerState } from "./player.service";
+
+var VideoIDRegex =
+  /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+
+function getID(url: string | undefined) {
+  return url?.match(VideoIDRegex)?.[2] || "";
+}
+
+function changeVideo(
+  player: YouTubePlayer | undefined,
+  args: {
+    id: string;
+    start: number;
+    ts: number;
+    success: () => void;
+    err: (reason: string) => void;
+  },
+  attempt = 1
+) {
+  // ts is to provide a timestamp for when javascript gets suspended in the background. if a ts is too far back, we ignore it.
+  const { id, start, ts } = args;
+  if (!player) return args.success();
+  // console.log("changing video layer");
+  if (attempt > 4) return args.err("too many tries");
+  // attempt to mutate:
+  const currentId = getID(player.getVideoUrl());
+  const playerState = player.getPlayerState();
+  if (currentId !== id) {
+    // if it's the wrong video, load it.
+    player.loadVideoById(id, start);
+    return setTimeout(() => {
+      changeVideo(player, args, attempt + 1);
+    }, 500);
+  }
+  if (Date.now() - ts > 5000) {
+    if (
+      playerState === PlayerStates.PLAYING ||
+      playerState === PlayerStates.PAUSED ||
+      playerState === PlayerStates.BUFFERING
+    ) {
+      return args.success();
+    } else {
+      return args.err("took too long");
+    }
+  }
+  // console.log("seeking", player.getCurrentTime(), start);
+
+  if (Math.abs(player.getCurrentTime() - start) > 5.0) {
+    // if the time is wrong, seek to the right time.
+    // console.log("seeking");
+    player.seekTo(start, true);
+    return setTimeout(() => {
+      changeVideo(player, args, attempt + 1);
+    }, 500);
+  }
+  if (
+    playerState !== PlayerStates.PLAYING &&
+    playerState !== PlayerStates.PAUSED &&
+    playerState !== PlayerStates.BUFFERING
+  ) {
+    // if it's not playing, play it.
+    // player.seekTo(start, true);
+    player.playVideoAt(start);
+    return setTimeout(() => {
+      changeVideo(player, args, attempt + 1);
+    }, 500);
+  }
+  return args.success();
+}
+
+const INITIALSTATE = {
+  currentTime: 0,
+  duration: 0,
+  currentVideo: "",
+  state: 0,
+  volume: 0,
+  muted: false,
+};
 
 export function PlayerBar({
   isExpanded,
@@ -36,7 +115,7 @@ export function PlayerBar({
 }: {
   isExpanded: boolean;
   toggleExpanded: () => void;
-  player: YouTubePlayer | null;
+  player: YouTubePlayer | undefined;
 }) {
   // Current song
   const currentSong = useStoreState(
@@ -54,18 +133,33 @@ export function PlayerBar({
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const {
-    mutateAsync: changeVideo,
-    isLoading,
-    isError: videoChangeError,
-  } = usePlayerMutateChangeVideo(player);
-  const {
-    data: status,
-    isRefetching,
-    isSuccess,
-  } = usePlayerState(player, !isLoading);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const [status, setStatus] =
+    useState<Partial<typeof INITIALSTATE>>(INITIALSTATE);
+
+  useEffect(() => {
+    let timer: NodeJS.Timer | null = null;
+    if (player && currentSong) {
+      timer = setInterval(() => {
+        if (player)
+          setStatus({
+            currentTime: player.getCurrentTime(),
+            duration: player.getDuration(),
+            currentVideo: getID(player.getVideoUrl()),
+            state: player.getPlayerState(),
+            volume: player.getVolume(),
+            muted: player.isMuted(),
+          });
+        else setStatus({});
+      }, 200);
+    }
+    return () => {
+      timer && clearInterval(timer);
+    };
+  }, [player, currentSong]);
 
   const playerState = useMemo(() => status?.state, [status]);
+  const toast = useToast();
 
   const [hovering, setHovering] = useState(false);
 
@@ -82,10 +176,29 @@ export function PlayerBar({
     (actions) => actions.playback.toggleRepeat
   );
 
+  const nextSongWhenPlaybackErr = (err: string) => {
+    // console.error(err, status.currentVideo, currentSong?.video_id);
+    if (
+      getID(player?.getVideoUrl()) === currentSong?.video_id // using videoID here is a bit sus, but since VIDEOS break and not SONGS, it should be fine.
+    ) {
+      console.log(
+        "SKIPPING____ DUE TO VIDEO PLAYBACK FAILURE (maybe the video is blocked in your country)"
+      );
+      toast({
+        position: "top-right",
+        status: "warning",
+        title: `The Song: ${currentSong?.name} is not playable. Skipping it.`,
+        duration: 10000,
+      });
+      (window as any).player = player;
+      // Video is failing to play: auto skip.
+      next({ count: 1, userSkipped: false });
+    }
+  };
+
   // Set start time when song/repeat/player changes
   useEffect(() => {
     if (
-      status?.error ||
       status?.currentTime === undefined ||
       currentSong === undefined ||
       currentSong.video_id !== status.currentVideo
@@ -102,8 +215,10 @@ export function PlayerBar({
    * Sync player state with internal values
    */
   useEffect(() => {
-    if (!player || !currentSong || !status || status.error) return;
+    // console.log("check if song over effect");
+
     const playerTime = status.currentTime;
+    if (!player || !currentSong || playerTime === undefined) return;
 
     // Sync isPlaying state
     if ((playerState === 1 && !isPlaying) || (playerState === 2 && isPlaying)) {
@@ -114,9 +229,10 @@ export function PlayerBar({
       return;
     }
     // Proceeed to next song
+    // console.log("t", playerTime, player.getDuration());
     if (
       progress >= 100 ||
-      (playerTime >= player.getDuration() - 1 && playerTime > 0)
+      (playerTime >= player.getDuration() - 2 && playerTime > 0)
     ) {
       console.log("finish", progress, playerTime);
       setProgress(0);
@@ -126,30 +242,31 @@ export function PlayerBar({
   }, [
     player,
     isPlaying,
-    progress,
     currentSong,
+    status.currentTime,
+    status?.currentVideo,
     playerState,
     next,
-    status?.currentVideo,
   ]);
 
   useEffect(() => {
-    if (
-      status?.error ||
-      status?.currentTime === undefined ||
-      currentSong === undefined
-    ) {
-      changeVideo({
+    // console.log("song & repeat effect");
+    if (status?.currentTime === undefined || currentSong === undefined) {
+      changeVideo(player, {
         id: "",
         start: 0,
         ts: Date.now(),
+        err: (err) => console.log("expected err, got err"),
+        success: () => console.log("probably shouldn't succeed?"),
       });
       return;
     }
-    changeVideo({
+    changeVideo(player, {
       id: currentSong.video_id,
       start: currentSong.start,
       ts: Date.now(),
+      err: nextSongWhenPlaybackErr,
+      success: () => console.log("Next Song"),
     });
     setProgress(0);
   }, [currentSong, repeat]);
@@ -161,10 +278,12 @@ export function PlayerBar({
     }
 
     if (player && currentSong) {
-      changeVideo({
+      changeVideo(player, {
         id: currentSong?.video_id,
         start: currentSong.start,
         ts: Date.now(),
+        err: nextSongWhenPlaybackErr,
+        success: () => console.log("Start Playback"),
       });
 
       calledOnce.current = true;
@@ -180,10 +299,12 @@ export function PlayerBar({
   function onChange(e: any) {
     if (!currentSong) return;
     if (!isPlaying) setIsPlaying(true);
-    changeVideo({
+    changeVideo(player, {
       id: currentSong.video_id,
       start: currentSong.start + (e / 100) * totalDuration,
       ts: Date.now(),
+      err: nextSongWhenPlaybackErr,
+      success: () => console.log("Changed Playback Seek Time"),
     });
     setProgress(e);
   }
@@ -192,16 +313,10 @@ export function PlayerBar({
     return <span>{formatSeconds((progress / 100) * totalDuration)}</span>;
   }, [progress, totalDuration]);
 
-  const ref1 = useRef<HTMLDivElement>(null);
-  const ref2 = useRef<HTMLDivElement>(null);
-
-  const [refLoc, setLoc] = useState<HTMLDivElement>();
-
   function togglePlay() {
     if (player) isPlaying ? player.pauseVideo() : player.playVideo();
 
     setIsPlaying((prev) => !prev);
-    setLoc(Math.random() > 0.5 ? ref1.current! : ref2.current!);
   }
 
   return (

@@ -5,7 +5,7 @@ import styled from "@emotion/styled";
 import { useStoreState, useStoreActions } from "../../store";
 import { SongTable } from "../data/SongTable";
 import { Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useMemo } from "react";
 
 export function PlayerOverlay({
   isExpanded,
@@ -15,11 +15,39 @@ export function PlayerOverlay({
   toggleExpanded: () => void;
 }) {
   const playlistQueue = useStoreState((state) => state.playback.playlistQueue);
+  const playedPlaylistQueue = useStoreState(
+    (state) => state.playback.playedPlaylistQueue
+  );
+
+  const currentlyPlaying = useStoreState(
+    (state) => state.playback.currentlyPlaying
+  );
+
+  const playlistTotalQueue = useMemo(() => {
+    const now =
+      currentlyPlaying.from === "playlist" ? [currentlyPlaying.song!] : [];
+    return [...now, ...playlistQueue, ...playedPlaylistQueue];
+  }, [
+    currentlyPlaying.from,
+    currentlyPlaying.song,
+    playedPlaylistQueue,
+    playlistQueue,
+  ]);
+
   const queue = useStoreState((state) => state.playback.queue);
+
+  const currentQueue = useMemo(() => {
+    const now =
+      currentlyPlaying.from === "queue" ? [currentlyPlaying.song!] : [];
+
+    return [...now, ...queue];
+  }, [currentlyPlaying.from, currentlyPlaying.song, queue]);
+
   const clearAll = useStoreActions((actions) => actions.playback.clearAll);
 
   return (
     <OverlayWrapper visible={isExpanded}>
+      <div className="bgOver"></div>
       <div className="overlay">
         {isExpanded && (
           <Container
@@ -28,19 +56,19 @@ export function PlayerOverlay({
             paddingTop="20px"
           >
             <Button onClick={() => clearAll()}>Clear All</Button>
-            {queue.length > 0 && (
+            {currentQueue.length > 0 && (
               <React.Fragment>
                 <Text fontSize="3xl">Queue</Text>
                 <Divider />
                 <br />
-                <SongTable songs={queue} />
+                <SongTable songs={currentQueue} />
               </React.Fragment>
             )}
             <br />
             <Text fontSize="3xl">Playlist</Text>
             <Divider />
             <br />
-            <SongTable songs={playlistQueue} />
+            <SongTable songs={playlistTotalQueue} />
           </Container>
         )}
       </div>
@@ -51,19 +79,31 @@ export function PlayerOverlay({
 const OverlayWrapper = styled.div<{ visible: boolean }>`
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: ${({ visible }) => (visible ? "scroll" : "hidden")};
   position: absolute;
   top: 0;
   pointer-events: ${({ visible }) => (visible ? "" : "none")};
+  visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
 
   .overlay {
     position: relative;
     top: ${({ visible }) => (visible ? "64px" : "100vh")};
-    opacity: ${({ visible }) => (visible ? "1" : "0")};
-    background: black;
+    visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
     height: calc(100% - 64px - 80px);
     transition: top 0.4s ease, opacity 0.5s ease;
     width: 100%;
-    z-index: 11;
+    z-index: 5;
+  }
+  .bgOver {
+    top: ${({ visible }) => (visible ? "64px" : "100vh")};
+    visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
+    height: calc(100% - 64px - 80px);
+    transition: top 0.4s ease, opacity 0.5s ease;
+
+    background: black;
+    position: fixed;
+    width: 100%;
+    z-index: 4;
   }
 `;

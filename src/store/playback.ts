@@ -110,7 +110,7 @@ const playbackModel: PlaybackModel = {
         : mq;
     // shuffle the rest.
     state.playlistQueue = shuffleArray(nq);
-    // state.playedPlaylistQueue = [];
+    state.playedPlaylistQueue = [];
   }),
 
   history: [],
@@ -181,6 +181,7 @@ const playbackModel: PlaybackModel = {
   // Each executed action will cause a rerender of playerBar, so for one frame the currentsong will be undefined
   _prepareEject: action((state) => {
     const s = state.currentlyPlaying;
+    console.log("prepare eject", JSON.stringify(s));
     if (s.song) {
       // Add to history
       state.history = state.history.filter(
@@ -193,7 +194,7 @@ const playbackModel: PlaybackModel = {
       }
 
       // Add to play queue if needed
-      if (state.currentlyPlaying.from === "playlist") {
+      if (s.from === "playlist") {
         state.playedPlaylistQueue.push(s.song);
       }
     }
@@ -296,9 +297,12 @@ const playbackModel: PlaybackModel = {
       const src =
         h.getState().queue.length > 0
           ? "queue"
-          : h.getState().playlistQueue.length > 0
+          : h.getState().playlistQueue.length +
+              h.getState().playedPlaylistQueue.length >
+            0
           ? "playlist"
           : undefined;
+      console.log("considering next song from", src);
       if (src) {
         actions._prepareEject();
         actions._insertCurrentlyPlaying(src);
@@ -306,13 +310,13 @@ const playbackModel: PlaybackModel = {
         actions._ejectCurrentlyPlaying();
       }
 
-      if (
-        h.getState().playlistQueue.length === 0 &&
-        h.getState().repeatMode === "repeat"
-      ) {
-        const playlist = h.getState().currentPlaylist;
-        playlist && actions.setPlaylist({ playlist });
-      }
+      // if (
+      //   h.getState().playlistQueue.length === 0 &&
+      //   h.getState().repeatMode === "repeat"
+      // ) {
+      //   const playlist = h.getState().currentPlaylist;
+      //   playlist && actions.setPlaylist({ playlist });
+      // }
       count--;
     }
   }),
