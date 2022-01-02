@@ -24,13 +24,13 @@ const NowPlayingIconContainer = styled.div`
     background-color: currentColor;
     transform-origin: middle;
 
-    &:nth-child(1) {
+    &:nth-of-type(1) {
       animation: ease-out now-playing-bounce-1 1202ms 13ms infinite;
     }
-    &:nth-child(2) {
+    &:nth-of-type(2) {
       animation: ease-out now-playing-bounce-2 1502ms infinite;
     }
-    &:nth-child(3) {
+    &:nth-of-type(3) {
       animation: ease-out now-playing-bounce-3 902ms infinite;
     }
   }

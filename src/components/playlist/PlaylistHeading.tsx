@@ -101,6 +101,7 @@ export function PlaylistHeading({
         color={colors}
         fontWeight={300}
         fontSize={{ base: "1xl", sm: "1.5xl", md: "2xl", lg: "2xl" }}
+        as={"div"}
       >
         {editDescription ? (
           <form onSubmit={submitHandlerDesc}>
