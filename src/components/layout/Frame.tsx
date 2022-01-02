@@ -139,7 +139,8 @@ export default function Frame({ children }: { children?: ReactNode }) {
                 height="100%"
                 position="absolute"
                 float="initial"
-                bgColor="bgAlpha.900"
+                opacity={0.6}
+                bgColor="bg.900"
               ></Box>
               {YoutubePlayer(onReady)}
             </Box>

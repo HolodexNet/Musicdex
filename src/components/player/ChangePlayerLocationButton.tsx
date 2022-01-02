@@ -39,14 +39,13 @@ export function ChangePlayerLocationButton() {
             <PopoverArrow />
             <PopoverBody>
               <HStack spacing={2}>
-                {Object.keys(LocationIcons).map((x: any, index) => {
+                {Object.keys(LocationIcons).map((x: any) => {
                   return (
                     <IconButton
-                      key={`yt-player-loc-${index}`}
+                      key={`yt-player-loc-${x}`}
                       aria-label="Expand"
                       icon={LocationIcons[x as PlayerPosition]}
                       variant="ghost"
-                      key={x + "_loc_choice"}
                       colorScheme={x === pos ? "brand" : "bgAlpha"}
                       onClick={() => {
                         setPos(x);
