@@ -96,15 +96,20 @@ export const useLikedCheckPlaylist = (playlistId: string) => {
 };
 
 export const useLikedSongs = (
-  offset?: number,
-  config: UseQueryOptions<Song[], unknown, Song[], string[]> = {}
+  page?: number,
+  config: UseQueryOptions<
+    PaginatedSongs,
+    unknown,
+    PaginatedSongs,
+    string[]
+  > = {}
 ) => {
   // const queryClient = useQueryClient();
   const { AxiosInstance } = useClient();
 
   const result = useQuery(
     ["likedSongList"],
-    async (q): Promise<Song[]> => {
+    async (q): Promise<PaginatedSongs> => {
       // fetch cached
       // const cached: Song[] | undefined = queryClient.getQueryData(["likedSongList"]);
       // if (cached) {
@@ -125,10 +130,10 @@ export const useLikedSongs = (
       //   }
       // }
       // cache miss:
-      const songs =
-        (await AxiosInstance<Song[]>(`/musicdex/like?offset=${offset ?? 0}`))
-          .data || [];
-      songs.forEach((x) => (x.liked = true));
+      const songs = (
+        await AxiosInstance<PaginatedSongs>(`/musicdex/like?page=${page ?? 1}`)
+      ).data;
+      songs?.content?.forEach((x) => (x.liked = true));
       return songs;
     },
     {

@@ -1,5 +1,5 @@
-import { Button, Heading, Stack, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { Button, Heading, HStack, Stack, Text } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
@@ -8,12 +8,16 @@ import { useLikedSongs } from "../modules/services/like.service";
 
 export function LikedSongs() {
   // const history = useStoreState((store) => store.playback.history);
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState(1);
   const {
-    data: likedSongs,
+    data: paginatedSongs,
     isPreviousData,
     ...status
-  } = useLikedSongs(offset, { keepPreviousData: true });
+  } = useLikedSongs(page, { keepPreviousData: true });
+  const hasMore = useMemo(
+    () => page < (paginatedSongs?.page_count || 1),
+    [page, paginatedSongs]
+  );
 
   return (
     <PageContainer>
@@ -21,12 +25,24 @@ export function LikedSongs() {
         <Stack spacing={4} my={4}>
           <Heading>Liked Songs</Heading>
           <QueryStatus queryStatus={status} />
-          {likedSongs?.length && <SongTable songs={likedSongs}></SongTable>}
-          {/* TODO: better pagination, with a wrapped count... */}
-          {isPreviousData && (likedSongs?.length || 0) % 50 === 0 && (
-            <Button onClick={() => setOffset((prev) => prev + 50)}>
-              Load more
-            </Button>
+          {paginatedSongs?.content?.length && (
+            <>
+              <SongTable songs={paginatedSongs.content}></SongTable>
+              <HStack justifyContent="center">
+                <Button
+                  isDisabled={page === 1}
+                  onClick={() => setPage((prev) => Math.min(1, prev - 1))}
+                >
+                  Prev
+                </Button>
+                <Button
+                  isDisabled={!hasMore}
+                  onClick={() => setPage((prev) => prev + 1)}
+                >
+                  Next
+                </Button>
+              </HStack>
+            </>
           )}
         </Stack>
       </ContainerInlay>
