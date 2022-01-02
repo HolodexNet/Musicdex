@@ -1,9 +1,11 @@
-import { Container, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Container, Flex, SimpleGrid, useQuery } from "@chakra-ui/react";
+import axios from "axios";
 import React from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
 import { SongItem } from "../components/song/SongItem";
+import { useDiscoveryOrg } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreState } from "../store";
 
@@ -13,9 +15,12 @@ export function Home() {
     org.name !== "All Vtubers" ? { org: org.name } : {}
   );
 
+  const { data: discovery, isSuccess } = useDiscoveryOrg(org.name);
+
   return (
     <PageContainer>
       <div>
+        Discovery: {JSON.stringify(discovery)}
         <h1>Top20: {org.name}</h1>
         <QueryStatus queryStatus={rest} />
         {trendingSongs && (
