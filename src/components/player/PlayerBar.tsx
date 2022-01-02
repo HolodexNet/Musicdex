@@ -10,6 +10,7 @@ import {
   Text,
   Tooltip,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -21,6 +22,7 @@ import {
   FaStepBackward,
   FaStepForward,
 } from "react-icons/fa";
+import { FiVolume1 } from "react-icons/fi";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import PlayerStates from "youtube-player/dist/constants/PlayerStates";
@@ -327,7 +329,7 @@ export function PlayerBar({
         min={0}
         max={100}
         value={progress}
-        className="progress-slider"
+        itemID="main-slider"
         colorScheme="blue"
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
@@ -394,37 +396,55 @@ export function PlayerBar({
           />
         </div>
         <div className="right">
-          <span>
-            <Text
-              color="whiteAlpha.600"
-              fontSize=".85em"
-              display="inline-block"
-            >
-              {ElapsedLabel} / <span>{formatSeconds(totalDuration)}</span>
-            </Text>
-            <IconButton
-              aria-label="Shuffle"
-              icon={ShuffleIcon(shuffleMode)}
-              variant="ghost"
-              onClick={() => toggleShuffleMode()}
-              size="lg"
-            />
-            <IconButton
-              aria-label="Shuffle"
-              icon={RepeatIcon(repeatMode)}
-              variant="ghost"
-              onClick={() => toggleRepeatMode()}
-              size="lg"
-            />
-            <ChangePlayerLocationButton />
+          <Box width={36} display="inline-block" mr={2}>
+            <VStack spacing={-1}>
+              <Slider
+                aria-label="slider-ex-4"
+                defaultValue={80}
+                onChange={(e) => {
+                  player?.setVolume(e);
+                }}
+              >
+                <SliderTrack bg="red.50">
+                  <SliderFilledTrack
+                    background={`linear-gradient(to right, var(--chakra-colors-brand-400), var(--chakra-colors-n2-400))`}
+                  />
+                </SliderTrack>
+                <SliderThumb boxSize={5}>
+                  <Box color="brand.400" as={FiVolume1} />
+                </SliderThumb>
+              </Slider>
+              <Text
+                color="whiteAlpha.600"
+                fontSize=".85em"
+                display="inline-block"
+              >
+                {ElapsedLabel} / <span>{formatSeconds(totalDuration)}</span>
+              </Text>
+            </VStack>
+          </Box>
+          <IconButton
+            aria-label="Shuffle"
+            icon={ShuffleIcon(shuffleMode)}
+            variant="ghost"
+            onClick={() => toggleShuffleMode()}
+            size="lg"
+          />
+          <IconButton
+            aria-label="Shuffle"
+            icon={RepeatIcon(repeatMode)}
+            variant="ghost"
+            onClick={() => toggleRepeatMode()}
+            size="lg"
+          />
+          <ChangePlayerLocationButton />
 
-            <IconButton
-              aria-label="Expand"
-              icon={isExpanded ? <FaChevronDown /> : <FaChevronUp />}
-              variant="ghost"
-              onClick={() => toggleExpanded()}
-            />
-          </span>
+          <IconButton
+            aria-label="Expand"
+            icon={isExpanded ? <FaChevronDown /> : <FaChevronUp />}
+            variant="ghost"
+            onClick={() => toggleExpanded()}
+          />
         </div>
       </PlayerMain>
     </PlayerContainer>
@@ -444,25 +464,7 @@ const PlayerContainer = styled.div`
   display: flex;
   z-index: 10;
 
-  .yt-container {
-    width: 400px;
-    max-width: 100%;
-    height: 225px;
-    position: absolute;
-    bottom: 90px;
-    z-index: 10;
-  }
-  .yt-container2 {
-    width: 400px;
-    max-width: 100%;
-    height: 225px;
-    position: absolute;
-    bottom: 90px;
-    right: 30px;
-    z-index: 10;
-  }
-
-  .chakra-slider {
+  > .chakra-slider {
     position: fixed !important;
     margin-top: -3px;
     width: 100%;
@@ -480,10 +482,6 @@ const PlayerMain = styled.div`
     margin-right: auto;
     padding-left: 20px;
   }
-  .right > span {
-    margin-left: auto;
-    padding-right: 20px;
-  }
   .left,
   .right,
   .center {
@@ -491,6 +489,11 @@ const PlayerMain = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .right {
+    justify-content: flex-end;
+    margin-left: auto;
+    padding-right: 12px;
   }
 `;
 function RepeatIcon(repeatMode: string) {
