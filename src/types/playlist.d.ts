@@ -26,6 +26,11 @@ interface PlaylistFull extends PlaylistStub {
   content?: Song[];
 }
 
+interface PaginatedSongs {
+  content: song[];
+  page_count: number;
+}
+
 interface Song {
   channel_id: string;
   video_id: string;
