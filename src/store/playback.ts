@@ -328,14 +328,19 @@ const playbackModel: PlaybackModel = {
       actions._setRepeatMode(oldRepeatMode === "none" ? "none" : "repeat");
     }
     while (count > 0) {
-      const src =
-        h.getState().queue.length > 0
-          ? "queue"
-          : h.getState().playlistQueue.length +
-              h.getState().playedPlaylistQueue.length >
-            0
-          ? "playlist"
-          : undefined;
+      const hasQ = h.getState().queue.length > 0;
+      const hasPlaylist =
+        h.getState().playlistQueue.length +
+          h.getState().playedPlaylistQueue.length >
+        0;
+      const isRepeatOne = h.getState().repeatMode === "repeat-one";
+      const src = hasQ
+        ? "queue"
+        : hasPlaylist
+        ? "playlist"
+        : isRepeatOne
+        ? "repeat-one"
+        : undefined;
       console.log("considering next song from", src);
       if (src) {
         actions._prepareEject();
