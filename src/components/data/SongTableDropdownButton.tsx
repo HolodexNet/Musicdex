@@ -24,7 +24,14 @@ export function PlaylistSongTableDropDownMenu({
   const navigate = useNavigate();
 
   return (
-    <Menu {...rest} isLazy>
+    <Menu
+      {...rest}
+      isLazy
+      boundary="scrollParent"
+      computePositionOnMount={true}
+      gutter={10}
+      placement="left"
+    >
       <MenuButton
         //   py={2}
         icon={<FiMoreHorizontal />}
