@@ -54,7 +54,10 @@ export const usePlayerState = (
   );
 };
 
-export const usePlayerMutateChangeVideo = (player: YouTubePlayer | null) => {
+export const usePlayerMutateChangeVideo = (
+  player: YouTubePlayer | null,
+  config = {}
+) => {
   return useMutation(
     ["videoChange"],
     async ({ id, start, ts }: { id: string; start: number; ts: number }) => {
@@ -72,10 +75,11 @@ export const usePlayerMutateChangeVideo = (player: YouTubePlayer | null) => {
       if (Math.abs(player.getCurrentTime() - start) > 2.0) {
         // if the time is wrong, seek to the right time.
         player.seekTo(start, true);
-        throw new Error("wrong time");
+        throw new Error("wrong time" + player.getCurrentTime());
       }
       if (
         player.getPlayerState() !== PlayerStates.PLAYING &&
+        player.getPlayerState() !== PlayerStates.PAUSED &&
         player.getPlayerState() !== PlayerStates.BUFFERING
       ) {
         // if it's not playing, play it.
@@ -98,6 +102,8 @@ export const usePlayerMutateChangeVideo = (player: YouTubePlayer | null) => {
       retry: 5,
       retryDelay: 250,
       onError() {},
+      useErrorBoundary: false,
+      ...config,
     }
   );
 };

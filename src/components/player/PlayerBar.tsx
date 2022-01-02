@@ -9,6 +9,7 @@ import {
   SliderTrack,
   Text,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -54,18 +55,35 @@ export function PlayerBar({
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  const [mutationStatus, setMutationStatus] = useState("ok");
+
   const {
     mutateAsync: changeVideo,
-    isLoading,
+    isLoading: videoChangeLoading,
     isError: videoChangeError,
-  } = usePlayerMutateChangeVideo(player);
+    isSuccess: videoChangeSuccess,
+  } = usePlayerMutateChangeVideo(player, {
+    onMutate() {
+      // console.log("mutating...");
+      setMutationStatus("hmm");
+    },
+    onSuccess() {
+      // console.log("succ...");
+      setMutationStatus("ok");
+    },
+    onError() {
+      // console.log("err...");
+      setMutationStatus("err");
+    },
+  });
   const {
     data: status,
     isRefetching,
     isSuccess,
-  } = usePlayerState(player, !isLoading);
+  } = usePlayerState(player, mutationStatus !== "hmm");
 
   const playerState = useMemo(() => status?.state, [status]);
+  const toast = useToast();
 
   const [hovering, setHovering] = useState(false);
 
@@ -105,6 +123,27 @@ export function PlayerBar({
     if (!player || !currentSong || !status || status.error) return;
     const playerTime = status.currentTime;
 
+    if (
+      playerTime === 0 &&
+      playerState === -1 &&
+      mutationStatus === "err" &&
+      status.currentVideo === currentSong.video_id // using videoID here is a bit sus, but since VIDEOS break and not SONGS, it should be fine.
+    ) {
+      // console.log(
+      //   "SKIPPING____ DUE TO VIDEO PLAYBACK FAILURE (maybe the video is blocked in your country)",
+      //   status,
+      //   videoChangeError,
+      //   videoChangeLoading
+      // );
+      toast({
+        position: "top-right",
+        status: "warning",
+        title: `The Song: ${currentSong.name} is not playable. Skipping it.`,
+        duration: 10000,
+      });
+      // Video is failing to play: auto skip.
+      next({ count: 1, userSkipped: false });
+    }
     // Sync isPlaying state
     if ((playerState === 1 && !isPlaying) || (playerState === 2 && isPlaying)) {
       isPlaying ? player.playVideo() : player.pauseVideo();
