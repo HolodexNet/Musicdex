@@ -14,6 +14,7 @@ export interface PlaybackModel {
 
   _queueAdd: Action<PlaybackModel, Song[]>;
   _queueClear: Action<PlaybackModel, void>;
+  _queueShuffle: Action<PlaybackModel, void>;
 
   // ===== Playlist and Playlist Mutators:
   playlistQueue: Song[]; // a queue that is fed by the playlist.
@@ -89,6 +90,9 @@ const playbackModel: PlaybackModel = {
   _queueClear: action((state) => {
     state.queue = [];
   }),
+  _queueShuffle: action((state) => {
+    state.queue = shuffleArray(state.queue || []);
+  }),
 
   playlistQueue: [],
   playedPlaylistQueue: [],
@@ -137,8 +141,15 @@ const playbackModel: PlaybackModel = {
   toggleShuffle: thunk((actions, _, helpers) => {
     const shuf = !helpers.getState().shuffleMode;
     actions._setShuffleMode(shuf);
-    if (shuf && helpers.getState().currentPlaylist) {
+    const currentPlaylist = helpers.getState().currentPlaylist;
+    if (shuf && currentPlaylist) {
       actions._shufflePlaylist();
+    } else if (!shuf && currentPlaylist) {
+      actions._setPlaylist(currentPlaylist);
+    }
+
+    if (shuf && helpers.getState().queue) {
+      actions._queueShuffle();
     }
   }),
 
