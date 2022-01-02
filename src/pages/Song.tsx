@@ -102,7 +102,7 @@ export function Song() {
               >
                 <FiShare2 />
               </Button>
-              <SongLikeButton song={song} active={true}></SongLikeButton>
+              <SongLikeButton song={song}></SongLikeButton>
             </HStack>
           </Flex>
         </Flex>

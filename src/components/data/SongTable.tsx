@@ -78,7 +78,6 @@ export const SongTable = ({
     (state) => state.playback.currentlyPlaying?.song?.id
   );
   // const [front,front2] = useCOlorMode
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   const columns: Column<IndexedSong>[] = React.useMemo<Column<IndexedSong>[]>(
     () => [
@@ -318,8 +317,8 @@ export const SongTable = ({
                 }}
                 key={menuIdStat + "_" + row.original.id + "_" + index}
                 _hover={HOVER_ROW_STYLE}
-                onMouseEnter={() => setHoverIndex(index)}
-                onMouseLeave={() => setHoverIndex(null)}
+                // onMouseEnter={() => setHoverIndex(index)}
+                // onMouseLeave={() => setHoverIndex(null)}
               >
                 {row.cells.map((cell) => (
                   <Td
@@ -342,10 +341,7 @@ export const SongTable = ({
                     px={{ xl: 3, base: 2 }}
                   >
                     {cell.column.id === "..." && (
-                      <SongLikeButton
-                        song={row.original}
-                        active={index === hoverIndex}
-                      />
+                      <SongLikeButton song={row.original} />
                     )}
                     {cell.render("Cell")}
                   </Td>

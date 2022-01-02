@@ -3,13 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useSongLikeUpdater } from "../../modules/services/like.service";
 
-export function SongLikeButton({
-  song,
-  active,
-}: {
-  song: Song;
-  active: boolean;
-}) {
+export function SongLikeButton({ song }: { song: Song }) {
   const [changed, setChanged] = useState(false);
   const { mutate: updateLike, isSuccess, isError } = useSongLikeUpdater();
 

@@ -13,6 +13,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   FaChevronDown,
@@ -54,7 +55,7 @@ function changeVideo(
   const { id, start, ts } = args;
   if (!player) return args.success();
   // console.log("changing video layer");
-  if (attempt > 4) return args.err("too many tries");
+  if (attempt > 5) return args.err("too many tries");
   // attempt to mutate:
   const currentId = getID(player.getVideoUrl());
   const playerState = player.getPlayerState();
@@ -166,20 +167,9 @@ export function PlayerBar({
   const [hovering, setHovering] = useState(false);
 
   const next = useStoreActions((actions) => actions.playback.next);
-  const previous = useStoreActions((actions) => actions.playback.previous);
-
-  const shuffleMode = useStoreState((state) => state.playback.shuffleMode);
-  const toggleShuffleMode = useStoreActions(
-    (actions) => actions.playback.toggleShuffle
-  );
-
-  const repeatMode = useStoreState((state) => state.playback.repeatMode);
-  const toggleRepeatMode = useStoreActions(
-    (actions) => actions.playback.toggleRepeat
-  );
 
   const nextSongWhenPlaybackErr = (err: string) => {
-    // console.error(err, status.currentVideo, currentSong?.video_id);
+    console.error(err, status.currentVideo, currentSong?.video_id);
     if (
       getID(player?.getVideoUrl()) === currentSong?.video_id // using videoID here is a bit sus, but since VIDEOS break and not SONGS, it should be fine.
     ) {
@@ -311,8 +301,8 @@ export function PlayerBar({
     setProgress(e);
   }
 
-  const ElapsedLabel = useMemo(() => {
-    return <span>{formatSeconds((progress / 100) * totalDuration)}</span>;
+  const seconds = useMemo(() => {
+    return formatSeconds((progress / 100) * totalDuration);
   }, [progress, totalDuration]);
 
   function togglePlay() {
@@ -346,107 +336,24 @@ export function PlayerBar({
           color="white"
           placement="top"
           isOpen={hovering}
-          label={ElapsedLabel}
+          label={<span>{seconds}</span>}
         >
           <SliderThumb visibility={hovering ? "visible" : "hidden"} />
         </Tooltip>
       </Slider>
-      <PlayerMain>
-        <div className="left">
-          <span>
-            {!!currentSong && (
-              <HStack>
-                <SongArtwork song={currentSong} size={50} marginRight={2} />
-                <Box>
-                  <Link as={NavLink} to={`/song/${currentSong.id}`}>
-                    <Text fontWeight={500} noOfLines={1}>
-                      {currentSong.name}
-                    </Text>
-                  </Link>
-                  <Link as={NavLink} to={`/`}>
-                    <Text noOfLines={1} color="whiteAlpha.600">
-                      {currentSong.channel.english_name ||
-                        currentSong.channel.name}
-                    </Text>
-                  </Link>
-                </Box>
-              </HStack>
-            )}
-          </span>
-        </div>
-        <div className="center">
-          <IconButton
-            aria-label="Previous Song"
-            icon={<FaStepBackward />}
-            variant="ghost"
-            onClick={() => previous()}
-          />
-          <IconButton
-            size="lg"
-            aria-label="Play"
-            icon={isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
-            variant="ghost"
-            onClick={togglePlay}
-          />
-          <IconButton
-            aria-label="Next Song"
-            icon={<FaStepForward />}
-            variant="ghost"
-            onClick={() => next({ count: 1, userSkipped: true })}
-          />
-        </div>
-        <div className="right">
-          <Box width={36} display="inline-block" mr={2}>
-            <VStack spacing={-1}>
-              <Slider
-                aria-label="slider-ex-4"
-                defaultValue={80}
-                onChange={(e) => {
-                  player?.setVolume(e);
-                }}
-              >
-                <SliderTrack bg="red.50">
-                  <SliderFilledTrack
-                    background={`linear-gradient(to right, var(--chakra-colors-brand-400), var(--chakra-colors-n2-400))`}
-                  />
-                </SliderTrack>
-                <SliderThumb boxSize={5}>
-                  <Box color="brand.400" as={FiVolume1} />
-                </SliderThumb>
-              </Slider>
-              <Text
-                color="whiteAlpha.600"
-                fontSize=".85em"
-                display="inline-block"
-              >
-                {ElapsedLabel} / <span>{formatSeconds(totalDuration)}</span>
-              </Text>
-            </VStack>
-          </Box>
-          <IconButton
-            aria-label="Shuffle"
-            icon={ShuffleIcon(shuffleMode)}
-            variant="ghost"
-            onClick={() => toggleShuffleMode()}
-            size="lg"
-          />
-          <IconButton
-            aria-label="Shuffle"
-            icon={RepeatIcon(repeatMode)}
-            variant="ghost"
-            onClick={() => toggleRepeatMode()}
-            size="lg"
-          />
-          <ChangePlayerLocationButton />
-
-          <IconButton
-            aria-label="Expand"
-            icon={isExpanded ? <FaChevronDown /> : <FaChevronUp />}
-            variant="ghost"
-            onClick={() => toggleExpanded()}
-          />
-        </div>
-      </PlayerMain>
+      <MemoizedPlayerBarLower
+        {...{
+          currentSong,
+          isPlaying,
+          togglePlay,
+          next,
+          player,
+          seconds,
+          totalDuration,
+          isExpanded,
+          toggleExpanded,
+        }}
+      />
     </PlayerContainer>
   );
 }
@@ -496,6 +403,141 @@ const PlayerMain = styled.div`
     padding-right: 12px;
   }
 `;
+function PlayerBarLower({
+  currentSong,
+  isPlaying,
+  togglePlay,
+  next,
+  player,
+  seconds,
+  totalDuration,
+  isExpanded,
+  toggleExpanded,
+}: {
+  currentSong: Song | undefined;
+  isPlaying: boolean;
+  togglePlay: () => void;
+  next: (x: any) => void;
+  player: YouTubePlayer | undefined;
+  seconds: string;
+  totalDuration: number;
+  isExpanded: boolean;
+  toggleExpanded: () => void;
+}) {
+  const previous = useStoreActions((actions) => actions.playback.previous);
+
+  const shuffleMode = useStoreState((state) => state.playback.shuffleMode);
+  const toggleShuffleMode = useStoreActions(
+    (actions) => actions.playback.toggleShuffle
+  );
+
+  const repeatMode = useStoreState((state) => state.playback.repeatMode);
+  const toggleRepeatMode = useStoreActions(
+    (actions) => actions.playback.toggleRepeat
+  );
+
+  return (
+    <PlayerMain>
+      <div className="left">
+        <span>
+          {!!currentSong && (
+            <HStack>
+              <SongArtwork song={currentSong} size={50} marginRight={2} />
+              <Box>
+                <Link as={NavLink} to={`/song/${currentSong.id}`}>
+                  <Text fontWeight={500} noOfLines={1}>
+                    {currentSong.name}
+                  </Text>
+                </Link>
+                <Link as={NavLink} to={`/`}>
+                  <Text noOfLines={1} color="whiteAlpha.600">
+                    {currentSong.channel.english_name ||
+                      currentSong.channel.name}
+                  </Text>
+                </Link>
+              </Box>
+            </HStack>
+          )}
+        </span>
+      </div>
+      <div className="center">
+        <IconButton
+          aria-label="Previous Song"
+          icon={<FaStepBackward />}
+          variant="ghost"
+          onClick={() => previous()}
+        />
+        <IconButton
+          size="lg"
+          aria-label="Play"
+          icon={isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
+          variant="ghost"
+          onClick={togglePlay}
+        />
+        <IconButton
+          aria-label="Next Song"
+          icon={<FaStepForward />}
+          variant="ghost"
+          onClick={() => next({ count: 1, userSkipped: true })}
+        />
+      </div>
+      <div className="right">
+        <Box width={36} display="inline-block" mr={2}>
+          <VStack spacing={-1}>
+            <Slider
+              aria-label="slider-ex-4"
+              defaultValue={80}
+              onChange={(e) => {
+                player?.setVolume(e);
+              }}
+            >
+              <SliderTrack bg="red.50">
+                <SliderFilledTrack
+                  background={`linear-gradient(to right, var(--chakra-colors-brand-400), var(--chakra-colors-n2-400))`}
+                />
+              </SliderTrack>
+              <SliderThumb boxSize={5}>
+                <Box color="brand.400" as={FiVolume1} />
+              </SliderThumb>
+            </Slider>
+            <Text
+              color="whiteAlpha.600"
+              fontSize=".85em"
+              display="inline-block"
+            >
+              <span>{seconds}</span> /{" "}
+              <span>{formatSeconds(totalDuration)}</span>
+            </Text>
+          </VStack>
+        </Box>
+        <IconButton
+          aria-label="Shuffle"
+          icon={ShuffleIcon(shuffleMode)}
+          variant="ghost"
+          onClick={() => toggleShuffleMode()}
+          size="lg"
+        />
+        <IconButton
+          aria-label="Shuffle"
+          icon={RepeatIcon(repeatMode)}
+          variant="ghost"
+          onClick={() => toggleRepeatMode()}
+          size="lg"
+        />
+        <ChangePlayerLocationButton />
+
+        <IconButton
+          aria-label="Expand"
+          icon={isExpanded ? <FaChevronDown /> : <FaChevronUp />}
+          variant="ghost"
+          onClick={() => toggleExpanded()}
+        />
+      </div>
+    </PlayerMain>
+  );
+}
+const MemoizedPlayerBarLower = React.memo(PlayerBarLower);
+
 function RepeatIcon(repeatMode: string) {
   switch (repeatMode) {
     case "repeat":

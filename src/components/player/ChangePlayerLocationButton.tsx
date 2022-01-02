@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@chakra-ui/react";
+import React from "react";
 import { FiEyeOff, FiMaximize, FiSidebar } from "react-icons/fi";
 import { MdPictureInPicture, MdPictureInPictureAlt } from "react-icons/md";
 import { useStoreActions, useStoreState } from "../../store";
@@ -20,7 +21,7 @@ const LocationIcons: Record<PlayerPosition, JSX.Element> = {
   hidden: <FiEyeOff />,
 };
 
-export function ChangePlayerLocationButton() {
+function _ChangePlayerLocationButton() {
   const pos = useStoreState((store) => store.player.position);
   const setPos = useStoreActions((store) => store.player.setPosition);
 
@@ -62,3 +63,7 @@ export function ChangePlayerLocationButton() {
     </Popover>
   );
 }
+
+export const ChangePlayerLocationButton = React.memo(
+  _ChangePlayerLocationButton
+);

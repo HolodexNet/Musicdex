@@ -201,7 +201,7 @@ const playbackModel: PlaybackModel = {
   // Each executed action will cause a rerender of playerBar, so for one frame the currentsong will be undefined
   _prepareEject: action((state) => {
     const s = state.currentlyPlaying;
-    console.log("prepare eject", JSON.stringify(s));
+    // console.log("prepare eject", JSON.stringify(s));
     if (s.song) {
       // Add to history
       state.history = state.history.filter(
@@ -214,7 +214,7 @@ const playbackModel: PlaybackModel = {
       }
 
       // Add to play queue if needed (repeat mode is on)
-      console.log(state.repeatMode);
+      // console.log(state.repeatMode);
       if (state.repeatMode === "repeat") {
         if (s.from === "playlist") {
           state.playedPlaylistQueue.push(s.song);
@@ -272,7 +272,7 @@ const playbackModel: PlaybackModel = {
       }
     }
     // console.log(debug(state.playlistQueue), debug(state.playedPlaylistQueue))
-    console.log("next: now playing", state.currentlyPlaying.song?.name);
+    // console.log("next: now playing", state.currentlyPlaying.song?.name);
   }),
 
   _forceInsertCurrentlyPlaying: action((state, song) => {
@@ -300,7 +300,7 @@ const playbackModel: PlaybackModel = {
   }),
 
   queueSongs: thunk((actions, { songs, immediatelyPlay }, h) => {
-    console.log(songs);
+    // console.log(songs);
     if (songs.length === 0) return;
     if (immediatelyPlay) {
       // songs should be singular.
@@ -341,7 +341,7 @@ const playbackModel: PlaybackModel = {
         : isRepeatOne
         ? "repeat-one"
         : undefined;
-      console.log("considering next song from", src);
+      // console.log("considering next song from", src);
       if (src) {
         actions._prepareEject();
         actions._insertCurrentlyPlaying(src);
