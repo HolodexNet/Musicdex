@@ -2,7 +2,6 @@ import { UseQueryOptions, useQuery } from "react-query";
 import { useClient } from "../client";
 import { encodeUrl } from "../client/utils";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
-import { mergeSongsWithLikeCheck, useLikedCheckSongs } from "./like.service";
 
 export const useSong = (
   songId: string,
@@ -22,7 +21,7 @@ export const useSong = (
 };
 
 export const useTrendingSongs = (
-  { org, channel_id }: { org?: string; channel_id?: string },
+  x: { org?: string; channel_id?: string },
   config: UseQueryOptions<
     Song[],
     unknown,
@@ -33,7 +32,7 @@ export const useTrendingSongs = (
   const { AxiosInstance } = useClient();
 
   const result = useQuery(
-    ["hot", { org, channel_id }],
+    ["hot", x],
     async (q): Promise<Song[]> => {
       return (
         await AxiosInstance<Song[]>(encodeUrl(`/songs/hot`, q.queryKey[1]))
@@ -41,12 +40,6 @@ export const useTrendingSongs = (
     },
     { ...DEFAULT_FETCH_CONFIG, ...config }
   );
-
-  const likeCheck = useLikedCheckSongs(result.data?.map((x) => x.id) || []);
-
-  if (result.data?.length && likeCheck.data?.length) {
-    mergeSongsWithLikeCheck(result.data, likeCheck.data);
-  }
 
   return { ...result };
 };

@@ -8,7 +8,14 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { IconType } from "react-icons";
-import { FiPlusCircle } from "react-icons/fi";
+import {
+  FiClock,
+  FiHeart,
+  FiHome,
+  FiPlusCircle,
+  FiServer,
+  FiSettings,
+} from "react-icons/fi";
 import { useClient } from "../../modules/client";
 import {
   usePlaylistWriter,
@@ -17,10 +24,12 @@ import {
 } from "../../modules/services/playlist.service";
 import { SidebarPlaylists } from "./SidebarPlaylists";
 import { NavItem } from "./NavItem";
+import { OrgSelector } from "./OrgSelector";
+import { useLocation } from "react-router-dom";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
-  linkItems: LinkItemProps[];
+  linkItems?: LinkItemProps[];
 }
 export interface LinkItemProps {
   name: string;
@@ -29,11 +38,24 @@ export interface LinkItemProps {
   disabled?: boolean;
 }
 
-export function SidebarContent({ linkItems, onClose, ...rest }: SidebarProps) {
+const LinkItems: Array<LinkItemProps> = [
+  // { name: "Home", icon: FiHome, path: "/" },
+  { name: "Recently Played", icon: FiClock, path: "/history" },
+  { name: "Liked Songs", icon: FiHeart, path: "/liked" },
+  { name: "My Playlists", icon: FiServer, path: "/playlists" },
+  { name: "Settings", icon: FiSettings, path: "/settings" },
+];
+
+export function SidebarContent({
+  linkItems = LinkItems,
+  onClose,
+  ...rest
+}: SidebarProps) {
   const { user } = useClient();
   const { mutate: writePlaylist, isSuccess, isError } = usePlaylistWriter();
   const { data: playlistList, isLoading: loadingMine } = useMyPlaylists();
   const { data: starredList, isLoading: loadingStars } = useStarredPlaylists();
+  const { pathname } = useLocation();
 
   const createNewPlaylistHandler = async () => {
     if (!user?.id) return alert("You must be logged in to create Playlists");
@@ -75,6 +97,10 @@ export function SidebarContent({ linkItems, onClose, ...rest }: SidebarProps) {
         </Text>
         <CloseButton display={{ base: "flex", lg: "none" }} onClick={onClose} />
       </Flex>
+      <NavItem icon={FiHome} key={"Home"} mb={4} path="/">
+        Home
+      </NavItem>
+      {pathname === "/" && <OrgSelector />}
       {linkItems.map((link) => (
         <NavItem {...link} key={link.name} mb={4}>
           {link.name}

@@ -1,28 +1,22 @@
-import { Container, Flex, Select, SimpleGrid } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Container, Flex, SimpleGrid } from "@chakra-ui/react";
+import React from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
 import { SongItem } from "../components/song/SongItem";
 import { useTrendingSongs } from "../modules/services/songs.service";
+import { useStoreState } from "../store";
 
 export function Home() {
-  const [org, setOrg] = useState<string>("Hololive");
-  const { data: trendingSongs, ...rest } = useTrendingSongs({ org });
-
-  function handle(e: any) {
-    setOrg(e.target.value);
-  }
+  const org = useStoreState((store) => store.org.currentOrg);
+  const { data: trendingSongs, ...rest } = useTrendingSongs(
+    org.name !== "All Vtubers" ? { org: org.name } : {}
+  );
 
   return (
     <PageContainer>
-      <Select placeholder="Select org" value={org} onChange={handle}>
-        <option value="Hololive">Hololive</option>
-        <option value="Nijisanji">Nijisanji</option>
-        <option value="Independents">Independents</option>
-      </Select>
       <div>
-        <h1>Top20</h1>
+        <h1>Top20: {org.name}</h1>
         <QueryStatus queryStatus={rest} />
         {trendingSongs && (
           <SimpleGrid minChildWidth="290px" spacing={2} paddingX={3}>

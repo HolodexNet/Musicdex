@@ -70,8 +70,8 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
               y2="18.5"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stop-color="#F06292" />
-              <stop offset="1" stop-color="#FF3A81" />
+              <stop stopColor="#F06292" />
+              <stop offset="1" stopColor="#FF3A81" />
             </linearGradient>
             <linearGradient
               id="b"
@@ -81,8 +81,8 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
               y2="11.3"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stop-color="#5DA2F2" />
-              <stop offset="1" stop-color="#715BF7" stop-opacity=".8" />
+              <stop stopColor="#5DA2F2" />
+              <stop offset="1" stopColor="#715BF7" stopOpacity=".8" />
             </linearGradient>
           </defs>
         </Icon>

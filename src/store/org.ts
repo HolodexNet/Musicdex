@@ -14,7 +14,7 @@ export interface OrgModel {
 }
 
 const orgModel: OrgModel = {
-  currentOrg: { name: "All VTubers", name_jp: "全サイト", short: "" },
+  currentOrg: { name: "All Vtubers", name_jp: "全サイト", short: "" },
 
   setOrg: action((state, target) => {
     state.currentOrg = target;

@@ -45,6 +45,7 @@ export function ChangePlayerLocationButton() {
                       aria-label="Expand"
                       icon={LocationIcons[x as PlayerPosition]}
                       variant="ghost"
+                      key={x + "_loc_choice"}
                       colorScheme={x === pos ? "brand" : "bgAlpha"}
                       onClick={() => {
                         setPos(x);

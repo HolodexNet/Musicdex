@@ -18,14 +18,6 @@ import { YoutubePlayer } from "../player/YoutubePlayer";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState } from "../../store";
 
-const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", icon: FiHome, path: "/" },
-  { name: "Recently Played", icon: FiClock, path: "/history" },
-  { name: "Liked Songs", icon: FiHeart, path: "/liked" },
-  { name: "My Playlists", icon: FiServer, path: "/playlists" },
-  { name: "Settings", icon: FiSettings, path: "/settings" },
-];
-
 const POSITIONS: { [key: string]: ChakraProps } = {
   background: {
     position: "absolute",
@@ -108,7 +100,7 @@ export default function FrameWithHeader({
           size="full"
         >
           <DrawerContent>
-            <SidebarContent onClose={onClose} linkItems={LinkItems} />
+            <SidebarContent onClose={onClose} />
           </DrawerContent>
         </Drawer>
         <Flex
@@ -121,7 +113,6 @@ export default function FrameWithHeader({
             onClose={onClose}
             display={{ base: "none", lg: "block" }}
             paddingTop="4"
-            linkItems={LinkItems}
           />
 
           <Flex
