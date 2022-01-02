@@ -136,9 +136,15 @@ export function PlayerBar({
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  const hasError = useRef(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [status, setStatus] =
     useState<Partial<typeof INITIALSTATE>>(INITIALSTATE);
+
+  const hasErrorCb = useCallback((err: boolean) => {
+    console.log("has error: ", err);
+    hasError.current = err;
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timer | null = null;
@@ -154,7 +160,7 @@ export function PlayerBar({
             muted: player.isMuted(),
           });
         else setStatus({});
-      }, 200);
+      }, 333);
     }
     return () => {
       timer && clearInterval(timer);
@@ -169,9 +175,18 @@ export function PlayerBar({
   const next = useStoreActions((actions) => actions.playback.next);
 
   const nextSongWhenPlaybackErr = (err: string) => {
-    console.error(err, status.currentVideo, currentSong?.video_id);
+    // console.error(
+    //   err,
+    //   getID(player?.getVideoUrl()),
+    //   (window as any).currentSong,
+    //   player?.getPlayerState(),
+    //   hasError.current
+    // );
     if (
-      getID(player?.getVideoUrl()) === currentSong?.video_id // using videoID here is a bit sus, but since VIDEOS break and not SONGS, it should be fine.
+      getID(player?.getVideoUrl()) === (window as any).currentSong && // using videoID here is a bit sus, but since VIDEOS break and not SONGS, it should be fine.
+      player?.getPlayerState() === -1 &&
+      hasError.current && //currently in error state.
+      isPlaying
     ) {
       console.log(
         "SKIPPING____ DUE TO VIDEO PLAYBACK FAILURE (maybe the video is blocked in your country)"
@@ -184,7 +199,7 @@ export function PlayerBar({
       });
       (window as any).player = player;
       // Video is failing to play: auto skip.
-      next({ count: 1, userSkipped: false });
+      next({ count: 1, userSkipped: false, hasError: true });
     }
   };
 
@@ -208,6 +223,7 @@ export function PlayerBar({
    */
   useEffect(() => {
     // console.log("check if song over effect");
+    (window as any).currentSong = currentSong?.video_id;
 
     const playerTime = status.currentTime;
     if (!player || !currentSong || playerTime === undefined) return;
@@ -249,7 +265,7 @@ export function PlayerBar({
         start: 0,
         ts: Date.now(),
         err: (err) => console.log("expected err, got err"),
-        success: () => console.log("probably shouldn't succeed?"),
+        success: () => hasErrorCb(false),
       });
       return;
     }
@@ -258,7 +274,7 @@ export function PlayerBar({
       start: currentSong.start,
       ts: Date.now(),
       err: nextSongWhenPlaybackErr,
-      success: () => console.log("Next Song"),
+      success: () => hasErrorCb(false),
     });
     setProgress(0);
   }, [currentSong, repeat]);
@@ -270,12 +286,14 @@ export function PlayerBar({
     }
 
     if (player && currentSong) {
+      (window as any).hasErrorCb = hasErrorCb;
+      player.addEventListener("onError", "hasErrorCb" as any);
       changeVideo(player, {
         id: currentSong?.video_id,
         start: currentSong.start,
         ts: Date.now(),
         err: nextSongWhenPlaybackErr,
-        success: () => console.log("Start Playback"),
+        success: () => hasErrorCb(false),
       });
 
       calledOnce.current = true;
@@ -296,7 +314,7 @@ export function PlayerBar({
       start: currentSong.start + (e / 100) * totalDuration,
       ts: Date.now(),
       err: nextSongWhenPlaybackErr,
-      success: () => console.log("Changed Playback Seek Time"),
+      success: () => hasErrorCb(false),
     });
     setProgress(e);
   }

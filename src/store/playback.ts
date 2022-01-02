@@ -61,7 +61,10 @@ export interface PlaybackModel {
   // adds a playlist into the queue
   setPlaylist: Thunk<PlaybackModel, { playlist: PlaylistFull }>;
   // for pressing NEXT or pressing a item on up-next.
-  next: Thunk<PlaybackModel, { count: number; userSkipped: boolean }>;
+  next: Thunk<
+    PlaybackModel,
+    { count: number; userSkipped: boolean; hasError?: boolean }
+  >;
 
   // for going Back one song
   previous: Thunk<PlaybackModel>;
@@ -321,11 +324,14 @@ const playbackModel: PlaybackModel = {
     actions._insertCurrentlyPlaying("playlist");
   }),
 
-  next: thunk((actions, { count, userSkipped }, h) => {
+  next: thunk((actions, { count, userSkipped, hasError = false }, h) => {
     // User initiated skip, ignore repeat-one mode
     let oldRepeatMode = h.getState().repeatMode;
     if (userSkipped) {
       actions._setRepeatMode(oldRepeatMode === "none" ? "none" : "repeat");
+    }
+    if (hasError) {
+      actions._setRepeatMode("none");
     }
     while (count > 0) {
       const hasQ = h.getState().queue.length > 0;
