@@ -1,7 +1,8 @@
 import { Button } from "@chakra-ui/button";
-import { Container } from "@chakra-ui/layout";
+import { Box, Container, Heading } from "@chakra-ui/layout";
 import {
   Divider,
+  Icon,
   IconButton,
   Menu,
   MenuButton,
@@ -14,9 +15,10 @@ import { useStoreState, useStoreActions } from "../../store";
 import { SongTable } from "../data/SongTable";
 import { Text } from "@chakra-ui/react";
 import React, { useMemo } from "react";
-import { FiMoreHorizontal } from "react-icons/fi";
+import { FiMoreHorizontal, FiTrash } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
+import { identifyTitle } from "../../utils/PlaylistHelper";
 
 export function PlayerOverlay({
   isExpanded,
@@ -33,6 +35,8 @@ export function PlayerOverlay({
   const currentlyPlaying = useStoreState(
     (state) => state.playback.currentlyPlaying
   );
+
+  const currentPlaylist = useStoreState((s) => s.playback.currentPlaylist);
 
   const playlistTotalQueue = useMemo(() => {
     const now =
@@ -55,8 +59,18 @@ export function PlayerOverlay({
   }, [currentlyPlaying.from, currentlyPlaying.song, queue]);
 
   const clearAll = useStoreActions((actions) => actions.playback.clearAll);
+  const clearQueue = useStoreActions((actions) => actions.playback._queueClear);
+
+  const clearPlaylist = useStoreActions(
+    (actions) => actions.playback.clearPlaylist
+  );
 
   const next = useStoreActions((actions) => actions.playback.next);
+
+  const currentTitle = useMemo(
+    () => currentPlaylist && identifyTitle(currentPlaylist),
+    [currentPlaylist]
+  );
 
   return (
     <OverlayWrapper visible={isExpanded}>
@@ -71,9 +85,17 @@ export function PlayerOverlay({
             <Button onClick={() => clearAll()}>Clear All</Button>
             {currentQueue.length > 0 && (
               <React.Fragment>
-                <Text fontSize="3xl">Queue</Text>
-                <Divider />
-                <br />
+                <Heading>
+                  Queue:
+                  <IconButton
+                    aria-label="clear playlist"
+                    icon={<FiTrash />}
+                    colorScheme="red"
+                    variant="ghost"
+                    onClick={() => clearQueue()}
+                    float="right"
+                  ></IconButton>
+                </Heading>
                 <SongTable
                   songs={currentQueue}
                   songClicked={(e, s) =>
@@ -81,18 +103,32 @@ export function PlayerOverlay({
                   }
                   songDropdownMenuRenderer={OverlayDropDownMenu}
                 />
+                <Divider />
               </React.Fragment>
             )}
-            <br />
-            <Text fontSize="3xl">Playlist</Text>
-            <Divider />
-            <br />
-            <SongTable
-              songs={playlistTotalQueue}
-              songClicked={(e, s) =>
-                next({ count: (s as any).idx - 1, userSkipped: true })
-              }
-            />
+            {playlistTotalQueue.length > 0 && (
+              <React.Fragment>
+                <Heading>
+                  Playlist:
+                  <IconButton
+                    aria-label="clear playlist"
+                    icon={<FiTrash />}
+                    colorScheme="red"
+                    variant="ghost"
+                    onClick={() => clearPlaylist()}
+                    float="right"
+                  ></IconButton>
+                </Heading>
+                <Text fontSize="md">{currentTitle}</Text>
+                <SongTable
+                  songs={playlistTotalQueue}
+                  songClicked={(e, s) =>
+                    next({ count: (s as any).idx - 1, userSkipped: true })
+                  }
+                />
+              </React.Fragment>
+            )}
+            <Box height={40}></Box>
           </Container>
         )}
       </div>
@@ -102,21 +138,22 @@ export function PlayerOverlay({
 
 const OverlayWrapper = styled.div<{ visible: boolean }>`
   width: 100vw;
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: ${({ visible }) => (visible ? "scroll" : "hidden")};
-  position: absolute;
+  min-height: 100vh;
+  // overflow: hidden;
+  overflow: ${({ visible }) => (visible ? "scroll" : "hidden")};
+  position: fixed;
   top: 0;
   visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
+  z-index: 5;
 
   .overlay {
     position: relative;
     top: ${({ visible }) => (visible ? "64px" : "100vh")};
     visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
-    height: calc(100% - 64px - 80px);
     transition: top 0.4s ease, opacity 0.5s ease;
     width: 100%;
-    z-index: 5;
+    z-index: 6;
+    clip-path: inset(0 0 0 0);
   }
   .bgOver {
     top: ${({ visible }) => (visible ? "64px" : "100vh")};

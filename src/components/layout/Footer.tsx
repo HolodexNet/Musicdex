@@ -4,6 +4,8 @@ import {
   IconButton,
   IconButtonProps,
   Link,
+  LinkBox,
+  LinkOverlay,
   Stack,
   Text,
   useColorModeValue,
@@ -12,7 +14,7 @@ import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { SiKofi } from "react-icons/si";
 import { ContainerInlay } from "./ContainerInlay";
 
-const SocialButton = ({ icon, ...rest }: IconButtonProps) => {
+const SocialButton = ({ icon, ...rest }: any) => {
   return (
     <IconButton
       bg={useColorModeValue("bg.100", "bg.100")}
@@ -46,28 +48,30 @@ export default function Footer() {
             </small>
           </Text>
           <Stack direction={"row"} spacing={6}>
-            <Link href="https://twitter.com/holodex" isExternal={true}>
-              <SocialButton
-                aria-label="Twitter"
-                icon={<FaTwitter />}
-                title="Twitter"
-              />
-            </Link>
-            <Link href="https://ko-fi.com/holodex" isExternal={true}>
-              <SocialButton
-                aria-label="Kofi"
-                as={Link}
-                icon={<SiKofi />}
-                title="Ko-Fi (Support Holodex)"
-              />
-            </Link>
-            <Link href="https://discord.gg/A24AbzgvRJ" isExternal={true}>
-              <SocialButton
-                aria-label="Discord"
-                icon={<FaDiscord />}
-                title="Discord"
-              />
-            </Link>
+            <SocialButton
+              aria-label="Twitter"
+              icon={<FaTwitter />}
+              title="Twitter"
+              as="a"
+              href="https://twitter.com/holodex"
+              target="_blank"
+            />
+            <SocialButton
+              aria-label="Kofi"
+              icon={<SiKofi />}
+              title="Ko-Fi (Support Holodex)"
+              as="a"
+              href="https://ko-fi.com/holodex"
+              target="_blank"
+            />
+            <SocialButton
+              aria-label="Discord"
+              icon={<FaDiscord />}
+              title="Discord"
+              as="a"
+              href="https://discord.gg/A24AbzgvRJ"
+              target="_blank"
+            />
           </Stack>
         </Container>
       </ContainerInlay>

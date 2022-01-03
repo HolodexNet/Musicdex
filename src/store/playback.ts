@@ -21,7 +21,7 @@ export interface PlaybackModel {
   playedPlaylistQueue: Song[]; // a backup queue for songs ONLY if Shuffle + Repeat
   currentPlaylist?: PlaylistFull;
 
-  _setPlaylist: Action<PlaybackModel, PlaylistFull>;
+  _setPlaylist: Action<PlaybackModel, PlaylistFull | undefined>;
   _shufflePlaylist: Action<PlaybackModel, void>; // specifically if you want to shuffle again... probably not a public.
 
   // ==== History:
@@ -70,6 +70,7 @@ export interface PlaybackModel {
   previous: Thunk<PlaybackModel>;
 
   clearAll: Action<PlaybackModel>;
+  clearPlaylist: Action<PlaybackModel>;
 }
 
 function shuffleArray(arr: Array<any>) {
@@ -106,10 +107,10 @@ const playbackModel: PlaybackModel = {
   currentPlaylist: undefined,
   _setPlaylist: action((state, playlist) => {
     state.currentPlaylist = playlist;
-    if (state.shuffleMode) {
+    if (state.shuffleMode && playlist) {
       state.playlistQueue = shuffleArray(playlist.content || []);
     } else {
-      state.playlistQueue = [...(playlist.content || [])];
+      state.playlistQueue = [...(playlist?.content || [])];
     }
     state.playedPlaylistQueue = [];
   }),
@@ -299,12 +300,21 @@ const playbackModel: PlaybackModel = {
     state.history = [];
     state.queue = [];
     state.playlistQueue = [];
+    state.currentPlaylist = undefined;
     state.playedPlaylistQueue = [];
     state.currentlyPlaying = {
       from: "none",
       song: undefined,
       repeat: state.currentlyPlaying.repeat + 1,
     };
+  }),
+  clearPlaylist: action((state) => {
+    state.playlistQueue = [];
+    state.playedPlaylistQueue = [];
+    state.currentPlaylist = undefined;
+    if (state.currentlyPlaying.from === "playlist") {
+      state.currentlyPlaying.from = "queue";
+    }
   }),
 
   queueSongs: thunk((actions, { songs, immediatelyPlay }, h) => {

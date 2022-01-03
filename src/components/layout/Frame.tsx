@@ -83,7 +83,11 @@ export default function Frame({ children }: { children?: ReactNode }) {
     >
       <Flex direction="column" h="100vh" overflow="hidden">
         {/* Generic Display: always present */}
-        <NavBar onOpen={onOpen} />
+        <NavBar
+          onOpen={onOpen}
+          zIndex={6}
+          bg={useColorModeValue("bg.100", "bg.900")}
+        />
 
         {/* Mobile Display: (provide close method) */}
         <Drawer

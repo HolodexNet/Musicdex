@@ -57,8 +57,6 @@ export function PlaylistHeading({
   const isValid = (t: string, min: number, max: number) =>
     t.length > min && t.length < max;
 
-  console.log(count);
-
   return (
     <Box as={"header"} mb="2" position="relative">
       <Heading
