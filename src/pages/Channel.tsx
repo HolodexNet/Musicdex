@@ -18,6 +18,7 @@ import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
+import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
 import { useDiscoveryChannel } from "../modules/services/discovery.service";
 import { useHistory } from "../modules/services/history.service";
 import { usePlaylist } from "../modules/services/playlist.service";
@@ -35,7 +36,7 @@ export function Channel() {
     async (q) => {
       return (await axios.get("/api/v2/channels/" + q.queryKey[1])).data;
     },
-    { cacheTime: 600000 /* 10 mins */ }
+    { ...DEFAULT_FETCH_CONFIG, cacheTime: 600000 /* 10 mins */ }
   );
 
   const { data: discovery, ...discoveryStatus } =
