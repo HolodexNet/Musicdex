@@ -45,7 +45,7 @@ export function CardCarousel({
     }
   }
   return (
-    <Flex {...rest}>
+    <Flex {...rest} paddingX="20px">
       <Flex
         position="relative"
         height={`${height}px`}
@@ -62,6 +62,7 @@ export function CardCarousel({
           aria-label="Left"
           onClick={() => scroll("left")}
           boxShadow="2xl"
+          marginLeft="-20px"
         />
         <IconButton
           visibility={hideRightBtn ? "hidden" : "visible"}
@@ -69,6 +70,7 @@ export function CardCarousel({
           aria-label="Right"
           onClick={() => scroll("right")}
           boxShadow="2xl"
+          marginRight="-20px"
         />
       </Flex>
     </Flex>
@@ -88,8 +90,16 @@ const SliderContainer = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-  * {
+  & > * {
     display: inline-flex;
     scroll-snap-align: end;
+  }
+
+  & > *:first-child {
+    margin-left: 0;
+  }
+
+  & > *:last-child {
+    margin-right: 0;
   }
 `;

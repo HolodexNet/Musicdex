@@ -11,10 +11,11 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
     <Flex
       minWidth="160px"
       width="160px"
-      height="180px"
+      height="190px"
       justifyContent="space-between"
       alignItems="center"
       bgColor="bg.800"
+      _hover={{ backgroundColor: "bg.700" }}
       borderRadius={8}
       padding={2}
       overflow="hidden"
@@ -31,7 +32,7 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
         height="128px"
         ignoreFallback
       />
-      <Text noOfLines={2} fontWeight={600} fontSize="md">
+      <Text noOfLines={2} fontWeight={600} fontSize="md" textAlign="center">
         {channel.english_name || channel.name}
       </Text>
     </Flex>
