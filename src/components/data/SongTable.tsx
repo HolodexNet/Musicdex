@@ -13,6 +13,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
+import { useStore } from "easy-peasy";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
@@ -347,6 +348,7 @@ const MemoizedRow = React.memo(
     const HOVER_ROW_STYLE: CSSObject = {
       backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
     };
+    const setDragging = useStoreActions((a) => a.contextMenu.setDragging);
 
     return (
       <Tr
@@ -375,6 +377,22 @@ const MemoizedRow = React.memo(
                 }
               : {})}
             px={{ xl: 3, base: 2 }}
+            draggable
+            onDragStart={(e) => {
+              e.dataTransfer.setData(
+                "text/plain",
+                `${window.location.origin}/song/${row.original.id}`
+              );
+              e.dataTransfer.setData(
+                "text/uri-list",
+                `${window.location.origin}/song/${row.original.id}`
+              );
+              e.dataTransfer.setData("song", JSON.stringify(row.original));
+              setDragging(true);
+            }}
+            onDragEnd={(e) => {
+              setDragging(false);
+            }}
           >
             {cell.column.id === "..." && <SongLikeButton song={row.original} />}
             {cell.render("Cell")}

@@ -22,6 +22,10 @@ export type IContextMenus = {
 export interface ContextMenuStore {
   menu: IContextMenus;
   setMenu: Action<ContextMenuStore, IContextMenus>;
+
+  //leveraging context menu for drag drop
+  dragging: boolean;
+  setDragging: Action<ContextMenuStore, boolean>;
 }
 
 // Context Menus
@@ -36,6 +40,11 @@ export const contextMenusAtom: ContextMenuStore = {
   },
   setMenu: action((state, menu) => {
     state.menu = menu;
+  }),
+
+  dragging: false,
+  setDragging: action((state, y) => {
+    state.dragging = y;
   }),
 };
 

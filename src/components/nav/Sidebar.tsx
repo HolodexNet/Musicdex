@@ -26,6 +26,7 @@ import { SidebarPlaylists } from "./SidebarPlaylists";
 import { NavItem } from "./NavItem";
 import { OrgSelector } from "./OrgSelector";
 import { useLocation } from "react-router-dom";
+import { useStoreState } from "../../store";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -56,6 +57,7 @@ export function SidebarContent({
   const { data: playlistList, isLoading: loadingMine } = useMyPlaylists();
   const { data: starredList, isLoading: loadingStars } = useStarredPlaylists();
   const { pathname } = useLocation();
+  const isDragging = useStoreState((s) => s.contextMenu.dragging);
 
   const createNewPlaylistHandler = async () => {
     if (!user?.id) return alert("You must be logged in to create Playlists");
@@ -114,7 +116,12 @@ export function SidebarContent({
       >
         Create New Playlist
       </NavItem>
-      {playlistList && <SidebarPlaylists playlistStubs={playlistList as any} />}
+      {playlistList && (
+        <SidebarPlaylists
+          playlistStubs={playlistList as any}
+          vibe={isDragging}
+        />
+      )}
       <Divider my={2} />
       {starredList && <SidebarPlaylists playlistStubs={starredList as any} />}
     </Box>

@@ -12,6 +12,7 @@ import {
   Stack,
   Box,
   Heading,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
@@ -28,6 +29,7 @@ export function AddToPlaylistModal(): JSX.Element {
   );
 
   const { mutateAsync } = usePlaylistUpdater();
+  const toast = useToast();
 
   const { data: playlists, isLoading } = useMyPlaylists();
 
@@ -76,7 +78,22 @@ export function AddToPlaylistModal(): JSX.Element {
                   action: "add",
                   playlistId: selectedPlaylistId,
                   song: song.id,
-                });
+                }).then(
+                  () => {
+                    toast({
+                      status: "success",
+                      position: "top-right",
+                      title: "Added",
+                    });
+                  },
+                  () => {
+                    toast({
+                      status: "warning",
+                      position: "top-right",
+                      title: "Something went wrong",
+                    });
+                  }
+                );
               close();
             }}
           >

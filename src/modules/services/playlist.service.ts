@@ -205,7 +205,14 @@ export const useMyPlaylists = (
     async (q): Promise<PlaylistStub[]> => {
       // fetch cached
       if (!isLoggedIn) return [];
-      return (await AxiosInstance<PlaylistStub[]>(`/musicdex/playlist/`)).data;
+      const playlists = (
+        await AxiosInstance<PlaylistStub[]>(`/musicdex/playlist/`)
+      ).data;
+      playlists.sort(
+        (a, b) =>
+          new Date(b.updated_at).valueOf() - new Date(a.updated_at).valueOf()
+      );
+      return playlists;
     },
     {
       ...DEFAULT_FETCH_CONFIG,
