@@ -71,6 +71,7 @@ export function Channel() {
             canEdit={false}
             editMode={false}
             count={0}
+            max={0}
           />
         </HStack>
         <Box>{JSON.stringify(discovery)}</Box>
