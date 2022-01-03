@@ -13,12 +13,12 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useNavigate } from "react-router";
-import { Column, useSortBy, useTable } from "react-table";
+import { Column, Row, useSortBy, useTable } from "react-table";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions, useStoreState } from "../../store";
 import { formatSeconds } from "../../utils/SongHelper";
@@ -210,19 +210,15 @@ export const SongTable = ({
 
   const contextMenuTrigger = useContextTrigger({ menuId: menuIdStat });
 
-  const HOVER_ROW_STYLE: CSSObject = {
-    backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
-  };
-
-  const defaultClickBehavior = (
-    e: React.MouseEvent<any, MouseEvent>,
-    song: Song
-  ) => {
-    queueSongs({
-      songs: [song],
-      immediatelyPlay: true,
-    });
-  };
+  const defaultClickBehavior = useCallback(
+    (e: React.MouseEvent<any, MouseEvent>, song: Song) => {
+      queueSongs({
+        songs: [song],
+        immediatelyPlay: true,
+      });
+    },
+    [queueSongs]
+  );
 
   return (
     <>
@@ -314,64 +310,77 @@ export const SongTable = ({
           {rows.map((row, index) => {
             prepareRow(row);
             return (
-              <Tr
-                {...row.getRowProps()}
-                onContextMenu={(e) => {
-                  contextMenuTrigger(e, row.original);
-                }}
+              <MemoizedRow
                 key={menuIdStat + "_" + row.original.id + "_" + index}
-                _hover={HOVER_ROW_STYLE}
-                // onMouseEnter={() => setHoverIndex(index)}
-                // onMouseLeave={() => setHoverIndex(null)}
-              >
-                {row.cells.map((cell) => (
-                  <Td
-                    {...cell.getCellProps()}
-                    isNumeric={(cell.column as any).isNumeric}
-                    {...{
-                      width: COLUMN_MIN_WIDTHS?.[cell.column.id] || "auto",
-                    }}
-                    {...(cell.column.id !== "..."
-                      ? {
-                          onClick: (e) => {
-                            if (window.getSelection()?.toString()?.length)
-                              return e.preventDefault();
-                            songClicked
-                              ? songClicked(e, row.original)
-                              : defaultClickBehavior(e as any, row.original);
-                          },
-                        }
-                      : {})}
-                    px={{ xl: 3, base: 2 }}
-                  >
-                    {cell.column.id === "..." && (
-                      <SongLikeButton song={row.original} />
-                    )}
-                    {cell.render("Cell")}
-                  </Td>
-                ))}
-              </Tr>
+                {...{
+                  row,
+                  contextMenuTrigger,
+                  songClicked,
+                  defaultClickBehavior,
+                }}
+              />
             );
           })}
         </Tbody>
-        {/* <Tfoot>
-          {headerGroups.map((headerGroup) => (
-            <Tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <Th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  isNumeric={(column as any).isNumeric}
-                >
-                  {column.render("Header")}
-                  <Box pl="4">
-                    {column.isSorted ? (column.isSortedDesc ? "v" : "^") : ""}
-                  </Box>
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Tfoot> */}
       </Table>
     </>
   );
 };
+const MemoizedRow = React.memo(
+  ({
+    row,
+    contextMenuTrigger,
+    songClicked,
+    defaultClickBehavior,
+  }: {
+    row: Row<IndexedSong>;
+    contextMenuTrigger: (
+      event: React.MouseEvent<Element, MouseEvent>,
+      passData?: any
+    ) => void;
+    songClicked: ((e: React.MouseEvent, s: Song) => void) | undefined;
+    defaultClickBehavior: (
+      e: React.MouseEvent<any, MouseEvent>,
+      song: Song
+    ) => void;
+  }): JSX.Element => {
+    const HOVER_ROW_STYLE: CSSObject = {
+      backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
+    };
+
+    return (
+      <Tr
+        {...row.getRowProps()}
+        onContextMenu={(e) => {
+          contextMenuTrigger(e, row.original);
+        }}
+        _hover={HOVER_ROW_STYLE}
+      >
+        {row.cells.map((cell) => (
+          <Td
+            {...cell.getCellProps()}
+            isNumeric={(cell.column as any).isNumeric}
+            {...{
+              width: COLUMN_MIN_WIDTHS?.[cell.column.id] || "auto",
+            }}
+            {...(cell.column.id !== "..."
+              ? {
+                  onClick: (e) => {
+                    if (window.getSelection()?.toString()?.length)
+                      return e.preventDefault();
+                    songClicked
+                      ? songClicked(e, row.original)
+                      : defaultClickBehavior(e as any, row.original);
+                  },
+                }
+              : {})}
+            px={{ xl: 3, base: 2 }}
+          >
+            {cell.column.id === "..." && <SongLikeButton song={row.original} />}
+            {cell.render("Cell")}
+          </Td>
+        ))}
+      </Tr>
+    );
+  }
+);
