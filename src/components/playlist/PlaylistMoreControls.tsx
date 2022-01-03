@@ -52,6 +52,7 @@ export function PlaylistMoreControlsMenu({
     const x = confirm("Really delete this playlist?");
     if (x) del({ playlistId: playlist.id });
   };
+  if (!canEdit) return <></>;
   return (
     <Menu {...rest} isLazy>
       <MenuButton

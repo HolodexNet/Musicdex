@@ -15,7 +15,7 @@ type PlaylistHeadingProps = {
   title: string;
   description: string;
   canEdit: boolean;
-  editMode: boolean;
+  editMode?: boolean;
   setTitle?: (text: string) => void;
   setDescription?: (text: string) => void;
   count: number;
@@ -26,7 +26,7 @@ export function PlaylistHeading({
   title,
   description,
   canEdit,
-  editMode,
+  editMode = false,
   setTitle,
   setDescription,
   count,

@@ -1,10 +1,12 @@
-import { Button, Heading, HStack, Stack, Text } from "@chakra-ui/react";
+import { Button, Heading, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
+import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { useLikedSongs } from "../modules/services/like.service";
+import { useStoreActions } from "../store";
 
 export function LikedSongs() {
   // const history = useStoreState((store) => store.playback.history);
@@ -18,13 +20,36 @@ export function LikedSongs() {
     () => page < (paginatedSongs?.page_count || 1),
     [page, paginatedSongs]
   );
+  const queueSongs = useStoreActions((s) => s.playback.queueSongs);
 
   return (
     <PageContainer>
       <ContainerInlay>
         <Stack spacing={4} my={4}>
-          <Heading>Liked Songs</Heading>
+          <PlaylistHeading
+            title={"Liked Songs"}
+            description={""}
+            canEdit={false}
+            count={0}
+            editMode={false}
+          ></PlaylistHeading>
           <QueryStatus queryStatus={status} />
+          <HStack spacing={4} flexShrink={1} flexWrap="wrap" my={2}>
+            <Button
+              variant="solid"
+              aria-label="add to queue"
+              size="md"
+              colorScheme="n2"
+              onClick={() =>
+                queueSongs({
+                  songs: paginatedSongs?.content || [],
+                  immediatelyPlay: false,
+                })
+              }
+            >
+              Add to Queue ({paginatedSongs?.content.length})
+            </Button>
+          </HStack>
           {paginatedSongs?.content?.length && (
             <>
               <SongTable songs={paginatedSongs.content}></SongTable>
