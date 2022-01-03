@@ -18,6 +18,9 @@ export function OrgSelector() {
     },
     {
       cacheTime: 1000 * 60 * 60 * 3,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 60 * 3,
     }
   );
 
