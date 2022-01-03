@@ -357,6 +357,22 @@ const MemoizedRow = React.memo(
           contextMenuTrigger(e, row.original);
         }}
         _hover={HOVER_ROW_STYLE}
+        draggable
+        onDragStart={(e) => {
+          e.dataTransfer.setData(
+            "text/plain",
+            `${window.location.origin}/song/${row.original.id}`
+          );
+          e.dataTransfer.setData(
+            "text/uri-list",
+            `${window.location.origin}/song/${row.original.id}`
+          );
+          e.dataTransfer.setData("song", JSON.stringify(row.original));
+          setDragging(true);
+        }}
+        onDragEnd={(e) => {
+          setDragging(false);
+        }}
       >
         {row.cells.map((cell) => (
           <Td
@@ -365,6 +381,7 @@ const MemoizedRow = React.memo(
             {...{
               width: COLUMN_MIN_WIDTHS?.[cell.column.id] || "auto",
             }}
+            {...(cell.column.id === "idx" && { cursor: "move" })}
             {...(cell.column.id !== "..."
               ? {
                   onClick: (e) => {
@@ -377,22 +394,6 @@ const MemoizedRow = React.memo(
                 }
               : {})}
             px={{ xl: 3, base: 2 }}
-            draggable
-            onDragStart={(e) => {
-              e.dataTransfer.setData(
-                "text/plain",
-                `${window.location.origin}/song/${row.original.id}`
-              );
-              e.dataTransfer.setData(
-                "text/uri-list",
-                `${window.location.origin}/song/${row.original.id}`
-              );
-              e.dataTransfer.setData("song", JSON.stringify(row.original));
-              setDragging(true);
-            }}
-            onDragEnd={(e) => {
-              setDragging(false);
-            }}
           >
             {cell.column.id === "..." && <SongLikeButton song={row.original} />}
             {cell.render("Cell")}
