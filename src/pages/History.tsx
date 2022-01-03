@@ -34,7 +34,7 @@ export function History() {
           description={playlist?.description || "Your recently played songs"}
           canEdit={false}
           editMode={false}
-          count={playlist?.content?.length || ""}
+          count={playlist?.content?.length || 0}
         />
         {playlist?.content && (
           <PlaylistButtonArray

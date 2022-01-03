@@ -18,7 +18,8 @@ type PlaylistHeadingProps = {
   editMode: boolean;
   setTitle?: (text: string) => void;
   setDescription?: (text: string) => void;
-  count: string | number;
+  count: number;
+  max?: number;
 };
 
 export function PlaylistHeading({
@@ -29,6 +30,7 @@ export function PlaylistHeading({
   setTitle,
   setDescription,
   count,
+  max = 500,
 }: PlaylistHeadingProps) {
   const colors = useColorModeValue("gray.700", "gray.400");
 
@@ -54,6 +56,8 @@ export function PlaylistHeading({
 
   const isValid = (t: string, min: number, max: number) =>
     t.length > min && t.length < max;
+
+  console.log(count);
 
   return (
     <Box as={"header"} mb="2" position="relative">
@@ -134,7 +138,8 @@ export function PlaylistHeading({
           icon={<FiEdit3 />}
         ></IconButton>{" "}
         <Text color="bg.400" float="right">
-          {count || 0}/500
+          {count > 0 ? count : ""}
+          {count > 0 && max > 0 ? `/ ${max}` : ""}
         </Text>
       </Text>
     </Box>

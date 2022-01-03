@@ -51,7 +51,7 @@ export function Video() {
           }
           canEdit={false}
           editMode={false}
-          count={playlist?.content?.length || ""}
+          count={playlist?.content?.length || 0}
         />
         {playlist?.content && (
           <PlaylistButtonArray

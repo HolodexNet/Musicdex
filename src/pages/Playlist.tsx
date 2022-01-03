@@ -119,7 +119,7 @@ export function Playlist() {
           count={
             (editMode
               ? newSongIds?.length ?? playlist?.content?.length
-              : playlist?.content?.length) || ""
+              : playlist?.content?.length) || 0
           }
         />
         <PlaylistButtonArray
