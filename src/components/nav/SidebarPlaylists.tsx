@@ -1,5 +1,7 @@
 import { Flex, Icon, Text, useToast } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import { AnimatePresence, motion } from "framer-motion";
+import { IconType } from "react-icons";
 import { FiFolder } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { usePlaylistUpdater } from "../../modules/services/playlist.service";
@@ -8,96 +10,109 @@ import { identifyTitle } from "../../utils/PlaylistHelper";
 export const SidebarPlaylists = ({
   playlistStubs,
   vibe = false,
+  defaultIcon = FiFolder,
 }: {
   playlistStubs: PlaylistStub[];
   vibe?: boolean;
+  defaultIcon?: IconType;
 }) => {
   const { mutateAsync } = usePlaylistUpdater();
   const toast = useToast();
 
   return (
     <div>
-      {playlistStubs.map((x) => {
-        const title = identifyTitle(x) || "...";
-        const emoji = title.match(/^\p{Emoji}/gu);
-        const rest = title.match(/(?!\p{Emoji})(.*)$/gu);
-        return (
-          <Link to={"/playlists/" + x.id} key={"sidebar-pl" + x.id}>
-            <Flex
-              align="center"
-              px="2"
-              mx="2"
-              py="2"
-              my="1"
-              borderRadius="lg"
-              role="group"
-              cursor="pointer"
-              _hover={{
-                bg: "cyan.400",
-                color: "white",
-              }}
-              onDragOver={(e) => {
-                e.preventDefault();
-              }}
-              onDragEnter={(e) => {
-                (e.target as any).style.textShadow =
-                  "1px 1px 1px var(--chakra-colors-n2-500)";
-              }}
-              onDragLeave={(e) => {
-                (e.target as any).style.textShadow = "";
-              }}
-              onDrop={(e) => {
-                const s = e.dataTransfer.getData("song");
-                console.log("huh");
-                (e.target as any).style.textShadow = "";
-                if (s) {
-                  e.preventDefault();
-                  const song = JSON.parse(s);
-                  console.log(song);
-                  mutateAsync({
-                    action: "add",
-                    playlistId: x.id,
-                    song: song.id,
-                  }).then(
-                    () => {
-                      toast({
-                        status: "success",
-                        position: "top-right",
-                        title: "Added",
-                      });
-                    },
-                    () => {
-                      toast({
-                        status: "warning",
-                        position: "top-right",
-                        title: "Something went wrong",
-                      });
-                    }
-                  );
-                }
-              }}
+      <AnimatePresence>
+        {playlistStubs.map((x) => {
+          const title = identifyTitle(x) || "...";
+          const emoji = title.match(/^\p{Emoji}/gu);
+          const rest = title.match(/(?!\p{Emoji})(.*)$/gu);
+          return (
+            <motion.div
+              key={"sidebar-pld" + x.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-              {emoji ? (
-                <Text as="span" fontSize="16" mr="4" maxW="16px">
-                  {emoji?.[0] || ""}
-                </Text>
-              ) : (
-                <Icon
-                  mr="4"
-                  fontSize="16"
-                  _groupHover={{
+              <Link to={"/playlists/" + x.id}>
+                <Flex
+                  align="center"
+                  px="2"
+                  mx="2"
+                  py="2"
+                  my="1"
+                  borderRadius="lg"
+                  role="group"
+                  cursor="pointer"
+                  _hover={{
+                    bg: "brand.700",
                     color: "white",
                   }}
-                  as={FiFolder}
-                />
-              )}
-              <Text as={VibeText} noOfLines={1} vibe={vibe}>
-                {rest?.[0]}
-              </Text>
-            </Flex>
-          </Link>
-        );
-      })}
+                  boxShadow={
+                    vibe ? "inset 0 0 4px 0px var(--chakra-colors-n2-500)" : ""
+                  }
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    (e.currentTarget as any).style.boxShadow =
+                      "inset 0 0 4px 3px var(--chakra-colors-n2-500)";
+                  }}
+                  onDragEnter={(e) => {}}
+                  onDragLeave={(e) => {
+                    (e.target as any).style.boxShadow = "";
+                  }}
+                  onDrop={(e) => {
+                    const s = e.dataTransfer.getData("song");
+                    console.log("huh");
+                    (e.target as any).style.boxShadow = "";
+                    if (s) {
+                      e.preventDefault();
+                      const song = JSON.parse(s);
+                      console.log(song);
+                      mutateAsync({
+                        action: "add",
+                        playlistId: x.id,
+                        song: song.id,
+                      }).then(
+                        () => {
+                          toast({
+                            status: "success",
+                            position: "top-right",
+                            title: "Added",
+                          });
+                        },
+                        () => {
+                          toast({
+                            status: "warning",
+                            position: "top-right",
+                            title: "Something went wrong",
+                          });
+                        }
+                      );
+                    }
+                  }}
+                >
+                  {emoji ? (
+                    <Text as="span" fontSize="16" mr="4" maxW="16px">
+                      {emoji?.[0] || ""}
+                    </Text>
+                  ) : (
+                    <Icon
+                      mr="4"
+                      fontSize="16"
+                      _groupHover={{
+                        color: "white",
+                      }}
+                      as={defaultIcon}
+                    />
+                  )}
+                  <Text as={VibeText} noOfLines={1} vibe={vibe}>
+                    {rest?.[0]}
+                  </Text>
+                </Flex>
+              </Link>
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
     </div>
   );
 };

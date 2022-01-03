@@ -18,6 +18,7 @@ export function PlaylistButtonArray({
   onEditClick,
   onFinishEditClick,
   editMode,
+  canStar = true,
   canEdit,
   playlist,
 }: {
@@ -27,6 +28,7 @@ export function PlaylistButtonArray({
   onFinishEditClick?: ClickEventHandler;
   editMode: boolean;
   canEdit: boolean;
+  canStar?: boolean;
   playlist: PlaylistFull;
 }): JSX.Element {
   // useColorModeValue('bg.400')
@@ -46,7 +48,7 @@ export function PlaylistButtonArray({
   let { mutateAsync: updateStar } = usePlaylistStarUpdater();
 
   return (
-    <HStack spacing={4} flexShrink={1} flexWrap="wrap">
+    <HStack spacing={4} flexShrink={1} flexWrap="wrap" my={2}>
       <Button
         aria-label="play"
         leftIcon={<FiPlay />}
@@ -89,7 +91,7 @@ export function PlaylistButtonArray({
       >
         Save Changes
       </Button>
-      {isLoggedIn && user && user.id !== playlist.owner && (
+      {isLoggedIn && user && user.id !== playlist.owner && canStar && (
         <Button
           variant="ghost"
           aria-label="star playlist"

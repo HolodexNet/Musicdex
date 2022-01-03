@@ -141,7 +141,7 @@ export function Playlist() {
           }}
           onFinishEditClick={finishSongEditing}
         />
-        <Box pt="4">
+        <Box>
           {playlist.content &&
             (editMode ? (
               <Suspense fallback={<div>Loading...</div>}>

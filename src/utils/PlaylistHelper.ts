@@ -26,6 +26,9 @@ export function identifyPlaylistBannerImage(playlist: Partial<PlaylistFull>) {
       ":history": (p, _, __) => {
         return undefined;
       },
+      ":video": (p, _, __) => {
+        return undefined;
+      },
     });
   } else {
     console.log(playlist);
@@ -60,6 +63,9 @@ export function identifyPlaylistChannelImage(playlist: Partial<PlaylistFull>) {
       ":history": (p, _, __) => {
         return undefined;
       },
+      ":video": (p, { id }, __) => {
+        return undefined;
+      },
     });
   } else {
     if (playlist.content && playlist.content[0]) {
@@ -85,6 +91,9 @@ export function identifyTitle(playlist: Partial<PlaylistFull>) {
       ":history": (p, _, __) => {
         return "Recently Played";
       },
+      ":video": (p, { id }, __) => {
+        return "Video";
+      },
     });
   } else {
     return playlist.title;
@@ -105,6 +114,9 @@ export function identifyDescription(playlist: Partial<PlaylistFull>) {
       },
       ":history": (p, _, __) => {
         return "Your recently played songs";
+      },
+      ":video": (p, { id }, __) => {
+        return "Songs from a Video";
       },
     });
   } else {

@@ -10,6 +10,7 @@ import {
 import { IconType } from "react-icons";
 import {
   FiClock,
+  FiStar,
   FiHeart,
   FiHome,
   FiPlusCircle,
@@ -123,7 +124,12 @@ export function SidebarContent({
         />
       )}
       <Divider my={2} />
-      {starredList && <SidebarPlaylists playlistStubs={starredList as any} />}
+      {starredList && (
+        <SidebarPlaylists
+          playlistStubs={starredList as any}
+          defaultIcon={FiStar}
+        />
+      )}
     </Box>
   );
 }

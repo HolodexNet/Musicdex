@@ -3,6 +3,7 @@ import {
   Container,
   IconButton,
   IconButtonProps,
+  Link,
   Stack,
   Text,
   useColorModeValue,
@@ -45,21 +46,28 @@ export default function Footer() {
             </small>
           </Text>
           <Stack direction={"row"} spacing={6}>
-            <SocialButton
-              aria-label="Twitter"
-              icon={<FaTwitter />}
-              title="Twitter"
-            />
-            <SocialButton
-              aria-label="Kofi"
-              icon={<SiKofi />}
-              title="Ko-Fi (Support Holodex)"
-            />
-            <SocialButton
-              aria-label="Discord"
-              icon={<FaDiscord />}
-              title="Discord"
-            />
+            <Link href="https://twitter.com/holodex" isExternal={true}>
+              <SocialButton
+                aria-label="Twitter"
+                icon={<FaTwitter />}
+                title="Twitter"
+              />
+            </Link>
+            <Link href="https://ko-fi.com/holodex" isExternal={true}>
+              <SocialButton
+                aria-label="Kofi"
+                as={Link}
+                icon={<SiKofi />}
+                title="Ko-Fi (Support Holodex)"
+              />
+            </Link>
+            <Link href="https://discord.gg/A24AbzgvRJ" isExternal={true}>
+              <SocialButton
+                aria-label="Discord"
+                icon={<FaDiscord />}
+                title="Discord"
+              />
+            </Link>
           </Stack>
         </Container>
       </ContainerInlay>

@@ -11,9 +11,11 @@ interface SGPDefMap {
   ":weekly": SGPDef<{ org: string }, { org: string }>;
   ":userweekly": SGPDef<{ user: string | number }, { user: string | number }>;
   ":history": SGPDef<{ user: string | number }, { user: string | number }>;
+  ":video": SGPDef<{ id: string }, { id: string }>;
 }
 
-const DEFAULT_PARAM_PARSER = (id: string) => parsePlaylistID(id).params;
+const DEFAULT_PARAM_PARSER = (playlistId: string) =>
+  parsePlaylistID(playlistId).params;
 const DEFAULT_DISC_PARSER = <T1>(x: string | undefined) =>
   x ? (JSON.parse(x) as T1) : undefined;
 
@@ -31,6 +33,10 @@ const SGPDefinitions: SGPDefMap = {
     paramParser: DEFAULT_PARAM_PARSER,
   },
   ":history": {
+    descParser: DEFAULT_DISC_PARSER,
+    paramParser: DEFAULT_PARAM_PARSER,
+  },
+  ":video": {
     descParser: DEFAULT_DISC_PARSER,
     paramParser: DEFAULT_PARAM_PARSER,
   },
@@ -56,6 +62,11 @@ interface SGPTransformer<Out> {
     playlist: PlaylistLike,
     id: { user: string | number },
     data: { user: string | number } | undefined
+  ) => Out;
+  ":video": (
+    playlist: PlaylistLike,
+    id: { id: string },
+    data: { id: string } | undefined
   ) => Out;
 }
 

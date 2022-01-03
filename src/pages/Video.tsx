@@ -62,6 +62,7 @@ export function Video() {
             onPlayClick={() => {
               setPlaylist({ playlist });
             }}
+            canStar={false}
             onAddQueueClick={() => {
               playlist.content &&
                 queueSongs({
