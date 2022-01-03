@@ -1,7 +1,9 @@
-import { Container, Flex, SimpleGrid, useQuery } from "@chakra-ui/react";
+import { SimpleGrid, Text, Heading, Spacer } from "@chakra-ui/react";
 import axios from "axios";
 import React from "react";
+import { ChannelCard } from "../components/channel/ChannelCard";
 import { QueryStatus } from "../components/common/QueryStatus";
+import { CardCarousel } from "../components/common/CardCarousel";
 import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
 import { SongItem } from "../components/song/SongItem";
@@ -19,19 +21,29 @@ export function Home() {
 
   return (
     <PageContainer>
-      <div>
-        Discovery: {JSON.stringify(discovery)}
-        <h1>Top20: {org.name}</h1>
-        <QueryStatus queryStatus={rest} />
-        {trendingSongs && (
-          <SimpleGrid minChildWidth="290px" spacing={2} paddingX={3}>
-            {trendingSongs.slice(0, 4).map((song) => (
-              <SongItem song={song} key={song.id} />
-            ))}
-          </SimpleGrid>
-        )}
-        {trendingSongs && <SongTable songs={trendingSongs} />}
-      </div>
+      <Heading size="lg" marginBottom={2}>
+        Discover {org.name}
+      </Heading>
+      {discovery && (
+        <CardCarousel height={210} width={160} scrollMultiplier={2}>
+          {discovery.channels.map((c: Channel) => (
+            <ChannelCard channel={c} key={c.id} margin={4} />
+          ))}
+        </CardCarousel>
+      )}
+      <Heading size="lg" marginBottom={2}>
+        Trending {org.name} Songs
+      </Heading>
+      <Spacer />
+      <QueryStatus queryStatus={rest} />
+      {trendingSongs && (
+        <SimpleGrid minChildWidth="290px" spacing={2} paddingX={3}>
+          {trendingSongs.slice(0, 4).map((song) => (
+            <SongItem song={song} key={song.id} />
+          ))}
+        </SimpleGrid>
+      )}
+      {trendingSongs && <SongTable songs={trendingSongs} />}
     </PageContainer>
   );
 }
