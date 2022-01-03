@@ -9,7 +9,9 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
+import { ChannelCard } from "../components/channel/ChannelCard";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
+import { CardCarousel } from "../components/common/CardCarousel";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
@@ -75,6 +77,16 @@ export function Channel() {
           />
         </HStack>
         <Box>{JSON.stringify(discovery)}</Box>
+        <Heading size="lg" marginBottom={2}>
+          Discover more from {channel.org}
+        </Heading>
+        {discovery && (
+          <CardCarousel height={210} width={160} scrollMultiplier={2}>
+            {discovery.channels.map((c: Channel) => (
+              <ChannelCard channel={c} key={c.id} marginX={2} />
+            ))}
+          </CardCarousel>
+        )}
       </ContainerInlay>
     </PageContainer>
   );
