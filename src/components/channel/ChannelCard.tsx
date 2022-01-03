@@ -15,6 +15,7 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
       justifyContent="space-between"
       alignItems="center"
       bgColor="bg.800"
+      _hover={{ backgroundColor: "bg.700" }}
       borderRadius={8}
       padding={2}
       overflow="hidden"
