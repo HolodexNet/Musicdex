@@ -27,7 +27,7 @@ export function Home() {
       {discovery && (
         <CardCarousel height={210} width={160} scrollMultiplier={2}>
           {discovery.channels.map((c: Channel) => (
-            <ChannelCard channel={c} key={c.id} margin={4} />
+            <ChannelCard channel={c} key={c.id} marginX={2} />
           ))}
         </CardCarousel>
       )}

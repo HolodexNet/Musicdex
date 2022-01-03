@@ -1,4 +1,5 @@
 import { Flex, FlexProps, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import { ChannelPhoto } from "./ChannelPhoto";
 
 interface ChannelCardProps extends FlexProps {
@@ -19,6 +20,8 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
       overflow="hidden"
       flexDirection="column"
       shadow="2xl"
+      as={Link}
+      to={`/channel/${channel.id}`}
       {...rest}
     >
       <ChannelPhoto
@@ -26,6 +29,7 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
         resizePhoto={128}
         width="128px"
         height="128px"
+        ignoreFallback
       />
       <Text noOfLines={2} fontWeight={600} fontSize="md">
         {channel.english_name || channel.name}
