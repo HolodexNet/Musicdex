@@ -149,23 +149,26 @@ export function PlayerBar({
   useEffect(() => {
     let timer: NodeJS.Timer | null = null;
     if (player && currentSong) {
-      timer = setInterval(() => {
-        if (player)
-          setStatus({
-            currentTime: player.getCurrentTime(),
-            duration: player.getDuration(),
-            currentVideo: getID(player.getVideoUrl()),
-            state: player.getPlayerState(),
-            volume: player.getVolume(),
-            muted: player.isMuted(),
-          });
-        else setStatus({});
-      }, 333);
+      timer = setInterval(
+        () => {
+          if (player)
+            setStatus({
+              currentTime: player.getCurrentTime(),
+              duration: player.getDuration(),
+              currentVideo: getID(player.getVideoUrl()),
+              state: player.getPlayerState(),
+              volume: player.getVolume(),
+              muted: player.isMuted(),
+            });
+          else setStatus({});
+        },
+        isPlaying ? 333 : 2000
+      );
     }
     return () => {
       timer && clearInterval(timer);
     };
-  }, [player, currentSong]);
+  }, [player, currentSong, isPlaying]);
 
   const playerState = useMemo(() => status?.state, [status]);
   const toast = useToast();

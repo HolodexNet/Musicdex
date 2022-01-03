@@ -15,7 +15,7 @@ export interface PlaybackModel {
   _queueAdd: Action<PlaybackModel, Song[]>;
   _queueClear: Action<PlaybackModel, void>;
   _queueShuffle: Action<PlaybackModel, void>;
-
+  queueRemove: Action<PlaybackModel, number>;
   // ===== Playlist and Playlist Mutators:
   playlistQueue: Song[]; // a queue that is fed by the playlist.
   playedPlaylistQueue: Song[]; // a backup queue for songs ONLY if Shuffle + Repeat
@@ -95,6 +95,10 @@ const playbackModel: PlaybackModel = {
   }),
   _queueShuffle: action((state) => {
     state.queue = shuffleArray(state.queue || []);
+  }),
+  queueRemove: action((state, idx) => {
+    const x = [...state.queue.slice(0, idx), ...state.queue.slice(idx + 1)];
+    state.queue = x;
   }),
 
   playlistQueue: [],
@@ -188,7 +192,8 @@ const playbackModel: PlaybackModel = {
         state.playedPlaylistQueue.push(s.song);
       } else if (
         state.currentlyPlaying.from === "queue" &&
-        state.repeatMode === "repeat"
+        state.repeatMode === "repeat" &&
+        state.playlistQueue.length + state.playedPlaylistQueue.length === 0
       ) {
         state.queue.push(s.song);
       }

@@ -26,6 +26,7 @@ export function PlaylistSongTableDropDownMenu({
   return (
     <Menu
       {...rest}
+      eventListeners={{ scroll: false }}
       isLazy
       boundary="scrollParent"
       computePositionOnMount={true}

@@ -155,11 +155,15 @@ export const SongTable = ({
         disableSortBy: true,
         accessor: "idx",
         Cell: (cellInfo: any) => {
-          return <PlaylistSongTableDropDownMenu song={cellInfo.row.original} />;
+          return songDropdownMenuRenderer ? (
+            songDropdownMenuRenderer(cellInfo)
+          ) : (
+            <PlaylistSongTableDropDownMenu song={cellInfo.row.original} />
+          );
         },
       },
     ],
-    [t, currentId]
+    [currentId, t, songDropdownMenuRenderer]
   );
 
   const showAddDialog = useStoreActions(
