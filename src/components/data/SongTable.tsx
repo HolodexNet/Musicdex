@@ -209,7 +209,7 @@ export const SongTable = ({
     () => menuId || "st" + Math.floor(Math.random() * 100000).toString()
   );
 
-  const contextMenuTrigger = useContextTrigger({ menuId: menuIdStat });
+  // const contextMenuTrigger = useContextTrigger({ menuId: menuIdStat });
 
   const defaultClickBehavior = useCallback(
     (e: React.MouseEvent<any, MouseEvent>, song: Song) => {
@@ -223,7 +223,7 @@ export const SongTable = ({
 
   return (
     <>
-      <ContextMenuList
+      {/* <ContextMenuList
         menuId={menuIdStat}
         render={({ menuId, closeContextMenus, passData: song }) => {
           if (songRightClickContextMenuRenderer)
@@ -283,7 +283,7 @@ export const SongTable = ({
             </>
           );
         }}
-      ></ContextMenuList>
+      ></ContextMenuList> */}
 
       <Table {...getTableProps()} size={isXL! >= 1 ? "md" : "sm"}>
         <Thead>
@@ -315,7 +315,7 @@ export const SongTable = ({
                 key={menuIdStat + "_" + row.original.id + "_" + index}
                 {...{
                   row,
-                  contextMenuTrigger,
+                  // contextMenuTrigger,
                   songClicked,
                   defaultClickBehavior,
                 }}
@@ -335,7 +335,7 @@ const MemoizedRow = React.memo(
     defaultClickBehavior,
   }: {
     row: Row<IndexedSong>;
-    contextMenuTrigger: (
+    contextMenuTrigger?: (
       event: React.MouseEvent<Element, MouseEvent>,
       passData?: any
     ) => void;
@@ -354,7 +354,7 @@ const MemoizedRow = React.memo(
       <Tr
         {...row.getRowProps()}
         onContextMenu={(e) => {
-          contextMenuTrigger(e, row.original);
+          contextMenuTrigger?.(e, row.original);
         }}
         _hover={HOVER_ROW_STYLE}
         draggable
