@@ -52,6 +52,8 @@ const POSITIONS: { [key: string]: ChakraProps } = {
   },
   hidden: {
     visibility: "hidden",
+    zIndex: -4,
+    position: "absolute",
   },
 };
 
@@ -131,11 +133,11 @@ export default function Frame({ children }: { children?: ReactNode }) {
             </Flex>
             <Box
               {...props}
-              visibility={
-                pos === "hidden" || currentSong === undefined
-                  ? "hidden"
-                  : "visible"
-              }
+              // visibility={
+              //   pos === "hidden" || currentSong === undefined
+              //     ? "hidden"
+              //     : "visible"
+              // }
             >
               <Box
                 visibility={pos === "background" ? "visible" : "hidden"}
