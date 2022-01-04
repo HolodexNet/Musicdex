@@ -33,7 +33,8 @@ export function OrgSelector() {
         opacity: [0, 1],
         marginTop: ["-30px", "-5px"],
       }}
-      transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
+      exit={{ opacity: 0, marginTop: "0px", height: "0px" }}
+      transition={{ duration: 0.4, type: "tween" }}
     >
       <Select
         placeholder="Select org"

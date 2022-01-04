@@ -28,6 +28,7 @@ import { NavItem } from "./NavItem";
 import { OrgSelector } from "./OrgSelector";
 import { useLocation } from "react-router-dom";
 import { useStoreState } from "../../store";
+import { AnimatePresence } from "framer-motion";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -103,7 +104,7 @@ export function SidebarContent({
       <NavItem icon={FiHome} key={"Home"} mb={4} path="/">
         Home
       </NavItem>
-      {pathname === "/" && <OrgSelector />}
+      <AnimatePresence>{pathname === "/" && <OrgSelector />}</AnimatePresence>
       {linkItems.map((link) => (
         <NavItem {...link} key={link.name} mb={4}>
           {link.name}
