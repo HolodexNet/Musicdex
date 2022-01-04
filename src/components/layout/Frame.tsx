@@ -17,6 +17,7 @@ import { LinkItemProps, SidebarContent } from "../nav/Sidebar";
 import { YoutubePlayer } from "../player/YoutubePlayer";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState } from "../../store";
+import { CommonContextMenu } from "../common/CommonContext";
 
 const POSITIONS: { [key: string]: ChakraProps } = {
   background: {
@@ -150,6 +151,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
         </Flex>
         <Player player={player} />
         <AddToPlaylistModal />
+        <CommonContextMenu />
       </Flex>
     </Box>
   );
