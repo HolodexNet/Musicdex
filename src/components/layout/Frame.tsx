@@ -150,8 +150,8 @@ export default function Frame({ children }: { children?: ReactNode }) {
         </Flex>
         <Player player={player} />
         <AddToPlaylistModal />
-        <CommonContextMenu />
       </Flex>
+      <CommonContextMenu />
     </Box>
   );
 }

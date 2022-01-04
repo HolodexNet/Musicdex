@@ -160,7 +160,7 @@ export function PlayerOverlay({
                 />
               </React.Fragment>
             )}
-            <Box height={40}></Box>
+            <Box height="200px"></Box>
           </Container>
         )}
       </div>
@@ -170,9 +170,9 @@ export function PlayerOverlay({
 
 const OverlayWrapper = styled.div<{ visible: boolean }>`
   width: 100vw;
-  min-height: 100vh;
-  // overflow: hidden;
-  overflow: ${({ visible }) => (visible ? "scroll" : "hidden")};
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: ${({ visible }) => (visible ? "scroll" : "hidden")};
   position: fixed;
   top: 0;
   visibility: ${({ visible }) => (visible ? "visible" : "hidden")};

@@ -1,4 +1,4 @@
-import { Item, ItemParams, Menu as CMenu } from "react-contexify";
+import { Item, Separator, ItemParams, Menu as CMenu } from "react-contexify";
 import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions } from "../../store";
@@ -38,7 +38,7 @@ export const CommonContextMenu = () => {
       >
         Add To Playlist...
       </Item>
-      <hr style={{ marginTop: "0.4rem", marginBottom: "0.4rem" }} />
+      <Separator />
       <Item
         onClick={(x: ItemParams) => {
           navigate("/song/" + x.props.id);
