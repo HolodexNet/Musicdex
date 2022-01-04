@@ -44,18 +44,18 @@ export function identifyPlaylistChannelImage(playlist: Partial<PlaylistFull>) {
   if (isSGPPlaylist(playlist.id!)) {
     return extractUsingFn(playlist, {
       ":dailyrandom": (p, { ch }, d) => {
-        return `/api/statics/channelImg/${ch || d?.channel.id}/200.png`;
+        return `/api/statics/channelImg/${ch || d?.channel.id}.png`;
       },
       ":userweekly": (p, { user }, _) => {
         if (p.content && p.content[0]) {
-          return `/api/statics/channelImg/${p.content[0].channel_id}/200.png`;
+          return `/api/statics/channelImg/${p.content[0].channel_id}.png`;
         } else {
           return undefined;
         }
       },
       ":weekly": (p, { org }, _) => {
         if (p.content && p.content[0]) {
-          return `/api/statics/channelImg/${p.content[0].channel_id}/200.png`;
+          return `/api/statics/channelImg/${p.content[0].channel_id}.png`;
         } else {
           return undefined;
         }

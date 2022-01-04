@@ -2,6 +2,7 @@ import {
   Box,
   Heading,
   HStack,
+  SimpleGrid,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -17,6 +18,7 @@ import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
+import { PlaylistCard } from "../components/playlist/PlaylistCard";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
 import { useDiscoveryChannel } from "../modules/services/discovery.service";
@@ -88,6 +90,12 @@ export function Channel() {
             ))}
           </CardCarousel>
         )}
+        <SimpleGrid spacing={3}>
+          {discovery &&
+            discovery.recommended.playlists.map((x: any) => {
+              return <PlaylistCard playlist={x}></PlaylistCard>;
+            })}
+        </SimpleGrid>
       </ContainerInlay>
     </PageContainer>
   );

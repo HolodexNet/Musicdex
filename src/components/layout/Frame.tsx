@@ -71,10 +71,6 @@ export default function Frame({ children }: { children?: ReactNode }) {
 
   const props = useMemo(() => POSITIONS[pos], [pos]);
 
-  const currentSong = useStoreState(
-    (state) => state.playback.currentlyPlaying.song
-  );
-
   return (
     <Box
       h="100vh"
