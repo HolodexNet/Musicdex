@@ -15,17 +15,17 @@ import { SongTable } from "../data/SongTable";
 import { Text } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { FiLink2, FiMoreHorizontal, FiTrash } from "react-icons/fi";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { identifyTitle } from "../../utils/PlaylistHelper";
 import { Link } from "react-router-dom";
 
 export function PlayerOverlay({
   isExpanded,
-  toggleExpanded,
+  close,
 }: {
   isExpanded: boolean;
-  toggleExpanded: () => void;
+  close: () => void;
 }) {
   const playlistQueue = useStoreState((state) => state.playback.playlistQueue);
   const playedPlaylistQueue = useStoreState(
@@ -48,6 +48,13 @@ export function PlayerOverlay({
     playedPlaylistQueue,
     playlistQueue,
   ]);
+
+  const location = useLocation();
+
+  React.useEffect(() => {
+    // runs on location, i.e. route, change
+    close();
+  }, [location]);
 
   const queue = useStoreState((state) => state.playback.queue);
 
@@ -90,7 +97,7 @@ export function PlayerOverlay({
                 colorScheme="red"
                 onClick={() => {
                   clearAll();
-                  toggleExpanded();
+                  close();
                 }}
               >
                 Clear All
@@ -142,7 +149,7 @@ export function PlayerOverlay({
                     ml={1}
                     as={Link}
                     to={`/playlists/${currentPlaylist?.id}/`}
-                    onClick={toggleExpanded}
+                    onClick={close}
                   ></IconButton>
                 </Text>
                 <SongTable

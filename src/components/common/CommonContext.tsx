@@ -49,7 +49,11 @@ export const CommonContextMenu = () => {
       <Item onClick={(x: ItemParams) => navigate("/video/" + x.props.video_id)}>
         Go To Video Page
       </Item>
-      <Item onClick={(x: ItemParams) => {}}>Go To Channel Page</Item>
+      <Item
+        onClick={(x: ItemParams) => navigate(`/channel/${x.props.channel_id}/`)}
+      >
+        Go To Channel Page
+      </Item>
     </CMenu>
   );
 };
