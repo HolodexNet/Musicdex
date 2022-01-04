@@ -79,7 +79,16 @@ export function Channel() {
             max={0}
           />
         </HStack>
-        <Box>{JSON.stringify(discovery)}</Box>
+        {/* <Box>{JSON.stringify(discovery)}</Box> */}
+        <Heading size="lg" marginBottom={2} marginTop={6}>
+          Playlists with {channel.name}
+        </Heading>
+        <CardCarousel height={270} width={380} scrollMultiplier={1}>
+          {discovery &&
+            discovery.recommended.playlists.map((x: any) => {
+              return <PlaylistCard playlist={x}></PlaylistCard>;
+            })}
+        </CardCarousel>
         <Heading size="lg" marginBottom={2}>
           Discover more from {channel.org}
         </Heading>
@@ -90,12 +99,6 @@ export function Channel() {
             ))}
           </CardCarousel>
         )}
-        <CardCarousel height={480} width={380} scrollMultiplier={1}>
-          {discovery &&
-            discovery.recommended.playlists.map((x: any) => {
-              return <PlaylistCard playlist={x}></PlaylistCard>;
-            })}
-        </CardCarousel>
       </ContainerInlay>
     </PageContainer>
   );

@@ -27,8 +27,12 @@ export function OrgSelector() {
 
   return (
     <motion.div
-      style={{ opacity: 0 }}
-      animate={{ scale: [0.9, 1], opacity: [0, 1], y: [-40, 0] }}
+      style={{ opacity: 0, position: "relative" }}
+      animate={{
+        scale: [0.9, 1],
+        opacity: [0, 1],
+        marginTop: ["-30px", "-5px"],
+      }}
       transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
     >
       <Select
@@ -39,7 +43,6 @@ export function OrgSelector() {
           if (tgt) setOrg(tgt);
         }}
         mb={3}
-        mt={-3}
         fontFamily="Assistant, sans-serif"
         width="89%"
         pl="11%"
