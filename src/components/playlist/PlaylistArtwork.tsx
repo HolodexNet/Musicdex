@@ -52,6 +52,16 @@ export function PlaylistArtwork({
     return null;
   }, [playlist]);
 
+  if (type === ":weekly") {
+    return (
+      <StackedTextArt
+        typeText="This Week in"
+        titleText={description?.org || ""}
+        imageUrl={thumbnail || ""}
+        reverse={true}
+      />
+    );
+  }
   if (type === ":dailyrandom") {
     return (
       <StackedTextArt
@@ -91,9 +101,19 @@ function OverlayTextArt({
   titleText: string;
   imageUrl: string;
 }) {
+  const bgColor =
+    titleText.charCodeAt(titleText.length - 1) % 2 === 0
+      ? "var(--chakra-colors-brand-600)"
+      : "var(--chakra-colors-n2-600)";
   return (
-    <>
-      <BrandColorGradientText />
+    <Flex
+      position="relative"
+      flexBasis="148px"
+      minWidth="148px"
+      width="100%"
+      flexDirection={"column"}
+    >
+      <BrandColorGradientText bgColor={bgColor} />
       <Box p={2} position="absolute" mt={3} width="100%">
         <Text fontSize={20} fontWeight={600} textAlign="center" noOfLines={2}>
           {titleText}
@@ -101,7 +121,7 @@ function OverlayTextArt({
       </Box>
 
       <Image src={imageUrl} alt="Playlist art" />
-    </>
+    </Flex>
   );
 }
 
@@ -109,18 +129,26 @@ function StackedTextArt({
   typeText,
   titleText,
   imageUrl,
+  reverse = false,
 }: {
   typeText: string;
   titleText: string;
   imageUrl: string;
+  reverse?: boolean;
 }) {
   // Random between color based on last character of title
   const bgColor =
     titleText.charCodeAt(titleText.length - 1) % 2 === 0
-      ? "n2.100"
-      : "brand.100";
+      ? "brand.100"
+      : "n2.100";
   return (
-    <>
+    <Flex
+      position="relative"
+      flexBasis="148px"
+      minWidth="148px"
+      width="100%"
+      flexDirection={reverse ? "column-reverse" : "column"}
+    >
       <Flex p={2} bgColor={bgColor} height="33%">
         <Box lineHeight={1.1}>
           <Text
@@ -151,16 +179,16 @@ function StackedTextArt({
         backgroundRepeat="no-repeat"
         bgSize="120% auto"
       ></Flex>
-    </>
+    </Flex>
   );
 }
 
-const BrandColorGradientText = styled.div`
+const BrandColorGradientText = styled.div<{ bgColor: string }>`
   mix-blend-mode: multiply;
   position: absolute;
   height: 100%;
   width: 100%;
-  background-color: var(--chakra-colors-brand-600);
+  background-color: ${({ bgColor }) => bgColor};
   opacity: 0.7;
 
   &::after {

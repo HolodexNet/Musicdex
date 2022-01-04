@@ -34,6 +34,7 @@ export const PlaylistCard = ({
 
   return (
     <Flex
+      minWidth="168px"
       width="168px"
       height="230px"
       // justifyContent="space-between"
@@ -49,14 +50,7 @@ export const PlaylistCard = ({
       to={`/playlists/${playlist.id}/`}
       {...rest}
     >
-      <Flex
-        position="relative"
-        flexBasis="148px"
-        width="100%"
-        flexDirection="column"
-      >
-        <PlaylistArtwork playlist={playlist} />
-      </Flex>
+      <PlaylistArtwork playlist={playlist} />
 
       <Flex direction="column" mt={1} width="100%">
         <Text fontSize="1rem" fontWeight="500" noOfLines={1}>

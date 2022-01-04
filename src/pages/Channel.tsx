@@ -83,7 +83,7 @@ export function Channel() {
         <Heading size="lg" marginBottom={2} marginTop={6}>
           Playlists with {channel.name}
         </Heading>
-        <CardCarousel height={270} width={380} scrollMultiplier={1}>
+        <CardCarousel height={270} width={160} scrollMultiplier={1}>
           {discovery &&
             discovery.recommended.playlists.map((x: any) => {
               return <PlaylistCard playlist={x} marginX={2}></PlaylistCard>;
