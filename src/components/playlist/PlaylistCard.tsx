@@ -7,7 +7,9 @@ import {
   Image,
   Flex,
   AspectRatio,
+  FlexProps,
 } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import {
   identifyDescription,
   identifyPlaylistBannerImage,
@@ -17,26 +19,36 @@ import {
 
 export const PlaylistCard = ({
   playlist,
+  ...rest
 }: {
   playlist: Partial<PlaylistFull>;
-}) => {
+} & FlexProps) => {
   const IMAGE =
     identifyPlaylistChannelImage(playlist) ||
     identifyPlaylistBannerImage(playlist);
   const title = identifyTitle(playlist);
   const description = identifyDescription(playlist);
   return (
-    <Box
-      bg={useColorModeValue("white", "gray.800")}
-      maxW="xs"
-      rounded="lg"
-      shadow="lg"
-      position="relative"
+    <Flex
+      maxW="280px"
+      // width="280px"
+      height="250px"
+      justifyContent="space-between"
+      marginX="10px"
+      alignItems="center"
+      bgColor="bg.800"
+      _hover={{ backgroundColor: "bg.700" }}
+      borderRadius="lg"
+      overflow="hidden"
+      flexDirection="column"
+      shadow="2xl"
+      as={Link}
+      to={`/playlists/${playlist.id}/`}
+      {...rest}
     >
       <AspectRatio
         ratio={16 / 9}
-        minW="xs"
-        boxSizing="content-box"
+        width="280px"
         _after={{
           transition: "all .3s ease",
           content: '""',
@@ -55,19 +67,18 @@ export const PlaylistCard = ({
           alt={`Playlist art`}
           roundedTop="lg"
           objectFit="cover"
-          minW="xs"
           zIndex={1}
         />
       </AspectRatio>
-
-      <Box p="6">
+      <Box p="4">
         <Flex mt="1" justifyContent="space-between" alignContent="center">
           <Box
             fontSize="2xl"
-            fontWeight="semibold"
+            fontWeight="500"
             as="h4"
             lineHeight="tight"
             isTruncated
+            noOfLines={2}
           >
             {title}
           </Box>
@@ -77,6 +88,6 @@ export const PlaylistCard = ({
         <Rating rating={data.rating} numReviews={data.numReviews} />
       </Flex> */}
       </Box>
-    </Box>
+    </Flex>
   );
 };

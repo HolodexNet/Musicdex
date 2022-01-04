@@ -90,12 +90,12 @@ export function Channel() {
             ))}
           </CardCarousel>
         )}
-        <SimpleGrid spacing={3}>
+        <CardCarousel height={480} width={380} scrollMultiplier={1}>
           {discovery &&
             discovery.recommended.playlists.map((x: any) => {
               return <PlaylistCard playlist={x}></PlaylistCard>;
             })}
-        </SimpleGrid>
+        </CardCarousel>
       </ContainerInlay>
     </PageContainer>
   );

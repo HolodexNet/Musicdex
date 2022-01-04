@@ -42,7 +42,7 @@ export function identifyPlaylistBannerImage(playlist: Partial<PlaylistFull>) {
 
 export function identifyPlaylistChannelImage(playlist: Partial<PlaylistFull>) {
   if (isSGPPlaylist(playlist.id!)) {
-    return extractUsingFn(playlist, {
+    const out = extractUsingFn(playlist, {
       ":dailyrandom": (p, { ch }, d) => {
         return `/api/statics/channelImg/${ch || d?.channel.id}.png`;
       },
@@ -67,12 +67,18 @@ export function identifyPlaylistChannelImage(playlist: Partial<PlaylistFull>) {
         return undefined;
       },
     });
+    if (out) return out;
+  }
+  if (playlist.content && playlist.content?.[0]) {
+    return `/api/statics/channelImg/${playlist.content[0].channel_id}/200.png`;
+  } else if ((playlist as any).channels || (playlist as any).videoids) {
+    const chs = (playlist as any).channels || [];
+    const vids = (playlist as any).videoids || [];
+    if (chs.length < 4 && chs.length > 0)
+      return `/api/statics/channelImg/${chs[0]}.png`;
+    else return `https://i.ytimg.com/vi/${vids[0]}/hqdefault.jpg`;
   } else {
-    if (playlist.content && playlist.content[0]) {
-      return `/api/statics/channelImg/${playlist.content[0].channel_id}/200.png`;
-    } else {
-      return undefined;
-    }
+    return undefined;
   }
 }
 
