@@ -1,4 +1,10 @@
-import { Flex, FlexProps, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  FlexProps,
+  Text,
+  useColorMode,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { ChannelPhoto } from "./ChannelPhoto";
 
@@ -7,20 +13,22 @@ interface ChannelCardProps extends FlexProps {
 }
 
 export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
+  const bgColor = useColorModeValue("bg.100", "bg.800");
+  const bgHover = useColorModeValue("bg.200", "bg.700");
   return (
     <Flex
-      minWidth="160px"
-      width="160px"
+      minWidth="168px"
+      width="168px"
       height="190px"
       justifyContent="space-between"
       alignItems="center"
-      bgColor="bg.800"
-      _hover={{ backgroundColor: "bg.700" }}
+      bgColor={bgColor}
+      _hover={{ backgroundColor: bgHover }}
       borderRadius={8}
       padding={2}
       overflow="hidden"
       flexDirection="column"
-      shadow="2xl"
+      shadow="md"
       as={Link}
       to={`/channel/${channel.id}`}
       {...rest}

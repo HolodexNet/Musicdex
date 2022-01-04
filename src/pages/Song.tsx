@@ -69,10 +69,10 @@ export function Song() {
                   </Text>
                 </Link>
               </HStack>
-              <Text color="whiteAlpha.600" fontSize="lg">
+              <Text opacity={0.75} fontSize="lg">
                 {song.original_artist}
               </Text>
-              <Text fontSize="md" color="whiteAlpha.600">
+              <Text fontSize="md" opacity={0.75}>
                 {formatSeconds(song.end - song.start)} •{" "}
                 {t("relativeDate", { date: new Date(song.available_at) })}
                 {song.is_mv && (

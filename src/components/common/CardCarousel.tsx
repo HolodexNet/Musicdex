@@ -1,6 +1,6 @@
 import { Flex, FlexProps, IconButton } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface CardCarouselProps extends FlexProps {
@@ -25,13 +25,30 @@ export function CardCarousel({
       const scrollAmount =
         (direction === "left" ? -1 : 1) * scrollMultiplier * width;
 
-      ref.current.scrollBy({
-        left: scrollAmount,
-        behavior: "smooth",
-      });
+      if (
+        direction === "left" &&
+        ref.current.scrollLeft + scrollAmount <= width / 2 - 1
+      ) {
+        ref.current.scrollTo({
+          left: 0,
+          behavior: "smooth",
+        });
+      } else {
+        ref.current.scrollBy({
+          left: scrollAmount,
+          behavior: "smooth",
+        });
+      }
     }
   }
 
+  // Watch for children cards to load in and check if it's scrollable
+  useEffect(() => {
+    if (ref && ref.current.clientWidth === ref.current.scrollWidth) {
+      setHideRightBtn(true);
+      setHideLeftBtn(true);
+    }
+  }, [children]);
   function onScroll() {
     const curLeft = ref.current.scrollLeft;
     const maxScroll = ref.current.scrollWidth - ref.current.clientWidth;
@@ -49,6 +66,7 @@ export function CardCarousel({
       <Flex
         position="relative"
         height={`${height}px`}
+        minHeight={`${height}px`}
         alignItems="center"
         justifyContent="space-between"
         flex="1"
@@ -62,7 +80,7 @@ export function CardCarousel({
           aria-label="Left"
           onClick={() => scroll("left")}
           boxShadow="2xl"
-          ml={[0, 0, 0, 0, 0, "-20px"]}
+          ml={["5px", null, null, null, null, "-20px"]}
         />
         <IconButton
           visibility={hideRightBtn ? "hidden" : "visible"}
@@ -70,7 +88,7 @@ export function CardCarousel({
           aria-label="Right"
           onClick={() => scroll("right")}
           boxShadow="2xl"
-          mr={[0, 0, 0, 0, 0, "-20px"]}
+          mr={["5px", null, null, null, null, "-20px"]}
         />
       </Flex>
     </Flex>
@@ -79,6 +97,8 @@ export function CardCarousel({
 
 const SliderContainer = styled.div`
   width: 100%;
+  height: 100%;
+  align-items: center;
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -86,7 +106,6 @@ const SliderContainer = styled.div`
 
   -ms-overflow-style: none;
   scrollbar-width: none;
-
   &::-webkit-scrollbar {
     display: none;
   }

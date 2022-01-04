@@ -9,3 +9,21 @@ export function formatSeconds(secs: number) {
     String(minutes).padStart(!hours && minutes ? 1 : 2, "0") || "00"
   }:${String(seconds).padStart(2, "0") || "00"}`;
 }
+
+export function getVideoThumbnails(ytVideoKey: string, useWebP = false) {
+  const base = useWebP
+    ? "https://i.ytimg.com/vi_webp"
+    : "https://i.ytimg.com/vi";
+  const ext = useWebP ? "webp" : "jpg";
+  return {
+    // 120w
+    default: `${base}/${ytVideoKey}/default.${ext}`,
+    // 320w
+    medium: `${base}/${ytVideoKey}/mqdefault.${ext}`,
+    // 640w
+    standard: `${base}/${ytVideoKey}/sddefault.${ext}`,
+    // 1280w
+    maxres: `${base}/${ytVideoKey}/maxresdefault.${ext}`,
+    hq720: `${base}/${ytVideoKey}/hq720.${ext}`,
+  };
+}

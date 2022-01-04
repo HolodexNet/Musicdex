@@ -19,7 +19,7 @@ const DEFAULT_PARAM_PARSER = (playlistId: string) =>
 const DEFAULT_DISC_PARSER = <T1>(x: string | undefined) =>
   x ? (JSON.parse(x) as T1) : undefined;
 
-const SGPDefinitions: SGPDefMap = {
+export const SGPDefinitions: SGPDefMap = {
   ":dailyrandom": {
     descParser: DEFAULT_DISC_PARSER,
     paramParser: DEFAULT_PARAM_PARSER,

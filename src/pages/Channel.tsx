@@ -86,7 +86,7 @@ export function Channel() {
         <CardCarousel height={270} width={380} scrollMultiplier={1}>
           {discovery &&
             discovery.recommended.playlists.map((x: any) => {
-              return <PlaylistCard playlist={x}></PlaylistCard>;
+              return <PlaylistCard playlist={x} marginX={2}></PlaylistCard>;
             })}
         </CardCarousel>
         <Heading size="lg" marginBottom={2}>

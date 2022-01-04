@@ -16,6 +16,7 @@ import {
   identifyPlaylistChannelImage,
   identifyTitle,
 } from "../../utils/PlaylistHelper";
+import { PlaylistArtwork } from "./PlaylistArtwork";
 
 export const PlaylistCard = ({
   playlist,
@@ -28,66 +29,45 @@ export const PlaylistCard = ({
     identifyPlaylistBannerImage(playlist);
   const title = identifyTitle(playlist);
   const description = identifyDescription(playlist);
+  const bgColor = useColorModeValue("bg.100", "bg.800");
+  const bgHover = useColorModeValue("bg.200", "bg.700");
+
   return (
     <Flex
-      maxW="280px"
-      // width="280px"
-      height="250px"
-      justifyContent="space-between"
-      marginX="10px"
+      width="168px"
+      height="230px"
+      // justifyContent="space-between"
+      padding={2}
       alignItems="center"
-      bgColor="bg.800"
-      _hover={{ backgroundColor: "bg.700" }}
-      borderRadius="lg"
+      bgColor={bgColor}
+      _hover={{ backgroundColor: bgHover }}
+      borderRadius={8}
       overflow="hidden"
       flexDirection="column"
-      shadow="2xl"
+      shadow="md"
       as={Link}
       to={`/playlists/${playlist.id}/`}
       {...rest}
     >
-      <AspectRatio
-        ratio={16 / 9}
-        width="280px"
-        _after={{
-          transition: "all .3s ease",
-          content: '""',
-          w: "full",
-          h: "full",
-          pos: "absolute",
-          top: 0,
-          left: 0,
-          backgroundImage: `url(${IMAGE})`,
-          filter: "blur(15px)",
-          opacity: 0.4,
-        }}
-      >
-        <Image
-          src={IMAGE}
-          alt={`Playlist art`}
-          roundedTop="lg"
-          objectFit="cover"
-          zIndex={1}
-        />
-      </AspectRatio>
-      <Box p="4">
-        <Flex mt="1" justifyContent="space-between" alignContent="center">
-          <Box
-            fontSize="2xl"
-            fontWeight="500"
-            as="h4"
-            lineHeight="tight"
-            isTruncated
-            noOfLines={2}
-          >
-            {title}
-          </Box>
-        </Flex>
-
-        {/* <Flex justifyContent="space-between" alignContent="center">
+      {/* <Image
+        src={IMAGE}
+        alt={`Playlist art`}
+        width="148px"
+        height="148px"
+        objectFit="cover"
+      /> */}
+      <PlaylistArtwork playlist={playlist} />
+      <Flex direction="column" mt={1} width="100%">
+        <Text fontSize="1rem" fontWeight="500" noOfLines={1}>
+          {title}
+        </Text>
+        <Text fontSize="0.9rem" opacity={0.7} noOfLines={2}>
+          {description}
+        </Text>
+      </Flex>
+      {/* <Flex justifyContent="space-between" alignContent="center">
         <Rating rating={data.rating} numReviews={data.numReviews} />
       </Flex> */}
-      </Box>
     </Flex>
   );
 };

@@ -472,7 +472,7 @@ function PlayerBarLower({
                   </Text>
                 </Link>
                 <Link as={NavLink} to={`/`}>
-                  <Text noOfLines={1} color="whiteAlpha.600">
+                  <Text noOfLines={1} opacity={0.66}>
                     {currentSong.channel.english_name ||
                       currentSong.channel.name}
                   </Text>
@@ -522,11 +522,7 @@ function PlayerBarLower({
                 <Box color="brand.400" as={FiVolume1} />
               </SliderThumb>
             </Slider>
-            <Text
-              color="whiteAlpha.600"
-              fontSize=".85em"
-              display="inline-block"
-            >
+            <Text fontSize=".85em" display="inline-block" opacity={0.5}>
               <span>{seconds}</span> /{" "}
               <span>{formatSeconds(totalDuration)}</span>
             </Text>

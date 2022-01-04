@@ -103,7 +103,7 @@ export const SongTable = ({
           return (
             <VStack alignItems="start" spacing={1}>
               <span>{cellInfo.row.original?.name}</span>
-              <Text color="whiteAlpha.600" fontWeight={300} fontSize="sm">
+              <Text opacity={0.66} fontWeight={300} fontSize="sm">
                 {cellInfo.row.original.channel?.name}
               </Text>
             </VStack>
