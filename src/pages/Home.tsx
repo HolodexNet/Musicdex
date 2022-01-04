@@ -10,6 +10,7 @@ import { SongItem } from "../components/song/SongItem";
 import { useDiscoveryOrg } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreState } from "../store";
+import { PlaylistCard } from "../components/playlist/PlaylistCard";
 
 export function Home() {
   const org = useStoreState((store) => store.org.currentOrg);
@@ -29,6 +30,11 @@ export function Home() {
           {discovery.channels.map((c: Channel) => (
             <ChannelCard channel={c} key={c.id} marginX={2} />
           ))}
+        </CardCarousel>
+      )}
+      {discovery && (
+        <CardCarousel height={230} width={160} scrollMultiplier={2}>
+          <PlaylistCard playlist={discovery.recentSingingStream.playlist} />
         </CardCarousel>
       )}
       <Heading size="lg" marginBottom={2}>

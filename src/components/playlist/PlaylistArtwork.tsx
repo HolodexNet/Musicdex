@@ -44,39 +44,43 @@ export function PlaylistArtwork({
       description: identifyDescription(playlist),
     };
   }, [playlist]);
-  console.log(title, type, params);
 
   const channelImg = identifyPlaylistChannelImage(playlist);
   const thumbnail = useMemo(() => {
     const videoIds: string[] = (playlist as any).videoids;
-    if (videoIds.length) return getVideoThumbnails(videoIds[0]).medium;
+    if (videoIds?.length) return getVideoThumbnails(videoIds[0]).medium;
     return null;
   }, [playlist]);
 
+  if (type === ":dailyrandom") {
+    return (
+      <StackedTextArt
+        typeText="Daily Mix"
+        titleText={
+          description?.channel.english_name || description?.channel.name
+        }
+        imageUrl={thumbnail || ""}
+      />
+    );
+  }
+
+  if (type === ":video") {
+    const image =
+      (description.id && getVideoThumbnails(description.id).medium) || "";
+    return (
+      <StackedTextArt
+        typeText="Archive Playlist"
+        titleText={description?.title}
+        imageUrl={image}
+      />
+    );
+  }
+
   return (
-    <Flex
-      position="relative"
-      {...rest}
-      flexBasis="148px"
-      width="100%"
-      flexDirection="column"
-    >
-      {type === ":dailyrandom" && (
-        <StackedTextArt
-          typeText="Daily Mix"
-          titleText={
-            description?.channel?.english_name || description?.channel.name
-          }
-          imageUrl={thumbnail || ""}
-        />
-      )}
-      {type !== ":dailyrandom" && (
-        <OverlayTextArt
-          titleText={playlist.title || ""}
-          imageUrl={channelImg || ""}
-        />
-      )}
-    </Flex>
+    <OverlayTextArt
+      titleText={playlist.title || ""}
+      imageUrl={channelImg || ""}
+    />
   );
 }
 
@@ -110,13 +114,19 @@ function StackedTextArt({
   titleText: string;
   imageUrl: string;
 }) {
+  // Random between color based on last character of title
+  const bgColor =
+    titleText.charCodeAt(titleText.length - 1) % 2 === 0
+      ? "n2.100"
+      : "brand.100";
   return (
     <>
-      <Flex p={2} bgColor="n2.200" height="33%">
+      <Flex p={2} bgColor={bgColor} height="33%">
         <Box lineHeight={1.1}>
           <Text
             fontSize={12}
             fontWeight={800}
+            letterSpacing={1.2}
             color="gray.800"
             textTransform="uppercase"
           >
@@ -125,7 +135,7 @@ function StackedTextArt({
           <Text
             noOfLines={1}
             fontSize="1.2rem"
-            fontWeight={500}
+            fontWeight={600}
             color="gray.800"
           >
             {/* {desc?.channel?.english_name || desc?.channel.name} */}

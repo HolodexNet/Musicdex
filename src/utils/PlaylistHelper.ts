@@ -97,8 +97,8 @@ export function identifyTitle(playlist: Partial<PlaylistFull>) {
       ":history": (p, _, __) => {
         return "Recently Played";
       },
-      ":video": (p, { id }, __) => {
-        return "Video";
+      ":video": (p, { id }, d) => {
+        return d?.title || "Video";
       },
     });
   } else {
@@ -121,8 +121,10 @@ export function identifyDescription(playlist: Partial<PlaylistFull>) {
       ":history": (p, _, __) => {
         return "Your recently played songs";
       },
-      ":video": (p, { id }, __) => {
-        return "Songs from a Video";
+      ":video": (p, { id }, d: any) => {
+        return `Playlist from ${
+          d.channel.english_name || d.channel.name
+        }'s stream`;
       },
     });
   } else {

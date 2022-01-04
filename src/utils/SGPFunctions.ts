@@ -66,7 +66,7 @@ interface SGPTransformer<Out> {
   ":video": (
     playlist: PlaylistLike,
     id: { id: string },
-    data: { id: string } | undefined
+    data: { id: string; title: string } | undefined
   ) => Out;
 }
 

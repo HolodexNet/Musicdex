@@ -49,14 +49,15 @@ export const PlaylistCard = ({
       to={`/playlists/${playlist.id}/`}
       {...rest}
     >
-      {/* <Image
-        src={IMAGE}
-        alt={`Playlist art`}
-        width="148px"
-        height="148px"
-        objectFit="cover"
-      /> */}
-      <PlaylistArtwork playlist={playlist} />
+      <Flex
+        position="relative"
+        flexBasis="148px"
+        width="100%"
+        flexDirection="column"
+      >
+        <PlaylistArtwork playlist={playlist} />
+      </Flex>
+
       <Flex direction="column" mt={1} width="100%">
         <Text fontSize="1rem" fontWeight="500" noOfLines={1}>
           {title}
