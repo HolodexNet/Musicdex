@@ -1,5 +1,6 @@
 import { Select } from "@chakra-ui/react";
 import axios from "axios";
+import { motion } from "framer-motion";
 import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useStoreActions, useStoreState } from "../../store";
@@ -25,26 +26,32 @@ export function OrgSelector() {
   );
 
   return (
-    <Select
-      placeholder="Select org"
-      value={org.name}
-      onChange={(e) => {
-        const tgt = data?.find((x) => x.name === e.target.value);
-        if (tgt) setOrg(tgt);
-      }}
-      mb={3}
-      mt={-3}
-      fontFamily="Assistant, sans-serif"
-      width="89%"
-      pl="11%"
+    <motion.div
+      style={{ opacity: 0 }}
+      animate={{ scale: [0.9, 1], opacity: [0, 1], y: [-40, 0] }}
+      transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
     >
-      {data?.map((x) => {
-        return (
-          <option key={x.name + "opt_os"} value={x.name}>
-            {x.name}
-          </option>
-        );
-      })}
-    </Select>
+      <Select
+        placeholder="Select org"
+        value={org.name}
+        onChange={(e) => {
+          const tgt = data?.find((x) => x.name === e.target.value);
+          if (tgt) setOrg(tgt);
+        }}
+        mb={3}
+        mt={-3}
+        fontFamily="Assistant, sans-serif"
+        width="89%"
+        pl="11%"
+      >
+        {data?.map((x) => {
+          return (
+            <option key={x.name + "opt_os"} value={x.name}>
+              {x.name}
+            </option>
+          );
+        })}
+      </Select>
+    </motion.div>
   );
 }

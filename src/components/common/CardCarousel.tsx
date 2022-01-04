@@ -95,11 +95,11 @@ const SliderContainer = styled.div`
     scroll-snap-align: end;
   }
 
-  & > *:first-child {
+  & > *:first-of-type {
     margin-left: 0px;
   }
 
-  & > *:last-child {
+  & > *:last-of-type {
     margin-right: 0px;
     scroll-snap-align: start;
   }

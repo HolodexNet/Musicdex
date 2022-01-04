@@ -44,7 +44,7 @@ const LinkItems: Array<LinkItemProps> = [
   // { name: "Home", icon: FiHome, path: "/" },
   { name: "Recently Played", icon: FiClock, path: "/history" },
   { name: "Liked Songs", icon: FiHeart, path: "/liked" },
-  { name: "My Playlists", icon: FiServer, path: "/playlists" },
+  // { name: "My Playlists", icon: FiServer, path: "/playlists" },
   { name: "Settings", icon: FiSettings, path: "/settings" },
 ];
 
