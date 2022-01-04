@@ -8,25 +8,19 @@ import {
   Th,
   Thead,
   Tr,
-  useBreakpoint,
   useBreakpointValue,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import { useStore } from "easy-peasy";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
+import { ContextMenuParams, useContextMenu } from "react-contexify";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { useNavigate } from "react-router";
 import { Column, Row, useSortBy, useTable } from "react-table";
-import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions, useStoreState } from "../../store";
 import { formatSeconds } from "../../utils/SongHelper";
 import { DEFAULT_MENU_ID } from "../common/CommonContext";
-import { useContextMenu, ContextMenuParams } from "react-contexify";
-
-import { MTHolodex, MTHolodexIcon } from "../common/MTHolodex";
 import { NowPlayingIcon } from "../common/NowPlayingIcon";
 import { SongLikeButton } from "../song/SongLikeButton";
 import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";

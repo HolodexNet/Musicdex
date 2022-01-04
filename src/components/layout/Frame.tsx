@@ -1,23 +1,22 @@
 import {
-  useDisclosure,
   Box,
-  useColorModeValue,
+  ChakraProps,
   Drawer,
   DrawerContent,
   Flex,
-  ChakraProps,
+  useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
-import { FiHome, FiHeart, FiClock, FiServer, FiSettings } from "react-icons/fi";
-import Footer from "./Footer";
-import { Player } from "../player/Player";
-import { AddToPlaylistModal } from "../playlist/AddToPlaylistModal";
-import { NavBar } from "../nav/NavBar";
-import { LinkItemProps, SidebarContent } from "../nav/Sidebar";
-import { YoutubePlayer } from "../player/YoutubePlayer";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState } from "../../store";
 import { CommonContextMenu } from "../common/CommonContext";
+import { NavBar } from "../nav/NavBar";
+import { SidebarContent } from "../nav/Sidebar";
+import { Player } from "../player/Player";
+import { YoutubePlayer } from "../player/YoutubePlayer";
+import { AddToPlaylistModal } from "../playlist/AddToPlaylistModal";
+import Footer from "./Footer";
 
 const POSITIONS: { [key: string]: ChakraProps } = {
   background: {

@@ -1,10 +1,4 @@
-import {
-  useContextMenu,
-  Menu as CMenu,
-  Item,
-  Separator,
-  ItemParams,
-} from "react-contexify";
+import { Item, ItemParams, Menu as CMenu } from "react-contexify";
 import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions } from "../../store";

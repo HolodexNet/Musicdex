@@ -2,7 +2,6 @@ import { Button } from "@chakra-ui/button";
 import { Box, Container, Heading, HStack } from "@chakra-ui/layout";
 import {
   Divider,
-  Icon,
   IconButton,
   Menu,
   MenuButton,

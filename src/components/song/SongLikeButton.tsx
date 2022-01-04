@@ -1,5 +1,5 @@
 import { IconButton, useToast } from "@chakra-ui/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useSongLikeUpdater } from "../../modules/services/like.service";
 

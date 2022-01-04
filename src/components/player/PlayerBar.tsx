@@ -34,7 +34,7 @@ import { SongArtwork } from "../song/SongArtwork";
 import { ChangePlayerLocationButton } from "./ChangePlayerLocationButton";
 
 var VideoIDRegex =
-  /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+  /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|\?v=)([^#&?]*).*/;
 
 function getID(url: string | undefined) {
   return url?.match(VideoIDRegex)?.[2] || "";
