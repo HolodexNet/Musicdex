@@ -1,24 +1,3 @@
-/* Works on Firefox
-.appdark * {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(233, 233, 233, 0.856) rgba(133, 133, 133, 0.459);
-}
-
-/* Works on Chrome, Edge, and Safari 
-.appdark *::-webkit-scrollbar {
-  width: 12px;
-}
-
-.appdark *::-webkit-scrollbar-track {
-  background: rgba(75, 75, 75, 0.582);
-}
-
-.appdark *::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.425);
-  border-radius: 20px;
-  border: 3px solid rgba(94, 94, 94, 0.582);
-} */
-
 * {
   scrollbar-width: thin;
 }
@@ -50,4 +29,11 @@
 .yt-player {
   width: 100%;
   height: 100%;
+}
+
+.react-contexify__theme--dark .react-contexify__separator {
+  background-color: #777;
+}
+.react-contexify__theme--light .react-contexify__separator {
+  background-color: #666;
 }

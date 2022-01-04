@@ -1,6 +1,4 @@
-import { Box, Heading, Stack, useColorModeValue } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { QueryStatus } from "../components/common/QueryStatus";
@@ -9,7 +7,6 @@ import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
-import { useHistory } from "../modules/services/history.service";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 
@@ -28,7 +25,6 @@ export function Video() {
     { cacheTime: 600000 /* 10 mins */ }
   );
 
-  const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
   // const {description, }
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const setPlaylist = useStoreActions(

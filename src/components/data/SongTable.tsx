@@ -8,28 +8,20 @@ import {
   Th,
   Thead,
   Tr,
-  useBreakpoint,
   useBreakpointValue,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import { useStore } from "easy-peasy";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
+import { ContextMenuParams, useContextMenu } from "react-contexify";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { useNavigate } from "react-router";
 import { Column, Row, useSortBy, useTable } from "react-table";
-import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions, useStoreState } from "../../store";
 import { formatSeconds } from "../../utils/SongHelper";
-import { MTHolodex, MTHolodexIcon } from "../common/MTHolodex";
+import { DEFAULT_MENU_ID } from "../common/CommonContext";
 import { NowPlayingIcon } from "../common/NowPlayingIcon";
-import {
-  ContextMenuItem,
-  ContextMenuList,
-  useContextTrigger,
-} from "../context-menu";
 import { SongLikeButton } from "../song/SongLikeButton";
 import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";
 
@@ -41,11 +33,6 @@ export interface SongTableProps {
   // reactive hooks:
   songClicked?: (e: React.MouseEvent, s: Song) => void;
   songDropdownMenuRenderer?: (cellInfo: any) => JSX.Element;
-  songRightClickContextMenuRenderer?: (_: {
-    song: Song;
-    menuId: string;
-    closeContextMenu: () => void;
-  }) => JSX.Element;
 
   // table controls:
   isSortable?: boolean; // default true
@@ -63,9 +50,8 @@ export const SongTable = ({
   songs,
   songClicked,
   songDropdownMenuRenderer,
-  songRightClickContextMenuRenderer,
   isSortable = true,
-  menuId,
+  menuId = DEFAULT_MENU_ID,
 }: SongTableProps) => {
   const { t } = useTranslation();
   // const t = (str: string, ..._: { date: Date; }[]) => str;
@@ -167,13 +153,13 @@ export const SongTable = ({
     [currentId, t, songDropdownMenuRenderer]
   );
 
-  const showAddDialog = useStoreActions(
-    (action) => action.addPlaylist.showPlaylistAddDialog
-  );
+  // const showAddDialog = useStoreActions(
+  //   (action) => action.addPlaylist.showPlaylistAddDialog
+  // );
 
-  const copyToClipboard = useClipboardWithToast();
+  // const copyToClipboard = useClipboardWithToast();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const {
     getTableProps,
@@ -205,10 +191,6 @@ export const SongTable = ({
     toggleHideColumn("dur", isXL < 1);
   }, [isXL, toggleHideColumn]);
 
-  const [menuIdStat] = useState(
-    () => menuId || "st" + Math.floor(Math.random() * 100000).toString()
-  );
-
   // const contextMenuTrigger = useContextTrigger({ menuId: menuIdStat });
 
   const defaultClickBehavior = useCallback(
@@ -221,70 +203,10 @@ export const SongTable = ({
     [queueSongs]
   );
 
+  const { show } = useContextMenu({ id: menuId });
+
   return (
     <>
-      {/* <ContextMenuList
-        menuId={menuIdStat}
-        render={({ menuId, closeContextMenus, passData: song }) => {
-          if (songRightClickContextMenuRenderer)
-            return songRightClickContextMenuRenderer({
-              menuId,
-              closeContextMenu: closeContextMenus,
-              song,
-            });
-
-          return (
-            <>
-              <ContextMenuItem
-                onClick={() => {
-                  queueSongs({ songs: [song], immediatelyPlay: false });
-                }}
-                colorScheme="gray"
-              >
-                Add to queue
-              </ContextMenuItem>
-              <ContextMenuItem
-                onClick={() => {
-                  copyToClipboard(`${window.location.origin}/song/${song.id}`);
-                }}
-                colorScheme="gray"
-              >
-                Copy Song Link
-              </ContextMenuItem>
-              <ContextMenuItem
-                onClick={() => {
-                  showAddDialog(song);
-                }}
-                colorScheme="gray"
-              >
-                Add To Playlist...
-              </ContextMenuItem>
-              <hr style={{ marginTop: "0.4rem", marginBottom: "0.4rem" }} />
-              <ContextMenuItem
-                onClick={() => {
-                  navigate("/song/" + song.id);
-                }}
-                colorScheme="gray"
-              >
-                Go To Song Page
-              </ContextMenuItem>
-              <ContextMenuItem
-                onClick={() => navigate("/video/" + song.video_id)}
-                colorScheme="gray"
-              >
-                Go To Video Page
-              </ContextMenuItem>
-              <ContextMenuItem
-                onClick={({ passData }) => {}}
-                colorScheme="gray"
-              >
-                Go To Channel Page
-              </ContextMenuItem>
-            </>
-          );
-        }}
-      ></ContextMenuList> */}
-
       <Table {...getTableProps()} size={isXL! >= 1 ? "md" : "sm"}>
         <Thead>
           {headerGroups.map((headerGroup) => (
@@ -312,10 +234,10 @@ export const SongTable = ({
             prepareRow(row);
             return (
               <MemoizedRow
-                key={menuIdStat + "_" + row.original.id + "_" + index}
+                key={"_" + row.original.id + "_" + index}
                 {...{
                   row,
-                  // contextMenuTrigger,
+                  show,
                   songClicked,
                   defaultClickBehavior,
                 }}
@@ -330,14 +252,14 @@ export const SongTable = ({
 const MemoizedRow = React.memo(
   ({
     row,
-    contextMenuTrigger,
+    show,
     songClicked,
     defaultClickBehavior,
   }: {
     row: Row<IndexedSong>;
-    contextMenuTrigger?: (
-      event: React.MouseEvent<Element, MouseEvent>,
-      passData?: any
+    show?: (
+      event: any,
+      params?: Pick<ContextMenuParams, "id" | "props" | "position"> | undefined
     ) => void;
     songClicked: ((e: React.MouseEvent, s: Song) => void) | undefined;
     defaultClickBehavior: (
@@ -354,7 +276,7 @@ const MemoizedRow = React.memo(
       <Tr
         {...row.getRowProps()}
         onContextMenu={(e) => {
-          contextMenuTrigger?.(e, row.original);
+          show?.(e, { props: row.original });
         }}
         _hover={HOVER_ROW_STYLE}
         draggable

@@ -1,8 +1,7 @@
 import { Button } from "@chakra-ui/button";
-import { Box, Container, Heading } from "@chakra-ui/layout";
+import { Box, Container, Heading, HStack } from "@chakra-ui/layout";
 import {
   Divider,
-  Icon,
   IconButton,
   Menu,
   MenuButton,
@@ -15,17 +14,18 @@ import { useStoreState, useStoreActions } from "../../store";
 import { SongTable } from "../data/SongTable";
 import { Text } from "@chakra-ui/react";
 import React, { useMemo } from "react";
-import { FiMoreHorizontal, FiTrash } from "react-icons/fi";
-import { useNavigate } from "react-router";
+import { FiLink2, FiMoreHorizontal, FiTrash } from "react-icons/fi";
+import { useLocation, useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { identifyTitle } from "../../utils/PlaylistHelper";
+import { Link } from "react-router-dom";
 
 export function PlayerOverlay({
   isExpanded,
-  toggleExpanded,
+  close,
 }: {
   isExpanded: boolean;
-  toggleExpanded: () => void;
+  close: () => void;
 }) {
   const playlistQueue = useStoreState((state) => state.playback.playlistQueue);
   const playedPlaylistQueue = useStoreState(
@@ -48,6 +48,13 @@ export function PlayerOverlay({
     playedPlaylistQueue,
     playlistQueue,
   ]);
+
+  const location = useLocation();
+
+  React.useEffect(() => {
+    // runs on location, i.e. route, change
+    close();
+  }, [location]);
 
   const queue = useStoreState((state) => state.playback.queue);
 
@@ -82,10 +89,23 @@ export function PlayerOverlay({
             maxW={{ lg: "5xl" }}
             paddingTop="20px"
           >
-            <Button onClick={() => clearAll()}>Clear All</Button>
+            <HStack alignItems={"center"}>
+              <Button
+                marginRight="auto"
+                marginLeft="auto"
+                leftIcon={<FiTrash />}
+                colorScheme="red"
+                onClick={() => {
+                  clearAll();
+                  close();
+                }}
+              >
+                Clear All
+              </Button>
+            </HStack>
             {currentQueue.length > 0 && (
               <React.Fragment>
-                <Heading>
+                <Heading mt={4}>
                   Queue:
                   <IconButton
                     aria-label="clear playlist"
@@ -106,9 +126,9 @@ export function PlayerOverlay({
                 <Divider />
               </React.Fragment>
             )}
-            {playlistTotalQueue.length > 0 && (
+            {currentlyPlaying && (
               <React.Fragment>
-                <Heading>
+                <Heading mt={4}>
                   Playlist:
                   <IconButton
                     aria-label="clear playlist"
@@ -119,7 +139,19 @@ export function PlayerOverlay({
                     float="right"
                   ></IconButton>
                 </Heading>
-                <Text fontSize="md">{currentTitle}</Text>
+                <Text fontSize="md">
+                  {currentTitle}
+                  <IconButton
+                    variant="ghost"
+                    size="xs"
+                    aria-label="go to playlist"
+                    icon={<FiLink2 />}
+                    ml={1}
+                    as={Link}
+                    to={`/playlists/${currentPlaylist?.id}/`}
+                    onClick={close}
+                  ></IconButton>
+                </Text>
                 <SongTable
                   songs={playlistTotalQueue}
                   songClicked={(e, s) =>
@@ -128,7 +160,7 @@ export function PlayerOverlay({
                 />
               </React.Fragment>
             )}
-            <Box height={40}></Box>
+            <Box height="200px"></Box>
           </Container>
         )}
       </div>
@@ -138,9 +170,9 @@ export function PlayerOverlay({
 
 const OverlayWrapper = styled.div<{ visible: boolean }>`
   width: 100vw;
-  min-height: 100vh;
-  // overflow: hidden;
-  overflow: ${({ visible }) => (visible ? "scroll" : "hidden")};
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: ${({ visible }) => (visible ? "scroll" : "hidden")};
   position: fixed;
   top: 0;
   visibility: ${({ visible }) => (visible ? "visible" : "hidden")};

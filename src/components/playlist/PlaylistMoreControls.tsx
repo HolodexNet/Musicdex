@@ -1,16 +1,16 @@
 import {
+  IconButton,
   Menu,
   MenuButton,
   MenuDivider,
   MenuItem,
-  MenuList,
-  MenuProps,
-  IconButton,
-  useToast,
-  MenuOptionGroup,
   MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
+  MenuProps,
+  useToast,
 } from "@chakra-ui/react";
-import { FiChevronDown, FiMoreHorizontal } from "react-icons/fi";
+import { FiMoreHorizontal } from "react-icons/fi";
 import {
   usePlaylistDeleter,
   usePlaylistWriter,
