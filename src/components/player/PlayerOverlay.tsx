@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/button";
-import { Box, Container, Heading } from "@chakra-ui/layout";
+import { Box, Container, Heading, HStack } from "@chakra-ui/layout";
 import {
   Divider,
   Icon,
@@ -15,10 +15,11 @@ import { useStoreState, useStoreActions } from "../../store";
 import { SongTable } from "../data/SongTable";
 import { Text } from "@chakra-ui/react";
 import React, { useMemo } from "react";
-import { FiMoreHorizontal, FiTrash } from "react-icons/fi";
+import { FiLink2, FiMoreHorizontal, FiTrash } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { identifyTitle } from "../../utils/PlaylistHelper";
+import { Link } from "react-router-dom";
 
 export function PlayerOverlay({
   isExpanded,
@@ -82,10 +83,23 @@ export function PlayerOverlay({
             maxW={{ lg: "5xl" }}
             paddingTop="20px"
           >
-            <Button onClick={() => clearAll()}>Clear All</Button>
+            <HStack alignItems={"center"}>
+              <Button
+                marginRight="auto"
+                marginLeft="auto"
+                leftIcon={<FiTrash />}
+                colorScheme="red"
+                onClick={() => {
+                  clearAll();
+                  toggleExpanded();
+                }}
+              >
+                Clear All
+              </Button>
+            </HStack>
             {currentQueue.length > 0 && (
               <React.Fragment>
-                <Heading>
+                <Heading mt={4}>
                   Queue:
                   <IconButton
                     aria-label="clear playlist"
@@ -106,9 +120,9 @@ export function PlayerOverlay({
                 <Divider />
               </React.Fragment>
             )}
-            {playlistTotalQueue.length > 0 && (
+            {currentlyPlaying && (
               <React.Fragment>
-                <Heading>
+                <Heading mt={4}>
                   Playlist:
                   <IconButton
                     aria-label="clear playlist"
@@ -119,7 +133,19 @@ export function PlayerOverlay({
                     float="right"
                   ></IconButton>
                 </Heading>
-                <Text fontSize="md">{currentTitle}</Text>
+                <Text fontSize="md">
+                  {currentTitle}
+                  <IconButton
+                    variant="ghost"
+                    size="xs"
+                    aria-label="go to playlist"
+                    icon={<FiLink2 />}
+                    ml={1}
+                    as={Link}
+                    to={`/playlists/${currentPlaylist?.id}/`}
+                    onClick={toggleExpanded}
+                  ></IconButton>
+                </Text>
                 <SongTable
                   songs={playlistTotalQueue}
                   songClicked={(e, s) =>
