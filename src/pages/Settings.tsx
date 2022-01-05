@@ -14,6 +14,8 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
+import { UserSettings } from "../components/common/UserSettings";
+import { LoginButtons } from "../components/header/Login";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 
@@ -26,14 +28,25 @@ export function Settings() {
         </Heading>
         <Accordion allowMultiple defaultIndex={[0, 1, 2]} mb={12}>
           <AccordionItem>
-            <h2>
-              <AccordionButton>
-                <Heading size="md" flex="1" textAlign="left">
-                  Language Preferences (yeah i know it's not working)
-                </Heading>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
+            <AccordionButton>
+              <Heading size="md" flex="1" textAlign="left">
+                User Preference
+              </Heading>
+              <AccordionIcon />
+            </AccordionButton>
+            <Divider />
+
+            <AccordionPanel pb={4}>
+              <UserSettings />
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionButton>
+              <Heading size="md" flex="1" textAlign="left">
+                Language Preferences (yeah i know it's not working)
+              </Heading>
+              <AccordionIcon />
+            </AccordionButton>
             <Divider />
 
             <AccordionPanel pb={4}>
