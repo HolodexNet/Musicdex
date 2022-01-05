@@ -32,7 +32,7 @@ export function Home() {
           ))}
         </CardCarousel>
       )}
-      {discovery.recentSingingStream.playlist && (
+      {discovery?.recentSingingStream?.playlist && (
         <CardCarousel height={230} width={160} scrollMultiplier={2}>
           <PlaylistCard playlist={discovery.recentSingingStream.playlist} />
         </CardCarousel>

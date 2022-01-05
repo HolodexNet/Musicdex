@@ -67,7 +67,7 @@ export function PlaylistMoreControlsMenu({
       <MenuList>
         <MenuOptionGroup
           defaultValue={playlist.listed ? "1" : "0"}
-          title="Playlist state"
+          title="Playlist Visibility State"
           type="radio"
         >
           <MenuItemOption
