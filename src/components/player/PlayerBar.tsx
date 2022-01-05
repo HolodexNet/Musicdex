@@ -24,7 +24,8 @@ import {
   FaStepForward,
 } from "react-icons/fa";
 import { FiVolume1 } from "react-icons/fi";
-import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
+import { MdRepeat, MdRepeatOne, MdShuffle, MdMusicVideo } from "react-icons/md";
+import { RiVideoFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 import { YouTubePlayer } from "youtube-player/dist/types";
@@ -465,8 +466,33 @@ function PlayerBarLower({
           {!!currentSong && (
             <HStack>
               <SongArtwork song={currentSong} size={50} marginRight={2} />
+              {/* TODO I HATE THIS BUTTON PLS PUT IT ELSEWHERE. */}
+              <IconButton
+                as={NavLink}
+                to={`/video/${currentSong.video_id}`}
+                display="block"
+                size="22px"
+                rounded="full"
+                variant="ghost"
+                colorScheme="pink"
+                _hover={{
+                  opacity: 1,
+                  outline: "1px solid var(--chakra-colors-brand-400)",
+                }}
+                // mt={-1}
+                aria-label="go to video"
+                title="Video"
+                icon={<RiVideoFill />}
+                position="absolute"
+                left="8px"
+                top="12px"
+              ></IconButton>
               <Box>
-                <Link as={NavLink} to={`/song/${currentSong.id}`}>
+                <Link
+                  as={NavLink}
+                  to={`/song/${currentSong.id}`}
+                  // display="inline-block"
+                >
                   <Text fontWeight={500} noOfLines={1}>
                     {currentSong.name}
                   </Text>
