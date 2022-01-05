@@ -24,13 +24,13 @@ export const PlaylistCard = ({
 }: {
   playlist: Partial<PlaylistFull>;
 } & FlexProps) => {
-  const IMAGE =
-    identifyPlaylistChannelImage(playlist) ||
-    identifyPlaylistBannerImage(playlist);
-  const title = identifyTitle(playlist);
-  const description = identifyDescription(playlist);
   const bgColor = useColorModeValue("bg.100", "bg.800");
   const bgHover = useColorModeValue("bg.200", "bg.700");
+
+  if (!playlist) return <div>{playlist}???</div>;
+
+  const title = identifyTitle(playlist);
+  const description = identifyDescription(playlist);
 
   return (
     <Flex

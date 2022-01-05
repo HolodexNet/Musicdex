@@ -126,6 +126,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
             <Flex overflowY="scroll" flex="1" direction="column">
               {children}
               <Footer></Footer>
+              <Box minH={pos === "hover-bottom" ? "250px" : "0px"}></Box>
             </Flex>
             <Box
               {...props}

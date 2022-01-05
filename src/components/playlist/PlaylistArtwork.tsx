@@ -45,7 +45,10 @@ export function PlaylistArtwork({
     };
   }, [playlist]);
 
-  const channelImg = identifyPlaylistChannelImage(playlist);
+  const channelImg = useMemo(
+    () => playlist && identifyPlaylistChannelImage(playlist),
+    [playlist]
+  );
   const thumbnail = useMemo(() => {
     const videoIds: string[] = (playlist as any).videoids;
     if (videoIds?.length) return getVideoThumbnails(videoIds[0]).medium;
