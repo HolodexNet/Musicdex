@@ -29,6 +29,7 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
       overflow="hidden"
       flexDirection="column"
       shadow="md"
+      transition="0.3s"
       as={Link}
       to={`/channel/${channel.id}`}
       {...rest}
@@ -39,6 +40,7 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
         width="128px"
         height="128px"
         ignoreFallback
+        boxShadow="0 8px 24px rgba(0,0,0,0.5)"
       />
       <Text noOfLines={2} fontWeight={600} fontSize="md" textAlign="center">
         {channel.english_name || channel.name}
