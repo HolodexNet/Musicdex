@@ -1,4 +1,15 @@
-import { SimpleGrid, Text, Heading, Spacer } from "@chakra-ui/react";
+import {
+  SimpleGrid,
+  Text,
+  Heading,
+  Spacer,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Container,
+} from "@chakra-ui/react";
 import axios from "axios";
 import React from "react";
 import { ChannelCard } from "../components/channel/ChannelCard";
@@ -11,6 +22,7 @@ import { useDiscoveryOrg } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreState } from "../store";
 import { PlaylistCard } from "../components/playlist/PlaylistCard";
+import styled from "@emotion/styled";
 
 export function Home() {
   const org = useStoreState((store) => store.org.currentOrg);
@@ -22,6 +34,39 @@ export function Home() {
 
   return (
     <PageContainer>
+      <Container maxW="4xl">
+        <CenterTabs>
+          <Tabs
+            isFitted
+            isLazy
+            // px={{ sm: 0, md: 12, lg: 24 }}
+            variant="line"
+            size="lg"
+          >
+            <TabList borderBottomColor="transparent">
+              <Tab marginX={3}>Latest in Hololive</Tab>
+              <Tab marginX={3}>Live Event</Tab>
+              <Tab marginX={3}>Latest in Musicdex</Tab>
+              <Tab marginX={3}>New Song Releases</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <p>one!</p>
+              </TabPanel>
+              <TabPanel>
+                <p>two!</p>
+              </TabPanel>
+              <TabPanel>
+                <p>one!</p>
+              </TabPanel>
+              <TabPanel>
+                <p>two!</p>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </CenterTabs>
+      </Container>
+
       <Heading size="lg" marginBottom={2}>
         Discover {org.name}
       </Heading>
@@ -53,3 +98,29 @@ export function Home() {
     </PageContainer>
   );
 }
+
+const CenterTabs = styled.div`
+  .chakra-tabs__tablist {
+    justify-content: space-around;
+  }
+  .chakra-tabs button[role="tab"] {
+    flex-shrink: 1;
+    flex-grow: 0;
+    flex-basis: fit-content;
+    padding-bottom: 3px;
+    border-bottom: 4px solid transparent;
+    font-family: var(--chakra-fonts-heading);
+  }
+  .chakra-tabs button[aria-selected="true"] {
+    border-bottom-style: solid;
+    border-bottom-width: 4px;
+    border-image-source: linear-gradient(
+      to right,
+      var(--chakra-colors-brand-300) 20%,
+      var(--chakra-colors-n2-300) 80%
+    );
+    border-image-slice: 1;
+    color: unset;
+    font-weight: 500;
+  }
+`;

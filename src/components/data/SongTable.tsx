@@ -56,7 +56,7 @@ export const SongTable = ({
   const { t } = useTranslation();
   // const t = (str: string, ..._: { date: Date; }[]) => str;
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
-  const s: IndexedSong[] = React.useMemo(() => {
+  const indexedSongs: IndexedSong[] = React.useMemo(() => {
     return songs.map((v, i) => {
       return { ...v, idx: i + 1 };
     });
@@ -171,17 +171,14 @@ export const SongTable = ({
   } = useTable(
     {
       columns: columns as any,
-      data: s,
+      data: indexedSongs,
       initialState: { hiddenColumns: ["channel"] },
       disableSortBy: !isSortable,
     },
     useSortBy
   );
 
-  const isXL = useBreakpointValue(
-    { base: 0, xs: 0, sm: 1, md: 2, xl: 3 },
-    "md"
-  );
+  const isXL = useBreakpointValue({ base: 2, xs: 0, sm: 1, md: 2, xl: 3 });
 
   useEffect(() => {
     if (isXL === undefined) return;
