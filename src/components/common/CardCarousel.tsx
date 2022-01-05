@@ -44,9 +44,16 @@ export function CardCarousel({
 
   // Watch for children cards to load in and check if it's scrollable
   useEffect(() => {
-    if (ref && ref.current.clientWidth === ref.current.scrollWidth) {
-      setHideRightBtn(true);
-      setHideLeftBtn(true);
+    if (ref?.current) {
+      // Reset scroll to 0
+      ref.current.scrollTo({
+        left: 0,
+      });
+      // check if should hide arrows, b/c content changed
+      if (ref.current.clientWidth === ref.current.scrollWidth) {
+        setHideRightBtn(true);
+        setHideLeftBtn(true);
+      }
     }
   }, [children]);
   function onScroll() {
