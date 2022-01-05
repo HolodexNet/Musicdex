@@ -105,9 +105,9 @@ function OverlayTextArt({
   imageUrl: string;
 }) {
   const bgColor =
-    titleText.charCodeAt(titleText.length - 1) % 2 === 0
-      ? "var(--chakra-colors-brand-600)"
-      : "var(--chakra-colors-n2-600)";
+    titleText.charCodeAt(Math.round(titleText.length / 2)) % 2 === 0
+      ? "var(--chakra-colors-n2-600)"
+      : "var(--chakra-colors-brand-600)";
   return (
     <Flex
       position="relative"
@@ -141,7 +141,7 @@ function StackedTextArt({
 }) {
   // Random between color based on last character of title
   const bgColor =
-    titleText.charCodeAt(titleText.length - 1) % 2 === 0
+    titleText.charCodeAt(Math.round(titleText.length / 2)) % 2 === 0
       ? "brand.100"
       : "n2.100";
   return (
