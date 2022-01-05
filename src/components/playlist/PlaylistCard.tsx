@@ -53,7 +53,7 @@ export const PlaylistCard = ({
       <PlaylistArtwork playlist={playlist} />
 
       <Flex direction="column" mt={1} width="100%">
-        <Text fontSize="1rem" fontWeight="500" noOfLines={1}>
+        <Text fontSize="1rem" fontWeight="500" isTruncated={true}>
           {title}
         </Text>
         <Text fontSize="0.9rem" opacity={0.7} noOfLines={2}>

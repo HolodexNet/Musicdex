@@ -153,7 +153,7 @@ function StackedTextArt({
       flexDirection={reverse ? "column-reverse" : "column"}
     >
       <Flex p={2} bgColor={bgColor} height="33%">
-        <Box lineHeight={1.1}>
+        <Box lineHeight={1.1} maxWidth="100%">
           <Text
             fontSize={12}
             fontWeight={800}
@@ -164,7 +164,7 @@ function StackedTextArt({
             {typeText}
           </Text>
           <Text
-            noOfLines={1}
+            isTruncated={true}
             fontSize="1.2rem"
             fontWeight={600}
             color="gray.800"
