@@ -147,34 +147,28 @@ function StackedTextArt({
   return (
     <Flex
       position="relative"
-      flexBasis="148px"
       minWidth="148px"
-      width="100%"
+      width="148px"
+      height="148px"
       flexDirection={reverse ? "column-reverse" : "column"}
     >
-      <Flex p={2} bgColor={bgColor} height="33%">
-        <Box lineHeight={1.1} maxWidth="100%">
-          <Text
-            fontSize={12}
-            fontWeight={800}
-            letterSpacing={1.2}
-            color="gray.800"
-            textTransform="uppercase"
-          >
-            {typeText}
-          </Text>
-          <Text
-            isTruncated={true}
-            fontSize="1.2rem"
-            fontWeight={600}
-            color="gray.800"
-          >
-            {/* {desc?.channel?.english_name || desc?.channel.name} */}
-            {titleText}
-          </Text>
-        </Box>
+      <Flex
+        lineHeight={1.1}
+        height="33%"
+        bgColor={bgColor}
+        minWidth={0}
+        p={2}
+        flexDir="column"
+        color="gray.800"
+        fontWeight={600}
+      >
+        <Text fontSize={12} letterSpacing={1.2} textTransform="uppercase">
+          {typeText}
+        </Text>
+        <Text isTruncated={true} fontSize="1.2rem">
+          {titleText}
+        </Text>
       </Flex>
-
       <Flex
         bgImage={imageUrl}
         flexGrow={1}
