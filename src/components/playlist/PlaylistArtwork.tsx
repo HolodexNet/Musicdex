@@ -105,9 +105,9 @@ function OverlayTextArt({
   imageUrl: string;
 }) {
   const bgColor =
-    titleText.charCodeAt(titleText.length - 1) % 2 === 0
-      ? "var(--chakra-colors-brand-600)"
-      : "var(--chakra-colors-n2-600)";
+    titleText.charCodeAt(Math.round(titleText.length / 2)) % 2 === 0
+      ? "var(--chakra-colors-n2-600)"
+      : "var(--chakra-colors-brand-600)";
   return (
     <Flex
       position="relative"
@@ -141,7 +141,7 @@ function StackedTextArt({
 }) {
   // Random between color based on last character of title
   const bgColor =
-    titleText.charCodeAt(titleText.length - 1) % 2 === 0
+    titleText.charCodeAt(Math.round(titleText.length / 2)) % 2 === 0
       ? "brand.100"
       : "n2.100";
   return (
@@ -153,7 +153,7 @@ function StackedTextArt({
       flexDirection={reverse ? "column-reverse" : "column"}
     >
       <Flex p={2} bgColor={bgColor} height="33%">
-        <Box lineHeight={1.1}>
+        <Box lineHeight={1.1} maxWidth="100%">
           <Text
             fontSize={12}
             fontWeight={800}
@@ -164,7 +164,7 @@ function StackedTextArt({
             {typeText}
           </Text>
           <Text
-            noOfLines={1}
+            isTruncated={true}
             fontSize="1.2rem"
             fontWeight={600}
             color="gray.800"

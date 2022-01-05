@@ -67,8 +67,11 @@ export function Home() {
         </CenterTabs>
       </Container>
 
-      <Heading size="lg" marginBottom={2}>
+      <Heading size="lg" marginBottom={6}>
         Discover {org.name}
+      </Heading>
+      <Heading size="md" marginBottom={2}>
+        {org.name} Artists
       </Heading>
       {discovery && (
         <CardCarousel height={210} width={160} scrollMultiplier={2}>
@@ -82,13 +85,13 @@ export function Home() {
           <PlaylistCard playlist={discovery.recentSingingStream.playlist} />
         </CardCarousel>
       )}
-      <Heading size="lg" marginBottom={2}>
+      <Heading size="md" marginBottom={2}>
         Trending {org.name} Songs
       </Heading>
       <Spacer />
       <QueryStatus queryStatus={rest} />
       {trendingSongs && (
-        <SimpleGrid minChildWidth="290px" spacing={2} paddingX={3}>
+        <SimpleGrid minChildWidth="290px" spacing={2}>
           {trendingSongs.slice(0, 4).map((song) => (
             <SongItem song={song} key={song.id} />
           ))}
