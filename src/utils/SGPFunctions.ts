@@ -43,27 +43,27 @@ export const SGPDefinitions: SGPDefMap = {
 };
 
 interface SGPTransformer<Out> {
-  ":dailyrandom": (
+  ":dailyrandom"?: (
     playlist: PlaylistLike,
     id: { ch: string },
     data: { channel: Channel } | undefined
   ) => Out;
-  ":weekly": (
+  ":weekly"?: (
     playlist: PlaylistLike,
     id: { org: string },
     data: { org: string } | undefined
   ) => Out;
-  ":userweekly": (
+  ":userweekly"?: (
     playlist: PlaylistLike,
     id: { user: string | number },
     data: { user: string | number } | undefined
   ) => Out;
-  ":history": (
+  ":history"?: (
     playlist: PlaylistLike,
     id: { user: string | number },
     data: { user: string | number } | undefined
   ) => Out;
-  ":video": (
+  ":video"?: (
     playlist: PlaylistLike,
     id: { id: string },
     data: { id: string; title: string } | undefined
@@ -75,7 +75,7 @@ export function extractUsingFn<Out>(
   transformers: SGPTransformer<Out>
 ) {
   const { type, params } = parsePlaylistID(playlist.id!);
-  return transformers[type](
+  return transformers?.[type]?.(
     playlist,
     params,
     (playlist?.description

@@ -7,8 +7,8 @@ export function ContainerInlay({ children, ...props }: BoxProps) {
     <Box
       bgColor={bgColor}
       position="relative"
-      p={{ base: 2, xl: 4 }}
-      pt={{ base: 4, xl: 8 }}
+      px={{ base: 2, md: 4, xl: 6 }}
+      pt={{ base: 4, xl: 6 }}
       borderRadius={5}
       {...props}
     >

@@ -1,5 +1,4 @@
 import { Box, useColorModeValue, useToast } from "@chakra-ui/react";
-import styled from "@emotion/styled";
 import { Suspense, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
@@ -20,6 +19,7 @@ import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray"
 import React from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
+import { BGImgContainer, BGImg } from "./BGImgContainer";
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
 );
@@ -101,8 +101,8 @@ export function Playlist() {
 
   return (
     <PageContainer>
-      <BGImgContainer>
-        <BGImg banner_url={banner || ""}></BGImg>
+      <BGImgContainer height="200px">
+        <BGImg banner_url={banner || ""} height="200px"></BGImg>
       </BGImgContainer>
       <ContainerInlay mt="12">
         <PlaylistHeading
@@ -158,33 +158,3 @@ export function Playlist() {
     </PageContainer>
   );
 }
-
-const BGImgContainer = styled.div`
-  width: 100%;
-  position: absolute;
-  z-index: 0;
-  left: 0px;
-  top: 0px;
-  height: 190px;
-  mask-image: radial-gradient(
-    ellipse farthest-side at 33% 12%,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.63) 48%,
-    rgba(0, 0, 0, 0.58) 74%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  mask-size: 150% 132%;
-  mask-position: left bottom;
-`;
-
-const BGImg = styled.div<{ banner_url: string }>`
-  width: 100%;
-  position: absolute;
-  z-index: 0;
-  left: 0px;
-  top: 0px;
-  height: 190px;
-  background: url(${({ banner_url }) => banner_url});
-  background-position: center;
-  background-size: cover;
-`;

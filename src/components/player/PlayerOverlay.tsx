@@ -17,7 +17,7 @@ import React, { useMemo } from "react";
 import { FiLink2, FiMoreHorizontal, FiTrash } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
-import { identifyTitle } from "../../utils/PlaylistHelper";
+import { identifyLink, identifyTitle } from "../../utils/PlaylistHelper";
 import { Link } from "react-router-dom";
 
 export function PlayerOverlay({
@@ -76,6 +76,11 @@ export function PlayerOverlay({
 
   const currentTitle = useMemo(
     () => currentPlaylist && identifyTitle(currentPlaylist),
+    [currentPlaylist]
+  );
+
+  const urlLinkToPlaylist = useMemo(
+    () => currentPlaylist && identifyLink(currentPlaylist),
     [currentPlaylist]
   );
 
@@ -148,7 +153,7 @@ export function PlayerOverlay({
                     icon={<FiLink2 />}
                     ml={1}
                     as={Link}
-                    to={`/playlists/${currentPlaylist?.id}/`}
+                    to={urlLinkToPlaylist || "#"}
                     onClick={close}
                   ></IconButton>
                 </Text>

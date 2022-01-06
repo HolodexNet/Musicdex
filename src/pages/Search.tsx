@@ -52,7 +52,7 @@ export function Search() {
         <HStack align="end">
           <Heading size="lg">Search: "{qObj.q || ""}"</Heading>
           <Spacer></Spacer>
-          <Text size="small">
+          <Text>
             {(searchResult?.page || 0) * 10 - 10 + (songs?.length || 0)} out of{" "}
             {searchResult?.found}
           </Text>

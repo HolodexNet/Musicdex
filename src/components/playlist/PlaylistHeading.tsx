@@ -7,6 +7,7 @@ import {
   Text,
   InputGroup,
   InputRightAddon,
+  BoxProps,
 } from "@chakra-ui/react";
 import { useState, FormEventHandler } from "react";
 import { FiEdit3 } from "react-icons/fi";
@@ -31,8 +32,9 @@ export function PlaylistHeading({
   setDescription,
   count,
   max = 500,
-}: PlaylistHeadingProps) {
-  const colors = useColorModeValue("gray.700", "gray.400");
+  ...props
+}: PlaylistHeadingProps & BoxProps) {
+  const colors = useColorModeValue("gray.700", "gray.300");
 
   const [editTitle, setEditTitle] = useState(() => canEdit && editMode);
   const [editDescription, setEditDescription] = useState(
@@ -58,7 +60,7 @@ export function PlaylistHeading({
     t.length > min && t.length < max;
 
   return (
-    <Box as={"header"} mb="2" position="relative">
+    <Box as={"header"} mb="2" position="relative" {...props}>
       <Heading
         lineHeight={1.1}
         fontWeight={500}

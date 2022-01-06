@@ -1,5 +1,6 @@
 import {
   Box,
+  Center,
   Heading,
   HStack,
   SimpleGrid,
@@ -25,6 +26,7 @@ import { useDiscoveryChannel } from "../modules/services/discovery.service";
 import { useHistory } from "../modules/services/history.service";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
+import { BGImgContainer, BGImg } from "./BGImgContainer";
 
 export function Channel() {
   // const history = useStoreState((store) => store.playback.history);
@@ -61,24 +63,33 @@ export function Channel() {
     return <QueryStatus queryStatus={channelStatus} />;
   return (
     <PageContainer>
+      <BGImgContainer height="60vh">
+        <BGImg
+          banner_url={"https://i.ytimg.com/vi/X9zw0QF12Kc/maxresdefault.jpg"}
+          height="66vh"
+        ></BGImg>
+      </BGImgContainer>
+
+      <HStack mx={6} my={6}>
+        <ChannelPhoto
+          channelId={channel.id}
+          resizePhoto={150}
+          size="2xl"
+          borderRadius={4}
+          mr={6}
+          shadow="lg"
+        ></ChannelPhoto>
+        <PlaylistHeading
+          title={channel.name}
+          description={channel.org}
+          canEdit={false}
+          editMode={false}
+          count={0}
+          max={0}
+          textShadow="1px 1px 5px var(--chakra-colors-bgAlpha-500);"
+        />
+      </HStack>
       <ContainerInlay>
-        <HStack>
-          <ChannelPhoto
-            channelId={channel.id}
-            resizePhoto={150}
-            size="2xl"
-            borderRadius={4}
-            mr={4}
-          ></ChannelPhoto>
-          <PlaylistHeading
-            title={channel.name}
-            description={channel.org}
-            canEdit={false}
-            editMode={false}
-            count={0}
-            max={0}
-          />
-        </HStack>
         {/* <Box>{JSON.stringify(discovery)}</Box> */}
         <Heading size="md" marginBottom={2} marginTop={6}>
           Playlists with {channel.name}

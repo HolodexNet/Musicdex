@@ -131,3 +131,19 @@ export function identifyDescription(playlist: Partial<PlaylistFull>) {
     return playlist.description;
   }
 }
+
+export function identifyLink(playlist: Partial<PlaylistFull>) {
+  if (isSGPPlaylist(playlist.id!)) {
+    const url = extractUsingFn(playlist, {
+      ":history": (p, _, __) => {
+        return "/history";
+      },
+      ":video": (p, { id }, d: any) => {
+        return `/video/${id}`;
+      },
+    });
+    if (url) return url;
+  } else {
+    return `/playlists/${playlist.id}/`;
+  }
+}
