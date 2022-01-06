@@ -28,5 +28,7 @@ export function ChannelPhoto({
   const id = channelId || channel?.id;
   const src = id && getChannelPhoto(id, resizePhoto);
   const name = channel?.english_name || channel?.name;
-  return <Avatar src={src} name={name} loading="lazy" {...rest} />;
+  return (
+    <Avatar src={src} name={name} loading="lazy" bgColor="unset" {...rest} />
+  );
 }

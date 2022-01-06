@@ -5,6 +5,7 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
+  Text,
   ModalFooter,
   Button,
   Radio,
@@ -13,8 +14,11 @@ import {
   Box,
   Heading,
   useToast,
+  Divider,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { FiMove } from "react-icons/fi";
+import { RiDragDropLine } from "react-icons/ri";
 import {
   useMyPlaylists,
   usePlaylistUpdater,
@@ -48,14 +52,14 @@ export function AddToPlaylistModal(): JSX.Element {
         <ModalHeader>Add To Playlist</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <hr style={{ margin: "0.4rem -1rem" }} />
+          <Divider mx={-4} mb={1} />
           {song && (
             <Box>
               <Heading size="sm">{song.name}</Heading> covered by{" "}
               <Heading size="sm">{song.channel.english_name}</Heading>
             </Box>
           )}
-          <hr style={{ margin: "0.4rem -1rem" }} />
+          <Divider mx={-4} mt={1} mb={2} />
           {isLoading ? (
             "Loading"
           ) : (
@@ -71,6 +75,11 @@ export function AddToPlaylistModal(): JSX.Element {
           )}
         </ModalBody>
         <ModalFooter>
+          <Text color="whiteAlpha.500">
+            <RiDragDropLine style={{ display: "inline" }}></RiDragDropLine> Tip:
+            you can also drag songs from tables into playlists to quickly add to
+            playlist.
+          </Text>
           <Button
             onClick={async () => {
               if (selectedPlaylistId !== "_" && song && song.id)
