@@ -3,6 +3,11 @@ import {
   HStack,
   IconButton,
   Link,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
   Slider,
   SliderFilledTrack,
   SliderThumb,
@@ -13,6 +18,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import { rest } from "lodash-es";
 import React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -23,13 +29,15 @@ import {
   FaStepBackward,
   FaStepForward,
 } from "react-icons/fa";
-import { FiVolume1 } from "react-icons/fi";
+import { FiMoreHorizontal, FiVolume1 } from "react-icons/fi";
 import { MdRepeat, MdRepeatOne, MdShuffle, MdMusicVideo } from "react-icons/md";
 import { RiVideoFill } from "react-icons/ri";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 import { YouTubePlayer } from "youtube-player/dist/types";
+import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions, useStoreState } from "../../store";
+import addPlaylist from "../../store/addPlaylist";
 import { formatSeconds } from "../../utils/SongHelper";
 import { SongArtwork } from "../song/SongArtwork";
 import { ChangePlayerLocationButton } from "./ChangePlayerLocationButton";
@@ -459,34 +467,72 @@ function PlayerBarLower({
     (actions) => actions.playback.toggleRepeat
   );
 
+  const copyToClipboard = useClipboardWithToast();
+  const addPlaylist = useStoreActions(
+    (a) => a.addPlaylist.showPlaylistAddDialog
+  );
+  const navigate = useNavigate();
+
   return (
     <PlayerMain>
       <div className="left">
         <span>
           {!!currentSong && (
             <HStack>
-              <SongArtwork song={currentSong} size={50} marginRight={2} />
-              {/* TODO I HATE THIS BUTTON PLS PUT IT ELSEWHERE. */}
-              <IconButton
-                as={NavLink}
-                to={`/video/${currentSong.video_id}`}
-                display="block"
-                size="22px"
-                rounded="full"
-                variant="ghost"
-                colorScheme="pink"
-                _hover={{
-                  opacity: 1,
-                  outline: "1px solid var(--chakra-colors-brand-400)",
-                }}
-                // mt={-1}
-                aria-label="go to video"
-                title="Video"
-                icon={<RiVideoFill />}
-                position="absolute"
-                left="8px"
-                top="12px"
-              ></IconButton>
+              <Menu
+                eventListeners={{ scroll: false }}
+                isLazy
+                boundary="scrollParent"
+                gutter={10}
+                placement="top-start"
+              >
+                <MenuButton
+                  as={IconButton}
+                  variant="ghost"
+                  colorScheme="brand"
+                  width="55px"
+                  height="55px"
+                  aria-label="More"
+                >
+                  <SongArtwork song={currentSong} size={50} marginRight={2} />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem
+                    onClick={() =>
+                      copyToClipboard(
+                        `${window.location.origin}/song/${currentSong.id}`
+                      )
+                    }
+                  >
+                    Copy Song Link
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      addPlaylist(currentSong);
+                    }}
+                  >
+                    Add To Playlist...
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/song/" + currentSong.id);
+                    }}
+                  >
+                    Go To Song Page
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/video/" + currentSong.video_id);
+                    }}
+                  >
+                    Go To Video Page
+                  </MenuItem>
+                  <MenuItem>Go to Channel Page</MenuItem>
+                  {/* <MenuDivider /> */}
+                </MenuList>
+              </Menu>
+
               <Box>
                 <Link
                   as={NavLink}
