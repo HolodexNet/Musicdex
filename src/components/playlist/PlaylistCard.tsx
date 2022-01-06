@@ -34,7 +34,9 @@ export const PlaylistCard = ({
   if (!playlist) return <div>{playlist}???</div>;
   const title = identifyTitle(playlist);
   const description = identifyDescription(playlist);
-  async function handlePlayClick() {
+  async function handlePlayClick(e: any) {
+    e.stopPropagation();
+    e.preventDefault();
     const cached: PlaylistFull | undefined = queryClient.getQueryData([
       "playlist",
       playlist.id,
@@ -70,6 +72,8 @@ export const PlaylistCard = ({
       shadow="md"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
+      as={Link}
+      to={`/playlists/${playlist.id}/`}
       {...rest}
     >
       <Flex
@@ -109,13 +113,7 @@ export const PlaylistCard = ({
         </MotionBox>
       </Flex>
 
-      <Flex
-        direction="column"
-        mt={1}
-        width="100%"
-        as={Link}
-        to={`/playlists/${playlist.id}/`}
-      >
+      <Flex direction="column" mt={1} width="100%">
         <Text fontSize="1rem" fontWeight="500" isTruncated={true}>
           {title}
         </Text>
