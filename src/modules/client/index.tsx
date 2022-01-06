@@ -1,8 +1,11 @@
+import { ButtonProps, chakra, ChakraProps } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { useCallback } from "react";
+import { ReactNode, useCallback } from "react";
 import OAuth2Login from "react-simple-oauth2-login";
 import { useStoreActions, useStoreState } from "../../store";
+import { useGoogleLogin } from "react-google-login";
+import open from "oauth-open";
 
 export interface OAuth2SuccessResponse {
   token_type: "Bearer";
@@ -75,37 +78,89 @@ export function useClient() {
   };
 }
 
+const StyledOAuth2 = chakra(OAuth2Login);
+
 export function useClientLogin() {
   const setUser = useStoreActions((actions) => actions.auth.setUser);
   const setToken = useStoreActions((actions) => actions.auth.setToken);
+  const currentToken = useStoreState((state) => state.auth.token);
 
-  async function onSuccess(res: OAuth2SuccessResponse) {
+  function onFailure(err: any) {
+    console.log("Error", err);
+  }
+
+  const { signIn, loaded } = useGoogleLogin({
+    clientId:
+      "275540829388-87s7f9v2ht3ih51ah0tjkqng8pd8bqo2.apps.googleusercontent.com",
+    scope: "https://www.googleapis.com/auth/userinfo.email",
+    prompt: "select_account",
+    redirectUri: "http://localhost:3000",
+    responseType: "code",
+    uxMode: "redirect",
+
+    fetchBasicProfile: false,
+    async onSuccess(res) {
+      if (!res.code) return;
+      const token = await getToken({
+        authToken: res.code,
+        service: "google",
+        jwt: currentToken || undefined,
+      });
+      const { jwt, user } = token;
+      setToken(jwt);
+      setUser(user);
+      console.log(res);
+    },
+    onFailure: onFailure,
+  });
+
+  async function onDiscordSuccess(res: OAuth2SuccessResponse) {
     const token = await getToken({
       authToken: res.access_token,
       service: "discord",
-      jwt: undefined,
+      jwt: currentToken || undefined,
     });
     const { jwt, user } = token;
     setToken(jwt);
     setUser(user);
   }
 
-  function onFailure(err: any) {
-    console.log("Error", err);
-  }
-
   return {
-    LoginButton: () => (
-      <LoginButton
+    DiscordOAuth: ({
+      children,
+      ...props
+    }: { children: ReactNode } & ChakraProps & ButtonProps) => (
+      <StyledOAuth2
         authorizationUrl="https://discord.com/api/oauth2/authorize"
         responseType="token"
         clientId="793619250115379262"
         redirectUri={`${window.location.protocol}//${window.location.host}/discord`}
         scope="identify"
-        onSuccess={onSuccess}
+        onSuccess={onDiscordSuccess}
         onFailure={onFailure}
-      />
+        {...props}
+      >
+        {children}
+      </StyledOAuth2>
     ),
+    TwitterAuth: () => {
+      open(
+        `/api/v2/user/login/twitter`,
+        async (err: any, out: { jwt: string }) => {
+          if (err) return onFailure(err);
+          const twitterTempJWT = out.jwt;
+          const token = await getToken({
+            authToken: twitterTempJWT,
+            service: "twitter",
+            jwt: currentToken || undefined,
+          });
+          const { jwt, user } = token;
+          setToken(jwt);
+          setUser(user);
+        }
+      );
+    },
+    GoogleAuthFn: signIn,
   };
 }
 
@@ -133,12 +188,3 @@ export async function getToken({
   });
   return res.json();
 }
-
-const LoginButton = styled(OAuth2Login)`
-  padding: 5px 15px;
-  border-radius: 4px;
-
-  &:hover {
-    outline: 1px solid #888;
-  }
-`;

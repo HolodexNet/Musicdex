@@ -7,8 +7,10 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { FaDiscord, FaGoogle, FaTwitter } from "react-icons/fa";
+import { useClientLogin } from "../../modules/client";
 
 export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
+  const { DiscordOAuth, GoogleAuthFn, TwitterAuth } = useClientLogin();
   return (
     <Center p={8}>
       <Stack spacing={4} align={"center"} maxW={"md"} w={"full"}>
@@ -26,21 +28,39 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
             </Text>
           </>
         )}
-        <Button w={"full"} colorScheme={"purple"} leftIcon={<FaDiscord />}>
-          <Center>
-            <Text>Login with Discord</Text>
-          </Center>
-        </Button>
+
+        <DiscordOAuth w={"full"}>
+          <Button
+            w={"full"}
+            colorScheme={"purple"}
+            leftIcon={<FaDiscord />}
+            as="div"
+          >
+            <Center>
+              <Text>Login with Discord</Text>
+            </Center>
+          </Button>
+        </DiscordOAuth>
 
         {/* Google */}
-        <Button w={"full"} colorScheme={"red"} leftIcon={<FaGoogle />}>
+        <Button
+          w={"full"}
+          colorScheme={"red"}
+          leftIcon={<FaGoogle />}
+          onClick={GoogleAuthFn}
+        >
           <Center>
             <Text>Login with Google</Text>
           </Center>
         </Button>
 
         {/* LinkedIn */}
-        <Button w={"full"} colorScheme={"twitter"} leftIcon={<FaTwitter />}>
+        <Button
+          w={"full"}
+          colorScheme={"twitter"}
+          leftIcon={<FaTwitter />}
+          onClick={TwitterAuth}
+        >
           <Center>
             <Text>Login with Twitter</Text>
           </Center>

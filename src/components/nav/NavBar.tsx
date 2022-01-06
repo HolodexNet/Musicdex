@@ -4,6 +4,7 @@ import {
   Flex,
   IconButton,
   HStack,
+  Button,
   Menu,
   MenuButton,
   Avatar,
@@ -17,15 +18,15 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { FiMenu, FiChevronDown } from "react-icons/fi";
-import { useClient, useClientLogin } from "../../modules/client";
+import { Link } from "react-router-dom";
+import { useClient } from "../../modules/client";
 import { Searchbox } from "../header/Searchbox";
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
 export function NavBar({ onOpen, ...rest }: MobileProps) {
-  const { AxiosInstance, isLoggedIn, logout, user } = useClient();
-  const { LoginButton } = useClientLogin();
+  const { isLoggedIn, logout, user } = useClient();
 
   // const bgColor = useColorModeValue("white", "gray.900");
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -146,15 +147,23 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
                 //bg={bgColor}
                 borderColor={borderColor}
               >
-                <MenuItem>Profile</MenuItem>
-                <MenuItem>Settings</MenuItem>
+                <MenuItem as={Link} to="/settings">
+                  Profile
+                </MenuItem>
+                <MenuItem as={Link} to="/settings">
+                  Settings
+                </MenuItem>
                 {/* <MenuItem>Billing</MenuItem> */}
                 <MenuDivider />
                 <MenuItem onClick={logout}>Sign out</MenuItem>
               </MenuList>
             </Menu>
           ) : (
-            <LoginButton />
+            <Link to="/login">
+              <Button size="lg" colorScheme="n2">
+                Login
+              </Button>
+            </Link>
           )}
         </Flex>
       </HStack>
