@@ -49,11 +49,12 @@ export function CardCarousel({
       ref.current.scrollTo({
         left: 0,
       });
+
       // check if should hide arrows, b/c content changed
-      if (ref.current.clientWidth === ref.current.scrollWidth) {
-        setHideRightBtn(true);
-        setHideLeftBtn(true);
-      }
+      const shouldHideBtn = ref.current.clientWidth === ref.current.scrollWidth;
+      const curLeft = ref.current.scrollLeft;
+      setHideRightBtn(shouldHideBtn);
+      setHideLeftBtn(curLeft === 0 || shouldHideBtn);
     }
   }, [children]);
   function onScroll() {

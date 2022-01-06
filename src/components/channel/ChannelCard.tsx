@@ -42,7 +42,7 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
         ignoreFallback
         boxShadow="0 8px 24px rgba(0,0,0,0.5)"
       />
-      <Text noOfLines={2} fontWeight={600} fontSize="md" textAlign="center">
+      <Text noOfLines={2} fontWeight={500} fontSize="md" textAlign="center">
         {channel.english_name || channel.name}
       </Text>
     </Flex>
