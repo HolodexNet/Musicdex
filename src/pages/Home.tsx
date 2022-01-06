@@ -114,6 +114,9 @@ const CenterTabs = styled.div`
     border-bottom: 4px solid transparent;
     font-family: var(--chakra-fonts-heading);
   }
+  .chakra-tabs button[role="tab"]:hover {
+    background-color: #7773;
+  }
   .chakra-tabs button[aria-selected="true"] {
     border-bottom-style: solid;
     border-bottom-width: 4px;
