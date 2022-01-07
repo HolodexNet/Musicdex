@@ -70,10 +70,14 @@ export function Home() {
                 </TabPanel>
               )}
               <TabPanel>
-                <p>one!</p>
+                <p>
+                  Honestly we're not sure what goes here, or how this looks!
+                </p>
               </TabPanel>
               <TabPanel>
-                <p>two!</p>
+                <p>
+                  Honestly we're not sure what goes here, or how this looks!
+                </p>
               </TabPanel>
             </TabPanels>
           </Tabs>
