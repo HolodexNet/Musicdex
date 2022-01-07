@@ -23,6 +23,7 @@ import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreState } from "../store";
 import { PlaylistCard } from "../components/playlist/PlaylistCard";
 import styled from "@emotion/styled";
+import { VideoPlaylistHighlight } from "../components/common/VideoPlaylistHighlight";
 
 export function Home() {
   const org = useStoreState((store) => store.org.currentOrg);
@@ -44,18 +45,30 @@ export function Home() {
             size="lg"
           >
             <TabList borderBottomColor="transparent">
-              <Tab marginX={3}>Latest in Hololive</Tab>
-              <Tab marginX={3}>Live Event</Tab>
+              {discovery?.recentSingingStream?.video && (
+                <Tab marginX={3}>Latest in Hololive</Tab>
+              )}
+              {discovery?.liveEvent?.video && <Tab marginX={3}>Live Event</Tab>}
               <Tab marginX={3}>Latest in Musicdex</Tab>
               <Tab marginX={3}>New Song Releases</Tab>
             </TabList>
-            <TabPanels>
-              <TabPanel>
-                <p>one!</p>
-              </TabPanel>
-              <TabPanel>
-                <p>two!</p>
-              </TabPanel>
+            <TabPanels px={-5}>
+              {discovery?.recentSingingStream?.video && (
+                <TabPanel>
+                  <VideoPlaylistHighlight
+                    video={discovery.recentSingingStream.video}
+                    playlist={discovery.recentSingingStream.playlist}
+                  />
+                </TabPanel>
+              )}
+              {discovery?.liveEvent?.video && (
+                <TabPanel>
+                  <VideoPlaylistHighlight
+                    video={discovery.liveEvent.video}
+                    playlist={discovery.liveEvent.playlist}
+                  />
+                </TabPanel>
+              )}
               <TabPanel>
                 <p>one!</p>
               </TabPanel>

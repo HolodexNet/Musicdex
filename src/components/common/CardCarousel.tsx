@@ -118,16 +118,16 @@ const SliderContainer = styled.div`
     display: none;
   }
   & > * {
-    display: inline-flex;
     scroll-snap-align: end;
   }
 
   & > *:first-of-type {
     margin-left: 0px;
+    scroll-snap-align: start;
   }
 
   & > *:last-of-type {
     margin-right: 0px;
-    scroll-snap-align: start;
+    scroll-snap-align: end;
   }
 `;
