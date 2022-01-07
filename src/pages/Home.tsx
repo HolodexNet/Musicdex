@@ -46,11 +46,11 @@ export function Home() {
           >
             <TabList borderBottomColor="transparent">
               {discovery?.recentSingingStream?.video && (
-                <Tab marginX={3}>Latest in Hololive</Tab>
+                <Tab marginX={3}>Latest in {org.name}</Tab>
               )}
               {discovery?.liveEvent?.video && <Tab marginX={3}>Live Event</Tab>}
-              <Tab marginX={3}>Latest in Musicdex</Tab>
               <Tab marginX={3}>New Song Releases</Tab>
+              <Tab marginX={3}>Latest in Musicdex</Tab>
             </TabList>
             <TabPanels px={-5}>
               {discovery?.recentSingingStream?.video && (
