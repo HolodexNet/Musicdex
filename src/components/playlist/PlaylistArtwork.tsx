@@ -13,6 +13,7 @@ import {
   SGPDefinitions,
 } from "../../utils/SGPFunctions";
 import { getVideoThumbnails } from "../../utils/SongHelper";
+import { LineLogo } from "../icons/LineLogo";
 
 interface PlaylistArtworkProps extends FlexProps {
   playlist: Partial<PlaylistFull>;
@@ -122,6 +123,7 @@ function OverlayTextArt({
           {titleText}
         </Text>
       </Box>
+      <LineLogo position="absolute" w={6} h={6} left="4px" bottom="4px" />
 
       <Image src={imageUrl} alt="Playlist art" />
     </Flex>
@@ -144,6 +146,11 @@ function StackedTextArt({
     titleText.charCodeAt(Math.round(titleText.length / 2)) % 2 === 0
       ? "brand.100"
       : "n2.100";
+  // Do some fancy math to adjust font size so it can fit longer text
+  const adjFontSize = Math.min(
+    Math.round(Math.pow(40 / titleText.length, 2) + 11),
+    20
+  );
   return (
     <Flex
       position="relative"
@@ -157,17 +164,32 @@ function StackedTextArt({
         height="33%"
         bgColor={bgColor}
         minWidth={0}
-        p={2}
+        p="5px"
         flexDir="column"
         color="gray.800"
         fontWeight={600}
+        overflow="hidden"
+        position="relative"
       >
-        <Text fontSize={12} letterSpacing={1.2} textTransform="uppercase">
+        <Text
+          fontSize={12}
+          letterSpacing={1.2}
+          textTransform="uppercase"
+          zIndex={1}
+        >
           {typeText}
         </Text>
-        <Text isTruncated={true} fontSize="1.2rem">
+        <Text isTruncated={true} fontSize={adjFontSize} my="auto" zIndex={1}>
           {titleText}
         </Text>
+        <LineLogo
+          position="absolute"
+          w={20}
+          h={20}
+          right="-8%"
+          top="0"
+          opacity="0.5"
+        />
       </Flex>
       <Flex
         bgImage={imageUrl}
