@@ -338,19 +338,21 @@ const playbackModel: PlaybackModel = {
   setPlaylist: thunk((actions, { playlist, startPos = 0 }, h) => {
     actions._ejectCurrentlyPlaying();
     actions.clearAll();
-    actions._setPlaylist(playlist);
-    actions._insertCurrentlyPlaying("playlist");
 
-    // Check if startpos is specified and play at that position
-    if (!startPos || (playlist.content && playlist.content.length >= startPos))
-      return;
-    actions._setShuffleMode(false);
-    while (startPos > 0) {
-      actions._prepareEject();
+    if (!startPos) {
+      actions._setPlaylist(playlist);
       actions._insertCurrentlyPlaying("playlist");
-      startPos--;
+    } else {
+      const oldShuffleMode = h.getState().shuffleMode;
+      actions._setShuffleMode(false);
+      actions._setPlaylist(playlist);
+      while (startPos >= 0) {
+        actions._prepareEject();
+        actions._insertCurrentlyPlaying("playlist");
+        startPos--;
+      }
+      actions._setShuffleMode(oldShuffleMode);
     }
-    actions._setShuffleMode(true);
   }),
 
   next: thunk((actions, { count, userSkipped, hasError = false }, h) => {
