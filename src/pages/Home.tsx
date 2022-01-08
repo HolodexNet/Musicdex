@@ -1,39 +1,30 @@
 import {
-  SimpleGrid,
-  Text,
   Heading,
-  Spacer,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Container,
   HStack,
-  useInterval,
+  SimpleGrid,
+  Spacer,
   useBoolean,
+  useInterval,
 } from "@chakra-ui/react";
-import axios from "axios";
+import styled from "@emotion/styled";
 import React, { useEffect, useRef, useState } from "react";
+import {
+  SnapItem,
+  SnapList,
+  useScroll,
+  useVisibleElements,
+} from "react-snaplist-carousel";
 import { ChannelCard } from "../components/channel/ChannelCard";
-import { QueryStatus } from "../components/common/QueryStatus";
 import { CardCarousel } from "../components/common/CardCarousel";
+import { QueryStatus } from "../components/common/QueryStatus";
+import { VideoPlaylistHighlight } from "../components/common/VideoPlaylistHighlight";
 import { SongTable } from "../components/data/SongTable";
+import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { SongItem } from "../components/song/SongItem";
 import { useDiscoveryOrg } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreState } from "../store";
-import { PlaylistCard } from "../components/playlist/PlaylistCard";
-import { VideoPlaylistHighlight } from "../components/common/VideoPlaylistHighlight";
-import {
-  SnapList,
-  SnapItem,
-  useVisibleElements,
-  useScroll,
-} from "react-snaplist-carousel";
-import styled from "@emotion/styled";
-import { ContainerInlay } from "../components/layout/ContainerInlay";
 
 export function Home() {
   const org = useStoreState((store) => store.org.currentOrg);
