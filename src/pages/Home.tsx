@@ -37,7 +37,7 @@ export function Home() {
   return (
     <PageContainer>
       <ContainerInlay>
-        <Heading size="lg" mt={6} mb={3}>
+        <Heading size="lg" mt={2} mb={3}>
           Recent Singing Streams
         </Heading>
 
@@ -55,15 +55,9 @@ export function Home() {
             ))}
           </CardCarousel>
         )}
-        {/* {discovery?.recentSingingStream?.playlist && (
-        <CardCarousel height={230} width={160} scrollMultiplier={2}>
-          <PlaylistCard playlist={discovery.recentSingingStream.playlist} />
-        </CardCarousel>
-      )} */}
-        <Heading size="md" marginBottom={2}>
+        <Heading size="lg" mt={6} mb={3}>
           Trending {org.name} Songs
         </Heading>
-        <Spacer />
         <QueryStatus queryStatus={rest} />
         {trendingSongs && (
           <SimpleGrid minChildWidth="290px" spacing={2}>

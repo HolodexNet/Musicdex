@@ -528,7 +528,13 @@ function PlayerBarLower({
                   >
                     Go To Video Page
                   </MenuItem>
-                  <MenuItem>Go to Channel Page</MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/channel/" + currentSong.channel_id);
+                    }}
+                  >
+                    Go to Channel Page
+                  </MenuItem>
                   {/* <MenuDivider /> */}
                 </MenuList>
               </Menu>
@@ -543,7 +549,7 @@ function PlayerBarLower({
                     {currentSong.name}
                   </Text>
                 </Link>
-                <Link as={NavLink} to={`/`}>
+                <Link as={NavLink} to={`/channel/${currentSong.channel_id}`}>
                   <Text noOfLines={1} opacity={0.66}>
                     {currentSong.channel.english_name ||
                       currentSong.channel.name}
