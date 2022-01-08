@@ -111,7 +111,7 @@ const playbackModel: PlaybackModel = {
   _setPlaylist: action((state, playlist) => {
     state.currentPlaylist = playlist;
     if (state.shuffleMode && playlist) {
-      state.playlistQueue = shuffleArray(playlist.content || []);
+      state.playlistQueue = shuffleArray([...(playlist?.content || [])]);
     } else {
       state.playlistQueue = [...(playlist?.content || [])];
     }
@@ -346,7 +346,8 @@ const playbackModel: PlaybackModel = {
       const oldShuffleMode = h.getState().shuffleMode;
       actions._setShuffleMode(false);
       actions._setPlaylist(playlist);
-      while (startPos >= 0) {
+      actions._insertCurrentlyPlaying("playlist");
+      while (startPos > 0) {
         actions._prepareEject();
         actions._insertCurrentlyPlaying("playlist");
         startPos--;

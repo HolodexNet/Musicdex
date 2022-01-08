@@ -1,18 +1,19 @@
 import { useInterval, useBoolean, HStack } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import {
   useVisibleElements,
   useScroll,
   SnapList,
   SnapItem,
 } from "react-snaplist-carousel";
+import { useStoreState } from "../../store";
 import { VideoPlaylistHighlight } from "./VideoPlaylistHighlight";
 
 export function VideoPlaylistCarousel({
   videoPlaylists,
 }: {
-  videoPlaylists?: any[];
+  videoPlaylists?: { playlist: PlaylistFull; video: any }[];
 }) {
   const snapList = useRef(null);
 
@@ -23,12 +24,29 @@ export function VideoPlaylistCarousel({
   const goToSnapItem = useScroll({ ref: snapList });
 
   const [currentItemAuto, setCurrentItemAuto] = useState(0);
+
+  const currentlyPlayingPlaylistId = useStoreState(
+    (store) => store.playback.currentPlaylist?.id
+  );
+
+  const playingFromIdx = useMemo(() => {
+    return (
+      videoPlaylists?.findIndex(
+        (x) => x.playlist.id === currentlyPlayingPlaylistId
+      ) || -1
+    );
+  }, [currentlyPlayingPlaylistId, videoPlaylists]);
+
   useInterval(() => {
-    if (!hovering) {
+    // Dont change if hovering on an item, or playing from an item
+    if (
+      !hovering &&
+      (playingFromIdx < 0 || playingFromIdx !== currentItemAuto)
+    ) {
       goToSnapItem((currentItemAuto + 1) % (videoPlaylists?.length || 1));
       setCurrentItemAuto(currentItemAuto + (1 % (videoPlaylists?.length || 1)));
     }
-  }, 8000);
+  }, 12000);
 
   useEffect(() => {
     setCurrentItemAuto(visible);
