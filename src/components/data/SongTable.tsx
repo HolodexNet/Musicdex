@@ -23,6 +23,7 @@ import { formatSeconds } from "../../utils/SongHelper";
 import { DEFAULT_MENU_ID } from "../common/CommonContext";
 import { NowPlayingIcon } from "../common/NowPlayingIcon";
 import { SongLikeButton } from "../song/SongLikeButton";
+import { useDraggableSong } from "./DraggableSong";
 import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";
 
 type IndexedSong = Song & { idx: number };
@@ -273,8 +274,7 @@ const MemoizedRow = React.memo(
     const HOVER_ROW_STYLE: CSSObject = {
       backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
     };
-    const setDragging = useStoreActions((a) => a.contextMenu.setDragging);
-
+    const dragSongProps = useDraggableSong(row.original);
     return (
       <Tr
         {...row.getRowProps()}
@@ -282,22 +282,7 @@ const MemoizedRow = React.memo(
           show?.(e, { props: row.original });
         }}
         _hover={HOVER_ROW_STYLE}
-        draggable
-        onDragStart={(e) => {
-          e.dataTransfer.setData(
-            "text/plain",
-            `${window.location.origin}/song/${row.original.id}`
-          );
-          e.dataTransfer.setData(
-            "text/uri-list",
-            `${window.location.origin}/song/${row.original.id}`
-          );
-          e.dataTransfer.setData("song", JSON.stringify(row.original));
-          setDragging(true);
-        }}
-        onDragEnd={(e) => {
-          setDragging(false);
-        }}
+        {...dragSongProps}
       >
         {row.cells.map((cell) => (
           <Td

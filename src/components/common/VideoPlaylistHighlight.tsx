@@ -13,8 +13,8 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { IoMdPlay } from "react-icons/io";
-import { MdCheckCircle, MdSettings } from "react-icons/md";
 import { useStoreActions } from "../../store";
+import { useDraggableSong } from "../data/DraggableSong";
 
 export const VideoPlaylistHighlight = ({
   video,
@@ -23,10 +23,13 @@ export const VideoPlaylistHighlight = ({
   video: any;
   playlist?: PlaylistFull;
 }) => {
-  const setDragging = useStoreActions((a) => a.contextMenu.setDragging);
+  const next = useStoreActions((actions) => actions.playback.next);
+  const setPlaylist = useStoreActions(
+    (actions) => actions.playback.setPlaylist
+  );
 
   return (
-    <Stack width="100%" height="100%">
+    <Box width="100%" height="100%">
       <AspectRatio
         ratio={34 / 9}
         maxH="auto"
@@ -49,7 +52,7 @@ export const VideoPlaylistHighlight = ({
               borderRadius="md"
             />
           </AspectRatio>
-          <Box flex={"1 1"} flexBasis={900 / 34 + "%"} pl={2} height="100%">
+          <Box flex={"1 1"} flexBasis={900 / 34 + "%"} height="100%">
             {playlist?.content ? (
               <List
                 spacing={1}
@@ -61,37 +64,15 @@ export const VideoPlaylistHighlight = ({
                 display="block"
                 flexDir="column"
               >
-                {playlist?.content.map((x) => (
-                  <ListItem
-                    key={x.id + "highlightsong"}
-                    scrollSnapAlign="start"
-                    draggable
-                    onDragStart={(e) => {
-                      e.dataTransfer.setData(
-                        "text/plain",
-                        `${window.location.origin}/song/${x.id}`
-                      );
-                      e.dataTransfer.setData(
-                        "text/uri-list",
-                        `${window.location.origin}/song/${x.id}`
-                      );
-                      e.dataTransfer.setData("song", JSON.stringify(x));
-                      setDragging(true);
+                {playlist?.content.map((x, idx) => (
+                  <HighlightListItem
+                    song={x}
+                    songClicked={() => {
+                      console.log(idx);
+                      if (!playlist) return;
+                      setPlaylist({ playlist, startPos: idx });
                     }}
-                    onDragEnd={(e) => {
-                      setDragging(false);
-                    }}
-                  >
-                    <HStack>
-                      <ListIcon as={IoMdPlay} width="14px" />
-                      <Box>
-                        <Text noOfLines={0}>{x.name}</Text>
-                        <Text noOfLines={0} color="gray.500" fontSize="sm">
-                          {x.channel.name} ({x.original_artist})
-                        </Text>
-                      </Box>
-                    </HStack>
-                  </ListItem>
+                  />
                 ))}
               </List>
             ) : (
@@ -119,7 +100,41 @@ export const VideoPlaylistHighlight = ({
           </Box>
         </Flex>
       </AspectRatio>
-      <Text>{video.title}</Text>
-    </Stack>
+      <Text mt={1}>{video.title}</Text>
+      <Text opacity={0.75} fontSize="sm">
+        {video.channel.name}
+      </Text>
+    </Box>
   );
 };
+
+function HighlightListItem({
+  song,
+  songClicked,
+}: {
+  song: Song;
+  songClicked: () => void;
+}) {
+  const dragProps = useDraggableSong(song);
+
+  return (
+    <ListItem
+      key={song.id + "highlightsong"}
+      scrollSnapAlign="start"
+      _hover={{ bgColor: "whiteAlpha.200" }}
+      pl={2}
+      onClick={songClicked}
+      {...dragProps}
+    >
+      <HStack>
+        <ListIcon as={IoMdPlay} width="14px" />
+        <Box>
+          <Text noOfLines={0}>{song.name}</Text>
+          <Text noOfLines={0} color="gray.500" fontSize="sm">
+            {/* {song.channel.name} */} ({song.original_artist})
+          </Text>
+        </Box>
+      </HStack>
+    </ListItem>
+  );
+}

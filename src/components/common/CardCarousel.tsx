@@ -89,6 +89,7 @@ export function CardCarousel({
           onClick={() => scroll("left")}
           boxShadow="2xl"
           ml={["5px", null, null, null, null, "-20px"]}
+          opacity={0.6}
         />
         <IconButton
           visibility={hideRightBtn ? "hidden" : "visible"}
@@ -97,6 +98,7 @@ export function CardCarousel({
           onClick={() => scroll("right")}
           boxShadow="2xl"
           mr={["5px", null, null, null, null, "-20px"]}
+          opacity={0.6}
         />
       </Flex>
     </Flex>
