@@ -23,13 +23,13 @@ export const VideoPlaylistHighlight = ({
   playlist?: PlaylistFull;
 }) => {
   return (
-    <Stack>
+    <Stack width="100%" height="100%">
       <AspectRatio
         ratio={34 / 9}
-        maxH="400px"
+        maxH="auto"
         borderRadius="lg"
         borderColor="brand.100"
-        borderWidth="2.5px"
+        borderWidth="2px"
         borderStyle="solid"
         overflow="hidden"
         boxSizing="border-box"

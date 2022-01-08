@@ -9,9 +9,12 @@ import {
   TabPanels,
   Tabs,
   Container,
+  HStack,
+  useInterval,
+  useBoolean,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ChannelCard } from "../components/channel/ChannelCard";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { CardCarousel } from "../components/common/CardCarousel";
@@ -22,8 +25,14 @@ import { useDiscoveryOrg } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreState } from "../store";
 import { PlaylistCard } from "../components/playlist/PlaylistCard";
-import styled from "@emotion/styled";
 import { VideoPlaylistHighlight } from "../components/common/VideoPlaylistHighlight";
+import {
+  SnapList,
+  SnapItem,
+  useVisibleElements,
+  useScroll,
+} from "react-snaplist-carousel";
+import styled from "@emotion/styled";
 
 export function Home() {
   const org = useStoreState((store) => store.org.currentOrg);
@@ -35,56 +44,15 @@ export function Home() {
 
   return (
     <PageContainer>
-      <Container maxW="4xl">
-        <CenterTabs>
-          <Tabs
-            isFitted
-            isLazy
-            // px={{ sm: 0, md: 12, lg: 24 }}
-            variant="line"
-            size="lg"
-          >
-            <TabList borderBottomColor="transparent">
-              {discovery?.recentSingingStream?.video && (
-                <Tab marginX={3}>Latest in {org.name}</Tab>
-              )}
-              {discovery?.liveEvent?.video && <Tab marginX={3}>Live Event</Tab>}
-              <Tab marginX={3}>New Song Releases</Tab>
-              <Tab marginX={3}>Latest in Musicdex</Tab>
-            </TabList>
-            <TabPanels px={-5}>
-              {discovery?.recentSingingStreams && (
-                <TabPanel>
-                  <VideoPlaylistHighlight
-                    video={discovery.recentSingingStreams?.[0]?.video}
-                    playlist={discovery.recentSingingStreams?.[0]?.playlist}
-                  />
-                </TabPanel>
-              )}
-              {discovery?.liveEvent?.video && (
-                <TabPanel>
-                  <VideoPlaylistHighlight
-                    video={discovery.liveEvent.video}
-                    playlist={discovery.liveEvent.playlist}
-                  />
-                </TabPanel>
-              )}
-              <TabPanel>
-                <p>
-                  Honestly we're not sure what goes here, or how this looks!
-                </p>
-              </TabPanel>
-              <TabPanel>
-                <p>
-                  Honestly we're not sure what goes here, or how this looks!
-                </p>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </CenterTabs>
-      </Container>
+      <Heading size="lg" mt={6} mb={3}>
+        Recent Singing Streams
+      </Heading>
 
-      <Heading size="lg" marginBottom={6}>
+      {/* <Container maxW="4xl"> */}
+      <SnapContainer videoPlaylists={discovery?.recentSingingStreams} />
+      {/* </Container> */}
+
+      <Heading size="lg" mt={6} mb={3}>
         Discover {org.name}
       </Heading>
       {discovery && (
@@ -116,31 +84,89 @@ export function Home() {
   );
 }
 
-const CenterTabs = styled.div`
-  .chakra-tabs__tablist {
-    justify-content: space-around;
+function SnapContainer({ videoPlaylists }: { videoPlaylists?: any[] }) {
+  const snapList = useRef(null);
+
+  const visible = useVisibleElements(
+    { debounce: 10, ref: snapList },
+    ([element]) => element
+  );
+  const goToSnapItem = useScroll({ ref: snapList });
+
+  const [currentItemAuto, setCurrentItemAuto] = useState(0);
+  const timer = useInterval(() => {
+    if (!hovering)
+      goToSnapItem((currentItemAuto + 1) % (videoPlaylists?.length || 1));
+  }, 5000);
+
+  useEffect(() => {
+    setCurrentItemAuto(visible);
+  }, [visible]);
+
+  const [hovering, { on, off }] = useBoolean(false);
+
+  if (!videoPlaylists) return <></>;
+
+  return (
+    <HStack spacing={0} onMouseEnter={on} onMouseLeave={off}>
+      <CarouselNav>
+        {videoPlaylists &&
+          videoPlaylists.map((x, idx) => (
+            <button
+              className={
+                visible === idx ? "cnav-button cnav-active" : "cnav-button"
+              }
+              onClick={() => goToSnapItem(idx)}
+            ></button>
+          ))}
+      </CarouselNav>
+
+      <SnapList ref={snapList} direction="vertical" height="320px" width="100%">
+        {videoPlaylists &&
+          videoPlaylists.map((x: any) => (
+            <SnapItem
+              key={"kxs" + x?.video.id}
+              snapAlign="center"
+              height="100%"
+              width="100%"
+            >
+              <VideoPlaylistHighlight video={x?.video} playlist={x?.playlist} />
+            </SnapItem>
+          ))}
+      </SnapList>
+    </HStack>
+  );
+}
+
+const CarouselNav = styled.aside`
+  position: relative;
+  margin-left: -24px;
+  top: 0px;
+  bottom: 0px;
+  width: 20px;
+  margin-right: 4px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  z-index: 4;
+
+  .cnav {
+    display: block;
   }
-  .chakra-tabs button[role="tab"] {
-    flex-shrink: 1;
-    flex-grow: 0;
-    flex-basis: fit-content;
-    padding-bottom: 3px;
-    border-bottom: 4px solid transparent;
-    font-family: var(--chakra-fonts-heading);
+
+  .cnav-button {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: #333;
+    background-clip: content-box;
+    border: 0.25rem solid transparent;
+    border-radius: 50%;
+    font-size: 0;
+    transition: transform 0.1s;
   }
-  .chakra-tabs button[role="tab"]:hover {
-    background-color: #7773;
-  }
-  .chakra-tabs button[aria-selected="true"] {
-    border-bottom-style: solid;
-    border-bottom-width: 4px;
-    border-image-source: linear-gradient(
-      to right,
-      var(--chakra-colors-brand-300) 20%,
-      var(--chakra-colors-n2-300) 80%
-    );
-    border-image-slice: 1;
-    color: unset;
-    font-weight: 500;
+
+  .cnav-button.cnav-active {
+    background-color: var(--chakra-colors-n2-400);
   }
 `;

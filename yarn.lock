@@ -8474,6 +8474,11 @@ react-simple-oauth2-login@^0.5.3:
   resolved "https://registry.yarnpkg.com/react-simple-oauth2-login/-/react-simple-oauth2-login-0.5.3.tgz#6bb785e3d4efcd0ac55143f2c6cbde6115ef0bb5"
   integrity sha512-gLrvxu1/9oxGPOo9Uy5AWcNMBu6XWcMVngyi0gCkQqyntHbbkc97yeCCP9t2AsMa5iIyHjMc+U5nUi4804Y0+g==
 
+react-snaplist-carousel@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/react-snaplist-carousel/-/react-snaplist-carousel-4.3.0.tgz#0ad47c24f35ffecd411939c5cb9ab5351eb4a0a3"
+  integrity sha512-h+oF9RUrU5M8ETEJ114nb4uA6wlBXhIOmRi2c+jfsdPsP4ghi5+nTNquj95Wbebyw51zeh0TThyeSpCcQViFPg==
+
 react-style-singleton@^2.1.0:
   version "2.1.1"
   resolved "https://registry.npmjs.org/react-style-singleton/-/react-style-singleton-2.1.1.tgz"
