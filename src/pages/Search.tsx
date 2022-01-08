@@ -57,7 +57,10 @@ export function Search() {
             {searchResult?.found}
           </Text>
         </HStack>
-        {songs && <SongTable songs={songs} />}
+        <Suspense fallback={<div>Loading...</div>}>
+          {songs && <SongTable songs={songs} />}
+        </Suspense>
+
         {searchResult && (
           <HStack spacing={3} my={3}>
             <Button

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Suspense } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { QueryStatus } from "../components/common/QueryStatus";
@@ -68,7 +69,9 @@ export function Video() {
             }}
           />
         )}
-        {playlist?.content && <SongTable songs={playlist.content} />}
+        <Suspense fallback={<div>Loading...</div>}>
+          {playlist?.content && <SongTable songs={playlist.content} />}{" "}
+        </Suspense>
       </ContainerInlay>
     </PageContainer>
   );

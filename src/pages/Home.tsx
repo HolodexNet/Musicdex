@@ -7,6 +7,7 @@ import {
   useBreakpoint,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import { Suspense } from "react";
 import { ChannelCard } from "../components/channel/ChannelCard";
 import { CardCarousel } from "../components/common/CardCarousel";
 import { QueryStatus } from "../components/common/QueryStatus";
@@ -92,7 +93,9 @@ export function Home() {
             ))}
           </SimpleGrid>
         )}
-        {trendingSongs && <SongTable songs={trendingSongs} />}
+        <Suspense fallback="...">
+          {trendingSongs && <SongTable songs={trendingSongs} />}
+        </Suspense>
       </ContainerInlay>
     </PageContainer>
   );

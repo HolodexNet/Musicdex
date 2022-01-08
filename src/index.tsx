@@ -40,9 +40,9 @@ store.persist.resolveRehydration().then(() => {
           </ThemeEditorProvider> */}
 
           <QueryClientProvider client={queryClient}>
-            <Suspense fallback="...">
-              <App />
-            </Suspense>
+            {/* <Suspense fallback="..."> */}
+            <App />
+            {/* </Suspense> */}
           </QueryClientProvider>
         </ChakraProvider>
       </StoreProvider>

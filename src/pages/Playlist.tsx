@@ -151,7 +151,9 @@ export function Playlist() {
                 />
               </Suspense>
             ) : (
-              <SongTable songs={playlist.content} />
+              <Suspense fallback={<div>Loading...</div>}>
+                <SongTable songs={playlist.content} />{" "}
+              </Suspense>
             ))}
         </Box>
       </ContainerInlay>

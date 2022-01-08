@@ -1,5 +1,5 @@
 import { Box, Heading, Stack, useColorModeValue } from "@chakra-ui/react";
-import { Fragment } from "react";
+import { Fragment, Suspense } from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
@@ -53,7 +53,9 @@ export function History() {
             }}
           />
         )}
-        {playlist?.content && <SongTable songs={playlist.content} />}
+        <Suspense fallback={<div>Loading...</div>}>
+          {playlist?.content && <SongTable songs={playlist.content} />}
+        </Suspense>
       </Fragment>
     );
   }

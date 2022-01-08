@@ -66,6 +66,7 @@ export const VideoPlaylistHighlight = ({
               >
                 {playlist?.content.map((x, idx) => (
                   <HighlightListItem
+                    key={"wph" + x.id}
                     song={x}
                     songClicked={() => {
                       console.log(idx);

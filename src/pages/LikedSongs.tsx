@@ -1,5 +1,5 @@
 import { Button, Heading, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
@@ -52,7 +52,9 @@ export function LikedSongs() {
           </HStack>
           {paginatedSongs?.content?.length && (
             <>
-              <SongTable songs={paginatedSongs.content}></SongTable>
+              <Suspense fallback={<div>Loading...</div>}>
+                <SongTable songs={paginatedSongs.content}></SongTable>
+              </Suspense>
               <HStack justifyContent="center">
                 <Button
                   isDisabled={page === 1}
