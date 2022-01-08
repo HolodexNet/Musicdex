@@ -33,6 +33,7 @@ import {
   useScroll,
 } from "react-snaplist-carousel";
 import styled from "@emotion/styled";
+import { ContainerInlay } from "../components/layout/ContainerInlay";
 
 export function Home() {
   const org = useStoreState((store) => store.org.currentOrg);
@@ -44,42 +45,44 @@ export function Home() {
 
   return (
     <PageContainer>
-      <Heading size="lg" mt={6} mb={3}>
-        Recent Singing Streams
-      </Heading>
+      <ContainerInlay>
+        <Heading size="lg" mt={6} mb={3}>
+          Recent Singing Streams
+        </Heading>
 
-      {/* <Container maxW="4xl"> */}
-      <SnapContainer videoPlaylists={discovery?.recentSingingStreams} />
-      {/* </Container> */}
+        {/* <Container maxW="4xl"> */}
+        <SnapContainer videoPlaylists={discovery?.recentSingingStreams} />
+        {/* </Container> */}
 
-      <Heading size="lg" mt={6} mb={3}>
-        Discover {org.name}
-      </Heading>
-      {discovery && (
-        <CardCarousel height={210} width={160} scrollMultiplier={2}>
-          {discovery.channels.map((c: Channel) => (
-            <ChannelCard channel={c} key={c.id} marginX={2} />
-          ))}
-        </CardCarousel>
-      )}
-      {/* {discovery?.recentSingingStream?.playlist && (
+        <Heading size="lg" mt={6} mb={3}>
+          Discover {org.name}
+        </Heading>
+        {discovery && (
+          <CardCarousel height={210} width={160} scrollMultiplier={2}>
+            {discovery.channels.map((c: Channel) => (
+              <ChannelCard channel={c} key={c.id} marginX={2} />
+            ))}
+          </CardCarousel>
+        )}
+        {/* {discovery?.recentSingingStream?.playlist && (
         <CardCarousel height={230} width={160} scrollMultiplier={2}>
           <PlaylistCard playlist={discovery.recentSingingStream.playlist} />
         </CardCarousel>
       )} */}
-      <Heading size="md" marginBottom={2}>
-        Trending {org.name} Songs
-      </Heading>
-      <Spacer />
-      <QueryStatus queryStatus={rest} />
-      {trendingSongs && (
-        <SimpleGrid minChildWidth="290px" spacing={2}>
-          {trendingSongs.slice(0, 4).map((song) => (
-            <SongItem song={song} key={song.id} />
-          ))}
-        </SimpleGrid>
-      )}
-      {trendingSongs && <SongTable songs={trendingSongs} />}
+        <Heading size="md" marginBottom={2}>
+          Trending {org.name} Songs
+        </Heading>
+        <Spacer />
+        <QueryStatus queryStatus={rest} />
+        {trendingSongs && (
+          <SimpleGrid minChildWidth="290px" spacing={2}>
+            {trendingSongs.slice(0, 4).map((song) => (
+              <SongItem song={song} key={song.id} />
+            ))}
+          </SimpleGrid>
+        )}
+        {trendingSongs && <SongTable songs={trendingSongs} />}
+      </ContainerInlay>
     </PageContainer>
   );
 }
@@ -161,12 +164,13 @@ const CarouselNav = styled.aside`
     background-color: #333;
     background-clip: content-box;
     border: 0.25rem solid transparent;
-    border-radius: 50%;
+    border-radius: 0.75rem;
     font-size: 0;
-    transition: transform 0.1s;
+    transition: all 0.4s;
   }
 
   .cnav-button.cnav-active {
     background-color: var(--chakra-colors-n2-400);
+    height: 2rem;
   }
 `;
