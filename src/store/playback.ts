@@ -59,7 +59,10 @@ export interface PlaybackModel {
   // queues songs up into the queue.
   queueSongs: Thunk<PlaybackModel, { songs: Song[]; immediatelyPlay: boolean }>;
   // adds a playlist into the queue
-  setPlaylist: Thunk<PlaybackModel, { playlist: PlaylistFull }>;
+  setPlaylist: Thunk<
+    PlaybackModel,
+    { playlist: PlaylistFull; startPos?: number }
+  >;
   // for pressing NEXT or pressing a item on up-next.
   next: Thunk<
     PlaybackModel,
@@ -332,11 +335,22 @@ const playbackModel: PlaybackModel = {
     }
   }),
 
-  setPlaylist: thunk((actions, { playlist }, h) => {
+  setPlaylist: thunk((actions, { playlist, startPos = 0 }, h) => {
     actions._ejectCurrentlyPlaying();
     actions.clearAll();
     actions._setPlaylist(playlist);
     actions._insertCurrentlyPlaying("playlist");
+
+    // Check if startpos is specified and play at that position
+    if (!startPos || (playlist.content && playlist.content.length >= startPos))
+      return;
+    actions._setShuffleMode(false);
+    while (startPos > 0) {
+      actions._prepareEject();
+      actions._insertCurrentlyPlaying("playlist");
+      startPos--;
+    }
+    actions._setShuffleMode(true);
   }),
 
   next: thunk((actions, { count, userSkipped, hasError = false }, h) => {

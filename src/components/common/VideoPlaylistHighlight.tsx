@@ -13,6 +13,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { IoMdPlay } from "react-icons/io";
+import { useStoreActions } from "../../store";
 import { useDraggableSong } from "../data/DraggableSong";
 
 export const VideoPlaylistHighlight = ({
@@ -22,8 +23,13 @@ export const VideoPlaylistHighlight = ({
   video: any;
   playlist?: PlaylistFull;
 }) => {
+  const next = useStoreActions((actions) => actions.playback.next);
+  const setPlaylist = useStoreActions(
+    (actions) => actions.playback.setPlaylist
+  );
+
   return (
-    <Stack width="100%" height="100%">
+    <Box width="100%" height="100%">
       <AspectRatio
         ratio={34 / 9}
         maxH="auto"
@@ -46,7 +52,7 @@ export const VideoPlaylistHighlight = ({
               borderRadius="md"
             />
           </AspectRatio>
-          <Box flex={"1 1"} flexBasis={900 / 34 + "%"} pl={2} height="100%">
+          <Box flex={"1 1"} flexBasis={900 / 34 + "%"} height="100%">
             {playlist?.content ? (
               <List
                 spacing={1}
@@ -58,8 +64,15 @@ export const VideoPlaylistHighlight = ({
                 display="block"
                 flexDir="column"
               >
-                {playlist?.content.map((x) => (
-                  <HighlightListItem song={x} />
+                {playlist?.content.map((x, idx) => (
+                  <HighlightListItem
+                    song={x}
+                    songClicked={() => {
+                      console.log(idx);
+                      if (!playlist) return;
+                      setPlaylist({ playlist, startPos: idx });
+                    }}
+                  />
                 ))}
               </List>
             ) : (
@@ -87,17 +100,30 @@ export const VideoPlaylistHighlight = ({
           </Box>
         </Flex>
       </AspectRatio>
-      <Text>{video.title}</Text>
-    </Stack>
+      <Text mt={1}>{video.title}</Text>
+      <Text opacity={0.75} fontSize="sm">
+        {video.channel.name}
+      </Text>
+    </Box>
   );
 };
 
-function HighlightListItem({ song }: { song: Song }) {
+function HighlightListItem({
+  song,
+  songClicked,
+}: {
+  song: Song;
+  songClicked: () => void;
+}) {
   const dragProps = useDraggableSong(song);
+
   return (
     <ListItem
       key={song.id + "highlightsong"}
       scrollSnapAlign="start"
+      _hover={{ bgColor: "whiteAlpha.200" }}
+      pl={2}
+      onClick={songClicked}
       {...dragProps}
     >
       <HStack>
@@ -105,7 +131,7 @@ function HighlightListItem({ song }: { song: Song }) {
         <Box>
           <Text noOfLines={0}>{song.name}</Text>
           <Text noOfLines={0} color="gray.500" fontSize="sm">
-            {song.channel.name} ({song.original_artist})
+            {/* {song.channel.name} */} ({song.original_artist})
           </Text>
         </Box>
       </HStack>
