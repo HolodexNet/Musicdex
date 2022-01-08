@@ -1,6 +1,7 @@
 import {
   Box,
   HStack,
+  Icon,
   IconButton,
   Link,
   Menu,
@@ -18,7 +19,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { rest } from "lodash-es";
 import React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -29,6 +29,7 @@ import {
   FaStepBackward,
   FaStepForward,
 } from "react-icons/fa";
+import { GrDrag } from "react-icons/gr";
 import { FiMoreHorizontal, FiVolume1 } from "react-icons/fi";
 import { MdRepeat, MdRepeatOne, MdShuffle, MdMusicVideo } from "react-icons/md";
 import { RiVideoFill } from "react-icons/ri";
@@ -486,14 +487,19 @@ function PlayerBarLower({
                 gutter={10}
                 placement="top-start"
               >
-                <MenuButton
-                  as={IconButton}
-                  variant="ghost"
-                  colorScheme="brand"
-                  width="55px"
-                  height="55px"
-                  aria-label="More"
-                >
+                <MenuButton position="relative">
+                  <Icon
+                    as={FaPlay}
+                    position="absolute"
+                    left="-7px"
+                    top="3px"
+                    opacity="0.4"
+                    // border="0px solid gray"
+                    py="1px"
+                    width="0.4rem"
+                    // backgroundColor="gray.400"
+                    // roundedLeft="md"
+                  ></Icon>
                   <SongArtwork song={currentSong} size={50} marginRight={2} />
                 </MenuButton>
                 <MenuList>
