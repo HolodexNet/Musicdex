@@ -13,8 +13,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { IoMdPlay } from "react-icons/io";
-import { MdCheckCircle, MdSettings } from "react-icons/md";
-import { useStoreActions } from "../../store";
+import { useDraggableSong } from "../data/DraggableSong";
 
 export const VideoPlaylistHighlight = ({
   video,
@@ -23,8 +22,6 @@ export const VideoPlaylistHighlight = ({
   video: any;
   playlist?: PlaylistFull;
 }) => {
-  const setDragging = useStoreActions((a) => a.contextMenu.setDragging);
-
   return (
     <Stack width="100%" height="100%">
       <AspectRatio
@@ -62,36 +59,7 @@ export const VideoPlaylistHighlight = ({
                 flexDir="column"
               >
                 {playlist?.content.map((x) => (
-                  <ListItem
-                    key={x.id + "highlightsong"}
-                    scrollSnapAlign="start"
-                    draggable
-                    onDragStart={(e) => {
-                      e.dataTransfer.setData(
-                        "text/plain",
-                        `${window.location.origin}/song/${x.id}`
-                      );
-                      e.dataTransfer.setData(
-                        "text/uri-list",
-                        `${window.location.origin}/song/${x.id}`
-                      );
-                      e.dataTransfer.setData("song", JSON.stringify(x));
-                      setDragging(true);
-                    }}
-                    onDragEnd={(e) => {
-                      setDragging(false);
-                    }}
-                  >
-                    <HStack>
-                      <ListIcon as={IoMdPlay} width="14px" />
-                      <Box>
-                        <Text noOfLines={0}>{x.name}</Text>
-                        <Text noOfLines={0} color="gray.500" fontSize="sm">
-                          {x.channel.name} ({x.original_artist})
-                        </Text>
-                      </Box>
-                    </HStack>
-                  </ListItem>
+                  <HighlightListItem song={x} />
                 ))}
               </List>
             ) : (
@@ -123,3 +91,24 @@ export const VideoPlaylistHighlight = ({
     </Stack>
   );
 };
+
+function HighlightListItem({ song }: { song: Song }) {
+  const dragProps = useDraggableSong(song);
+  return (
+    <ListItem
+      key={song.id + "highlightsong"}
+      scrollSnapAlign="start"
+      {...dragProps}
+    >
+      <HStack>
+        <ListIcon as={IoMdPlay} width="14px" />
+        <Box>
+          <Text noOfLines={0}>{song.name}</Text>
+          <Text noOfLines={0} color="gray.500" fontSize="sm">
+            {song.channel.name} ({song.original_artist})
+          </Text>
+        </Box>
+      </HStack>
+    </ListItem>
+  );
+}
