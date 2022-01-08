@@ -1,4 +1,5 @@
 import {
+  Button,
   Heading,
   HStack,
   SimpleGrid,
@@ -37,7 +38,17 @@ export function Home() {
   return (
     <PageContainer>
       <ContainerInlay>
-        <Heading size="lg" mt={2} mb={3}>
+        <HStack alignItems="flex-end">
+          <Spacer />
+          <Button variant="ghost" size="sm" colorScheme="n2">
+            All {org.name} Songs
+          </Button>
+          <Button variant="ghost" size="sm" colorScheme="n2">
+            Search {org.name} Songs
+          </Button>
+        </HStack>
+
+        <Heading size="lg" mb={3}>
           Recent Singing Streams
         </Heading>
 
@@ -55,9 +66,13 @@ export function Home() {
             ))}
           </CardCarousel>
         )}
-        <Heading size="lg" mt={6} mb={3}>
-          Trending {org.name} Songs
-        </Heading>
+        <HStack alignItems="flex-end" mt={6} mb={3}>
+          <Heading size="lg">Trending {org.name} Songs</Heading>
+          <Spacer />
+          <Button variant="ghost" size="sm" colorScheme="n2">
+            Queue All
+          </Button>
+        </HStack>
         <QueryStatus queryStatus={rest} />
         {trendingSongs && (
           <SimpleGrid minChildWidth="290px" spacing={2}>
