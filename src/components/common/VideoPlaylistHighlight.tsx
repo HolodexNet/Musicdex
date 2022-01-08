@@ -29,9 +29,10 @@ export const VideoPlaylistHighlight = ({
         maxH="400px"
         borderRadius="lg"
         borderColor="brand.100"
-        borderWidth="1px"
+        borderWidth="2.5px"
         borderStyle="solid"
         overflow="hidden"
+        boxSizing="border-box"
       >
         <Flex>
           <AspectRatio
@@ -40,7 +41,10 @@ export const VideoPlaylistHighlight = ({
             flexBasis={1600 / 34 + "%"}
             width={1600 / 34 + "%"}
           >
-            <Image src={`https://i.ytimg.com/vi/${video.id}/sddefault.jpg`} />
+            <Image
+              src={`https://i.ytimg.com/vi/${video.id}/sddefault.jpg`}
+              borderRadius="md"
+            />
           </AspectRatio>
           <Box flex={"1 1"} flexBasis={900 / 34 + "%"} pl={2} height="100%">
             {playlist?.content ? (
