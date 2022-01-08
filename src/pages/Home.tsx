@@ -53,11 +53,11 @@ export function Home() {
               <Tab marginX={3}>Latest in Musicdex</Tab>
             </TabList>
             <TabPanels px={-5}>
-              {discovery?.recentSingingStream?.video && (
+              {discovery?.recentSingingStreams && (
                 <TabPanel>
                   <VideoPlaylistHighlight
-                    video={discovery.recentSingingStream.video}
-                    playlist={discovery.recentSingingStream.playlist}
+                    video={discovery.recentSingingStreams?.[0]?.video}
+                    playlist={discovery.recentSingingStreams?.[0]?.playlist}
                   />
                 </TabPanel>
               )}
@@ -87,9 +87,6 @@ export function Home() {
       <Heading size="lg" marginBottom={6}>
         Discover {org.name}
       </Heading>
-      <Heading size="md" marginBottom={2}>
-        {org.name} Artists
-      </Heading>
       {discovery && (
         <CardCarousel height={210} width={160} scrollMultiplier={2}>
           {discovery.channels.map((c: Channel) => (
@@ -97,11 +94,11 @@ export function Home() {
           ))}
         </CardCarousel>
       )}
-      {discovery?.recentSingingStream?.playlist && (
+      {/* {discovery?.recentSingingStream?.playlist && (
         <CardCarousel height={230} width={160} scrollMultiplier={2}>
           <PlaylistCard playlist={discovery.recentSingingStream.playlist} />
         </CardCarousel>
-      )}
+      )} */}
       <Heading size="md" marginBottom={2}>
         Trending {org.name} Songs
       </Heading>
