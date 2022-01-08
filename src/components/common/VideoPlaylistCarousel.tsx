@@ -44,6 +44,7 @@ export function VideoPlaylistCarousel({
         {videoPlaylists &&
           videoPlaylists.map((x, idx) => (
             <button
+              key={"kbxn" + x?.video.id}
               className={
                 currentItemAuto === idx
                   ? "cnav-button cnav-active"
