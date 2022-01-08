@@ -38,9 +38,10 @@ i18n
             const ts1 = formatInTimeZone(value, SYSTEM_TZ, "Pp zzz", {
               locale,
             });
-            const ts2 = formatInTimeZone(value, "Asia/Tokyo", "Pp zzz", {
-              locale,
-            });
+            const ts2 =
+              formatInTimeZone(value, "Asia/Tokyo", "Pp", {
+                locale,
+              }) + " JST";
             if (ts1 === ts2) {
               return ts1;
             }
