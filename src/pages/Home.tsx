@@ -98,8 +98,10 @@ function SnapContainer({ videoPlaylists }: { videoPlaylists?: any[] }) {
 
   const [currentItemAuto, setCurrentItemAuto] = useState(0);
   const timer = useInterval(() => {
-    if (!hovering)
+    if (!hovering) {
       goToSnapItem((currentItemAuto + 1) % (videoPlaylists?.length || 1));
+      setCurrentItemAuto(currentItemAuto + (1 % (videoPlaylists?.length || 1)));
+    }
   }, 5000);
 
   useEffect(() => {
@@ -117,14 +119,19 @@ function SnapContainer({ videoPlaylists }: { videoPlaylists?: any[] }) {
           videoPlaylists.map((x, idx) => (
             <button
               className={
-                visible === idx ? "cnav-button cnav-active" : "cnav-button"
+                currentItemAuto === idx
+                  ? "cnav-button cnav-active"
+                  : "cnav-button"
               }
-              onClick={() => goToSnapItem(idx)}
+              onClick={() => {
+                goToSnapItem(idx);
+                setCurrentItemAuto(idx);
+              }}
             ></button>
           ))}
       </CarouselNav>
 
-      <SnapList ref={snapList} direction="vertical" height="320px" width="100%">
+      <SnapList ref={snapList} direction="horizontal">
         {videoPlaylists &&
           videoPlaylists.map((x: any) => (
             <SnapItem
