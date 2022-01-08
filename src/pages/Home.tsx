@@ -118,6 +118,7 @@ function SnapContainer({ videoPlaylists }: { videoPlaylists?: any[] }) {
         {videoPlaylists &&
           videoPlaylists.map((x, idx) => (
             <button
+              key={"kxbn" + x?.video.id}
               className={
                 currentItemAuto === idx
                   ? "cnav-button cnav-active"

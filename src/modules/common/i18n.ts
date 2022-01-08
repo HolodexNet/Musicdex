@@ -1,6 +1,7 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
+import { formatInTimeZone } from "date-fns-tz";
 import {
   format as formatDate,
   formatDistanceToNow,
@@ -11,6 +12,8 @@ import { enUS, ja, zhTW } from "date-fns/locale"; // import all locales we need
 import I18NextHttpBackend from "i18next-http-backend";
 
 const locales: { [key: string]: Locale } = { "en-US": enUS, ja, zhTW }; // used to look up the required locale
+
+const SYSTEM_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 i18n
   .use(I18NextHttpBackend)
@@ -31,6 +34,18 @@ i18n
           if (format === "long") return formatDate(value, "PPPP", { locale });
           if (format === "relative")
             return formatRelative(value, new Date(), { locale });
+          if (format === "absolute") {
+            const ts1 = formatInTimeZone(value, SYSTEM_TZ, "Pp zzz", {
+              locale,
+            });
+            const ts2 = formatInTimeZone(value, "Asia/Tokyo", "Pp zzz", {
+              locale,
+            });
+            if (ts1 === ts2) {
+              return ts1;
+            }
+            return `${ts1}\n${ts2}`;
+          }
           if (format === "ago")
             if (
               new Date().valueOf() - value.valueOf() >

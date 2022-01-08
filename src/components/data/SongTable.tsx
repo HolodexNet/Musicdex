@@ -133,8 +133,14 @@ export const SongTable = ({
       {
         id: "date",
         Header: "Sang On",
-        accessor: (row: { available_at: Date }) =>
-          t("relativeDate", { date: new Date(row?.available_at) }),
+        accessor: (row: { available_at: Date }) => new Date(row?.available_at),
+        Cell(cellInfo: any) {
+          return (
+            <span title={t("absoluteDate", { date: cellInfo.value as Date })}>
+              {t("relativeDate", { date: cellInfo.value })}
+            </span>
+          );
+        },
       },
       {
         id: "...",

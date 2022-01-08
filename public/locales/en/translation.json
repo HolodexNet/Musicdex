@@ -9,5 +9,6 @@
   "shortDate": "{{date, short}}",
   "shortDateTime": "{{date, datetime}}",
   "longDate": "{{date, long}}",
-  "relativeDate": "{{date, ago}}"
+  "relativeDate": "{{date, ago}}",
+  "absoluteDate": "{{date, absolute}}"
 }

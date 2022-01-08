@@ -14,7 +14,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
   return (
     <Center p={8}>
       <Stack spacing={4} align={"center"} maxW={"md"} w={"full"}>
-        {isNew && (
+        {isNew ? (
           <>
             <Heading>Login/Sign up to Musicdex</Heading>
             <Divider width={12} py={2} />
@@ -27,44 +27,58 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
               in.
             </Text>
           </>
+        ) : (
+          <>
+            <Heading size="md">Connect more accounts to Musicdex</Heading>
+            <Text>
+              No particular reason, maybe you find it easier to login using one
+              or another method on a different device.
+            </Text>
+          </>
         )}
 
-        <DiscordOAuth w={"full"}>
-          <Button
-            w={"full"}
-            colorScheme={"purple"}
-            leftIcon={<FaDiscord />}
-            as="div"
-          >
-            <Center>
-              <Text>Login with Discord</Text>
-            </Center>
-          </Button>
-        </DiscordOAuth>
+        {DiscordOAuth && (
+          <DiscordOAuth w={"full"}>
+            <Button
+              w={"full"}
+              colorScheme={"purple"}
+              leftIcon={<FaDiscord />}
+              as="div"
+            >
+              <Center>
+                <Text>Login with Discord</Text>
+              </Center>
+            </Button>
+          </DiscordOAuth>
+        )}
 
         {/* Google */}
-        <Button
-          w={"full"}
-          colorScheme={"red"}
-          leftIcon={<FaGoogle />}
-          onClick={GoogleAuthFn}
-        >
-          <Center>
-            <Text>Login with Google</Text>
-          </Center>
-        </Button>
+        {GoogleAuthFn && (
+          <Button
+            w={"full"}
+            colorScheme={"red"}
+            leftIcon={<FaGoogle />}
+            onClick={GoogleAuthFn}
+          >
+            <Center>
+              <Text>Login with Google</Text>
+            </Center>
+          </Button>
+        )}
 
         {/* LinkedIn */}
-        <Button
-          w={"full"}
-          colorScheme={"twitter"}
-          leftIcon={<FaTwitter />}
-          onClick={TwitterAuth}
-        >
-          <Center>
-            <Text>Login with Twitter</Text>
-          </Center>
-        </Button>
+        {TwitterAuth && (
+          <Button
+            w={"full"}
+            colorScheme={"twitter"}
+            leftIcon={<FaTwitter />}
+            onClick={TwitterAuth}
+          >
+            <Center>
+              <Text>Login with Twitter</Text>
+            </Center>
+          </Button>
+        )}
       </Stack>
     </Center>
   );
