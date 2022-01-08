@@ -344,13 +344,15 @@ const playbackModel: PlaybackModel = {
     // Check if startpos is specified and play at that position
     if (!startPos || (playlist.content && playlist.content.length >= startPos))
       return;
+
+    const oldShuffleMode = h.getState().shuffleMode;
     actions._setShuffleMode(false);
     while (startPos > 0) {
       actions._prepareEject();
       actions._insertCurrentlyPlaying("playlist");
       startPos--;
     }
-    actions._setShuffleMode(true);
+    actions._setShuffleMode(oldShuffleMode);
   }),
 
   next: thunk((actions, { count, userSkipped, hasError = false }, h) => {
