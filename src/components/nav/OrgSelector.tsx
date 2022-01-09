@@ -3,27 +3,29 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
+import { useServerOrgList } from "../../modules/services/statics.service";
 import { useStoreActions, useStoreState } from "../../store";
 import { Org } from "../../store/org";
 
 export function OrgSelector() {
   const org = useStoreState((state) => state.org.currentOrg);
   const setOrg = useStoreActions((state) => state.org.setOrg);
+  const orglist = useStoreState((s) => s.org.orgsList);
 
-  const { data, isLoading } = useQuery<Org[]>(
-    ["orgs"],
-    async () => {
-      const list: any[] = (await axios.get("/api/statics/orgs.json")).data;
-      // list.unshift({ name: "All Vtubers", name_jp: "", short: "All" });
-      return list;
-    },
-    {
-      cacheTime: 1000 * 60 * 60 * 3,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      staleTime: 1000 * 60 * 60 * 3,
-    }
-  );
+  const { data: orgs, isLoading } = useServerOrgList();
+  const sortedOrgList = useMemo(() => {
+    return orgs?.sort((a, b) => {
+      const av = orglist[a.name];
+      const bv = orglist[b.name];
+      if (av !== undefined && bv !== undefined) {
+        return av - bv;
+      } else if (av !== undefined) return -1;
+      else if (bv !== undefined) return 1;
+      else {
+        return a.name.localeCompare(b.name);
+      }
+    });
+  }, [orglist, orgs]);
 
   return (
     <motion.div
@@ -40,7 +42,7 @@ export function OrgSelector() {
         placeholder="Select org"
         value={org.name}
         onChange={(e) => {
-          const tgt = data?.find((x) => x.name === e.target.value);
+          const tgt = sortedOrgList?.find((x) => x.name === e.target.value);
           if (tgt) setOrg(tgt);
         }}
         mb={3}
@@ -48,7 +50,7 @@ export function OrgSelector() {
         width="89%"
         pl="11%"
       >
-        {data?.map((x) => {
+        {sortedOrgList?.map((x) => {
           return (
             <option key={x.name + "opt_os"} value={x.name}>
               {x.name}

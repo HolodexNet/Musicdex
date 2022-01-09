@@ -12,8 +12,10 @@ import {
   UseRadioProps,
   Divider,
   SimpleGrid,
+  Text,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
+import { OrgManager } from "../components/common/OrgManagement";
 import { UserSettings } from "../components/common/UserSettings";
 import { LoginButtons } from "../components/header/Login";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
@@ -29,10 +31,10 @@ export function Settings() {
         <Accordion allowMultiple defaultIndex={[0, 1, 2]} mb={12}>
           <AccordionItem>
             <AccordionButton>
+              <AccordionIcon />
               <Heading size="md" flex="1" textAlign="left">
                 User Preference
               </Heading>
-              <AccordionIcon />
             </AccordionButton>
             <Divider />
 
@@ -42,15 +44,33 @@ export function Settings() {
           </AccordionItem>
           <AccordionItem>
             <AccordionButton>
+              <AccordionIcon />
+
               <Heading size="md" flex="1" textAlign="left">
                 Language Preferences (yeah i know it's not working)
               </Heading>
-              <AccordionIcon />
             </AccordionButton>
             <Divider />
 
             <AccordionPanel pb={4}>
               <LanguagePrefs />
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionButton>
+              <AccordionIcon />
+
+              <Heading size="md" flex="1" textAlign="left">
+                Organization Ordering
+              </Heading>
+            </AccordionButton>
+            <Divider />
+
+            <AccordionPanel pb={4}>
+              <Text fontWeight="bold">
+                Drag and Drop to reorder list of orgs in the org dropdown
+              </Text>
+              <OrgManager />
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
