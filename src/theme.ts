@@ -30,7 +30,7 @@ function makeColor(color: Color, alpha?: string) {
 }
 
 const localColors = {
-  brand: makeColor(new Color("hex", ["#5298b6"])),
+  brand: makeColor(new Color("hex", ["#276986"])),
   n2: makeColor(new Color("hex", ["#D31371"])),
   bg: makeColor(new Color("hex", ["#464658"])),
   bgAlpha: makeColor(new Color("hex", ["#464658B3"]), "B3"),
