@@ -35,9 +35,9 @@ store.persist.resolveRehydration().then(() => {
     <React.StrictMode>
       <StoreProvider store={store}>
         <ChakraProvider theme={theme}>
-          {/* <ThemeEditorProvider>
+          <ThemeEditorProvider>
             <HyperThemeEditor pos="fixed" bottom={20} right={5} zIndex={12} />
-          </ThemeEditorProvider> */}
+          </ThemeEditorProvider>
 
           <QueryClientProvider client={queryClient}>
             {/* <Suspense fallback="..."> */}

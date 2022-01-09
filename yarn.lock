@@ -3663,11 +3663,6 @@ color-name@^1.1.4, color-name@~1.1.4:
   resolved "https://registry.npmjs.org/color-name/-/color-name-1.1.4.tgz"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
-color2k@^1.1.1:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/color2k/-/color2k-1.2.4.tgz#af34950ac58e23cf224a01cb8dd0c9911a79605e"
-  integrity sha512-DiwdBwc0BryPFFXoCrW8XQGXl2rEtMToODybxZjKnN5IJXt/tV/FsN02pCK/b7KcWvJEioz3c74lQSmayFvS4Q==
-
 colord@^2.1.0, colord@^2.9.1:
   version "2.9.2"
   resolved "https://registry.npmjs.org/colord/-/colord-2.9.2.tgz"
@@ -3759,6 +3754,13 @@ connect-history-api-fallback@^1.6.0:
   version "1.6.0"
   resolved "https://registry.npmjs.org/connect-history-api-fallback/-/connect-history-api-fallback-1.6.0.tgz"
   integrity sha512-e54B99q/OUoH64zYYRf3HBP5z24G38h5D3qXu23JGRoigpX5Ss4r9ZnDk3g0Z8uQC2x2lPaJ+UlWBc1ZWBWdLg==
+
+consistent-shading@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/consistent-shading/-/consistent-shading-1.1.0.tgz#320d88f76710ec52f1084e32d4db3e633623ab8b"
+  integrity sha512-DjTUSeMyacu/sDc9BxPSdeNatsLTq01ovvQ2Zj1n65WPDrRJu04sHoI10Lm0sdN76xpzcaT7R6r5+DUB8x8n3Q==
+  dependencies:
+    color-convert "^2.0.1"
 
 content-disposition@0.5.3:
   version "0.5.3"
@@ -7345,13 +7347,6 @@ p-try@^2.0.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/p-try/-/p-try-2.2.0.tgz"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
-
-palette-by-numbers@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/palette-by-numbers/-/palette-by-numbers-0.1.6.tgz#3e153ac070e1bcbad5baeb4e867058c06dd24bcc"
-  integrity sha512-Upb8RcPe7RqspaNiWgkOy5uxib2/zvkAxyK6pgMuLHu5KFmHGP9KoaaWzJmJu3QE+K2Bohs1f6Xhr49J15ZawA==
-  dependencies:
-    color2k "^1.1.1"
 
 param-case@^3.0.4:
   version "3.0.4"
