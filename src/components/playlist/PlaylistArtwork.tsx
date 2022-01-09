@@ -144,8 +144,8 @@ function StackedTextArt({
   // Random between color based on last character of title
   const bgColor =
     titleText.charCodeAt(Math.round(titleText.length / 2)) % 2 === 0
-      ? "brand.100"
-      : "n2.100";
+      ? "brand.50"
+      : "n2.50";
   // Do some fancy math to adjust font size so it can fit longer text
   const adjFontSize = Math.min(
     Math.round(Math.pow(40 / titleText.length, 2) + 11),
@@ -188,7 +188,7 @@ function StackedTextArt({
           h={20}
           right="-8%"
           top="0"
-          opacity="0.5"
+          opacity="0.3"
         />
       </Flex>
       <Flex
