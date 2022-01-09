@@ -14,12 +14,16 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
+import React, { Suspense } from "react";
 import { ReactNode, useMemo } from "react";
-import { OrgManager } from "../components/common/OrgManagement";
 import { UserSettings } from "../components/common/UserSettings";
 import { LoginButtons } from "../components/header/Login";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
+
+export const OrgManager = React.lazy(
+  () => import("../components/common/OrgManagement")
+);
 
 export function Settings() {
   return (
@@ -70,7 +74,9 @@ export function Settings() {
               <Text fontWeight="bold">
                 Drag and Drop to reorder list of orgs in the org dropdown
               </Text>
-              <OrgManager />
+              <Suspense fallback="...">
+                <OrgManager />
+              </Suspense>
             </AccordionPanel>
           </AccordionItem>
         </Accordion>

@@ -1,11 +1,11 @@
 import { useEffect, useMemo } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { theme } from "react-contexify";
 import { useStoreActions, useStoreState } from "../../store";
 import { useServerOrgList } from "../../modules/services/statics.service";
 import { Box, SimpleGrid } from "@chakra-ui/react";
+import React from "react";
 
-export function OrgManager() {
+export default function OrgManager() {
   const orglist = useStoreState((s) => s.org.orgsList);
   const setOrglist = useStoreActions((s) => s.org.setOrgsList);
 

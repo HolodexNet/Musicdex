@@ -21,7 +21,3 @@ export const theme = extendTheme(
   },
   withDefaultColorScheme({ colorScheme: "brand" })
 );
-
-export const colors = {
-  bg: "black",
-};
