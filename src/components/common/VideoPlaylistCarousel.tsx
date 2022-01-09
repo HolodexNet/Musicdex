@@ -32,7 +32,7 @@ export function VideoPlaylistCarousel({
   const playingFromIdx = useMemo(() => {
     return (
       videoPlaylists?.findIndex(
-        (x) => x.playlist.id === currentlyPlayingPlaylistId
+        (x) => x?.playlist?.id === currentlyPlayingPlaylistId
       ) || -1
     );
   }, [currentlyPlayingPlaylistId, videoPlaylists]);
