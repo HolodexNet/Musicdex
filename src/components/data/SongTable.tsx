@@ -28,7 +28,7 @@ import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";
 
 type IndexedSong = Song & { idx: number };
 
-export interface SongTableProps {
+interface SongTableProps {
   songs: Song[];
 
   // reactive hooks:

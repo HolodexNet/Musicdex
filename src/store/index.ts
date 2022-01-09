@@ -6,7 +6,7 @@ import orgModel, { OrgModel } from "./org";
 import playbackModel, { PlaybackModel } from "./playback";
 import playerModel, { PlayerModel } from "./player";
 
-export interface StoreModel {
+interface StoreModel {
   auth: AuthModel;
   player: PlayerModel;
   playback: PlaybackModel;
