@@ -91,8 +91,6 @@ export const VideoPlaylistCard = React.memo(
                   py={2}
                   height="100%"
                   overflowY="auto"
-                  scrollSnapType="block"
-                  scrollSnapStop="always"
                   display="block"
                   flexDir="column"
                 >

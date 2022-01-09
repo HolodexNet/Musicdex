@@ -56,6 +56,8 @@ export const SongCard = ({ song, ...rest }: SongCardProps) => {
             transition={{ duration: 0.3 }}
             onClick={() => playSong()}
             cursor="pointer"
+            display="flex"
+            justifyContent="center"
           >
             <Icon as={FaPlay} w={8} h={8} color="brand.400" />
           </MotionBox>
