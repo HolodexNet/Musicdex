@@ -3,18 +3,23 @@ import {
   Center,
   Heading,
   HStack,
+  IconButton,
   SimpleGrid,
+  Spacer,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect } from "react";
+import { FiShare2, FiTwitter, FiYoutube } from "react-icons/fi";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { ChannelCard } from "../components/channel/ChannelCard";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { CardCarousel } from "../components/common/CardCarousel";
+import { MTHolodexIcon } from "../components/common/MTHolodex";
 import { QueryStatus } from "../components/common/QueryStatus";
+import { VideoPlaylistHighlight } from "../components/common/VideoPlaylistHighlight";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
@@ -65,8 +70,9 @@ export function Channel() {
     <PageContainer>
       <BGImgContainer height="60vh">
         <BGImg
-          banner_url={"https://i.ytimg.com/vi/X9zw0QF12Kc/maxresdefault.jpg"}
+          banner_url={`https://i.ytimg.com/vi/${discovery?.recentSingingStream?.video.id}/sddefault.jpg`}
           height="66vh"
+          blur
         ></BGImg>
       </BGImgContainer>
 
@@ -88,10 +94,44 @@ export function Channel() {
           max={0}
           textShadow="1px 1px 5px var(--chakra-colors-bgAlpha-500);"
         />
+        <Spacer />
+        <SimpleGrid spacing={2} columns={2}>
+          <IconButton
+            colorScheme="bg"
+            icon={<FiTwitter />}
+            aria-label="Twitter"
+          />
+          <IconButton
+            colorScheme="bg"
+            icon={<FiYoutube />}
+            aria-label="Youtube"
+          />
+          <IconButton
+            colorScheme="bg"
+            icon={<FiShare2 />}
+            aria-label="Copy URL"
+          />
+          <IconButton
+            colorScheme="bg"
+            icon={<MTHolodexIcon width="18px" />}
+            aria-label="Holodex"
+          />
+        </SimpleGrid>
       </HStack>
       <ContainerInlay>
         {/* <Box>{JSON.stringify(discovery)}</Box> */}
-        <Heading size="md" marginBottom={2} marginTop={6}>
+        {discovery?.recentSingingStream && (
+          <>
+            <Heading size="md" marginBottom={2} marginTop={6}>
+              Latest Stream:
+            </Heading>
+            <VideoPlaylistHighlight
+              video={discovery?.recentSingingStream?.video}
+              playlist={discovery?.recentSingingStream?.playlist}
+            />
+          </>
+        )}
+        <Heading size="md" my={2}>
           Playlists with {channel.name}
         </Heading>
         <CardCarousel height={250} width={160} scrollMultiplier={1}>
@@ -100,7 +140,7 @@ export function Channel() {
               return <PlaylistCard playlist={x} marginX={2}></PlaylistCard>;
             })}
         </CardCarousel>
-        <Heading size="md" marginBottom={2}>
+        <Heading size="md" my={2}>
           Discover more from {channel.org}
         </Heading>
         {discovery && (

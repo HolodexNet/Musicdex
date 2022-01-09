@@ -17,7 +17,11 @@ export const BGImgContainer = styled.div<{ height: string }>`
   mask-size: 150% 132%;
   mask-position: left bottom;
 `;
-export const BGImg = styled.div<{ banner_url: string; height: string }>`
+export const BGImg = styled.div<{
+  banner_url: string;
+  height: string;
+  blur?: boolean;
+}>`
   width: 100%;
   position: absolute;
   z-index: 0;
@@ -27,4 +31,5 @@ export const BGImg = styled.div<{ banner_url: string; height: string }>`
   background: url(${({ banner_url }) => banner_url});
   background-position: center;
   background-size: cover;
+  ${(blur) => blur && "filter: blur(8px);"}
 `;
