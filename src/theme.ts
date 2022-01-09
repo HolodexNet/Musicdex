@@ -1,5 +1,6 @@
 import { extendTheme, withDefaultColorScheme } from "@chakra-ui/react";
 import { Color, ConsistentShading } from "consistent-shading";
+import convert from "color-convert";
 
 const IdealBaseColor = new Color("hex", ["#46465A"]);
 
@@ -17,13 +18,17 @@ const IdealShades = [
 ];
 const Generator = new ConsistentShading(IdealBaseColor, IdealShades);
 
+const SATURATION_MAP = [0.32, 0.16, 0.08, 0.04, 0, 0, 0.04, 0.08, 0.16, 0.56];
 const AR = [5, 10, 20, 30, 40, 50, 60, 70, 80, 90];
 function makeColor(color: Color, alpha?: string) {
   const x = Object.fromEntries(
-    Generator.generate(color, "hex").map((x, i) => [
-      AR[i] * 10,
-      "#" + x.value + (alpha || ""),
-    ])
+    Generator.generate(color, "hex").map((x, i) => {
+      const hsl = convert["hex"]["hsl"].raw("#" + x.value);
+      hsl[1] = hsl[1] * (1 - SATURATION_MAP[i]);
+      const hex = convert["hsl"]["hex"].raw(hsl);
+      console.log(hex);
+      return [AR[i] * 10, "#" + hex + (alpha || "")];
+    })
   );
   console.log(x);
   return x;
