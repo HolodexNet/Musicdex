@@ -108,6 +108,11 @@ export const PlaylistCard = ({
             duration: 0.3,
             ease: "easeInOut",
           }}
+          whileHover={{
+            scale: 1.1,
+            transition: { duration: 0.3 },
+          }}
+          whileTap={{ scale: 0.9 }}
         >
           <Icon as={FaPlay} w={5} h={5} color="brand.400" />
         </MotionBox>

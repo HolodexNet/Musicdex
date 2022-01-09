@@ -16,6 +16,7 @@ import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistCard } from "../components/playlist/PlaylistCard";
+import { SongCard } from "../components/song/SongCard";
 import { SongItem } from "../components/song/SongItem";
 import { useDiscoveryOrg } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
@@ -34,7 +35,7 @@ export function Home() {
   return (
     <PageContainer>
       <ContainerInlay>
-        <HStack alignItems="flex-end">
+        {/* <HStack alignItems="flex-end">
           <Spacer />
           <Button variant="ghost" size="sm" colorScheme="n2">
             All {org.name} Songs
@@ -42,7 +43,7 @@ export function Home() {
           <Button variant="ghost" size="sm" colorScheme="n2">
             Search {org.name} Songs
           </Button>
-        </HStack>
+        </HStack> */}
 
         <Heading size="lg" mb={3}>
           Recent Singing Streams
@@ -67,6 +68,31 @@ export function Home() {
             videoPlaylists={discovery?.recentSingingStreams}
           />
         )}
+        <HStack alignItems="flex-end" mt={6} mb={3}>
+          <Heading size="lg">Trending {org.name} Songs</Heading>
+          <Spacer />
+          <Button variant="ghost" size="sm" colorScheme="n2">
+            Queue ({trendingSongs?.length})
+          </Button>
+          <Button variant="ghost" size="sm" colorScheme="n2">
+            See All
+          </Button>
+        </HStack>
+        <QueryStatus queryStatus={rest} />
+        {/* {trendingSongs && (
+          <SimpleGrid minChildWidth="290px" spacing={2}>
+            {trendingSongs.slice(0, 4).map((song) => (
+              <SongItem song={song} key={song.id} />
+            ))}
+          </SimpleGrid>
+        )} */}
+        {trendingSongs && (
+          <CardCarousel height={180} width={128} scrollMultiplier={2}>
+            {trendingSongs.map((song) => (
+              <SongCard song={song} key={song.id} mx={2} />
+            ))}
+          </CardCarousel>
+        )}
 
         <Heading size="lg" mt={6} mb={3}>
           Discover {org.name}
@@ -78,24 +104,9 @@ export function Home() {
             ))}
           </CardCarousel>
         )}
-        <HStack alignItems="flex-end" mt={6} mb={3}>
-          <Heading size="lg">Trending {org.name} Songs</Heading>
-          <Spacer />
-          <Button variant="ghost" size="sm" colorScheme="n2">
-            Queue All
-          </Button>
-        </HStack>
-        <QueryStatus queryStatus={rest} />
-        {trendingSongs && (
-          <SimpleGrid minChildWidth="290px" spacing={2}>
-            {trendingSongs.slice(0, 4).map((song) => (
-              <SongItem song={song} key={song.id} />
-            ))}
-          </SimpleGrid>
-        )}
-        <Suspense fallback="...">
+        {/* <Suspense fallback="...">
           {trendingSongs && <SongTable songs={trendingSongs} />}
-        </Suspense>
+        </Suspense> */}
       </ContainerInlay>
     </PageContainer>
   );

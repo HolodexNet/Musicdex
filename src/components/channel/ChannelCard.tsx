@@ -19,7 +19,7 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
     <Flex
       minWidth="168px"
       width="168px"
-      height="190px"
+      height="180px"
       justifyContent="space-between"
       alignItems="center"
       bgColor={bgColor}
@@ -42,8 +42,14 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
         ignoreFallback
         boxShadow="0 8px 24px rgba(0,0,0,0.5)"
       />
-      <Text noOfLines={2} fontWeight={500} fontSize="md" textAlign="center">
-        {channel.english_name || channel.name}
+      <Text
+        isTruncated
+        fontWeight={500}
+        fontSize="md"
+        textAlign="center"
+        maxWidth="100%"
+      >
+        {channel.name}
       </Text>
     </Flex>
   );
