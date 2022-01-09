@@ -283,8 +283,6 @@ const playbackModel: PlaybackModel = {
         state.currentlyPlaying.repeat++;
       }
     }
-    // console.log(debug(state.playlistQueue), debug(state.playedPlaylistQueue))
-    // console.log("next: now playing", state.currentlyPlaying.song?.name);
   }),
 
   _forceInsertCurrentlyPlaying: action((state, song) => {
@@ -321,7 +319,6 @@ const playbackModel: PlaybackModel = {
   }),
 
   queueSongs: thunk((actions, { songs, immediatelyPlay }, h) => {
-    // console.log(songs);
     if (songs.length === 0) return;
     if (immediatelyPlay) {
       // songs should be singular.
@@ -335,11 +332,11 @@ const playbackModel: PlaybackModel = {
     }
   }),
 
-  setPlaylist: thunk((actions, { playlist, startPos = 0 }, h) => {
+  setPlaylist: thunk((actions, { playlist, startPos }, h) => {
     actions._ejectCurrentlyPlaying();
     actions.clearAll();
 
-    if (!startPos) {
+    if (startPos === undefined) {
       actions._setPlaylist(playlist);
       actions._insertCurrentlyPlaying("playlist");
     } else {
@@ -386,14 +383,6 @@ const playbackModel: PlaybackModel = {
       } else {
         actions._ejectCurrentlyPlaying();
       }
-
-      // if (
-      //   h.getState().playlistQueue.length === 0 &&
-      //   h.getState().repeatMode === "repeat"
-      // ) {
-      //   const playlist = h.getState().currentPlaylist;
-      //   playlist && actions.setPlaylist({ playlist });
-      // }
       count--;
     }
     if (userSkipped) {
