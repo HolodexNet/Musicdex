@@ -19,7 +19,7 @@ import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { CardCarousel } from "../components/common/CardCarousel";
 import { MTHolodexIcon } from "../components/common/MTHolodex";
 import { QueryStatus } from "../components/common/QueryStatus";
-import { VideoPlaylistHighlight } from "../components/common/VideoPlaylistHighlight";
+import { VideoPlaylistCard } from "../components/common/VideoPlaylistCard";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
@@ -125,7 +125,7 @@ export function Channel() {
             <Heading size="md" marginBottom={2} marginTop={6}>
               Latest Stream:
             </Heading>
-            <VideoPlaylistHighlight
+            <VideoPlaylistCard
               video={discovery?.recentSingingStream?.video}
               playlist={discovery?.recentSingingStream?.playlist}
             />

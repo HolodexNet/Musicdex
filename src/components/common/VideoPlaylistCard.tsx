@@ -21,7 +21,7 @@ import { useDraggableSong } from "../data/DraggableSong";
 import { MotionBox } from "./MotionBox";
 import { NowPlayingIcon } from "./NowPlayingIcon";
 
-export const VideoPlaylistHighlight = React.memo(
+export const VideoPlaylistCard = React.memo(
   ({ video, playlist }: { video: any; playlist?: PlaylistFull }) => {
     const setPlaylist = useStoreActions(
       (actions) => actions.playback.setPlaylist
@@ -114,7 +114,13 @@ export const VideoPlaylistHighlight = React.memo(
                   {new Date(video.available_at) < new Date() ? (
                     <Box>
                       <Text>Stream is not yet tagged with any songs.</Text>
-                      <Button variant="link" colorScheme={"n2"}>
+                      <Button
+                        variant="link"
+                        colorScheme={"n2"}
+                        as="a"
+                        href={`https://holodex.net/edit/video/${video.id}/music`}
+                        target="_blank"
+                      >
                         Help us tag it on Holodex
                       </Button>
                     </Box>
@@ -134,8 +140,16 @@ export const VideoPlaylistHighlight = React.memo(
             </Box>
           </Flex>
         </AspectRatio>
-        <Text mt={1}>{video.title}</Text>
-        <Text opacity={0.75} fontSize="sm">
+        <Text mt={1} as="a" display="block" href={`/video/${video.id}`}>
+          {video.title}
+        </Text>
+        <Text
+          opacity={0.75}
+          fontSize="sm"
+          display="block"
+          as="a"
+          href={`/channel/${video.channel_id || video.channel.id}`}
+        >
           {video.channel.name}
         </Text>
       </Box>
@@ -180,7 +194,7 @@ const HighlightListItem = React.memo(
       <ListItem
         key={song.id + "highlightsong"}
         scrollSnapAlign="start"
-        _hover={{ bgColor: "whiteAlpha.200" }}
+        _hover={{ bgColor: "whiteAlpha.200", cursor: "pointer" }}
         bgColor={active ? "whiteAlpha.200" : ""}
         transition="0.3s"
         pl={2}

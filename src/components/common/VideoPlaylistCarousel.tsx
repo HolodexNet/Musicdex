@@ -8,7 +8,7 @@ import {
   SnapItem,
 } from "react-snaplist-carousel";
 import { useStoreState } from "../../store";
-import { VideoPlaylistHighlight } from "./VideoPlaylistHighlight";
+import { VideoPlaylistCard } from "./VideoPlaylistCard";
 
 export function VideoPlaylistCarousel({
   videoPlaylists,
@@ -85,7 +85,7 @@ export function VideoPlaylistCarousel({
               height="100%"
               width="100%"
             >
-              <VideoPlaylistHighlight video={x?.video} playlist={x?.playlist} />
+              <VideoPlaylistCard video={x?.video} playlist={x?.playlist} />
             </SnapItem>
           ))}
       </SnapList>
