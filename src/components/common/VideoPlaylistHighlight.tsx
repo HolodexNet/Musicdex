@@ -10,9 +10,11 @@ import {
   HStack,
   Center,
   Button,
+  Icon,
 } from "@chakra-ui/react";
 import React from "react";
 import { useState } from "react";
+import { FaPlay } from "react-icons/fa";
 import { IoMdPlay } from "react-icons/io";
 import { useStoreActions, useStoreState } from "../../store";
 import { useDraggableSong } from "../data/DraggableSong";
@@ -47,10 +49,40 @@ export const VideoPlaylistHighlight = React.memo(
               flexBasis={1600 / 34 + "%"}
               width={1600 / 34 + "%"}
             >
-              <Image
-                src={`https://i.ytimg.com/vi/${video.id}/sddefault.jpg`}
-                borderRadius="md"
-              />
+              <div>
+                <MotionBox
+                  position="absolute"
+                  width="100%"
+                  height="100%"
+                  display="flex"
+                  top="0"
+                  justifyContent="center"
+                  alignItems="center"
+                  whileHover={{
+                    backgroundColor: "rgba(0,0,0,0.4)",
+                    opacity: 1,
+                  }}
+                  opacity={0}
+                  transition={{
+                    duration: 0.3,
+                  }}
+                  cursor="pointer"
+                >
+                  <MotionBox
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ duration: 0.3 }}
+                    // onClick={() => playSong()}
+                  >
+                    <Icon as={FaPlay} w={8} h={8} color="brand.200" />
+                  </MotionBox>
+                </MotionBox>
+
+                <Image
+                  src={`https://i.ytimg.com/vi/${video.id}/sddefault.jpg`}
+                  borderRadius="md"
+                />
+              </div>
             </AspectRatio>
             <Box flex={"1 1"} flexBasis={900 / 34 + "%"} height="100%">
               {playlist?.content ? (

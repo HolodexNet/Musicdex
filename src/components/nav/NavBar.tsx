@@ -21,7 +21,7 @@ import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useClient } from "../../modules/client";
 import { Searchbox } from "../header/Searchbox";
-import { GradientLogo } from "../icons/GraidentLogo";
+import { GradientLogo } from "../icons/GradientLogo";
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
