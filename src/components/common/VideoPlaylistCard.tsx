@@ -16,6 +16,7 @@ import React from "react";
 import { useState } from "react";
 import { FaPlay } from "react-icons/fa";
 import { IoMdPlay } from "react-icons/io";
+import { Link } from "react-router-dom";
 import { useStoreActions, useStoreState } from "../../store";
 import { useDraggableSong } from "../data/DraggableSong";
 import { MotionBox } from "./MotionBox";
@@ -91,8 +92,6 @@ export const VideoPlaylistCard = React.memo(
                   py={2}
                   height="100%"
                   overflowY="auto"
-                  scrollSnapType="block"
-                  scrollSnapStop="always"
                   display="block"
                   flexDir="column"
                 >
@@ -140,15 +139,22 @@ export const VideoPlaylistCard = React.memo(
             </Box>
           </Flex>
         </AspectRatio>
-        <Text mt={1} as="a" display="block" href={`/video/${video.id}`}>
+        <Text
+          mt={1}
+          as={Link}
+          display="block"
+          to={`/video/${video.id}`}
+          _hover={{ color: "whiteAlpha.700" }}
+        >
           {video.title}
         </Text>
         <Text
           opacity={0.75}
           fontSize="sm"
           display="block"
-          as="a"
-          href={`/channel/${video.channel_id || video.channel.id}`}
+          as={Link}
+          to={`/channel/${video.channel_id || video.channel.id}`}
+          _hover={{ color: "whiteAlpha.700" }}
         >
           {video.channel.name}
         </Text>
