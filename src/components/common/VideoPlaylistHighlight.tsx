@@ -16,6 +16,7 @@ import { useState } from "react";
 import { IoMdPlay } from "react-icons/io";
 import { useStoreActions, useStoreState } from "../../store";
 import { useDraggableSong } from "../data/DraggableSong";
+import { MotionBox } from "./MotionBox";
 import { NowPlayingIcon } from "./NowPlayingIcon";
 
 export const VideoPlaylistHighlight = React.memo(
@@ -129,7 +130,18 @@ const HighlightListItem = React.memo(
         return (
           <NowPlayingIcon style={{ color: "var(--chakra-colors-n2-400)" }} />
         );
-      if (hover) return <ListIcon as={IoMdPlay} width="20px" mr={0} />;
+      if (hover)
+        return (
+          <MotionBox
+            whileHover={{
+              scale: 1.2,
+              transition: { duration: 0.3, type: "tween", ease: "easeOut" },
+            }}
+            whileTap={{ scale: 0.8 }}
+          >
+            <ListIcon as={IoMdPlay} width="20px" mr={0} color="n2.300" />
+          </MotionBox>
+        );
       return <Text width="20px">{index + 1}.</Text>;
     }
     return (

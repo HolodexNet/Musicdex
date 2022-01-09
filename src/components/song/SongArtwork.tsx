@@ -30,6 +30,7 @@ export function SongArtwork({
       alt={song?.name || ""}
       width={size + "px"}
       height={size + "px"}
+      loading="lazy"
       {...rest}
     />
   );
