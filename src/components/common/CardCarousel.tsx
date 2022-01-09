@@ -90,6 +90,7 @@ export function CardCarousel({
           boxShadow="2xl"
           ml={["5px", null, null, null, null, "-20px"]}
           opacity={0.6}
+          _hover={{ opacity: 1 }}
         />
         <IconButton
           visibility={hideRightBtn ? "hidden" : "visible"}
@@ -99,6 +100,7 @@ export function CardCarousel({
           boxShadow="2xl"
           mr={["5px", null, null, null, null, "-20px"]}
           opacity={0.6}
+          _hover={{ opacity: 1 }}
         />
       </Flex>
     </Flex>

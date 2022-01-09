@@ -7,7 +7,6 @@ import {
   identifyPlaylistChannelImage,
 } from "../../utils/PlaylistHelper";
 import {
-  extractUsingFn,
   isSGPPlaylist,
   parsePlaylistID,
   SGPDefinitions,
@@ -147,9 +146,9 @@ function StackedTextArt({
       ? "brand.50"
       : "n2.50";
   // Do some fancy math to adjust font size so it can fit longer text
-  const adjFontSize = Math.min(
-    Math.round(Math.pow(40 / titleText.length, 2) + 11),
-    20
+  const adjFontSize = Math.max(
+    14,
+    Math.min(Math.round(Math.pow(40 / titleText.length, 2) + 11), 20)
   );
   return (
     <Flex
@@ -173,7 +172,7 @@ function StackedTextArt({
       >
         <Text
           fontSize={12}
-          letterSpacing={1.2}
+          letterSpacing={1.1}
           textTransform="uppercase"
           zIndex={1}
         >

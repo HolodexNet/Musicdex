@@ -48,6 +48,7 @@ export const SongCard = ({ song, ...rest }: SongCardProps) => {
           opacity={0}
           transition={{
             duration: 0.3,
+            ease: "anticipate",
           }}
         >
           <MotionBox
@@ -59,7 +60,7 @@ export const SongCard = ({ song, ...rest }: SongCardProps) => {
             display="flex"
             justifyContent="center"
           >
-            <Icon as={FaPlay} w={8} h={8} color="brand.400" />
+            <Icon as={FaPlay} w={8} h={8} color="n2.200" />
           </MotionBox>
         </MotionBox>
       </Flex>
