@@ -97,22 +97,22 @@ export function Channel() {
         <Spacer />
         <SimpleGrid spacing={2} columns={2}>
           <IconButton
-            colorScheme="bg"
+            colorScheme="bgAlpha"
             icon={<FiTwitter />}
             aria-label="Twitter"
           />
           <IconButton
-            colorScheme="bg"
+            colorScheme="bgAlpha"
             icon={<FiYoutube />}
             aria-label="Youtube"
           />
           <IconButton
-            colorScheme="bg"
+            colorScheme="bgAlpha"
             icon={<FiShare2 />}
             aria-label="Copy URL"
           />
           <IconButton
-            colorScheme="bg"
+            colorScheme="bgAlpha"
             icon={<MTHolodexIcon width="18px" />}
             aria-label="Holodex"
           />
