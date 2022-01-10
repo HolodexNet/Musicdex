@@ -1,5 +1,6 @@
 import { Box, Flex, FlexProps, Image, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import React from "react";
 import { useMemo } from "react";
 import {
   identifyTitle,
@@ -19,83 +20,81 @@ interface PlaylistArtworkProps extends FlexProps {
   renderType?: "dropShadowText" | "auto";
 }
 
-export function PlaylistArtwork({
-  playlist,
-  renderType = "auto",
-  ...rest
-}: PlaylistArtworkProps) {
-  const { title, description, type, params } = useMemo(() => {
-    if (isSGPPlaylist(playlist.id!)) {
-      const { type, params } = parsePlaylistID(playlist.id!);
-      const desc = (
-        playlist?.description
-          ? SGPDefinitions[type].descParser(playlist?.description)
-          : undefined
-      ) as any;
+export const PlaylistArtwork = React.memo(
+  ({ playlist, renderType = "auto", ...rest }: PlaylistArtworkProps) => {
+    const { title, description, type, params } = useMemo(() => {
+      if (isSGPPlaylist(playlist.id!)) {
+        const { type, params } = parsePlaylistID(playlist.id!);
+        const desc = (
+          playlist?.description
+            ? SGPDefinitions[type].descParser(playlist?.description)
+            : undefined
+        ) as any;
+        return {
+          title: identifyTitle(playlist),
+          type,
+          params,
+          description: desc,
+        };
+      }
       return {
         title: identifyTitle(playlist),
-        type,
-        params,
-        description: desc,
+        description: identifyDescription(playlist),
       };
+    }, [playlist]);
+
+    const channelImg = useMemo(
+      () => playlist && identifyPlaylistChannelImage(playlist),
+      [playlist]
+    );
+    const thumbnail = useMemo(() => {
+      const videoIds: string[] = (playlist as any).videoids;
+      if (videoIds?.length) return getVideoThumbnails(videoIds[0]).medium;
+      return null;
+    }, [playlist]);
+
+    if (type === ":weekly") {
+      return (
+        <StackedTextArt
+          typeText="This Week in"
+          titleText={description?.org || ""}
+          imageUrl={thumbnail || ""}
+          reverse={true}
+        />
+      );
     }
-    return {
-      title: identifyTitle(playlist),
-      description: identifyDescription(playlist),
-    };
-  }, [playlist]);
+    if (type === ":dailyrandom") {
+      return (
+        <StackedTextArt
+          typeText="Daily Mix"
+          titleText={
+            description?.channel.english_name || description?.channel.name
+          }
+          imageUrl={thumbnail || ""}
+        />
+      );
+    }
 
-  const channelImg = useMemo(
-    () => playlist && identifyPlaylistChannelImage(playlist),
-    [playlist]
-  );
-  const thumbnail = useMemo(() => {
-    const videoIds: string[] = (playlist as any).videoids;
-    if (videoIds?.length) return getVideoThumbnails(videoIds[0]).medium;
-    return null;
-  }, [playlist]);
+    if (type === ":video") {
+      const image =
+        (description.id && getVideoThumbnails(description.id).medium) || "";
+      return (
+        <StackedTextArt
+          typeText="Archive Playlist"
+          titleText={description?.title}
+          imageUrl={image}
+        />
+      );
+    }
 
-  if (type === ":weekly") {
     return (
-      <StackedTextArt
-        typeText="This Week in"
-        titleText={description?.org || ""}
-        imageUrl={thumbnail || ""}
-        reverse={true}
+      <OverlayTextArt
+        titleText={playlist.title || ""}
+        imageUrl={channelImg || ""}
       />
     );
   }
-  if (type === ":dailyrandom") {
-    return (
-      <StackedTextArt
-        typeText="Daily Mix"
-        titleText={
-          description?.channel.english_name || description?.channel.name
-        }
-        imageUrl={thumbnail || ""}
-      />
-    );
-  }
-
-  if (type === ":video") {
-    const image =
-      (description.id && getVideoThumbnails(description.id).medium) || "";
-    return (
-      <StackedTextArt
-        typeText="Archive Playlist"
-        titleText={description?.title}
-        imageUrl={image}
-      />
-    );
-  }
-
-  return (
-    <OverlayTextArt
-      titleText={playlist.title || ""}
-      imageUrl={channelImg || ""}
-    />
-  );
-}
+);
 
 function OverlayTextArt({
   titleText,
@@ -105,7 +104,7 @@ function OverlayTextArt({
   imageUrl: string;
 }) {
   const bgColor =
-    titleText.charCodeAt(Math.round(titleText.length / 2)) % 2 === 0
+    titleText.length % 2 === 0
       ? "var(--chakra-colors-n2-600)"
       : "var(--chakra-colors-brand-600)";
   return (
@@ -141,10 +140,7 @@ function StackedTextArt({
   reverse?: boolean;
 }) {
   // Random between color based on last character of title
-  const bgColor =
-    titleText.charCodeAt(Math.round(titleText.length / 2)) % 2 === 0
-      ? "brand.50"
-      : "n2.50";
+  const bgColor = titleText.length % 2 === 0 ? "brand.50" : "n2.50";
   // Do some fancy math to adjust font size so it can fit longer text
   const adjFontSize = Math.max(
     14,
