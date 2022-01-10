@@ -14,11 +14,13 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useState } from "react";
+import { useContextMenu } from "react-contexify";
 import { FaPlay } from "react-icons/fa";
 import { IoMdPlay } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useStoreActions, useStoreState } from "../../store";
 import { useDraggableSong } from "../data/DraggableSong";
+import { DEFAULT_MENU_ID } from "./CommonContext";
 import { MotionBox } from "./MotionBox";
 import { NowPlayingIcon } from "./NowPlayingIcon";
 
@@ -177,6 +179,8 @@ const HighlightListItem = React.memo(
   }) => {
     const dragProps = useDraggableSong(song);
     const [hover, setHover] = useState(false);
+    const { show } = useContextMenu({ id: DEFAULT_MENU_ID });
+
     function LeftIcon() {
       if (active)
         return (
@@ -208,6 +212,7 @@ const HighlightListItem = React.memo(
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         {...dragProps}
+        onContextMenu={(e) => show(e, { props: song })}
       >
         <HStack>
           <LeftIcon />
