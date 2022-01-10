@@ -13,7 +13,7 @@ import styled from "@emotion/styled";
 import { useStoreState, useStoreActions } from "../../store";
 import { SongTable } from "../data/SongTable";
 import { Text } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React, { Suspense, useMemo } from "react";
 import { FiLink2, FiMoreHorizontal, FiTrash } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
@@ -121,13 +121,15 @@ export function PlayerOverlay({
                     float="right"
                   ></IconButton>
                 </Heading>
-                <SongTable
-                  songs={currentQueue}
-                  songClicked={(e, s) =>
-                    next({ count: (s as any).idx - 1, userSkipped: true })
-                  }
-                  songDropdownMenuRenderer={OverlayDropDownMenu}
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <SongTable
+                    songs={currentQueue}
+                    songClicked={(e, s) =>
+                      next({ count: (s as any).idx - 1, userSkipped: true })
+                    }
+                    songDropdownMenuRenderer={OverlayDropDownMenu}
+                  />
+                </Suspense>
                 <Divider />
               </React.Fragment>
             )}
@@ -157,12 +159,14 @@ export function PlayerOverlay({
                     onClick={close}
                   ></IconButton>
                 </Text>
-                <SongTable
-                  songs={playlistTotalQueue}
-                  songClicked={(e, s) =>
-                    next({ count: (s as any).idx - 1, userSkipped: true })
-                  }
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <SongTable
+                    songs={playlistTotalQueue}
+                    songClicked={(e, s) =>
+                      next({ count: (s as any).idx - 1, userSkipped: true })
+                    }
+                  />
+                </Suspense>
               </React.Fragment>
             )}
             <Box height="200px"></Box>
