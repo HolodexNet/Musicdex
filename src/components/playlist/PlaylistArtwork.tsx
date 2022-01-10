@@ -168,13 +168,19 @@ function StackedTextArt({
       >
         <Text
           fontSize={12}
-          letterSpacing={1.1}
+          letterSpacing=".1rem"
           textTransform="uppercase"
           zIndex={1}
         >
           {typeText}
         </Text>
-        <Text isTruncated={true} fontSize={adjFontSize} my="auto" zIndex={1}>
+        <Text
+          isTruncated={true}
+          letterSpacing="normal"
+          fontSize={adjFontSize}
+          my="auto"
+          zIndex={1}
+        >
           {titleText}
         </Text>
         <LineLogo
