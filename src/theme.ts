@@ -14,7 +14,7 @@ const IdealShades = [
   new Color("hex", ["#30303d"]),
   new Color("hex", ["#25252f"]), //700
   new Color("hex", ["#17171e"]),
-  new Color("hex", ["#090902"]), //900
+  new Color("hex", ["#121212"]), //900
 ];
 const Generator = new ConsistentShading(IdealBaseColor, IdealShades);
 
