@@ -1,4 +1,10 @@
-import { Item, Separator, ItemParams, Menu as CMenu } from "react-contexify";
+import {
+  Item,
+  Separator,
+  ItemParams,
+  Menu as CMenu,
+  Submenu,
+} from "react-contexify";
 import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions } from "../../store";
@@ -31,6 +37,22 @@ export const CommonContextMenu = () => {
       >
         Copy Song Link
       </Item>
+      <Submenu label="Select...">
+        <Item
+          onClick={(x: ItemParams) => {
+            copyToClipboard(x.props.name);
+          }}
+        >
+          Select and Copy Song Name
+        </Item>
+        <Item
+          onClick={(x: ItemParams) => {
+            copyToClipboard(x.props.original_artist);
+          }}
+        >
+          Select and Copy Original Artist
+        </Item>
+      </Submenu>
       <Item
         onClick={(x: ItemParams) => {
           showAddDialog(x.props);

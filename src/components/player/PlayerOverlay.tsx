@@ -211,6 +211,9 @@ function OverlayDropDownMenu(cellInfo: any) {
   const addPlaylist = useStoreActions(
     (store) => store.addPlaylist.showPlaylistAddDialog
   );
+  const currentlyPlaying = useStoreState(
+    (state) => state.playback.currentlyPlaying
+  );
 
   const copyToClipboard = useClipboardWithToast();
   const navigate = useNavigate();
@@ -240,7 +243,12 @@ function OverlayDropDownMenu(cellInfo: any) {
         <MenuItem
           onClick={() => {
             console.log((song as any).idx);
-            if ((song as any).idx) queueRemove((song as any).idx - 1);
+            if ((song as any).idx)
+              queueRemove(
+                (song as any).idx -
+                  1 -
+                  (currentlyPlaying.from === "queue" ? 1 : 0)
+              );
           }}
           color="red.400"
         >

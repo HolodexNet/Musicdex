@@ -4,6 +4,7 @@ export function useDraggableSong(song: Song) {
   const setDragging = useStoreActions((a) => a.contextMenu.setDragging);
 
   const onDragStart = (e: any) => {
+    // console.log(e);
     e.dataTransfer.setData(
       "text/plain",
       `${window.location.origin}/song/${song.id}`

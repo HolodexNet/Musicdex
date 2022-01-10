@@ -24,6 +24,8 @@ export function Search() {
     query_by:
       "name, channel_name, channel_english_name, original_artist, channel_org, title",
     ...qObj,
+    facet_by: "channel_org, is_mv",
+    // filter_by: "original_artist: doriko",
   });
 
   function doSearch(queryNew: Partial<SearchParams<Song>> = {}) {
