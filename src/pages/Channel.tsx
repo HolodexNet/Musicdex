@@ -122,7 +122,7 @@ export function Channel() {
         {/* <Box>{JSON.stringify(discovery)}</Box> */}
         {discovery?.recentSingingStream && (
           <>
-            <Heading size="md" marginBottom={2} marginTop={6}>
+            <Heading size="md" marginBottom={2}>
               Latest Stream:
             </Heading>
             <VideoPlaylistCard
