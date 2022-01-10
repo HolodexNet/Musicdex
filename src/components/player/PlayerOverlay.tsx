@@ -214,6 +214,7 @@ function OverlayDropDownMenu(cellInfo: any) {
   const currentlyPlaying = useStoreState(
     (state) => state.playback.currentlyPlaying
   );
+  const next = useStoreActions((s) => s.playback.next);
 
   const copyToClipboard = useClipboardWithToast();
   const navigate = useNavigate();
@@ -243,12 +244,22 @@ function OverlayDropDownMenu(cellInfo: any) {
         <MenuItem
           onClick={() => {
             console.log((song as any).idx);
-            if ((song as any).idx)
+            if (
+              (song as any).idx > 1 ||
+              ((song as any).idx >= 1 && currentlyPlaying.from !== "queue")
+            )
+              // when the song you want to remove is on the queue.
               queueRemove(
                 (song as any).idx -
                   1 -
                   (currentlyPlaying.from === "queue" ? 1 : 0)
               );
+            else if (
+              (song as any).idx === 1 &&
+              currentlyPlaying.from === "queue"
+            )
+              // when the song you want to remove is NOW PLAYING.
+              next({ count: 1, userSkipped: true });
           }}
           color="red.400"
         >
