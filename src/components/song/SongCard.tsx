@@ -1,7 +1,9 @@
 import { Flex, FlexProps, Icon, Text } from "@chakra-ui/react";
+import { useContextMenu } from "react-contexify";
 import { FaPlay } from "react-icons/fa";
 import { useStoreActions } from "../../store";
 import { ChannelPhoto } from "../channel/ChannelPhoto";
+import { DEFAULT_MENU_ID } from "../common/CommonContext";
 import { MotionBox } from "../common/MotionBox";
 import { useDraggableSong } from "../data/DraggableSong";
 import { SongArtwork } from "./SongArtwork";
@@ -19,8 +21,16 @@ export const SongCard = ({ song, ...rest }: SongCardProps) => {
     });
   }
 
+  const { show } = useContextMenu({ id: DEFAULT_MENU_ID });
+
   return (
-    <Flex {...rest} minWidth="128px" direction="column">
+    <Flex
+      {...rest}
+      minWidth="128px"
+      direction="column"
+      onContextMenu={(e) => show(e, { props: song })}
+      {...dragSongProps}
+    >
       <Flex position="relative">
         <SongArtwork song={song} size={128} rounded="md" />
         <ChannelPhoto
@@ -64,7 +74,7 @@ export const SongCard = ({ song, ...rest }: SongCardProps) => {
           </MotionBox>
         </MotionBox>
       </Flex>
-      <Text noOfLines={2} height="44px" fontSize={14} my={1} {...dragSongProps}>
+      <Text noOfLines={2} height="44px" fontSize={14} my={1}>
         {song.name}
       </Text>
     </Flex>

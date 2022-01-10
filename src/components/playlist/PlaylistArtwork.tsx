@@ -176,7 +176,7 @@ function StackedTextArt({
         </Text>
         <Text
           isTruncated={true}
-          letterSpacing="normal"
+          letterSpacing="0px"
           fontSize={adjFontSize}
           my="auto"
           zIndex={1}

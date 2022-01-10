@@ -1,3 +1,4 @@
+import { Box, Text, Button } from "@chakra-ui/react";
 import axios from "axios";
 import { Suspense } from "react";
 import { useQuery } from "react-query";
@@ -8,6 +9,7 @@ import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
+import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 
@@ -23,7 +25,11 @@ export function Video() {
     async (q) => {
       return (await axios.get("/api/v2/videos/" + q.queryKey[1])).data;
     },
-    { cacheTime: 600000 /* 10 mins */ }
+    {
+      ...DEFAULT_FETCH_CONFIG /* 10 mins */,
+      cacheTime: 600000,
+      staleTime: 600000,
+    }
   );
 
   // const {description, }
@@ -34,9 +40,9 @@ export function Video() {
 
   // useEffect(() => console.log(playlist), [playlist])
 
-  if (!status.isSuccess) return <QueryStatus queryStatus={status} />;
+  if (videoStatus.isLoading) return <QueryStatus queryStatus={status} />;
 
-  if (!videoStatus.isSuccess) return <QueryStatus queryStatus={videoStatus} />;
+  // if (!videoStatus.isSuccess) return <QueryStatus queryStatus={videoStatus} />;
 
   return (
     <PageContainer>
@@ -72,6 +78,20 @@ export function Video() {
         <Suspense fallback={<div>Loading...</div>}>
           {playlist?.content && <SongTable songs={playlist.content} />}{" "}
         </Suspense>
+        {!playlist && status.isError && (
+          <Box>
+            <Text>Stream is not yet tagged with any songs.</Text>
+            <Button
+              variant="link"
+              colorScheme={"n2"}
+              as="a"
+              href={`https://holodex.net/edit/video/${video.id}/music`}
+              target="_blank"
+            >
+              Help us tag it on Holodex
+            </Button>
+          </Box>
+        )}
       </ContainerInlay>
     </PageContainer>
   );
