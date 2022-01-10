@@ -1,4 +1,22 @@
-import { Button, Heading, HStack, Spacer, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  HStack,
+  Icon,
+  Input,
+  Radio,
+  RadioGroup,
+  SimpleGrid,
+  Spacer,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { Suspense, useMemo } from "react";
 import {
   createSearchParams,
@@ -12,6 +30,9 @@ import {
   SearchParams,
   useSongSearch,
 } from "../modules/services/search.service";
+import { useForm } from "react-hook-form";
+import { FiFilter, FiSearch } from "react-icons/fi";
+import { BiMovie } from "react-icons/bi";
 
 export default function Search() {
   const [search] = useSearchParams();
@@ -49,6 +70,7 @@ export default function Search() {
 
   return (
     <PageContainer>
+      <AdvancedSearchFilters></AdvancedSearchFilters>
       <QueryStatus queryStatus={rest} />
       <Suspense fallback={<div></div>}>
         <HStack align="end">
@@ -92,11 +114,109 @@ export default function Search() {
     </PageContainer>
   );
 }
-
 function AdvancedSearchFilters() {
   const [search] = useSearchParams();
   const navigate = useNavigate();
   const qObj: Partial<SearchParams<Song>> = Object.fromEntries(
     search.entries()
+  );
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm();
+
+  function onSubmit(values: any) {
+    return new Promise((resolve: (x: any) => void) => {
+      setTimeout(() => {
+        alert(JSON.stringify(values, null, 2));
+        resolve(1);
+      }, 3000);
+    });
+  }
+
+  console.log(errors);
+
+  return (
+    <Box
+      w={"full"}
+      bg={useColorModeValue("white", "gray.900")}
+      boxShadow={"2xl"}
+      rounded={"lg"}
+      p={6}
+      textAlign={"start"}
+    >
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl isInvalid={errors.q} mt={2} mb={3}>
+          <FormLabel htmlFor="q">
+            <Icon as={FiSearch}></Icon> Search by Name, Original Artist, or
+            Channel
+          </FormLabel>
+          <Input
+            id="q"
+            placeholder="Song Query"
+            defaultValue={qObj.q}
+            {...register("q", {
+              required: "Required",
+              minLength: { value: 1, message: "Minimum length should be 1" },
+            })}
+          />
+          <FormErrorMessage>{errors.q && errors.q.message}</FormErrorMessage>
+        </FormControl>
+        <SimpleGrid spacing={5} minChildWidth="300px" mt={2} mb={3}>
+          <FormControl isInvalid={errors.original_artist}>
+            <FormLabel htmlFor="original_artist">
+              <Icon as={FiFilter}></Icon> Filter by Original Artist
+            </FormLabel>
+            <Input
+              id="original_artist"
+              placeholder="Original Artist"
+              {...register("original_artist")}
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel htmlFor="org">
+              <Icon as={FiFilter}></Icon> Filter by status
+            </FormLabel>
+
+            <RadioGroup defaultValue="0">
+              <Stack direction="row">
+                <Radio value="0" id="ismv" {...register("facets.is_mv")}>
+                  All Song Types
+                </Radio>
+                <Radio value="1" id="ismv" {...register("facets.is_mv")}>
+                  <Icon as={BiMovie}></Icon> MV Only
+                </Radio>
+                <Radio value="2" id="ismv" {...register("facets.is_mv")}>
+                  Non MV Only (Karaokes, etc)
+                </Radio>
+              </Stack>
+            </RadioGroup>
+          </FormControl>
+        </SimpleGrid>
+        <FormControl mt={2} mb={3}>
+          <FormLabel htmlFor="org">
+            <Icon as={FiFilter}></Icon> Filter by Org
+          </FormLabel>
+          <Stack spacing={5} direction="row">
+            <Checkbox defaultIsChecked {...register("facets.org.hololive")}>
+              Hololive (32)
+            </Checkbox>
+            <Checkbox defaultIsChecked {...register("facets.org.hololive")}>
+              Nijisanji (12)
+            </Checkbox>
+          </Stack>
+        </FormControl>
+        <Button
+          mt={4}
+          colorScheme="teal"
+          isLoading={isSubmitting}
+          type="submit"
+        >
+          Submit
+        </Button>
+      </form>
+    </Box>
   );
 }
