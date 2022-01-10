@@ -90,7 +90,7 @@ export const PlaylistArtwork = React.memo(
     return (
       <OverlayTextArt
         titleText={playlist.title || ""}
-        imageUrl={channelImg || ""}
+        imageUrl={thumbnail || channelImg || ""}
       />
     );
   }
@@ -107,6 +107,11 @@ function OverlayTextArt({
     titleText.length % 2 === 0
       ? "var(--chakra-colors-n2-600)"
       : "var(--chakra-colors-brand-600)";
+
+  const adjFontSize = Math.max(
+    14,
+    Math.min(Math.round(Math.pow(70 / titleText.length, 2) + 11), 20)
+  );
   return (
     <Flex
       position="relative"
@@ -114,16 +119,31 @@ function OverlayTextArt({
       minWidth="148px"
       width="100%"
       flexDirection={"column"}
+      bgImage={imageUrl}
+      flexGrow={1}
+      backgroundPosition="center"
+      backgroundRepeat="no-repeat"
+      bgSize="cover"
     >
       <BrandColorGradientText bgColor={bgColor} />
       <Box p={2} position="absolute" mt={3} width="100%">
-        <Text fontSize={20} fontWeight={600} textAlign="center" noOfLines={2}>
+        <Text
+          fontSize={adjFontSize}
+          fontWeight={600}
+          textAlign="center"
+          noOfLines={2}
+        >
           {titleText}
         </Text>
       </Box>
-      <LineLogo position="absolute" w={6} h={6} left="4px" bottom="4px" />
-
-      <Image src={imageUrl} alt="Playlist art" />
+      <LineLogo
+        position="absolute"
+        w={6}
+        h={6}
+        left="4px"
+        bottom="4px"
+        zIndex={1}
+      />
     </Flex>
   );
 }

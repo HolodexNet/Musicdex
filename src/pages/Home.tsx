@@ -29,7 +29,7 @@ export function Home() {
 
   return (
     <PageContainer>
-      <ContainerInlay>
+      <ContainerInlay pt={0}>
         {/* <HStack alignItems="flex-end">
           <Spacer />
           <Button variant="ghost" size="sm" colorScheme="n2">
@@ -119,6 +119,6 @@ export function Home() {
 }
 
 const HomeSection = styled.div`
-  padding: 8px 0px;
-  margin-bottom: 24px;
+  padding: 0.5rem 0px;
+  margin-bottom: 1.5rem;
 `;
