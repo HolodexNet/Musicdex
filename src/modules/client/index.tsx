@@ -6,6 +6,7 @@ import OAuth2Login from "react-simple-oauth2-login";
 import { useStoreActions, useStoreState } from "../../store";
 import { useGoogleLogin } from "react-google-login";
 import open from "oauth-open";
+import { useNavigate } from "react-router-dom";
 
 export interface OAuth2SuccessResponse {
   token_type: "Bearer";
@@ -85,6 +86,7 @@ export function useClientLogin() {
   const setToken = useStoreActions((actions) => actions.auth.setToken);
   const currentToken = useStoreState((state) => state.auth.token);
   const user = useStoreState((state) => state.auth.user);
+  const navigate = useNavigate();
 
   function onFailure(err: any) {
     console.log("Error", err);
@@ -110,6 +112,7 @@ export function useClientLogin() {
       const { jwt, user } = token;
       setToken(jwt);
       setUser(user);
+      navigate("/settings");
       console.log(res);
     },
     onFailure: onFailure,
@@ -124,6 +127,7 @@ export function useClientLogin() {
     const { jwt, user } = token;
     setToken(jwt);
     setUser(user);
+    navigate("/settings");
   }
 
   return {
@@ -162,6 +166,7 @@ export function useClientLogin() {
               const { jwt, user } = token;
               setToken(jwt);
               setUser(user);
+              navigate("/settings");
             }
           );
         },

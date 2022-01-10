@@ -18,7 +18,7 @@ const IdealShades = [
 ];
 const Generator = new ConsistentShading(IdealBaseColor, IdealShades);
 
-const SATURATION_MAP = [0.32, 0.16, 0.08, 0.04, 0, 0, 0.04, 0.08, 0.16, 0.56];
+const SATURATION_MAP = [0.32, 0.16, 0.08, 0.04, 0, 0, 0.04, 0.08, 0.46, 0.7];
 const AR = [5, 10, 20, 30, 40, 50, 60, 70, 80, 90];
 function makeColor(color: Color, alpha?: string) {
   const x = Object.fromEntries(
@@ -37,8 +37,8 @@ function makeColor(color: Color, alpha?: string) {
 const localColors = {
   brand: makeColor(new Color("hex", ["#276986"])),
   n2: makeColor(new Color("hex", ["#D31371"])),
-  bg: makeColor(new Color("hex", ["#464658"])),
-  bgAlpha: makeColor(new Color("hex", ["#464658B3"]), "B3"),
+  bg: makeColor(new Color("hex", ["#46464c"])),
+  bgAlpha: makeColor(new Color("hex", ["#46464cB3"]), "B3"),
 };
 
 console.log(localColors);

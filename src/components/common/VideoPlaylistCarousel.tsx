@@ -1,4 +1,4 @@
-import { useInterval, useBoolean, HStack } from "@chakra-ui/react";
+import { useInterval, useBoolean, HStack, Box } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useRef, useState, useEffect, useMemo } from "react";
 import {
@@ -61,7 +61,7 @@ export function VideoPlaylistCarousel({
       <CarouselNav>
         {videoPlaylists &&
           videoPlaylists.map((x, idx) => (
-            <button
+            <Box
               key={"kbxn" + x?.video.id}
               className={
                 currentItemAuto === idx
@@ -72,7 +72,9 @@ export function VideoPlaylistCarousel({
                 goToSnapItem(idx);
                 setCurrentItemAuto(idx);
               }}
-            ></button>
+              cursor="pointer"
+              _hover={{ backgroundColor: "#999" }}
+            ></Box>
           ))}
       </CarouselNav>
 
