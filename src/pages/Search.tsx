@@ -13,7 +13,7 @@ import {
   useSongSearch,
 } from "../modules/services/search.service";
 
-export function Search() {
+export default function Search() {
   const [search] = useSearchParams();
   const navigate = useNavigate();
   const qObj: Partial<SearchParams<Song>> = Object.fromEntries(
@@ -90,5 +90,13 @@ export function Search() {
         )}
       </Suspense>
     </PageContainer>
+  );
+}
+
+function AdvancedSearchFilters() {
+  const [search] = useSearchParams();
+  const navigate = useNavigate();
+  const qObj: Partial<SearchParams<Song>> = Object.fromEntries(
+    search.entries()
   );
 }
