@@ -16,8 +16,9 @@ import React from "react";
 import { useState } from "react";
 import { useContextMenu } from "react-contexify";
 import { FaPlay } from "react-icons/fa";
+import { FiExternalLink } from "react-icons/fi";
 import { IoMdPlay } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useStoreActions, useStoreState } from "../../store";
 import { useDraggableSong } from "../data/DraggableSong";
 import { DEFAULT_MENU_ID } from "./CommonContext";
@@ -32,6 +33,13 @@ export const VideoPlaylistCard = React.memo(
     const currentlyPlayingId = useStoreState(
       (state) => state.playback.currentlyPlaying.song?.id
     );
+
+    const navigate = useNavigate();
+
+    function openVideo() {
+      if (playlist?.content) setPlaylist({ playlist });
+      else window.open(`https://holodex.net/watch/${video.id}`, "_blank");
+    }
 
     return (
       <Box width="100%" height="100%">
@@ -69,6 +77,7 @@ export const VideoPlaylistCard = React.memo(
                   transition={{
                     duration: 0.3,
                   }}
+                  onClick={openVideo}
                   cursor="pointer"
                 >
                   <MotionBox
@@ -77,7 +86,13 @@ export const VideoPlaylistCard = React.memo(
                     transition={{ duration: 0.3 }}
                     // onClick={() => playSong()}
                   >
-                    <Icon as={FaPlay} w={8} h={8} color="brand.200" />
+                    <Icon
+                      as={playlist?.content ? FaPlay : FiExternalLink}
+                      w={8}
+                      h={8}
+                      color="brand.50"
+                      textShadow="2xl"
+                    />
                   </MotionBox>
                 </MotionBox>
 
