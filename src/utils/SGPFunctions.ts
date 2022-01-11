@@ -79,7 +79,7 @@ export function extractUsingFn<Out>(
     playlist,
     params,
     (playlist?.description
-      ? SGPDefinitions[type].descParser(playlist?.description)
+      ? SGPDefinitions?.[type]?.descParser?.(playlist?.description)
       : undefined) as any
   );
 }

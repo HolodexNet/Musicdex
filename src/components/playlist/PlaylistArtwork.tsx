@@ -27,7 +27,7 @@ export const PlaylistArtwork = React.memo(
         const { type, params } = parsePlaylistID(playlist.id!);
         const desc = (
           playlist?.description
-            ? SGPDefinitions[type].descParser(playlist?.description)
+            ? SGPDefinitions?.[type]?.descParser?.(playlist?.description)
             : undefined
         ) as any;
         return {
