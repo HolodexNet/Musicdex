@@ -110,7 +110,6 @@ export function identifyDescription(playlist: Partial<PlaylistFull>) {
   if (isSGPPlaylist(playlist.id!)) {
     return extractUsingFn(playlist, {
       ":dailyrandom": (p, { ch }, d: any) => {
-        console.log(ch, d);
         return `Your daily dose of ${d.channel.english_name || d.channel.name}`;
       },
       ":userweekly": (p, { user }, _) => {
