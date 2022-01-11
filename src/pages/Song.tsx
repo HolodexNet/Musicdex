@@ -22,7 +22,7 @@ import { useSong } from "../modules/services/songs.service";
 import { useStoreActions } from "../store";
 import { formatSeconds } from "../utils/SongHelper";
 
-export function Song() {
+export default function Song() {
   let params = useParams();
   let songId = params.songId!;
 

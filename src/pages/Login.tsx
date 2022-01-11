@@ -1,7 +1,7 @@
 import { LoginButtons } from "../components/header/Login";
 import { PageContainer } from "../components/layout/PageContainer";
 
-export function Login() {
+export default function Login() {
   return (
     <PageContainer>
       <LoginButtons></LoginButtons>

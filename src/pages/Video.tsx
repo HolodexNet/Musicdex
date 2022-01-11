@@ -13,7 +13,7 @@ import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 
-export function Video() {
+export default function Video() {
   // const history = useStoreState((store) => store.playback.history);
   let params = useParams();
   let videoId = params.id!;

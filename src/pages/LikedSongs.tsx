@@ -8,7 +8,7 @@ import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { useLikedSongs } from "../modules/services/like.service";
 import { useStoreActions } from "../store";
 
-export function LikedSongs() {
+export default function LikedSongs() {
   // const history = useStoreState((store) => store.playback.history);
   const [page, setPage] = useState(1);
   const {

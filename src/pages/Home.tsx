@@ -17,7 +17,7 @@ import { useDiscoveryOrg } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreState } from "../store";
 
-export function Home() {
+export default function Home() {
   const org = useStoreState((store) => store.org.currentOrg);
   const { data: trendingSongs, ...rest } = useTrendingSongs(
     org.name !== "All Vtubers" ? { org: org.name } : {}

@@ -25,7 +25,7 @@ export const OrgManager = React.lazy(
   () => import("../components/common/OrgManagement")
 );
 
-export function Settings() {
+export default function Settings() {
   return (
     <PageContainer>
       <ContainerInlay>

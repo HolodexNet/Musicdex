@@ -11,7 +11,7 @@ import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 import { formatPlaylistID } from "../utils/SGPFunctions";
 
-export function History() {
+export default function History() {
   // const history = useStoreState((store) => store.playback.history);
   const { isLoggedIn, user } = useClient();
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");

@@ -19,12 +19,12 @@ import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray"
 import React from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
-import { BGImgContainer, BGImg } from "./BGImgContainer";
+import { BGImgContainer, BGImg } from "../components/common/BGImgContainer";
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
 );
 
-export function Playlist() {
+export default function Playlist() {
   let params = useParams();
   let playlistId = params.playlistId!;
   let { user, isLoggedIn } = useClient();

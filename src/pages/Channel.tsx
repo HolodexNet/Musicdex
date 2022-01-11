@@ -31,9 +31,9 @@ import { useDiscoveryChannel } from "../modules/services/discovery.service";
 import { useHistory } from "../modules/services/history.service";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
-import { BGImgContainer, BGImg } from "./BGImgContainer";
+import { BGImgContainer, BGImg } from "../components/common/BGImgContainer";
 
-export function Channel() {
+export default function Channel() {
   // const history = useStoreState((store) => store.playback.history);
   let params = useParams();
   let channelId = params.id!;
