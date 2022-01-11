@@ -225,7 +225,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
                         {...row.getRowProps()}
                         _hover={HOVER_ROW_STYLE}
                         ref={provided.innerRef}
-                        isDragging={snapshot.isDragging}
+                        // isDragging={snapshot.isDragging}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >

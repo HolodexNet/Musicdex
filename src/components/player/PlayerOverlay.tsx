@@ -146,7 +146,13 @@ export function PlayerOverlay({
                     float="right"
                   ></IconButton>
                 </Heading>
-                <Text fontSize="md">
+                <Text
+                  fontSize="md"
+                  as={Link}
+                  to={urlLinkToPlaylist || "#"}
+                  onClick={close}
+                  _hover={{ textDecoration: "underline" }}
+                >
                   {currentTitle}
                   <IconButton
                     variant="ghost"
@@ -154,9 +160,6 @@ export function PlayerOverlay({
                     aria-label="go to playlist"
                     icon={<FiLink2 />}
                     ml={1}
-                    as={Link}
-                    to={urlLinkToPlaylist || "#"}
-                    onClick={close}
                   ></IconButton>
                 </Text>
                 <Suspense fallback={<div>Loading...</div>}>

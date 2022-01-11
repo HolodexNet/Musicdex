@@ -91,6 +91,8 @@ export default function Playlist() {
           setEditMode(false);
         }
       );
+    } else {
+      setEditMode(false);
     }
   };
 
