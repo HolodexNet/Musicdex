@@ -1,5 +1,5 @@
 import { Box, useColorModeValue, useToast } from "@chakra-ui/react";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
@@ -34,6 +34,11 @@ export default function Playlist() {
   const { mutateAsync: writeNewPlaylist } = usePlaylistWriter();
 
   const [editMode, setEditMode] = useState(false);
+
+  useEffect(() => {
+    setEditMode(false);
+  }, [playlistId]);
+
   const { banner, title, description } = useMemo(() => {
     return (
       (playlist && {
@@ -102,7 +107,7 @@ export default function Playlist() {
     );
 
   return (
-    <PageContainer>
+    <PageContainer key={"playlist_" + playlistId}>
       <BGImgContainer height="200px">
         <BGImg banner_url={banner || ""} height="200px"></BGImg>
       </BGImgContainer>
