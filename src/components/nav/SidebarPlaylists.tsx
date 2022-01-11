@@ -24,8 +24,8 @@ export const SidebarPlaylists = ({
       <AnimatePresence>
         {playlistStubs.map((x) => {
           const title = identifyTitle(x) || "...";
-          const emoji = title.match(/^\p{Emoji}/gu);
-          const rest = title.match(/(?!\p{Emoji})(.*)$/gu);
+          const emoji = title.match(/^(?!\d)\p{Emoji}/gu); // Match a emoji that's not preceeded by a number
+          const rest = title.match(/(?!^(?!\d)\p{Emoji})(.*)$/gu); // a bit confusing. double negative lookahead. Match <.*> that's not preceeded by a Emoji, but the Emoji can't be a number.
           return (
             <motion.div
               key={"sidebar-pld" + x.id}
