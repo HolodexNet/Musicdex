@@ -42,6 +42,11 @@ import addPlaylist from "../../store/addPlaylist";
 import { formatSeconds } from "../../utils/SongHelper";
 import { SongArtwork } from "../song/SongArtwork";
 import { ChangePlayerLocationButton } from "./ChangePlayerLocationButton";
+import { SongInfo } from "./controls/PlayerSongInfo";
+import { PlaybackControl } from "./controls/PlaybackControl";
+import { PlayerOption } from "./controls/PlayerOption";
+import { VolumeSlider } from "./controls/VolumeSlider";
+import { TimeSlider } from "./controls/TimeSlider";
 
 var VideoIDRegex =
   /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|\?v=)([^#&?]*).*/;
@@ -182,8 +187,6 @@ export function PlayerBar({
 
   const playerState = useMemo(() => status?.state, [status]);
   const toast = useToast();
-
-  const [hovering, setHovering] = useState(false);
 
   const next = useStoreActions((actions) => actions.playback.next);
 
@@ -338,40 +341,16 @@ export function PlayerBar({
 
   function togglePlay() {
     if (player) isPlaying ? player.pauseVideo() : player.playVideo();
-
     setIsPlaying((prev) => !prev);
   }
 
   return (
     <PlayerContainer>
-      <Slider
-        defaultValue={0}
-        step={0.1}
-        min={0}
-        max={100}
-        value={progress}
-        itemID="main-slider"
-        colorScheme="blue"
-        onMouseEnter={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
+      <TimeSlider
+        progress={progress}
         onChange={onChange}
-      >
-        <SliderTrack height={hovering ? "10px" : "6px"}>
-          <SliderFilledTrack
-            background={`linear-gradient(to right, var(--chakra-colors-brand-400), var(--chakra-colors-n2-400))`}
-          />
-        </SliderTrack>
-        <Tooltip
-          hasArrow
-          bg="teal.500"
-          color="white"
-          placement="top"
-          isOpen={hovering}
-          label={<span>{seconds}</span>}
-        >
-          <SliderThumb visibility={hovering ? "visible" : "hidden"} />
-        </Tooltip>
-      </Slider>
+        totalDuration={totalDuration}
+      />
       <MemoizedPlayerBarLower
         {...{
           currentSong,
@@ -456,201 +435,27 @@ function PlayerBarLower({
   isExpanded: boolean;
   toggleExpanded: () => void;
 }) {
-  const previous = useStoreActions((actions) => actions.playback.previous);
-
-  const shuffleMode = useStoreState((state) => state.playback.shuffleMode);
-  const toggleShuffleMode = useStoreActions(
-    (actions) => actions.playback.toggleShuffle
-  );
-
-  const repeatMode = useStoreState((state) => state.playback.repeatMode);
-  const toggleRepeatMode = useStoreActions(
-    (actions) => actions.playback.toggleRepeat
-  );
-
-  const copyToClipboard = useClipboardWithToast();
-  const addPlaylist = useStoreActions(
-    (a) => a.addPlaylist.showPlaylistAddDialog
-  );
-  const navigate = useNavigate();
-
   return (
     <PlayerMain>
       <div className="left">
-        <span>
-          {!!currentSong && (
-            <HStack>
-              <Menu
-                eventListeners={{ scroll: false }}
-                isLazy
-                boundary="scrollParent"
-                gutter={10}
-                placement="top-start"
-              >
-                <MenuButton position="relative">
-                  <Icon
-                    as={FaPlay}
-                    position="absolute"
-                    left="-7px"
-                    top="3px"
-                    opacity="0.4"
-                    // border="0px solid gray"
-                    py="1px"
-                    width="0.4rem"
-                    // backgroundColor="gray.400"
-                    // roundedLeft="md"
-                  ></Icon>
-                  <SongArtwork song={currentSong} size={50} marginRight={2} />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem
-                    onClick={() =>
-                      copyToClipboard(
-                        `${window.location.origin}/song/${currentSong.id}`
-                      )
-                    }
-                  >
-                    Copy Song Link
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      addPlaylist(currentSong);
-                    }}
-                  >
-                    Add To Playlist...
-                  </MenuItem>
-                  <MenuDivider />
-                  <MenuItem
-                    onClick={() => {
-                      navigate("/song/" + currentSong.id);
-                    }}
-                  >
-                    Go To Song Page
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      navigate("/video/" + currentSong.video_id);
-                    }}
-                  >
-                    Go To Video Page
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      navigate("/channel/" + currentSong.channel_id);
-                    }}
-                  >
-                    Go to Channel Page
-                  </MenuItem>
-                  {/* <MenuDivider /> */}
-                </MenuList>
-              </Menu>
-
-              <Box>
-                <Link
-                  as={NavLink}
-                  to={`/song/${currentSong.id}`}
-                  // display="inline-block"
-                >
-                  <Text fontWeight={500} noOfLines={1}>
-                    {currentSong.name}
-                  </Text>
-                </Link>
-                <Link as={NavLink} to={`/channel/${currentSong.channel_id}`}>
-                  <Text noOfLines={1} opacity={0.66}>
-                    {currentSong.channel.english_name ||
-                      currentSong.channel.name}
-                  </Text>
-                </Link>
-              </Box>
-            </HStack>
-          )}
-        </span>
+        <span>{currentSong && <SongInfo song={currentSong} />}</span>
       </div>
       <div className="center">
-        <IconButton
-          aria-label="Previous Song"
-          icon={<FaStepBackward />}
-          variant="ghost"
-          onClick={() => previous()}
-        />
-        <IconButton
-          size="lg"
-          aria-label="Play"
-          icon={isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
-          variant="ghost"
-          onClick={togglePlay}
-        />
-        <IconButton
-          aria-label="Next Song"
-          icon={<FaStepForward />}
-          variant="ghost"
-          onClick={() => next({ count: 1, userSkipped: true })}
-        />
+        <PlaybackControl isPlaying={isPlaying} togglePlay={togglePlay} />
       </div>
       <div className="right">
         <Box width={36} display="inline-block" mr={2}>
           <VStack spacing={-1}>
-            <Slider
-              aria-label="slider-ex-4"
-              defaultValue={80}
-              onChange={(e) => {
-                player?.setVolume(e);
-              }}
-            >
-              <SliderTrack bg="red.50">
-                <SliderFilledTrack
-                  background={`linear-gradient(to right, var(--chakra-colors-brand-400), var(--chakra-colors-n2-400))`}
-                />
-              </SliderTrack>
-              <SliderThumb boxSize={5}>
-                <Box color="brand.400" as={FiVolume1} />
-              </SliderThumb>
-            </Slider>
+            <VolumeSlider onChange={(e) => player?.setVolume(e)} />
             <Text fontSize=".85em" display="inline-block" opacity={0.5}>
               <span>{seconds}</span> /{" "}
               <span>{formatSeconds(totalDuration)}</span>
             </Text>
           </VStack>
         </Box>
-        <IconButton
-          aria-label="Shuffle"
-          icon={ShuffleIcon(shuffleMode)}
-          variant="ghost"
-          onClick={() => toggleShuffleMode()}
-          size="lg"
-        />
-        <IconButton
-          aria-label="Shuffle"
-          icon={RepeatIcon(repeatMode)}
-          variant="ghost"
-          onClick={() => toggleRepeatMode()}
-          size="lg"
-        />
-        <ChangePlayerLocationButton />
-
-        <IconButton
-          aria-label="Expand"
-          icon={isExpanded ? <FaChevronDown /> : <FaChevronUp />}
-          variant="ghost"
-          onClick={() => toggleExpanded()}
-        />
+        <PlayerOption isExpanded={isExpanded} toggleExpanded={toggleExpanded} />
       </div>
     </PlayerMain>
   );
 }
 const MemoizedPlayerBarLower = React.memo(PlayerBarLower);
-
-function RepeatIcon(repeatMode: string) {
-  switch (repeatMode) {
-    case "repeat":
-      return <MdRepeat size={24} />;
-    case "repeat-one":
-      return <MdRepeatOne size={24} />;
-    default:
-      return <MdRepeat size={24} color="grey" />;
-  }
-}
-
-function ShuffleIcon(shuffleMode: boolean) {
-  return <MdShuffle size={24} color={shuffleMode ? "" : "grey"} />;
-}

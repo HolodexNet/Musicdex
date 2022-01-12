@@ -76,12 +76,7 @@ export const PlaylistCard = ({
       to={`/playlists/${playlist.id}/`}
       {...rest}
     >
-      <Flex
-        flexDirection="column"
-        position="relative"
-        onClick={handlePlayClick}
-        cursor="pointer"
-      >
+      <Flex flexDirection="column" position="relative" cursor="pointer">
         <PlaylistArtwork playlist={playlist} />
         <MotionBox
           width="40px"
@@ -113,6 +108,7 @@ export const PlaylistCard = ({
             transition: { duration: 0.3 },
           }}
           whileTap={{ scale: 0.9 }}
+          onClick={handlePlayClick}
         >
           <Icon as={FaPlay} w={5} h={5} color="brand.400" />
         </MotionBox>
