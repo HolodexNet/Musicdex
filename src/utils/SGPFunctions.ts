@@ -13,10 +13,7 @@ interface SGPDefMap {
   ":history": SGPDef<{ user: string | number }, { user: string | number }>;
   ":video": SGPDef<{ id: string }, { id: string }>;
   ":latest": SGPDef<{ org: string }, { org: string }>;
-  ":mv": SGPDef<
-    { org: string; sort: "recent" | "random" },
-    { org: string; sort: "recent" | "random" }
-  >;
+  ":mv": SGPDef<{ org: string; sort: "recent" | "random" }, { org: string }>;
 }
 
 const DEFAULT_PARAM_PARSER = (playlistId: string) =>
@@ -65,15 +62,15 @@ interface SGPTransformer<Out> {
     id: { id: string },
     data: { id: string; title: string } | undefined
   ) => Out;
-  ":mv"?: (
+  ":latest"?: (
     playlist: PlaylistLike,
     id: { org: string },
     data: { org: string } | undefined
   ) => Out;
-  ":latest"?: (
+  ":mv"?: (
     playlist: PlaylistLike,
-    id: { org: string },
-    data: { org: string; sort: "recent" | "random" } | undefined
+    id: { org: string; sort: "recent" | "random" },
+    data: { org: string } | undefined
   ) => Out;
 }
 
@@ -109,7 +106,7 @@ export function parsePlaylistID(id: string): {
   const [type, paramString] = id.split(IDSplitter);
   return {
     type: type as any,
-    params: paramString ? qs.parse(paramString) : {},
+    params: paramString ? qs.parse(paramString.replaceAll(",", "&")) : {},
   };
 }
 

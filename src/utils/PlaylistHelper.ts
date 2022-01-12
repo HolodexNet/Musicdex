@@ -100,6 +100,17 @@ export function identifyTitle(playlist: Partial<PlaylistFull>) {
       ":video": (p, { id }, d) => {
         return d?.title || "Video";
       },
+      ":latest": (p, { org }, _) => {
+        return `${org} New Arrivals`;
+      },
+      ":mv": (p, { org, sort }, _) => {
+        switch (sort) {
+          case "random":
+            return `${org} MV Mix`;
+          case "recent":
+            return `Latest ${org} MVs`;
+        }
+      },
     });
   } else {
     return playlist.title;
@@ -125,6 +136,17 @@ export function identifyDescription(playlist: Partial<PlaylistFull>) {
         return `Playlist from ${
           d.channel.english_name || d.channel.name
         }'s stream`;
+      },
+      ":latest": (p, { org }, _) => {
+        return `Latest tagged songs in ${org}`;
+      },
+      ":mv": (p, { org, sort }, _) => {
+        switch (sort) {
+          case "random":
+            return `Some of the best from ${org}`;
+          case "recent":
+            return `Recent ${org} covers & originals`;
+        }
       },
     });
   } else {
