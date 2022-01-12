@@ -1,6 +1,7 @@
 import {
   CSSObject,
   Icon,
+  IconButton,
   Table,
   Tbody,
   Td,
@@ -17,6 +18,7 @@ import { ContextMenuParams, useContextMenu } from "react-contexify";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FiMoreHorizontal } from "react-icons/fi";
 import { Column, Row, useSortBy, useTable } from "react-table";
 import { useStoreActions, useStoreState } from "../../store";
 import { formatSeconds } from "../../utils/SongHelper";
@@ -24,7 +26,6 @@ import { DEFAULT_MENU_ID } from "../common/CommonContext";
 import { NowPlayingIcon } from "../common/NowPlayingIcon";
 import { SongLikeButton } from "../song/SongLikeButton";
 import { useDraggableSong } from "./DraggableSong";
-import { PlaylistSongTableDropDownMenu } from "./SongTableDropdownButton";
 
 type IndexedSong = Song & { idx: number };
 
@@ -47,6 +48,66 @@ const COLUMN_MIN_WIDTHS: { [key: string]: string } = {
   "...": "100px",
 };
 
+const IdxGrid = ({
+  row: { original },
+  value,
+}: {
+  row: { original: Song };
+  value: any;
+}) => {
+  const currentId = useStoreState(
+    (state) => state.playback.currentlyPlaying?.song?.id
+  );
+
+  return original.id === currentId ? (
+    <NowPlayingIcon style={{ color: "var(--chakra-colors-n2-400)" }} />
+  ) : (
+    value
+  );
+};
+
+const TitleGrid = ({ row: { original } }: { row: { original: Song } }) => {
+  return (
+    <VStack alignItems="start" spacing={1}>
+      <span>{original?.name}</span>
+      <Text opacity={0.66} fontWeight={300} fontSize="sm">
+        {original.channel?.name}
+      </Text>
+    </VStack>
+  );
+};
+
+const DurationGrid = ({
+  row: { original },
+  value,
+}: {
+  row: { original: Song };
+  value: any;
+}) => {
+  return (
+    <>
+      {original.is_mv && (
+        <Icon mb="-3px" mr={3} as={BiMovie} title="MV" color="gray.500"></Icon>
+      )}{" "}
+      {value}
+    </>
+  );
+};
+
+const SangOnGrid = ({
+  row: { original },
+  value,
+}: {
+  row: { original: Song };
+  value: any;
+}) => {
+  const { t } = useTranslation();
+  return (
+    <span title={t("absoluteDate", { date: value as Date })}>
+      {t("relativeDate", { date: value })}
+    </span>
+  );
+};
 export const SongTable = ({
   songs,
   songClicked,
@@ -62,8 +123,27 @@ export const SongTable = ({
       return { ...v, idx: i + 1 };
     });
   }, [songs]);
-  const currentId = useStoreState(
-    (state) => state.playback.currentlyPlaying?.song?.id
+
+  const { show } = useContextMenu({ id: menuId });
+
+  const dropDownUsageFn = React.useMemo(
+    () =>
+      songDropdownMenuRenderer
+        ? songDropdownMenuRenderer
+        : (cellInfo: any) => (
+            <IconButton
+              //   py={2}
+              icon={<FiMoreHorizontal />}
+              rounded="full"
+              size="sm"
+              mr={-2}
+              variant="ghost"
+              colorScheme="n2"
+              aria-label="More"
+              onClick={(e) => show(e, { props: cellInfo?.row?.original })}
+            ></IconButton>
+          ),
+    [songDropdownMenuRenderer]
   );
   // const [front,front2] = useCOlorMode
 
@@ -75,27 +155,12 @@ export const SongTable = ({
         maxWidth: 40,
         minWidth: 40,
         width: 40,
-        Cell: (cellInfo: any) => {
-          return cellInfo.row.original.id === currentId ? (
-            <NowPlayingIcon style={{ color: "var(--chakra-colors-n2-400)" }} />
-          ) : (
-            cellInfo.row.original.idx
-          );
-        },
+        Cell: IdxGrid,
       },
       {
         Header: "Title",
         accessor: "name",
-        Cell: (cellInfo: any) => {
-          return (
-            <VStack alignItems="start" spacing={1}>
-              <span>{cellInfo.row.original?.name}</span>
-              <Text opacity={0.66} fontWeight={300} fontSize="sm">
-                {cellInfo.row.original.channel?.name}
-              </Text>
-            </VStack>
-          );
-        },
+        Cell: TitleGrid,
       },
       {
         id: "channel",
@@ -114,59 +179,24 @@ export const SongTable = ({
           return formatSeconds(row.end - row.start);
         },
         isNumeric: true,
-        Cell: (cellInfo: any) => {
-          return (
-            <>
-              {cellInfo.row.original.is_mv && (
-                <Icon
-                  mb="-3px"
-                  mr={3}
-                  as={BiMovie}
-                  title="MV"
-                  color="gray.500"
-                ></Icon>
-              )}{" "}
-              {cellInfo.value}
-            </>
-          );
-        },
+        Cell: DurationGrid,
       },
       {
         id: "date",
         Header: "Sang On",
         accessor: (row: { available_at: Date }) => new Date(row?.available_at),
-        Cell(cellInfo: any) {
-          return (
-            <span title={t("absoluteDate", { date: cellInfo.value as Date })}>
-              {t("relativeDate", { date: cellInfo.value })}
-            </span>
-          );
-        },
+        Cell: SangOnGrid,
       },
       {
         id: "...",
         Header: "",
         disableSortBy: true,
         accessor: "idx",
-        Cell: (cellInfo: any) => {
-          return songDropdownMenuRenderer ? (
-            songDropdownMenuRenderer(cellInfo)
-          ) : (
-            <PlaylistSongTableDropDownMenu song={cellInfo.row.original} />
-          );
-        },
+        Cell: dropDownUsageFn,
       },
     ],
-    [currentId, t, songDropdownMenuRenderer]
+    [dropDownUsageFn]
   );
-
-  // const showAddDialog = useStoreActions(
-  //   (action) => action.addPlaylist.showPlaylistAddDialog
-  // );
-
-  // const copyToClipboard = useClipboardWithToast();
-
-  // const navigate = useNavigate();
 
   const {
     getTableProps,
@@ -195,8 +225,6 @@ export const SongTable = ({
     toggleHideColumn("dur", isXL < 1);
   }, [isXL, toggleHideColumn]);
 
-  // const contextMenuTrigger = useContextTrigger({ menuId: menuIdStat });
-
   const defaultClickBehavior = useCallback(
     (e: React.MouseEvent<any, MouseEvent>, song: Song) => {
       queueSongs({
@@ -206,8 +234,6 @@ export const SongTable = ({
     },
     [queueSongs]
   );
-
-  const { show } = useContextMenu({ id: menuId });
 
   return (
     <>
