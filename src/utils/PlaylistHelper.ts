@@ -29,6 +29,20 @@ export function identifyPlaylistBannerImage(playlist: Partial<PlaylistFull>) {
       ":video": (p, _, __) => {
         return undefined;
       },
+      ":latest": (p, __, _) => {
+        if (p.content && p.content[0]) {
+          return `/api/statics/channelImg/${p.content[0].channel_id}/banner/3.jpeg`;
+        } else {
+          return undefined;
+        }
+      },
+      ":mv": (p, __, _) => {
+        if (p.content && p.content[0]) {
+          return `/api/statics/channelImg/${p.content[0].channel_id}/banner/3.jpeg`;
+        } else {
+          return undefined;
+        }
+      },
     });
   } else {
     console.log(playlist);
