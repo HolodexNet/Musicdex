@@ -37,3 +37,7 @@
 .react-contexify__theme--light .react-contexify__separator {
   background-color: #666;
 }
+
+.chakra-heading:not(a *):not(button *) {
+  cursor: default;
+}
