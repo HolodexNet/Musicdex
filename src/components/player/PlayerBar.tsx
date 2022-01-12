@@ -379,7 +379,7 @@ const PlayerContainer = styled.div`
   /* overflow: hidden; */
   flex-direction: row;
   display: flex;
-  z-index: 15;
+  z-index: 10;
 
   > .chakra-slider {
     position: fixed !important;
@@ -394,7 +394,6 @@ const PlayerMain = styled.div`
   align-items: center;
   padding-top: 5px;
   /* flex-direction: column; */
-  z-index: 15;
 
   .left > span {
     margin-right: auto;
