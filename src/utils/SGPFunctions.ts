@@ -13,7 +13,7 @@ interface SGPDefMap {
   ":history": SGPDef<{ user: string | number }, { user: string | number }>;
   ":video": SGPDef<{ id: string }, { id: string }>;
   ":latest": SGPDef<{ org: string }, { org: string }>;
-  ":mv": SGPDef<{ org: string; sort: "recent" | "random" }, { org: string }>;
+  ":mv": SGPDef<{ org: string; sort: "latest" | "random" }, { org: string }>;
 }
 
 const DEFAULT_PARAM_PARSER = (playlistId: string) =>
@@ -69,7 +69,7 @@ interface SGPTransformer<Out> {
   ) => Out;
   ":mv"?: (
     playlist: PlaylistLike,
-    id: { org: string; sort: "recent" | "random" },
+    id: { org: string; sort: "latest" | "random" },
     data: { org: string } | undefined
   ) => Out;
 }

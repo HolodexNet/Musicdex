@@ -121,7 +121,7 @@ export function identifyTitle(playlist: Partial<PlaylistFull>) {
         switch (sort) {
           case "random":
             return `${org} MV Mix`;
-          case "recent":
+          case "latest":
             return `Latest ${org} MVs`;
         }
       },
@@ -158,7 +158,7 @@ export function identifyDescription(playlist: Partial<PlaylistFull>) {
         switch (sort) {
           case "random":
             return `Some of the best from ${org}`;
-          case "recent":
+          case "latest":
             return `Recent ${org} covers & originals`;
         }
       },
