@@ -89,7 +89,7 @@ export const PlaylistArtwork = React.memo(
 
     return (
       <OverlayTextArt
-        titleText={playlist.title || ""}
+        titleText={title || ""}
         imageUrl={thumbnail || channelImg || ""}
       />
     );
