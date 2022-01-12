@@ -12,6 +12,11 @@ interface SGPDefMap {
   ":userweekly": SGPDef<{ user: string | number }, { user: string | number }>;
   ":history": SGPDef<{ user: string | number }, { user: string | number }>;
   ":video": SGPDef<{ id: string }, { id: string }>;
+  ":latest": SGPDef<{ org: string }, { org: string }>;
+  ":mv": SGPDef<
+    { org: string; sort: "recent" | "random" },
+    { org: string; sort: "recent" | "random" }
+  >;
 }
 
 const DEFAULT_PARAM_PARSER = (playlistId: string) =>
@@ -19,27 +24,19 @@ const DEFAULT_PARAM_PARSER = (playlistId: string) =>
 const DEFAULT_DISC_PARSER = <T1>(x: string | undefined) =>
   x ? (JSON.parse(x) as T1) : undefined;
 
+const DEF_PARSER_GROUP = {
+  descParser: DEFAULT_DISC_PARSER,
+  paramParser: DEFAULT_PARAM_PARSER,
+};
+
 export const SGPDefinitions: SGPDefMap = {
-  ":dailyrandom": {
-    descParser: DEFAULT_DISC_PARSER,
-    paramParser: DEFAULT_PARAM_PARSER,
-  },
-  ":weekly": {
-    descParser: DEFAULT_DISC_PARSER,
-    paramParser: DEFAULT_PARAM_PARSER,
-  },
-  ":userweekly": {
-    descParser: DEFAULT_DISC_PARSER,
-    paramParser: DEFAULT_PARAM_PARSER,
-  },
-  ":history": {
-    descParser: DEFAULT_DISC_PARSER,
-    paramParser: DEFAULT_PARAM_PARSER,
-  },
-  ":video": {
-    descParser: DEFAULT_DISC_PARSER,
-    paramParser: DEFAULT_PARAM_PARSER,
-  },
+  ":dailyrandom": DEF_PARSER_GROUP,
+  ":weekly": DEF_PARSER_GROUP,
+  ":userweekly": DEF_PARSER_GROUP,
+  ":history": DEF_PARSER_GROUP,
+  ":video": DEF_PARSER_GROUP,
+  ":latest": DEF_PARSER_GROUP,
+  ":mv": DEF_PARSER_GROUP,
 };
 
 interface SGPTransformer<Out> {
@@ -67,6 +64,16 @@ interface SGPTransformer<Out> {
     playlist: PlaylistLike,
     id: { id: string },
     data: { id: string; title: string } | undefined
+  ) => Out;
+  ":mv"?: (
+    playlist: PlaylistLike,
+    id: { org: string },
+    data: { org: string } | undefined
+  ) => Out;
+  ":latest"?: (
+    playlist: PlaylistLike,
+    id: { org: string },
+    data: { org: string; sort: "recent" | "random" } | undefined
   ) => Out;
 }
 
