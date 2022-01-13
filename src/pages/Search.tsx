@@ -351,8 +351,9 @@ function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
             return (
               <Checkbox
                 defaultIsChecked={orgs?.includes(org[0])}
-                {...register("facets.org." + org[0])}
+                {...register("facets.org." + i)}
                 key={"facet-org-" + org[0]}
+                value={org[0]}
               >
                 {org[0]} ({org[1]})
               </Checkbox>
@@ -372,8 +373,9 @@ function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
             return (
               <Checkbox
                 defaultIsChecked={suborgs?.includes(suborg[0])}
-                {...register("facets.org." + suborg[0])}
+                {...register("facets.suborg." + i)}
                 key={"facet-org-" + suborg[0]}
+                value={suborg[0]}
               >
                 {suborg[0]} ({suborg[1]})
               </Checkbox>
