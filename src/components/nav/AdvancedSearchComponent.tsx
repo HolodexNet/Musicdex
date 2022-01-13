@@ -32,6 +32,7 @@ import { SearchableSong } from "../../pages/Search";
 
 export interface AdvancedSearchProps {
   facets?: SearchResponseFacetCountSchema<SearchableSong>[];
+  fullreset?: () => void;
 }
 const FILTER_BY_EXTRACT_ORIGINAL_ARTIST_REGEX =
   /original_artist:(?<original_artist>.*?)(?:&&|$)/;
@@ -41,7 +42,10 @@ const FILTER_BY_EXTRACT_CHANNEL_ORG_REGEX =
 const FILTER_BY_EXTRACT_CHANNEL_SUBORG_REGEX =
   /channel_suborg:=\[?(?<suborgs>.*?)\]?(?:&&|$)/;
 // const FILTER_BY_EXTRACT_CHANNEL_SUBORG_REGEX=/channel_suborg:=\[?(?<suborgs>.*?)\]?(?:&&|$)/
-export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
+export function AdvancedSearchFiltersForm({
+  facets,
+  fullreset = () => {},
+}: AdvancedSearchProps) {
   const [search] = useSearchParams();
   const navigate = useNavigate();
   const qObj: Partial<SearchParams<SearchableSong>> = useMemo(
@@ -101,6 +105,7 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
 
     const filter_by = [part1, part2, part3, part4].filter((x) => x).join("&&");
     console.log(filter_by);
+
     navigate({
       pathname: "/search",
       search: `?${createSearchParams({
@@ -108,6 +113,7 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
         ...(filter_by && { filter_by }),
       } as any)}`,
     });
+    fullreset();
   }
 
   const is_mv_facets = useMemo(() => {
@@ -302,6 +308,7 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
               } as any)}`,
             });
             incr((x) => x + 1000);
+            fullreset();
           }}
         >
           Reset

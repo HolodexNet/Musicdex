@@ -9,7 +9,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Suspense, useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import {
   createSearchParams,
   useNavigate,
@@ -129,6 +129,8 @@ function AdvancedSearchFilters({ ...props }: AdvancedSearchProps) {
     }
   }, [search]);
 
+  const [id, incr] = useState(200);
+
   return (
     <Box
       style={{
@@ -154,7 +156,11 @@ function AdvancedSearchFilters({ ...props }: AdvancedSearchProps) {
             position="relative"
           />
 
-          <AdvancedSearchFiltersForm {...props} />
+          <AdvancedSearchFiltersForm
+            {...props}
+            key={id + "search"}
+            fullreset={() => incr((x) => x + 100)}
+          />
         </Box>
       ) : (
         <Button w="120px" onClick={onOpen} leftIcon={<FiFilter />}>
