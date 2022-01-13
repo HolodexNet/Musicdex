@@ -167,7 +167,7 @@ function StackedTextArt({
   hideLogo?: boolean;
 }) {
   // Random between color based on last character of title
-  const bgColor = titleText.length % 2 === 0 ? "brand.50" : "n2.50";
+  const bgColor = titleText.length % 2 === 0 ? "brand.100" : "n2.100";
   // Do some fancy math to adjust font size so it can fit longer text
   const adjFontSize = Math.max(
     14,

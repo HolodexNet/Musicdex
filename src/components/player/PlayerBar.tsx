@@ -50,7 +50,7 @@ export function PlayerBar({
   }, [volume]);
   // Player State Event
   useEffect(() => {
-    console.log("player changed state", state);
+    // console.log("player changed state", state);
     if (state === PlayerStates.BUFFERING || state === PlayerStates.PLAYING) {
       setIsPlaying(true);
     } else {
@@ -60,12 +60,12 @@ export function PlayerBar({
 
   // Sanity video id check event
   useEffect(() => {
-    console.log(
-      "player changed video",
-      currentSong?.video_id,
-      currentVideo,
-      currentVideo !== currentSong?.video_id
-    );
+    // console.log(
+    //   "player changed video",
+    //   currentSong?.video_id,
+    //   currentVideo,
+    //   currentVideo !== currentSong?.video_id
+    // );
     if (
       player &&
       currentSong?.video_id &&
@@ -122,10 +122,15 @@ export function PlayerBar({
     if (currentSong.video_id !== currentVideo) {
       return;
     }
+    // Prevent time from playing before start time
+    if (currentTime < currentSong.start) {
+      player.seekTo(currentSong.start, true);
+      return;
+    }
     // Proceeed to next song
     if (progress >= 100) {
       setProgress(0);
-      console.log("going next...");
+      // console.log("going next...");
       next({ count: 1, userSkipped: false });
       return;
     }
@@ -147,7 +152,7 @@ export function PlayerBar({
       next({ count: 1, userSkipped: false, hasError: true });
       setError(false);
     }
-  }, [hasError, currentSong]);
+  }, [hasError, currentSong, toast, next, setError]);
 
   function onChange(e: any) {
     if (!currentSong) return;

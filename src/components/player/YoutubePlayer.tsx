@@ -54,8 +54,8 @@ export function usePlayer(player?: YouTubePlayer) {
   const [status, setStatus] =
     useState<Partial<typeof INITIALSTATE>>(INITIALSTATE);
   const [hasError, setError] = useState(false);
-  const errorHandler = useCallback(() => {
-    console.warn("PLAYER ERROR ORCCURED");
+  const errorHandler = useCallback((e: any) => {
+    console.warn("PLAYER ERROR ORCCURED", e);
     setError(true);
   }, []);
 
