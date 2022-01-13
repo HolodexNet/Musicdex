@@ -45,9 +45,9 @@ export const useTrendingSongs = (
 };
 
 export interface SongAPILookupObject {
-  org: string;
-  channel_id: string;
-  video_id: string;
+  org?: string;
+  channel_id?: string;
+  video_id?: string;
   // q: string; <q has been deprecated, use search API instead>
   offset?: number;
   limit?: number;

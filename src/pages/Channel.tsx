@@ -1,6 +1,8 @@
 import {
   Box,
+  Button,
   Center,
+  Flex,
   Heading,
   HStack,
   IconButton,
@@ -32,6 +34,9 @@ import { useHistory } from "../modules/services/history.service";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 import { BGImgContainer, BGImg } from "../components/common/BGImgContainer";
+import { useTrendingSongs } from "../modules/services/songs.service";
+import { SongCard } from "../components/song/SongCard";
+import { SongItem } from "../components/song/SongItem";
 
 export default function Channel() {
   // const history = useStoreState((store) => store.playback.history);
@@ -50,6 +55,10 @@ export default function Channel() {
 
   const { data: discovery, ...discoveryStatus } =
     useDiscoveryChannel(channelId);
+
+  const { data: trending, ...trendingStatus } = useTrendingSongs({
+    channel_id: channelId,
+  });
 
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
   // const {description, }
@@ -120,17 +129,43 @@ export default function Channel() {
       </HStack>
       <ContainerInlay>
         {/* <Box>{JSON.stringify(discovery)}</Box> */}
-        {discovery?.recentSingingStream && (
-          <>
-            <Heading size="md" marginBottom={2}>
-              Latest Stream:
-            </Heading>
-            <VideoPlaylistCard
-              video={discovery?.recentSingingStream?.video}
-              playlist={discovery?.recentSingingStream?.playlist}
-            />
-          </>
-        )}
+        <Flex flexWrap="wrap" flexDirection="row">
+          {discovery?.recentSingingStream && (
+            <Box flex="1.3 0 580px" minWidth="480px" mr={4}>
+              <Heading size="md" marginBottom={2}>
+                Latest Stream:
+              </Heading>
+              <VideoPlaylistCard
+                video={discovery?.recentSingingStream?.video}
+                playlist={discovery?.recentSingingStream?.playlist}
+              />
+            </Box>
+          )}
+          {trending && (
+            <Box flex="1 1 140px" minWidth="300px">
+              <Heading size="md" marginBottom={2}>
+                Popular Songs:{" "}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  py={0}
+                  my={-2}
+                  colorScheme="n2"
+                  onClick={() => {
+                    queueSongs({ songs: trending, immediatelyPlay: false });
+                  }}
+                >
+                  Queue All ({trending.length})
+                </Button>
+              </Heading>
+              <Box overflow="auto" height="300px">
+                {trending?.map((x) => (
+                  <SongItem song={x}></SongItem>
+                ))}
+              </Box>
+            </Box>
+          )}
+        </Flex>
         <Heading size="md" my={2}>
           Playlists with {channel.name}
         </Heading>
