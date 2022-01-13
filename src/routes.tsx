@@ -1,14 +1,21 @@
 import React from "react";
 import { RouteObject, useRoutes } from "react-router";
+import LikedSongs from "./pages/LikedSongs";
+import History from "./pages/History";
+import Login from "./pages/Login";
+import Video from "./pages/Video";
+import Song from "./pages/Song";
+import Home from "./pages/Home";
+
 const Channel = React.lazy(() => import("./pages/Channel"));
-const History = React.lazy(() => import("./pages/History"));
-const Home = React.lazy(() => import("./pages/Home"));
-const LikedSongs = React.lazy(() => import("./pages/LikedSongs"));
-const Login = React.lazy(() => import("./pages/Login"));
+// const History = React.lazy(() => import("./pages/History"));
+// const Home = React.lazy(() => import("./pages/Home"));
+// const LikedSongs = React.lazy(() => import("./pages/LikedSongs"));
+// const Login = React.lazy(() => import("./pages/Login"));
 const Playlist = React.lazy(() => import("./pages/Playlist"));
 const Settings = React.lazy(() => import("./pages/Settings"));
-const Song = React.lazy(() => import("./pages/Song"));
-const Video = React.lazy(() => import("./pages/Video"));
+// const Song = React.lazy(() => import("./pages/Song"));
+// const Video = React.lazy(() => import("./pages/Video"));
 const Search = React.lazy(() => import("./pages/Search"));
 
 const routes: RouteObject[] = [

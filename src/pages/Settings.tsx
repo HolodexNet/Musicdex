@@ -16,14 +16,11 @@ import {
 } from "@chakra-ui/react";
 import React, { Suspense } from "react";
 import { ReactNode, useMemo } from "react";
+import OrgManager from "../components/common/OrgManagement";
 import { UserSettings } from "../components/common/UserSettings";
 import { LoginButtons } from "../components/header/Login";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
-
-export const OrgManager = React.lazy(
-  () => import("../components/common/OrgManagement")
-);
 
 export default function Settings() {
   return (
@@ -74,9 +71,7 @@ export default function Settings() {
               <Text fontWeight="bold">
                 Drag and Drop to reorder list of orgs in the org dropdown
               </Text>
-              <Suspense fallback="...">
-                <OrgManager />
-              </Suspense>
+              <OrgManager />
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
