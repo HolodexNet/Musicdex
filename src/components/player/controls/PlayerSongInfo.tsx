@@ -10,10 +10,12 @@ import {
   Link,
   Text,
 } from "@chakra-ui/react";
+import { useContextMenu } from "react-contexify";
 import { FaPlay } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useClipboardWithToast } from "../../../modules/common/clipboard";
 import { useStoreActions } from "../../../store";
+import { DEFAULT_MENU_ID } from "../../common/CommonContext";
 import { SongArtwork } from "../../song/SongArtwork";
 
 interface SongInfoProps {
@@ -25,8 +27,10 @@ export const SongInfo = ({ song }: SongInfoProps) => {
   const addPlaylist = useStoreActions(
     (a) => a.addPlaylist.showPlaylistAddDialog
   );
+  const { show } = useContextMenu({ id: DEFAULT_MENU_ID });
+
   return (
-    <HStack>
+    <HStack onContextMenu={show}>
       <Menu
         eventListeners={{ scroll: false }}
         isLazy

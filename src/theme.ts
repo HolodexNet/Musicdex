@@ -5,9 +5,9 @@ import convert from "color-convert";
 const IdealBaseColor = new Color("hex", ["#46465A"]);
 
 const IdealShades = [
-  new Color("hex", ["#9f9fb4"]), //50
-  new Color("hex", ["#82829e"]), //100
-  new Color("hex", ["#747493"]), //200
+  new Color("hex", ["#C3C3DD"]), //50
+  new Color("hex", ["#B0B0BB"]), //100
+  new Color("hex", ["#8181A3"]), //200
   new Color("hex", ["#676785"]),
   new Color("hex", ["#5c5c77"]),
   new Color("hex", ["#46465A"]), //500

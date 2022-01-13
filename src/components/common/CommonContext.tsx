@@ -1,4 +1,4 @@
-import { Menu } from "@chakra-ui/react";
+import { Icon, Menu } from "@chakra-ui/react";
 import {
   Item,
   Separator,
@@ -6,6 +6,7 @@ import {
   Menu as CMenu,
   Submenu,
 } from "react-contexify";
+import { FiCopy } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions } from "../../store";
@@ -38,20 +39,29 @@ export const CommonContextMenu = () => {
       >
         Copy Song Link
       </Item>
-      <Submenu label="Select...">
+      <Submenu label="Select and Copy">
         <Item
           onClick={(x: ItemParams) => {
             copyToClipboard(x.props.name);
           }}
         >
-          Select and Copy Song Name
+          <Icon mr={2} as={FiCopy}></Icon> Song Name
         </Item>
         <Item
           onClick={(x: ItemParams) => {
             copyToClipboard(x.props.original_artist);
           }}
         >
-          Select and Copy Original Artist
+          <Icon mr={2} as={FiCopy}></Icon> Original Artist
+        </Item>
+        <Item
+          onClick={(x: ItemParams) => {
+            copyToClipboard(
+              `https://youtu.be/${x.props.video_id}?t=${x.props.start}`
+            );
+          }}
+        >
+          <Icon mr={2} as={FiCopy}></Icon> Timestamped Youtube Link
         </Item>
       </Submenu>
       <Item
