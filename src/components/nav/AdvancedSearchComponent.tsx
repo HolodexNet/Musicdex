@@ -15,13 +15,17 @@ import {
   TagLabel,
   TagLeftIcon,
 } from "@chakra-ui/react";
-import { useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useMemo, useState } from "react";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import {
   SearchParams,
   SearchResponseFacetCountSchema,
 } from "../../modules/services/search.service";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { FiFilter, FiSearch } from "react-icons/fi";
 import { BiMovie } from "react-icons/bi";
 import { SearchableSong } from "../../pages/Search";
@@ -31,7 +35,7 @@ export interface AdvancedSearchProps {
 }
 const FILTER_BY_EXTRACT_ORIGINAL_ARTIST_REGEX =
   /original_artist:(?<original_artist>.*?)(?:&&|$)/;
-const FILTER_BY_EXTRACT_IS_MV_REGEX = /is_mv:(?<is_mv>.*?)(?:&&|$)/;
+const FILTER_BY_EXTRACT_IS_MV_REGEX = /is_mv:=(?<is_mv>.*?)(?:&&|$)/;
 const FILTER_BY_EXTRACT_CHANNEL_ORG_REGEX =
   /channel_org:=\[?(?<orgs>.*?)\]?(?:&&|$)/;
 const FILTER_BY_EXTRACT_CHANNEL_SUBORG_REGEX =
@@ -40,22 +44,62 @@ const FILTER_BY_EXTRACT_CHANNEL_SUBORG_REGEX =
 export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
   const [search] = useSearchParams();
   const navigate = useNavigate();
-  const qObj: Partial<SearchParams<SearchableSong>> = Object.fromEntries(
-    search.entries()
+  const qObj: Partial<SearchParams<SearchableSong>> = useMemo(
+    () => Object.fromEntries(search.entries()),
+    [search]
   );
   const {
     handleSubmit,
     register,
+    control,
     formState: { errors, isSubmitting },
     reset,
   } = useForm();
 
+  const [counter, incr] = useState(1000);
   function onSubmit(values: any) {
-    return new Promise((resolve: (x: any) => void) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve(1);
-      }, 3000);
+    const {
+      q,
+      original_artist,
+      facets: { is_mv, org, suborg },
+    }: {
+      q: string;
+      original_artist: string;
+      facets: {
+        is_mv: "0" | "1" | "2";
+        org?: [boolean | string];
+        suborg?: [boolean | string];
+      };
+    } = values;
+
+    const part1 =
+      original_artist &&
+      original_artist.trim().length > 0 &&
+      "original_artist:" + original_artist.trim();
+    const part2 =
+      is_mv &&
+      is_mv !== "0" &&
+      (is_mv === "1" ? "is_mv:=true" : "is_mv:=false");
+    const part3 =
+      org &&
+      org.length > 0 &&
+      !org.every((x) => !x) &&
+      !org.every((x) => x) &&
+      `channel_org:=[${org.filter((x) => x).join(",")}]`;
+    const part4 =
+      suborg &&
+      suborg.length > 0 &&
+      !suborg.every((x) => !x) &&
+      !suborg.every((x) => x) &&
+      `channel_suborg:=[${suborg.filter((x) => x).join(",")}]`;
+
+    const filter_by = [part1, part2, part3, part4].filter((x) => x).join("&&");
+    navigate({
+      pathname: "/search",
+      search: `?${createSearchParams({
+        q,
+        ...(filter_by && { filter_by }),
+      } as any)}`,
     });
   }
 
@@ -103,7 +147,7 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
     const suborgs = match4?.groups?.suborgs?.split(",");
 
     return [oa, is_mv, orgs, suborgs];
-  }, [qObj.filter_by]);
+  }, [qObj]);
 
   const coordinatedOrgs = useMemo(() => {
     return [
@@ -122,7 +166,7 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
     ];
   }, [suborgs, suborgsFacets]);
 
-  console.log(errors);
+  // console.log(errors);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -131,7 +175,10 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
         <FormLabel htmlFor="q">
           <Tag size="md" variant="subtle" colorScheme="cyan">
             <TagLeftIcon boxSize="12px" as={FiSearch} />
-            <TagLabel>Search by Name, Original Artist, or Channel</TagLabel>
+            <TagLabel>
+              Search by Everything (Name, Original Artist, Channel,
+              Organization)
+            </TagLabel>
           </Tag>
         </FormLabel>
         <Input
@@ -169,7 +216,7 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
             </Tag>
           </FormLabel>
 
-          <RadioGroup defaultValue={is_mv}>
+          <RadioGroup defaultValue={String(is_mv)}>
             <Stack direction="row">
               <Radio value="0" id="ismv" {...register("facets.is_mv")}>
                 All Song Types
@@ -195,10 +242,10 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
           {coordinatedOrgs.map((org, i) => {
             return (
               <Checkbox
-                defaultIsChecked={orgs?.includes(org[0])}
-                {...register("facets.org." + i)}
-                key={"facet-org-" + org[0]}
+                defaultIsChecked={!!orgs?.includes(org[0])}
+                key={counter + "facet-org-" + org[0] + i}
                 value={org[0]}
+                {...register("facets.org." + i)}
               >
                 {org[0]} ({org[1]})
               </Checkbox>
@@ -219,7 +266,7 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
               <Checkbox
                 defaultIsChecked={suborgs?.includes(suborg[0])}
                 {...register("facets.suborg." + i)}
-                key={"facet-org-" + suborg[0]}
+                key={counter + "facet-org-" + suborg[0] + i}
                 value={suborg[0]}
               >
                 {suborg[0]} ({suborg[1]})
@@ -232,7 +279,24 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
         <Button colorScheme="teal" isLoading={isSubmitting} type="submit">
           Search
         </Button>
-        <Button variant="outline" colorScheme="teal">
+        <Button
+          variant="outline"
+          colorScheme="teal"
+          onClick={() => {
+            reset();
+            // reset({
+            //   q: qObj.q,
+            //   facets: null,
+            // });
+            navigate({
+              pathname: "/search",
+              search: `?${createSearchParams({
+                q: qObj.q,
+              } as any)}`,
+            });
+            incr((x) => x + 1000);
+          }}
+        >
           Reset
         </Button>
       </ButtonGroup>

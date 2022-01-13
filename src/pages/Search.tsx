@@ -44,6 +44,7 @@ export default function Search() {
     q: "",
     query_by:
       "name, channel_name, channel_english_name, original_artist, channel_org, channel_suborg, title",
+    sort_by: "_text_match:desc,available_at:desc",
     ...qObj,
     facet_by: "channel_org, is_mv, channel_suborg",
     // filter_by: "original_artist: doriko",
@@ -61,8 +62,6 @@ export default function Search() {
   }
 
   const songs = useMemo(() => {
-    console.log(searchResult);
-
     return searchResult?.hits?.map((doc) => {
       return doc.document;
     });
@@ -77,11 +76,6 @@ export default function Search() {
       <Suspense fallback={<div></div>}>
         <HStack align="end">
           <Heading size="lg">Search: "{qObj.q || ""}"</Heading>
-          <Spacer></Spacer>
-          <Text>
-            {(searchResult?.page || 0) * 10 - 10 + (songs?.length || 0)} out of{" "}
-            {searchResult?.found}
-          </Text>
         </HStack>
         <Suspense fallback={<div>Loading...</div>}>
           {songs && <SongTable songs={songs} />}
@@ -98,6 +92,11 @@ export default function Search() {
             >
               Prev
             </Button>
+            <Text>
+              1 ~ {(searchResult?.page || 0) * 10 - 10 + (songs?.length || 0)}{" "}
+              out of {searchResult?.found}
+            </Text>
+
             <Button
               disabled={
                 searchResult?.page * 10 + (songs?.length || 0) - 10 >=
