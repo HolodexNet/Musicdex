@@ -10,12 +10,13 @@ import { ReactNode } from "react";
 import { FiVolume1 } from "react-icons/fi";
 
 interface VolumeSliderProps {
+  volume: number;
   onChange: (e: number) => void;
 }
 
-export const VolumeSlider = ({ onChange }: VolumeSliderProps) => {
+export const VolumeSlider = ({ volume, onChange }: VolumeSliderProps) => {
   return (
-    <Slider aria-label="slider-ex-4" defaultValue={80} onChange={onChange}>
+    <Slider aria-label="slider-ex-4" value={volume} onChange={onChange}>
       <SliderTrack bg="red.50">
         <SliderFilledTrack
           background={`linear-gradient(to right, var(--chakra-colors-brand-400), var(--chakra-colors-n2-400))`}
