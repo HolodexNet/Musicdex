@@ -102,7 +102,12 @@ export const VideoPlaylistCard = React.memo(
                 />
               </div>
             </AspectRatio>
-            <Box flex={"1 1"} flexBasis={900 / 34 + "%"} height="100%">
+            <Box
+              flex={"1 1"}
+              flexBasis={900 / 34 + "%"}
+              height="100%"
+              bgColor="bgAlpha.800"
+            >
               {playlist?.content ? (
                 <List
                   spacing={1}

@@ -85,15 +85,22 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
       org.length > 0 &&
       !org.every((x) => !x) &&
       !org.every((x) => x) &&
-      `channel_org:=[${org.filter((x) => x).join(",")}]`;
+      `channel_org:=[${org
+        .filter((x) => x)
+        .map((x) => "`" + x + "`")
+        .join(",")}]`;
     const part4 =
       suborg &&
       suborg.length > 0 &&
       !suborg.every((x) => !x) &&
       !suborg.every((x) => x) &&
-      `channel_suborg:=[${suborg.filter((x) => x).join(",")}]`;
+      `channel_suborg:=[${suborg
+        .filter((x) => x)
+        .map((x) => "`" + x + "`")
+        .join(",")}]`;
 
     const filter_by = [part1, part2, part3, part4].filter((x) => x).join("&&");
+    console.log(filter_by);
     navigate({
       pathname: "/search",
       search: `?${createSearchParams({
@@ -142,9 +149,9 @@ export function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
         is_mv = 0;
     }
     const match3 = FILTER_BY_EXTRACT_CHANNEL_ORG_REGEX.exec(filter);
-    const orgs = match3?.groups?.orgs?.split(",");
+    const orgs = match3?.groups?.orgs?.replaceAll("`", "")?.split(",");
     const match4 = FILTER_BY_EXTRACT_CHANNEL_SUBORG_REGEX.exec(filter);
-    const suborgs = match4?.groups?.suborgs?.split(",");
+    const suborgs = match4?.groups?.suborgs?.replaceAll("`", "")?.split(",");
 
     return [oa, is_mv, orgs, suborgs];
   }, [qObj]);
