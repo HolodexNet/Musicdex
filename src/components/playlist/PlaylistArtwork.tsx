@@ -91,6 +91,7 @@ export const PlaylistArtwork = React.memo(
       <OverlayTextArt
         titleText={title || ""}
         imageUrl={thumbnail || channelImg || ""}
+        hideLogo={playlist.type === "ugp"}
       />
     );
   }
@@ -99,9 +100,11 @@ export const PlaylistArtwork = React.memo(
 function OverlayTextArt({
   titleText,
   imageUrl,
+  hideLogo = false,
 }: {
   titleText: string;
   imageUrl: string;
+  hideLogo?: boolean;
 }) {
   const bgColor =
     titleText.length % 2 === 0
@@ -136,14 +139,16 @@ function OverlayTextArt({
           {titleText}
         </Text>
       </Box>
-      <LineLogo
-        position="absolute"
-        w={6}
-        h={6}
-        left="4px"
-        bottom="4px"
-        zIndex={1}
-      />
+      {!hideLogo && (
+        <LineLogo
+          position="absolute"
+          w={6}
+          h={6}
+          left="4px"
+          bottom="4px"
+          zIndex={1}
+        />
+      )}
     </Flex>
   );
 }
@@ -153,11 +158,13 @@ function StackedTextArt({
   titleText,
   imageUrl,
   reverse = false,
+  hideLogo = false,
 }: {
   typeText: string;
   titleText: string;
   imageUrl: string;
   reverse?: boolean;
+  hideLogo?: boolean;
 }) {
   // Random between color based on last character of title
   const bgColor = titleText.length % 2 === 0 ? "brand.50" : "n2.50";
@@ -203,14 +210,16 @@ function StackedTextArt({
         >
           {titleText}
         </Text>
-        <LineLogo
-          position="absolute"
-          w={20}
-          h={20}
-          right="-8%"
-          top="0"
-          opacity="0.3"
-        />
+        {!hideLogo && (
+          <LineLogo
+            position="absolute"
+            w={20}
+            h={20}
+            right="-8%"
+            top="0"
+            opacity="0.3"
+          />
+        )}
       </Flex>
       <Flex
         bgImage={imageUrl}
