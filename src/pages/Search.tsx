@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Checkbox,
   CloseButton,
   FormControl,
@@ -15,6 +16,9 @@ import {
   SimpleGrid,
   Spacer,
   Stack,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Text,
   useColorModeValue,
   useDisclosure,
@@ -30,6 +34,7 @@ import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
 import {
   SearchParams,
+  SearchResponseFacetCountSchema,
   useSongSearch,
 } from "../modules/services/search.service";
 import { useForm } from "react-hook-form";
@@ -37,18 +42,23 @@ import { FiFilter, FiSearch } from "react-icons/fi";
 import { BiMovie } from "react-icons/bi";
 import { motion } from "framer-motion";
 
+interface SearchableSong extends Song {
+  channel_org?: string;
+  channel_suborg?: string;
+}
+
 export default function Search() {
   const [search] = useSearchParams();
   const navigate = useNavigate();
-  const qObj: Partial<SearchParams<Song>> = Object.fromEntries(
+  const qObj: Partial<SearchParams<SearchableSong>> = Object.fromEntries(
     search.entries()
   );
-  const { data: searchResult, ...rest } = useSongSearch<Song>({
+  const { data: searchResult, ...rest } = useSongSearch<SearchableSong>({
     q: "",
     query_by:
-      "name, channel_name, channel_english_name, original_artist, channel_org, title",
+      "name, channel_name, channel_english_name, original_artist, channel_org, channel_suborg, title",
     ...qObj,
-    facet_by: "channel_org, is_mv",
+    facet_by: "channel_org, is_mv, channel_suborg",
     // filter_by: "original_artist: doriko",
   });
 
@@ -73,7 +83,9 @@ export default function Search() {
 
   return (
     <PageContainer>
-      <AdvancedSearchFilters></AdvancedSearchFilters>
+      <AdvancedSearchFilters
+        facets={searchResult?.facet_counts}
+      ></AdvancedSearchFilters>
       <QueryStatus queryStatus={rest} />
       <Suspense fallback={<div></div>}>
         <HStack align="end">
@@ -118,12 +130,12 @@ export default function Search() {
   );
 }
 
-function AdvancedSearchFilters() {
+function AdvancedSearchFilters({ ...props }: AdvancedSearchProps) {
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const [search] = useSearchParams();
 
   useEffect(() => {
-    const qObj: Partial<SearchParams<Song>> = Object.fromEntries(
+    const qObj: Partial<SearchParams<SearchableSong>> = Object.fromEntries(
       search.entries()
     );
     if ((qObj as any)?.advanced) {
@@ -141,8 +153,7 @@ function AdvancedSearchFilters() {
         // marginLeft: "auto",
         // marginRight: "0px",
       }}
-      ml={isOpen ? "0px" : "auto"}
-      mr="0px"
+      my={4}
       // layout
       transition="all 0.4s"
     >
@@ -157,7 +168,7 @@ function AdvancedSearchFilters() {
             position="relative"
           />
 
-          <AdvancedSearchFiltersForm />
+          <AdvancedSearchFiltersForm {...props} />
         </Box>
       ) : (
         <Button w="120px" onClick={onOpen} leftIcon={<FiFilter />}>
@@ -168,16 +179,30 @@ function AdvancedSearchFilters() {
   );
 }
 
-function AdvancedSearchFiltersForm() {
+interface AdvancedSearchProps {
+  facets?: SearchResponseFacetCountSchema<SearchableSong>[];
+}
+
+const FILTER_BY_EXTRACT_ORIGINAL_ARTIST_REGEX =
+  /original_artist:(?<original_artist>.*?)(?:&&|$)/;
+const FILTER_BY_EXTRACT_IS_MV_REGEX = /is_mv:(?<is_mv>.*?)(?:&&|$)/;
+const FILTER_BY_EXTRACT_CHANNEL_ORG_REGEX =
+  /channel_org:=\[?(?<orgs>.*?)\]?(?:&&|$)/;
+const FILTER_BY_EXTRACT_CHANNEL_SUBORG_REGEX =
+  /channel_suborg:=\[?(?<suborgs>.*?)\]?(?:&&|$)/;
+// const FILTER_BY_EXTRACT_CHANNEL_SUBORG_REGEX=/channel_suborg:=\[?(?<suborgs>.*?)\]?(?:&&|$)/
+
+function AdvancedSearchFiltersForm({ facets }: AdvancedSearchProps) {
   const [search] = useSearchParams();
   const navigate = useNavigate();
-  const qObj: Partial<SearchParams<Song>> = Object.fromEntries(
+  const qObj: Partial<SearchParams<SearchableSong>> = Object.fromEntries(
     search.entries()
   );
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm();
 
   function onSubmit(values: any) {
@@ -189,14 +214,80 @@ function AdvancedSearchFiltersForm() {
     });
   }
 
+  const is_mv_facets = useMemo(() => {
+    return Object.fromEntries(
+      facets
+        ?.find((x) => x.field_name === "is_mv")
+        ?.counts?.map((cv) => [cv.value, cv.count]) || []
+    );
+  }, [facets]);
+  const orgsFacets: [string, number][] = useMemo(() => {
+    return (
+      facets
+        ?.find((x) => x.field_name === "channel_org")
+        ?.counts?.map((cv) => [cv.value, cv.count]) || []
+    );
+  }, [facets]);
+  const suborgsFacets: [string, number][] = useMemo(() => {
+    return (
+      facets
+        ?.find((x) => x.field_name === "channel_suborg")
+        ?.counts?.map((cv) => [cv.value, cv.count]) || []
+    );
+  }, [facets]);
+
+  const [original_artist, is_mv, orgs, suborgs] = useMemo(() => {
+    const filter = qObj.filter_by || "";
+    const match1 = FILTER_BY_EXTRACT_ORIGINAL_ARTIST_REGEX.exec(filter);
+    const oa = match1?.groups?.original_artist;
+    const match2 = FILTER_BY_EXTRACT_IS_MV_REGEX.exec(filter);
+    let is_mv = 0;
+    switch (match2?.groups?.is_mv) {
+      case "true":
+        is_mv = 1;
+        break;
+      case "false":
+        is_mv = 2;
+        break;
+      default:
+        is_mv = 0;
+    }
+    const match3 = FILTER_BY_EXTRACT_CHANNEL_ORG_REGEX.exec(filter);
+    const orgs = match3?.groups?.orgs?.split(",");
+    const match4 = FILTER_BY_EXTRACT_CHANNEL_SUBORG_REGEX.exec(filter);
+    const suborgs = match4?.groups?.suborgs?.split(",");
+
+    return [oa, is_mv, orgs, suborgs];
+  }, [qObj.filter_by]);
+
+  const coordinatedOrgs = useMemo(() => {
+    return [
+      ...orgsFacets,
+      ...(orgs || [])
+        ?.filter((x) => !orgsFacets.find((o) => o[0] === x))
+        .map((x) => [x, "0"]),
+    ];
+  }, [orgs, orgsFacets]);
+  const coordinatedSubOrgs = useMemo(() => {
+    return [
+      ...suborgsFacets,
+      ...(suborgs || [])
+        ?.filter((x) => !suborgsFacets.find((o) => o[0] === x))
+        .map((x) => [x, "0"]),
+    ];
+  }, [suborgs, suborgsFacets]);
+
   console.log(errors);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl isInvalid={errors.q} mt={2} mb={3}>
+      {/* {JSON.stringify(facets)} */}
+      <FormControl isInvalid={errors.q} mb={4}>
         <FormLabel htmlFor="q">
-          <Icon as={FiSearch}></Icon> Search by Name, Original Artist, or
-          Channel
+          <Tag size="md" variant="subtle" colorScheme="cyan">
+            <TagLeftIcon boxSize="12px" as={FiSearch} />
+            <TagLabel>Search by Name, Original Artist, or Channel</TagLabel>
+          </Tag>
         </FormLabel>
         <Input
           id="q"
@@ -209,13 +300,17 @@ function AdvancedSearchFiltersForm() {
         />
         <FormErrorMessage>{errors.q && errors.q.message}</FormErrorMessage>
       </FormControl>
-      <SimpleGrid spacing={5} minChildWidth="300px" mt={2} mb={3}>
+      <SimpleGrid spacing={4} minChildWidth="500px" my={4}>
         <FormControl isInvalid={errors.original_artist}>
           <FormLabel htmlFor="original_artist">
-            <Icon as={FiFilter}></Icon> Filter by Original Artist
+            <Tag size="md" variant="subtle" colorScheme="cyan">
+              <TagLeftIcon boxSize="12px" as={FiFilter} />
+              <TagLabel>Filter by Original Artist</TagLabel>
+            </Tag>
           </FormLabel>
           <Input
             id="original_artist"
+            defaultValue={original_artist}
             placeholder="Original Artist"
             {...register("original_artist")}
           />
@@ -223,40 +318,77 @@ function AdvancedSearchFiltersForm() {
 
         <FormControl>
           <FormLabel htmlFor="org">
-            <Icon as={FiFilter}></Icon> Filter by status
+            <Tag size="md" variant="subtle" colorScheme="cyan">
+              <TagLeftIcon boxSize="12px" as={FiFilter} />
+              <TagLabel>Filter by status</TagLabel>
+            </Tag>
           </FormLabel>
 
-          <RadioGroup defaultValue="0">
+          <RadioGroup defaultValue={is_mv}>
             <Stack direction="row">
               <Radio value="0" id="ismv" {...register("facets.is_mv")}>
                 All Song Types
               </Radio>
               <Radio value="1" id="ismv" {...register("facets.is_mv")}>
-                <Icon as={BiMovie}></Icon> MV Only
+                <Icon as={BiMovie}></Icon> MV Only ({is_mv_facets["true"]})
               </Radio>
               <Radio value="2" id="ismv" {...register("facets.is_mv")}>
-                Non MV Only (Karaokes, etc)
+                Non MV Only (Karaokes, etc) ({is_mv_facets["false"]})
               </Radio>
             </Stack>
           </RadioGroup>
         </FormControl>
       </SimpleGrid>
-      <FormControl mt={2} mb={3}>
+      <FormControl my={4}>
         <FormLabel htmlFor="org">
-          <Icon as={FiFilter}></Icon> Filter by Org
+          <Tag size="md" variant="subtle" colorScheme="cyan">
+            <TagLeftIcon boxSize="12px" as={FiFilter} />
+            <TagLabel>Filter by Organization</TagLabel>
+          </Tag>
         </FormLabel>
-        <Stack spacing={5} direction="row">
-          <Checkbox defaultIsChecked {...register("facets.org.hololive")}>
-            Hololive (32)
-          </Checkbox>
-          <Checkbox defaultIsChecked {...register("facets.org.hololive")}>
-            Nijisanji (12)
-          </Checkbox>
-        </Stack>
+        <SimpleGrid spacing={2} direction="row" minChildWidth="220px">
+          {coordinatedOrgs.map((org, i) => {
+            return (
+              <Checkbox
+                defaultIsChecked={orgs?.includes(org[0])}
+                {...register("facets.org." + org[0])}
+                key={"facet-org-" + org[0]}
+              >
+                {org[0]} ({org[1]})
+              </Checkbox>
+            );
+          })}
+        </SimpleGrid>
       </FormControl>
-      <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
-        Submit
-      </Button>
+      <FormControl mt={2} mb={2}>
+        <FormLabel htmlFor="org">
+          <Tag size="md" variant="subtle" colorScheme="cyan">
+            <TagLeftIcon boxSize="12px" as={FiFilter} />
+            <TagLabel>Filter by Sub Organization</TagLabel>
+          </Tag>
+        </FormLabel>
+        <SimpleGrid spacing={2} direction="row" minChildWidth="220px">
+          {coordinatedSubOrgs.map((suborg, i) => {
+            return (
+              <Checkbox
+                defaultIsChecked={suborgs?.includes(suborg[0])}
+                {...register("facets.org." + suborg[0])}
+                key={"facet-org-" + suborg[0]}
+              >
+                {suborg[0]} ({suborg[1]})
+              </Checkbox>
+            );
+          })}
+        </SimpleGrid>
+      </FormControl>
+      <ButtonGroup mt={4} spacing={4}>
+        <Button colorScheme="teal" isLoading={isSubmitting} type="submit">
+          Search
+        </Button>
+        <Button variant="outline" colorScheme="teal">
+          Reset
+        </Button>
+      </ButtonGroup>
     </form>
   );
 }
