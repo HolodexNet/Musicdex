@@ -4,6 +4,7 @@ export const BGImgContainer = styled.div<{ height: string }>`
   width: 100%;
   position: absolute;
   z-index: 0;
+  pointer-events: none;
   left: 0px;
   top: 0px;
   height: ${({ height }) => height};
@@ -24,6 +25,7 @@ export const BGImg = styled.div<{
 }>`
   width: 100%;
   position: absolute;
+  pointer-events: none;
   z-index: 0;
   left: 0px;
   top: 0px;

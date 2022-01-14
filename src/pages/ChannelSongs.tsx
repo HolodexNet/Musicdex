@@ -1,7 +1,11 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Center,
+  Editable,
+  EditableInput,
+  EditablePreview,
   Flex,
   Heading,
   HStack,
@@ -12,8 +16,15 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect } from "react";
-import { FiList, FiShare2, FiTwitter, FiYoutube } from "react-icons/fi";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiList,
+  FiShare2,
+  FiTwitter,
+  FiYoutube,
+} from "react-icons/fi";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { ChannelCard } from "../components/channel/ChannelCard";
@@ -34,13 +45,16 @@ import { useHistory } from "../modules/services/history.service";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 import { BGImgContainer, BGImg } from "../components/common/BGImgContainer";
-import { useTrendingSongs } from "../modules/services/songs.service";
+import {
+  useSongAPI,
+  useTrendingSongs,
+} from "../modules/services/songs.service";
 import { SongCard } from "../components/song/SongCard";
 import { SongItem } from "../components/song/SongItem";
 import useNamePicker from "../modules/common/useNamePicker";
 import { useClipboardWithToast } from "../modules/common/clipboard";
-
-export default function Channel() {
+const PERPAGE = 10;
+export default function ChannelSongs() {
   // const history = useStoreState((store) => store.playback.history);
   let params = useParams();
   let channelId = params.id!;
@@ -56,10 +70,18 @@ export default function Channel() {
   const { data: discovery, ...discoveryStatus } =
     useDiscoveryChannel(channelId);
 
-  const { data: trending, ...trendingStatus } = useTrendingSongs({
+  const [offset, setOffset] = useState(0);
+  const { data, ...trendingStatus } = useSongAPI({
     channel_id: channelId,
+    paginated: true,
+    limit: PERPAGE,
+    offset: offset,
   });
 
+  const { items: latest, total } = useMemo(
+    () => (data as any) || { items: undefined, total: 0 },
+    [data]
+  );
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const tn = useNamePicker();
@@ -142,76 +164,86 @@ export default function Channel() {
       </HStack>
       <ContainerInlay>
         {/* <Box>{JSON.stringify(discovery)}</Box> */}
-        <Flex flexWrap="wrap" flexDirection="row">
-          {discovery?.recentSingingStream && (
-            <Box flex="1.3 0 580px" minWidth="480px" mr={4}>
-              <Heading size="md" marginBottom={2}>
-                Latest Stream:
-              </Heading>
-              <VideoPlaylistCard
-                video={discovery?.recentSingingStream?.video}
-                playlist={discovery?.recentSingingStream?.playlist}
-              />
+        {latest && (
+          <Box flex="1 1 140px" minWidth="300px">
+            <Heading size="md" marginBottom={2}>
+              All Songs ({offset} - {offset + latest.length} of {total}):{" "}
+              <Button
+                variant="ghost"
+                size="sm"
+                py={0}
+                my={-2}
+                colorScheme="n2"
+                onClick={() => {
+                  queueSongs({ songs: latest, immediatelyPlay: false });
+                }}
+              >
+                Queue All ({latest.length})
+              </Button>
+            </Heading>
+            <Box overflow="auto" maxH="62vh">
+              <Suspense fallback={<div>Loading...</div>}>
+                <SongTable songs={latest}></SongTable>
+              </Suspense>
             </Box>
-          )}
-          {trending && (
-            <Box flex="1 1 140px" minWidth="300px">
-              <Heading size="md" marginBottom={2}>
-                Popular Songs:{" "}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  py={0}
-                  my={-2}
-                  colorScheme="n2"
-                  onClick={() => {
-                    queueSongs({ songs: trending, immediatelyPlay: false });
-                  }}
-                >
-                  Queue All ({trending.length})
-                </Button>
-              </Heading>
-              <Box overflow="auto" height="300px">
-                {trending?.map((x) => (
-                  <SongItem song={x}></SongItem>
-                ))}
-              </Box>
-            </Box>
-          )}
-        </Flex>
-        <Heading size="md" my={2}>
-          Playlists with {name}
-        </Heading>
-        <CardCarousel height={250} width={160} scrollMultiplier={1}>
-          {discovery &&
-            discovery.recommended.playlists.map((x: any) => {
-              return <PlaylistCard playlist={x} marginX={2}></PlaylistCard>;
-            })}
-        </CardCarousel>
-        <ContainerInlay width="100%" pt={0}>
-          <Center>
-            <Button
-              variant="ghost"
-              size="lg"
-              my={4}
-              width="100%"
-              height="50px"
-              colorScheme="n2"
-              leftIcon={<FiList />}
-            >
-              See All Songs
-            </Button>
-          </Center>
-        </ContainerInlay>
-        <Heading size="md" my={2}>
-          Discover more from {channel.org}
-        </Heading>
-        {discovery && (
-          <CardCarousel height={210} width={160} scrollMultiplier={2}>
-            {discovery.channels.map((c: Channel) => (
-              <ChannelCard channel={c} key={c.id} marginX={2} />
-            ))}
-          </CardCarousel>
+            <ButtonGroup colorScheme="brand" mt="3" spacing="5">
+              <Button
+                onClick={() =>
+                  setOffset((e) =>
+                    Math.max(
+                      Math.min(
+                        Math.floor(total / PERPAGE) * PERPAGE,
+                        e - PERPAGE
+                      ),
+                      0
+                    )
+                  )
+                }
+              >
+                <FiArrowLeft />
+              </Button>
+              <Editable
+                key={offset}
+                defaultValue={String(Math.floor(offset / PERPAGE) + 1)}
+                fontSize="xl"
+                onSubmit={(e) => {
+                  const n = Number.parseInt(e);
+                  setOffset(
+                    Math.max(
+                      Math.min(
+                        Math.floor(total / PERPAGE) * PERPAGE,
+                        (n - 1) * PERPAGE
+                      ),
+                      0
+                    )
+                  );
+                }}
+              >
+                <EditablePreview />
+                <EditableInput
+                  width="30px"
+                  type="number"
+                  min="1"
+                  max={Math.ceil(total / PERPAGE)}
+                />
+              </Editable>
+              <Button
+                onClick={() =>
+                  setOffset((e) =>
+                    Math.max(
+                      Math.min(
+                        Math.floor(total / PERPAGE) * PERPAGE,
+                        e + PERPAGE
+                      ),
+                      0
+                    )
+                  )
+                }
+              >
+                <FiArrowRight />
+              </Button>
+            </ButtonGroup>
+          </Box>
         )}
       </ContainerInlay>
     </PageContainer>
