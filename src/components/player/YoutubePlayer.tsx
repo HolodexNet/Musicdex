@@ -2,9 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
 
-export function YoutubePlayer(
-  onReady: (event: { target: YouTubePlayer }) => void
-) {
+export function YoutubePlayer({
+  onReady,
+}: {
+  onReady: (event: { target: YouTubePlayer }) => void;
+}) {
   return (
     <YouTube
       containerClassName="yt-player"
@@ -32,10 +34,10 @@ const INITIALSTATE = {
   muted: false,
 };
 
-var VideoIDRegex =
+const VideoIDRegex =
   /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|\?v=)([^#&?]*).*/;
 
-function getID(url: string | undefined) {
+export function getID(url: string | undefined) {
   return url?.match(VideoIDRegex)?.[2] || "";
 }
 
@@ -78,13 +80,10 @@ export function usePlayer(player?: YouTubePlayer) {
       timer && clearInterval(timer);
     };
   }, [player]);
-  function setPlaying(play: boolean) {
-    play ? player?.playVideo() : player?.pauseVideo();
-  }
+
   return {
     ...status,
     setError,
     hasError,
-    setPlaying,
   };
 }

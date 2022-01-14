@@ -11,7 +11,9 @@ import { PlaybackControl } from "./controls/PlaybackControl";
 import { PlayerOption } from "./controls/PlayerOption";
 import { VolumeSlider } from "./controls/VolumeSlider";
 import { TimeSlider } from "./controls/TimeSlider";
-import { usePlayer } from "./YoutubePlayer";
+import { getID, usePlayer } from "./YoutubePlayer";
+
+const retryCounts: Record<string, number> = {};
 
 export function PlayerBar({
   isExpanded,
@@ -44,19 +46,25 @@ export function PlayerBar({
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volumeSlider, setVolumeSlider] = useState(0);
+  const [firstPlay, setFirstPlay] = useState(true);
 
   useEffect(() => {
     setVolumeSlider(volume ?? 0);
   }, [volume]);
   // Player State Event
   useEffect(() => {
+    if (firstPlay) {
+      setIsPlaying(false);
+      player?.pauseVideo();
+      return;
+    }
     // console.log("player changed state", state);
     if (state === PlayerStates.BUFFERING || state === PlayerStates.PLAYING) {
       setIsPlaying(true);
     } else {
       setIsPlaying(false);
     }
-  }, [state]);
+  }, [firstPlay, player, state]);
 
   // Sanity video id check event
   useEffect(() => {
@@ -139,7 +147,30 @@ export function PlayerBar({
 
   // Error Event Effect
   useEffect(() => {
-    if (hasError && currentSong) {
+    if (player && hasError && currentSong) {
+      // Initialize retry count
+      if (!retryCounts[currentSong.video_id])
+        retryCounts[currentSong.video_id] = 0;
+
+      // Allow up to 3 retries
+      if (retryCounts[currentSong.video_id] <= 3) {
+        if (getID(player.getVideoUrl()) !== currentSong.video_id) return;
+        setTimeout(() => {
+          console.log(
+            `Retrying ${currentSong.name} - attempt #${
+              retryCounts[currentSong.video_id] / 4
+            }`
+          );
+          player?.loadVideoById({
+            videoId: currentSong.video_id,
+            startSeconds: currentSong.start,
+          });
+          setError(false);
+        }, 2000);
+        retryCounts[currentSong.video_id] += 1;
+        return;
+      }
+
       console.log(
         "SKIPPING____ DUE TO VIDEO PLAYBACK FAILURE (maybe the video is blocked in your country)"
       );
@@ -152,7 +183,7 @@ export function PlayerBar({
       next({ count: 1, userSkipped: false, hasError: true });
       setError(false);
     }
-  }, [hasError, currentSong, toast, next, setError]);
+  }, [hasError, currentSong, toast, next, setError, player]);
 
   function onChange(e: any) {
     if (!currentSong) return;
@@ -165,6 +196,7 @@ export function PlayerBar({
   }, [progress, totalDuration]);
 
   function togglePlay() {
+    if (firstPlay) setFirstPlay(false);
     if (player) isPlaying ? player.pauseVideo() : player.playVideo();
     setIsPlaying((prev) => !prev);
   }

@@ -11,6 +11,7 @@ import { ReactNode, useMemo, useState } from "react";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState } from "../../store";
 import { CommonContextMenu } from "../common/CommonContext";
+import { MotionBox } from "../common/MotionBox";
 import { NavBar } from "../nav/NavBar";
 import { SidebarContent } from "../nav/Sidebar";
 import { Player } from "../player/Player";
@@ -128,13 +129,10 @@ export default function Frame({ children }: { children?: ReactNode }) {
               <Footer></Footer>
               <Box minH={pos === "hover-bottom" ? "250px" : "0px"}></Box>
             </Flex>
-            <Box
+            <MotionBox
               {...props}
-              // visibility={
-              //   pos === "hidden" || currentSong === undefined
-              //     ? "hidden"
-              //     : "visible"
-              // }
+              transition={{ duration: 0.5, type: "tween", ease: "easeInOut" }}
+              layout
             >
               <Box
                 visibility={pos === "background" ? "visible" : "hidden"}
@@ -145,8 +143,8 @@ export default function Frame({ children }: { children?: ReactNode }) {
                 opacity={0.6}
                 bgColor="bg.900"
               ></Box>
-              {YoutubePlayer(onReady)}
-            </Box>
+              <YoutubePlayer onReady={onReady} />
+            </MotionBox>
           </Flex>
         </Flex>
         <Player player={player} />
