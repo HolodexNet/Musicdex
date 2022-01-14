@@ -81,98 +81,98 @@ export default function ChannelSongs() {
   if (!channelStatus.isSuccess)
     return <QueryStatus queryStatus={channelStatus} />;
 
-  return (
-    latest && (
-      <Box flex="1 1 140px" minWidth="300px">
-        <Heading size="md" marginBottom={2}>
-          <Button
-            variant="solid"
-            width="22px"
-            height="22px"
-            size="30px"
-            mr={2}
-            borderRadius="full"
-            position="relative"
-            as="a"
-            href={"/channel/" + channel.id}
-            onClick={(e) => {
-              e.preventDefault();
-              navigate("/channel/" + channel.id);
-            }}
-          >
-            <FiArrowLeft />
-          </Button>
-          All Songs ({offset} - {offset + latest.length} of {total}){" "}
-          <Button
-            variant="ghost"
-            size="sm"
-            py={0}
-            my={-2}
-            colorScheme="n2"
-            onClick={() => {
-              queueSongs({ songs: latest, immediatelyPlay: false });
-            }}
-          >
-            Queue All ({latest.length})
-          </Button>
-        </Heading>
-        <Box>
-          <Suspense fallback={<div>Loading...</div>}>
-            <SongTable songs={latest}></SongTable>
-          </Suspense>
-        </Box>
-        <ButtonGroup colorScheme="brand" mt="3" spacing="5">
-          <Button
-            onClick={() =>
-              setOffset((e) =>
-                Math.max(
-                  Math.min(Math.floor(total / PERPAGE) * PERPAGE, e - PERPAGE),
-                  0
-                )
-              )
-            }
-          >
-            <FiArrowLeft />
-          </Button>
-          <Editable
-            key={offset}
-            defaultValue={String(Math.floor(offset / PERPAGE) + 1)}
-            fontSize="xl"
-            onSubmit={(e) => {
-              const n = Number.parseInt(e);
-              setOffset(
-                Math.max(
-                  Math.min(
-                    Math.floor(total / PERPAGE) * PERPAGE,
-                    (n - 1) * PERPAGE
-                  ),
-                  0
-                )
-              );
-            }}
-          >
-            <EditablePreview />
-            <EditableInput
-              width="30px"
-              type="number"
-              min="1"
-              max={Math.ceil(total / PERPAGE)}
-            />
-          </Editable>
-          <Button
-            onClick={() =>
-              setOffset((e) =>
-                Math.max(
-                  Math.min(Math.floor(total / PERPAGE) * PERPAGE, e + PERPAGE),
-                  0
-                )
-              )
-            }
-          >
-            <FiArrowRight />
-          </Button>
-        </ButtonGroup>
+  return latest ? (
+    <Box flex="1 1 140px" minWidth="300px">
+      <Heading size="md" marginBottom={2}>
+        <Button
+          variant="solid"
+          width="22px"
+          height="22px"
+          size="30px"
+          mr={2}
+          borderRadius="full"
+          position="relative"
+          as="a"
+          href={"/channel/" + channel.id}
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/channel/" + channel.id);
+          }}
+        >
+          <FiArrowLeft />
+        </Button>
+        All Songs ({offset} - {offset + latest.length} of {total}){" "}
+        <Button
+          variant="ghost"
+          size="sm"
+          py={0}
+          my={-2}
+          colorScheme="n2"
+          onClick={() => {
+            queueSongs({ songs: latest, immediatelyPlay: false });
+          }}
+        >
+          Queue All ({latest.length})
+        </Button>
+      </Heading>
+      <Box>
+        <Suspense fallback={<div>Loading...</div>}>
+          <SongTable songs={latest}></SongTable>
+        </Suspense>
       </Box>
-    )
+      <ButtonGroup colorScheme="brand" mt="3" spacing="5">
+        <Button
+          onClick={() =>
+            setOffset((e) =>
+              Math.max(
+                Math.min(Math.floor(total / PERPAGE) * PERPAGE, e - PERPAGE),
+                0
+              )
+            )
+          }
+        >
+          <FiArrowLeft />
+        </Button>
+        <Editable
+          key={offset}
+          defaultValue={String(Math.floor(offset / PERPAGE) + 1)}
+          fontSize="xl"
+          onSubmit={(e) => {
+            const n = Number.parseInt(e);
+            setOffset(
+              Math.max(
+                Math.min(
+                  Math.floor(total / PERPAGE) * PERPAGE,
+                  (n - 1) * PERPAGE
+                ),
+                0
+              )
+            );
+          }}
+        >
+          <EditablePreview />
+          <EditableInput
+            width="30px"
+            type="number"
+            min="1"
+            max={Math.ceil(total / PERPAGE)}
+          />
+        </Editable>
+        <Button
+          onClick={() =>
+            setOffset((e) =>
+              Math.max(
+                Math.min(Math.floor(total / PERPAGE) * PERPAGE, e + PERPAGE),
+                0
+              )
+            )
+          }
+        >
+          <FiArrowRight />
+        </Button>
+      </ButtonGroup>
+    </Box>
+  ) : (
+    <div>Loading...</div>
   );
 }
