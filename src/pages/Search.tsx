@@ -130,7 +130,7 @@ function AdvancedSearchFilters({ ...props }: AdvancedSearchProps) {
     if ((qObj as any)?.advanced) {
       onOpen();
     }
-  }, [search]);
+  }, [onOpen, search]);
 
   const [id, incr] = useState(200);
 

@@ -55,11 +55,7 @@ export default function Playlist() {
     (actions) => actions.playback.setPlaylist
   );
 
-  function handleClick(song: Song) {
-    queueSongs({ songs: [song], immediatelyPlay: true });
-  }
-
-  const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
+  // const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
 
   const writablePlaylist: Partial<WriteablePlaylist> = useMemo(() => {
     let c: Partial<WriteablePlaylist> = {

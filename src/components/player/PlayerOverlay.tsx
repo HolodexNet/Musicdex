@@ -54,6 +54,7 @@ export function PlayerOverlay({
   React.useEffect(() => {
     // runs on location, i.e. route, change
     close();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   const queue = useStoreState((state) => state.playback.queue);

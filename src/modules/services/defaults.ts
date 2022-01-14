@@ -1,5 +1,3 @@
-import { UseQueryOptions } from "react-query/types/react/types";
-
 export const DEFAULT_FETCH_CONFIG /*: Omit<UseQueryOptions, 'queryKey'>*/ = {
   refetchOnWindowFocus: false,
   retry: 1,

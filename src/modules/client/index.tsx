@@ -1,5 +1,4 @@
 import { ButtonProps, chakra, ChakraProps } from "@chakra-ui/react";
-import styled from "@emotion/styled";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { ReactNode, useCallback } from "react";
 import OAuth2Login from "react-simple-oauth2-login";

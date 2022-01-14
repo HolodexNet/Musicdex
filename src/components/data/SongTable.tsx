@@ -43,10 +43,10 @@ interface SongTableProps {
   menuId?: string;
 }
 
-const COLUMN_MIN_WIDTHS: { [key: string]: string } = {
+const COLUMN_MIN_WIDTHS: { [key: string]: string | any } = {
   idx: "40px",
   // 'dur': '20px',
-  "...": "100px",
+  "...": { base: "80px", md: "100px" },
 };
 
 const IdxGrid = ({
@@ -223,7 +223,7 @@ export const SongTable = ({
     useSortBy
   );
 
-  const isXL = useBreakpointValue({ base: 2, xs: 0, sm: 1, md: 2, xl: 3 });
+  const isXL = useBreakpointValue({ base: 0, xs: 0, sm: 1, md: 2, xl: 3 });
 
   useEffect(() => {
     if (isXL === undefined) return;
@@ -253,7 +253,7 @@ export const SongTable = ({
                 <Th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   isNumeric={(column as any).isNumeric}
-                  px={{ xl: 3, base: 2 }}
+                  px={{ xl: 3, md: 2, base: 1 }}
                 >
                   {column.isSorted &&
                     (column.isSortedDesc ? (
@@ -337,7 +337,7 @@ const MemoizedRow = React.memo(
                   },
                 }
               : {})}
-            px={{ xl: 3, base: 2 }}
+            px={{ xl: 3, md: 2, base: 1 }}
           >
             {cell.column.id === "..." && <SongLikeButton song={row.original} />}
             {cell.render("Cell")}

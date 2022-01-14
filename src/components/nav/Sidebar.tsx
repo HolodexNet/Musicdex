@@ -1,12 +1,4 @@
-import {
-  Box,
-  useColorModeValue,
-  Flex,
-  CloseButton,
-  Divider,
-  BoxProps,
-  Text,
-} from "@chakra-ui/react";
+import { Box, CloseButton, Divider, BoxProps, Text } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 import {
   FiClock,
@@ -29,6 +21,17 @@ import { OrgSelector } from "./OrgSelector";
 import { useLocation } from "react-router-dom";
 import { useStoreState } from "../../store";
 import { AnimatePresence } from "framer-motion";
+
+import {
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Stack,
+  useColorModeValue,
+} from "@chakra-ui/react";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -132,5 +135,61 @@ export function SidebarContent({
         />
       )}
     </Box>
+  );
+}
+
+export default function CreateNewPlaylistForm(): JSX.Element {
+  const { mutate: writePlaylist, isSuccess, isError } = usePlaylistWriter();
+
+  return (
+    <Flex
+      minH={"100vh"}
+      align={"center"}
+      justify={"center"}
+      bg={useColorModeValue("gray.50", "gray.800")}
+    >
+      <Stack
+        spacing={4}
+        w={"full"}
+        maxW={"md"}
+        bg={useColorModeValue("white", "gray.700")}
+        rounded={"xl"}
+        boxShadow={"lg"}
+        p={6}
+        my={12}
+        as="form"
+        onSubmit={(e) => alert(JSON.stringify(e))}
+      >
+        <Heading lineHeight={1.1} fontSize={{ base: "2xl", md: "3xl" }}>
+          Create New Playlist
+        </Heading>
+        <FormControl id="name" isRequired>
+          <FormLabel>
+            Name (Can start a playlist with an emoji to set it as the icon)
+          </FormLabel>
+          <Input
+            placeholder="Playlist Name"
+            _placeholder={{ color: "gray.500" }}
+            type="text"
+          />
+        </FormControl>
+        <FormControl id="description" isRequired>
+          <FormLabel>Description</FormLabel>
+          <Input type="text" />
+        </FormControl>
+        <Stack spacing={6}>
+          <Button
+            bg={"green.400"}
+            color={"white"}
+            _hover={{
+              bg: "green.500",
+            }}
+            type="submit"
+          >
+            Create
+          </Button>
+        </Stack>
+      </Stack>
+    </Flex>
   );
 }

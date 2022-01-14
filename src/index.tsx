@@ -1,14 +1,14 @@
 import "react-contexify/dist/ReactContexify.css";
 
 import { ChakraProvider } from "@chakra-ui/react";
-import {
-  HyperThemeEditor,
-  ThemeEditorProvider,
-} from "@hypertheme-editor/chakra-ui";
+// import {
+//   HyperThemeEditor,
+//   ThemeEditorProvider,
+// } from "@hypertheme-editor/chakra-ui";
 import { StoreProvider } from "easy-peasy";
 // https://chakra-ui.com/docs/migration#css-reset
 import "focus-visible/dist/focus-visible";
-import React, { Suspense } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import {
   queryClient,
