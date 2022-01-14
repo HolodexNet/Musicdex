@@ -45,7 +45,7 @@ export function Searchbox(): JSX.Element {
             <HStack>
               <IconButton
                 color="green.500"
-                bgColor={isFocused ? "green.200" : "whiteAlpha.200"}
+                colorScheme={isFocused ? "green" : "whiteAlpha"}
                 size="sm"
                 aria-label="Search"
                 icon={<FiSearch />}
@@ -57,6 +57,15 @@ export function Searchbox(): JSX.Element {
                 colorScheme={isFocused ? "n2" : "bgAlpha"}
                 variant="outline"
                 icon={<FiFilter />}
+                onClick={() => {
+                  navigate({
+                    pathname: "/search",
+                    search: `?${createSearchParams({
+                      advanced: "1",
+                      q: currentValue,
+                    })}`,
+                  });
+                }}
               ></IconButton>
             </HStack>
           </InputRightElement>

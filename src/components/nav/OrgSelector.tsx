@@ -27,6 +27,7 @@ export function OrgSelector() {
     });
   }, [orglist, orgs]);
 
+  // CSS for .orgselector is in global.css
   return (
     <motion.div
       style={{ opacity: 0, position: "relative" }}
@@ -37,18 +38,19 @@ export function OrgSelector() {
       }}
       exit={{ opacity: 0, marginTop: "0px", height: "0px" }}
       transition={{ duration: 0.4, type: "tween" }}
+      className="orgselector"
     >
-      <Select
+      <select
         placeholder="Select org"
         value={org.name}
         onChange={(e) => {
           const tgt = sortedOrgList?.find((x) => x.name === e.target.value);
           if (tgt) setOrg(tgt);
         }}
-        mb={3}
-        fontFamily="Assistant, sans-serif"
-        width="89%"
-        pl="11%"
+        // mb={3}
+        // fontFamily="Assistant, sans-serif"
+        // width="89%"
+        // pl="11%"
       >
         {sortedOrgList?.map((x) => {
           return (
@@ -57,7 +59,7 @@ export function OrgSelector() {
             </option>
           );
         })}
-      </Select>
+      </select>
     </motion.div>
   );
 }

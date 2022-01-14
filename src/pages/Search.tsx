@@ -40,8 +40,11 @@ export default function Search() {
   const qObj: Partial<SearchParams<SearchableSong>> = Object.fromEntries(
     search.entries()
   );
+  if (qObj?.q?.length === 0 || qObj?.q?.trim()?.length === 0) {
+    delete qObj.q;
+  }
   const { data: searchResult, ...rest } = useSongSearch<SearchableSong>({
-    q: "",
+    q: " ",
     query_by:
       "name, channel_name, channel_english_name, original_artist, channel_org, channel_suborg, title",
     sort_by: "_text_match:desc,available_at:desc",

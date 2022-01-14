@@ -41,3 +41,54 @@
 .chakra-heading:not(a *):not(button *) {
   cursor: default;
 }
+
+.orgselector select {
+  /* Reset Select */
+  appearance: none;
+  outline: 0;
+  border: 0;
+  box-shadow: none;
+  /* Personalize */
+  flex: 1;
+  padding: 0 1em;
+  color: #fff;
+  background-color: var(--chakra-colors-bgAlpha-700);
+  background-image: none;
+  cursor: pointer;
+  font-family: "Assistant", sans-serif;
+}
+
+.orgselector option {
+  font-family: "Assistant", sans-serif !important;
+}
+/* Remove IE arrow */
+.orgselector select::-ms-expand {
+  display: none;
+}
+/* Custom Select wrapper */
+.orgselector {
+  position: relative;
+  display: flex;
+  width: 78%;
+  height: 2em;
+  border-radius: 0.25em;
+  overflow: hidden;
+  margin-left: 11%;
+  margin-bottom: 1em;
+  font-family: "Assistant", sans-serif;
+}
+/* Arrow */
+.orgselector::after {
+  content: "\25BC";
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.3em;
+  background-color: var(--chakra-colors-bgAlpha-800);
+  transition: 0.25s all ease;
+  pointer-events: none;
+}
+/* Transition */
+.orgselector:hover::after {
+  color: #f39c12;
+}
