@@ -14,6 +14,7 @@ import { useContextMenu } from "react-contexify";
 import { FaPlay } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useClipboardWithToast } from "../../../modules/common/clipboard";
+import useNamePicker from "../../../modules/common/useNamePicker";
 import { useStoreActions } from "../../../store";
 import { DEFAULT_MENU_ID } from "../../common/CommonContext";
 import { SongArtwork } from "../../song/SongArtwork";
@@ -28,6 +29,7 @@ export const SongInfo = ({ song }: SongInfoProps) => {
     (a) => a.addPlaylist.showPlaylistAddDialog
   );
   const { show } = useContextMenu({ id: DEFAULT_MENU_ID });
+  const tn = useNamePicker();
 
   return (
     <HStack onContextMenu={show}>
@@ -94,7 +96,7 @@ export const SongInfo = ({ song }: SongInfoProps) => {
         </Link>
         <Link as={NavLink} to={`/channel/${song.channel_id}`}>
           <Text noOfLines={1} opacity={0.66}>
-            {song.channel.english_name || song.channel.name}
+            {tn(song.channel.english_name, song.channel.name)}
           </Text>
         </Link>
       </Box>

@@ -1,18 +1,20 @@
 import { createStore, createTypedHooks, persist } from "easy-peasy";
 import addPlaylistModel, { AddPlaylistModel } from "./addPlaylist";
 import authModel, { AuthModel } from "./auth";
-import { contextMenusAtom, ContextMenuStore } from "./contextMenu";
+import { dndAtom, DnDStore } from "./dragAndDrop";
 import orgModel, { OrgModel } from "./org";
 import playbackModel, { PlaybackModel } from "./playback";
 import playerModel, { PlayerModel } from "./player";
+import { settingsStore, SettingsStore } from "./settings";
 
 interface StoreModel {
   auth: AuthModel;
   player: PlayerModel;
   playback: PlaybackModel;
   org: OrgModel;
-  contextMenu: ContextMenuStore;
+  dnd: DnDStore;
   addPlaylist: AddPlaylistModel;
+  settings: SettingsStore;
 }
 
 const storeModel: StoreModel = {
@@ -20,8 +22,9 @@ const storeModel: StoreModel = {
   player: playerModel,
   playback: playbackModel,
   org: orgModel,
-  contextMenu: contextMenusAtom,
+  dnd: dndAtom,
   addPlaylist: addPlaylistModel,
+  settings: settingsStore,
 };
 
 const typedHooks = createTypedHooks<StoreModel>();
@@ -30,7 +33,7 @@ export const useStoreDispatch = typedHooks.useStoreDispatch;
 export const useStoreState = typedHooks.useStoreState;
 
 const storeM = createStore(
-  persist(storeModel, { storage: "localStorage", deny: ["contextMenu"] })
+  persist(storeModel, { storage: "localStorage", deny: ["dnd"] })
 );
 
 if (process.env.NODE_ENV === "development") {

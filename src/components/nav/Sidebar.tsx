@@ -59,7 +59,7 @@ export function SidebarContent({
   const { data: playlistList, isLoading: loadingMine } = useMyPlaylists();
   const { data: starredList, isLoading: loadingStars } = useStarredPlaylists();
   const { pathname } = useLocation();
-  const isDragging = useStoreState((s) => s.contextMenu.dragging);
+  const isDragging = useStoreState((s) => s.dnd.dragging);
 
   const createNewPlaylistHandler = async () => {
     if (!user?.id) return alert("You must be logged in to create Playlists");

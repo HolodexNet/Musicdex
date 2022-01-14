@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FiTrash } from "react-icons/fi";
 import { Column, useSortBy, useTable } from "react-table";
+import useNamePicker from "../../modules/common/useNamePicker";
 
 type IndexedSong = Song & { idx: number };
 interface SongEditableTableProps {
@@ -45,6 +46,8 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
       };
     });
   }, [newSongIds, songs]);
+  const tn = useNamePicker();
+
   const columns: Column<IndexedSong>[] = useMemo<Column<IndexedSong>[]>(
     () => [
       {
@@ -71,7 +74,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
         id: "channel",
         Header: "ChannelName",
         accessor: (row: IndexedSong) =>
-          row.channel?.english_name || row.channel?.name,
+          tn(row.channel?.english_name, row.channel?.name),
       },
       {
         Header: "Original Artist",
@@ -112,7 +115,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
         },
       },
     ],
-    [t, newSongIds]
+    [t, newSongIds, tn]
   );
 
   const {

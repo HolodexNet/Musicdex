@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import { FiMove } from "react-icons/fi";
 import { RiDragDropLine } from "react-icons/ri";
+import useNamePicker from "../../modules/common/useNamePicker";
 import {
   useMyPlaylists,
   usePlaylistUpdater,
@@ -44,7 +45,7 @@ export function AddToPlaylistModal(): JSX.Element {
       setPlaylist(playlists[0].id);
     }
   }, [playlists]);
-
+  const tn = useNamePicker();
   return (
     <Modal onClose={close} isOpen={showDialog}>
       <ModalOverlay />
@@ -56,7 +57,9 @@ export function AddToPlaylistModal(): JSX.Element {
           {song && (
             <Box>
               <Heading size="sm">{song.name}</Heading> covered by{" "}
-              <Heading size="sm">{song.channel.english_name}</Heading>
+              <Heading size="sm">
+                {tn(song.channel?.english_name, song.channel?.name)}
+              </Heading>
             </Box>
           )}
           <Divider mx={-4} mt={1} mb={2} />

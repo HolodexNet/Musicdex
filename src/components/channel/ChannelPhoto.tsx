@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { channel } from "diagnostics_channel";
 import { getChannelPhoto } from "../../modules/channel/utils";
+import useNamePicker from "../../modules/common/useNamePicker";
 
 interface ChannelPhotoProps extends AvatarProps {
   channelId?: string;
@@ -25,9 +26,11 @@ export function ChannelPhoto({
   resizePhoto,
   ...rest
 }: ChannelPhotoProps) {
+  const tn = useNamePicker();
+
   const id = channelId || channel?.id;
   const src = id && getChannelPhoto(id, resizePhoto);
-  const name = channel?.english_name || channel?.name;
+  const name = tn(channel?.english_name, channel?.name);
   return (
     <Avatar src={src} name={name} loading="lazy" bgColor="unset" {...rest} />
   );

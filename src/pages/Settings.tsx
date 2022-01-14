@@ -14,13 +14,12 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-import React, { Suspense } from "react";
 import { ReactNode, useMemo } from "react";
 import OrgManager from "../components/common/OrgManagement";
 import { UserSettings } from "../components/common/UserSettings";
-import { LoginButtons } from "../components/header/Login";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
+import { useStoreActions, useStoreState } from "../store";
 
 export default function Settings() {
   return (
@@ -89,8 +88,11 @@ function LanguagePrefs() {
 
   const channelNamePrefs: LanguageOpts[] = [
     { value: "english_name", display: "English" },
-    { value: "name", display: "Original Language" },
+    { value: "name", display: "Same as Youtube (Japanese, etc)" },
   ];
+
+  const useEN = useStoreState((s) => s.settings.useEN);
+  const changeUseEN = useStoreActions((s) => s.settings.setUseEN);
 
   return (
     <SimpleGrid minChildWidth="300px" spacing="40px">
@@ -110,8 +112,8 @@ function LanguagePrefs() {
         </Heading>
         <LanguageSelector
           options={channelNamePrefs}
-          onChange={console.log}
-          defaultValue="english_name"
+          onChange={(e) => changeUseEN(e === "english_name")}
+          defaultValue={useEN ? "english_name" : "name"}
         />
       </Box>
     </SimpleGrid>

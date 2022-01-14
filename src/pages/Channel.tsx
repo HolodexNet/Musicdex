@@ -37,13 +37,12 @@ import { BGImgContainer, BGImg } from "../components/common/BGImgContainer";
 import { useTrendingSongs } from "../modules/services/songs.service";
 import { SongCard } from "../components/song/SongCard";
 import { SongItem } from "../components/song/SongItem";
+import useNamePicker from "../modules/common/useNamePicker";
 
 export default function Channel() {
   // const history = useStoreState((store) => store.playback.history);
   let params = useParams();
   let channelId = params.id!;
-
-  //const { data: playlist, ...status } = usePlaylist(`:video[id=${channelId}]`);
 
   const { data: channel, ...channelStatus } = useQuery(
     ["channel", channelId],
@@ -61,20 +60,14 @@ export default function Channel() {
   });
 
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
-  // const {description, }
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
-  const setPlaylist = useStoreActions(
-    (actions) => actions.playback.setPlaylist
-  );
-
-  console.log(channel);
-  // useEffect(() => console.log(playlist), [playlist])
-
-  // if (!status.isSuccess)
-  //   return <QueryStatus queryStatus={status} /> ;
+  const tn = useNamePicker();
 
   if (!channelStatus.isSuccess)
     return <QueryStatus queryStatus={channelStatus} />;
+
+  const name = tn(channel.english_name, channel.name);
+
   return (
     <PageContainer>
       <BGImgContainer height="60vh">
@@ -95,7 +88,7 @@ export default function Channel() {
           shadow="lg"
         ></ChannelPhoto>
         <PlaylistHeading
-          title={channel.name}
+          title={name}
           description={channel.org}
           canEdit={false}
           editMode={false}
@@ -167,7 +160,7 @@ export default function Channel() {
           )}
         </Flex>
         <Heading size="md" my={2}>
-          Playlists with {channel.name}
+          Playlists with {name}
         </Heading>
         <CardCarousel height={250} width={160} scrollMultiplier={1}>
           {discovery &&

@@ -14,6 +14,12 @@
     "i18n-ally.keepFulfilled": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "workbench.colorCustomizations": {
+      "statusBar.background": "#708090",
+      "statusBar.debuggingBackground": "#708090",
+      "statusBar.noFolderBackground": "#708090",
+      "statussBar.prominentBackground": "#708090"
+    }
   }
 }

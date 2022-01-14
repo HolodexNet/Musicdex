@@ -1,7 +1,7 @@
 import { useStoreActions } from "../../store";
 
 export function useDraggableSong(song: Song) {
-  const setDragging = useStoreActions((a) => a.contextMenu.setDragging);
+  const setDragging = useStoreActions((a) => a.dnd.setDragging);
 
   const onDragStart = (e: any) => {
     // console.log(e);

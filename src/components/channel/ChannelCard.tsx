@@ -6,6 +6,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import useNamePicker from "../../modules/common/useNamePicker";
 import { ChannelPhoto } from "./ChannelPhoto";
 
 interface ChannelCardProps extends FlexProps {
@@ -15,6 +16,8 @@ interface ChannelCardProps extends FlexProps {
 export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
   const bgColor = useColorModeValue("bg.100", "bg.800");
   const bgHover = useColorModeValue("bg.200", "bg.700");
+  const tn = useNamePicker();
+
   return (
     <Flex
       minWidth="168px"
@@ -49,7 +52,7 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
         textAlign="center"
         maxWidth="100%"
       >
-        {channel.name}
+        {tn(channel.english_name, channel.name)}
       </Text>
     </Flex>
   );

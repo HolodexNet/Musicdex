@@ -20,6 +20,7 @@ import { BiMovie } from "react-icons/bi";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { Column, Row, useSortBy, useTable } from "react-table";
+import useNamePicker from "../../modules/common/useNamePicker";
 import { useStoreActions, useStoreState } from "../../store";
 import { formatSeconds } from "../../utils/SongHelper";
 import { DEFAULT_MENU_ID } from "../common/CommonContext";
@@ -66,12 +67,17 @@ const IdxGrid = ({
   );
 };
 
-const TitleGrid = ({ row: { original } }: { row: { original: Song } }) => {
+const TitleGrid = ({
+  row, //: { original, channel },
+}: {
+  row: any;
+  // row: { original: Song; channel: string };
+}) => {
   return (
     <VStack alignItems="start" spacing={1}>
-      <span>{original?.name}</span>
+      <span>{row?.original?.name}</span>
       <Text opacity={0.66} fontWeight={300} fontSize="sm">
-        {original.channel?.name}
+        {row?.values?.channel}
       </Text>
     </VStack>
   );
@@ -147,6 +153,7 @@ export const SongTable = ({
   );
   // const [front,front2] = useCOlorMode
 
+  const tn = useNamePicker();
   const columns: Column<IndexedSong>[] = React.useMemo<Column<IndexedSong>[]>(
     () => [
       {
@@ -165,8 +172,9 @@ export const SongTable = ({
       {
         id: "channel",
         Header: "ChannelName",
-        accessor: (row: IndexedSong) =>
-          row.channel?.english_name || row.channel?.name,
+        accessor: (row: IndexedSong) => {
+          return tn(row.channel?.english_name, row.channel?.name);
+        },
       },
       {
         Header: "Original Artist",
@@ -195,7 +203,7 @@ export const SongTable = ({
         Cell: dropDownUsageFn,
       },
     ],
-    [dropDownUsageFn]
+    [dropDownUsageFn, tn]
   );
 
   const {

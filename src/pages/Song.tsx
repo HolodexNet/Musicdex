@@ -10,14 +10,16 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
-import { FiShare2 } from "react-icons/fi";
+import { FiShare2, FiYoutube } from "react-icons/fi";
 import { useParams } from "react-router";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { QueryStatus } from "../components/common/QueryStatus";
+import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { SongArtwork } from "../components/song/SongArtwork";
 import { SongLikeButton } from "../components/song/SongLikeButton";
 import { useClipboardWithToast } from "../modules/common/clipboard";
+import useNamePicker from "../modules/common/useNamePicker";
 import { useSong } from "../modules/services/songs.service";
 import { useStoreActions } from "../store";
 import { formatSeconds } from "../utils/SongHelper";
@@ -41,72 +43,91 @@ export default function Song() {
 
   const queueSong = useStoreActions((actions) => actions.playback.queueSongs);
   const clip = useClipboardWithToast();
+  const tn = useNamePicker();
 
   return (
     <PageContainer>
-      <QueryStatus queryStatus={rest} />
-      {song && (
-        <Flex wrap="wrap">
-          <SongArtwork
-            song={song}
-            size={imageSize}
-            m={3}
-            style={{
-              WebkitBoxReflect:
-                "below 0px linear-gradient(to bottom, rgba(0,0,0,0.0) 80%, rgba(0,0,0,0.3))",
-            }}
-          />
-          <Flex flexDirection="column" px={3} py={5} flex="1 1 300px">
-            <Box marginTop="auto">
-              <Text fontSize="3xl" fontWeight={600}>
-                {song.name}
-              </Text>
-              <HStack py={2}>
-                <ChannelPhoto channelId={song.channel_id} resizePhoto={30} />
-                <Link>
-                  <Text fontSize="2xl" color="n2.300">
-                    {song.channel.english_name || song.channel.name}
-                  </Text>
-                </Link>
-              </HStack>
-              <Text opacity={0.75} fontSize="lg">
-                {song.original_artist}
-              </Text>
-              <Text fontSize="md" opacity={0.75}>
-                {formatSeconds(song.end - song.start)} •{" "}
-                {t("relativeDate", { date: new Date(song.available_at) })}
-                {song.is_mv && (
-                  <Icon mb="-3px" ml={3} as={BiMovie} title="MV"></Icon>
-                )}
-              </Text>
-            </Box>
+      <ContainerInlay>
+        <QueryStatus queryStatus={rest} />
+        {song && (
+          <Flex wrap="wrap">
+            <SongArtwork
+              song={song}
+              size={imageSize}
+              m={3}
+              style={{
+                WebkitBoxReflect:
+                  "below 0px linear-gradient(to bottom, rgba(0,0,0,0.0) 80%, rgba(0,0,0,0.3))",
+              }}
+            />
+            <Flex flexDirection="column" px={3} py={5} flex="1 1 300px">
+              <Box marginTop="auto">
+                <Text fontSize="3xl" fontWeight={600}>
+                  {song.name}
+                </Text>
+                <HStack py={2}>
+                  <ChannelPhoto channelId={song.channel_id} resizePhoto={30} />
+                  <Link>
+                    <Text fontSize="2xl" color="n2.300">
+                      {tn(song.channel.english_name, song.channel.name)}
+                    </Text>
+                  </Link>
+                </HStack>
+                <Text opacity={0.75} fontSize="lg">
+                  {song.original_artist}
+                </Text>
+                <Text fontSize="md" opacity={0.75}>
+                  {formatSeconds(song.end - song.start)} •{" "}
+                  {t("relativeDate", { date: new Date(song.available_at) })}
+                  {song.is_mv && (
+                    <Icon mb="-3px" ml={3} as={BiMovie} title="MV"></Icon>
+                  )}
+                </Text>
+              </Box>
 
-            <HStack spacing={2} mt={4}>
-              <Button
-                onClick={() => {
-                  queueSong({ songs: [song], immediatelyPlay: true });
-                }}
-                marginTop="auto"
-                maxWidth="200px"
-                minW="120px"
-              >
-                Play
-              </Button>
-              <Button
-                variant="ghost"
-                aria-label="share link"
-                size="md"
-                onClick={() => clip(window.location.toString(), false)}
-                colorScheme="n2"
-                title="Share"
-              >
-                <FiShare2 />
-              </Button>
-              <SongLikeButton song={song}></SongLikeButton>
-            </HStack>
+              <HStack spacing={2} mt={4}>
+                <Button
+                  onClick={() => {
+                    queueSong({ songs: [song], immediatelyPlay: true });
+                  }}
+                  marginTop="auto"
+                  maxWidth="200px"
+                  minW="120px"
+                >
+                  Play
+                </Button>
+                <Button
+                  variant="ghost"
+                  aria-label="share link"
+                  size="md"
+                  onClick={() => clip(window.location.toString(), false)}
+                  colorScheme="n2"
+                  title="Share"
+                >
+                  <FiShare2 />
+                </Button>
+                <Button
+                  variant="ghost"
+                  aria-label="youtube"
+                  size="md"
+                  onClick={() =>
+                    window.open(
+                      `https://youtu.be/${song.video_id}?t=${song.start}`,
+                      "_blank"
+                    )
+                  }
+                  colorScheme="n2"
+                  title="Open Youtube"
+                >
+                  <FiYoutube />
+                </Button>
+
+                <SongLikeButton song={song}></SongLikeButton>
+              </HStack>
+            </Flex>
           </Flex>
-        </Flex>
-      )}
+        )}
+      </ContainerInlay>
     </PageContainer>
   );
 }

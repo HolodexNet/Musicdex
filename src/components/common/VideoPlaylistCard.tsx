@@ -19,6 +19,7 @@ import { FaPlay } from "react-icons/fa";
 import { FiExternalLink } from "react-icons/fi";
 import { IoMdPlay } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
+import useNamePicker from "../../modules/common/useNamePicker";
 import { useStoreActions, useStoreState } from "../../store";
 import { useDraggableSong } from "../data/DraggableSong";
 import { DEFAULT_MENU_ID } from "./CommonContext";
@@ -33,13 +34,13 @@ export const VideoPlaylistCard = React.memo(
     const currentlyPlayingId = useStoreState(
       (state) => state.playback.currentlyPlaying.song?.id
     );
-
     const navigate = useNavigate();
 
     function openVideo() {
       if (playlist?.content) setPlaylist({ playlist });
       else window.open(`https://holodex.net/watch/${video.id}`, "_blank");
     }
+    const tn = useNamePicker();
 
     return (
       <Box width="100%" height="100%">
@@ -178,7 +179,7 @@ export const VideoPlaylistCard = React.memo(
           to={`/channel/${video.channel_id || video.channel.id}`}
           _hover={{ color: "whiteAlpha.700" }}
         >
-          {video.channel.name}
+          {tn(video.channel.english_name, video.channel.name)}
         </Text>
       </Box>
     );
@@ -239,7 +240,7 @@ const HighlightListItem = React.memo(
           <Box>
             <Text noOfLines={0}>{song.name}</Text>
             <Text noOfLines={0} color="gray.500" fontSize="sm">
-              {/* {song.channel.name} */} ({song.original_artist})
+              {song.original_artist}
             </Text>
           </Box>
         </HStack>
