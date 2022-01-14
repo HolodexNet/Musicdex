@@ -2,9 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
 
-export function YoutubePlayer(
-  onReady: (event: { target: YouTubePlayer }) => void
-) {
+export function YoutubePlayer({
+  onReady,
+}: {
+  onReady: (event: { target: YouTubePlayer }) => void;
+}) {
   return (
     <YouTube
       containerClassName="yt-player"
