@@ -4,7 +4,6 @@ import {
   Flex,
   HStack,
   Icon,
-  Link,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
@@ -12,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
 import { FiShare2, FiYoutube } from "react-icons/fi";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
@@ -54,21 +54,31 @@ export default function Song() {
             <SongArtwork
               song={song}
               size={imageSize}
-              m={3}
+              m={4}
               style={{
                 WebkitBoxReflect:
                   "below 0px linear-gradient(to bottom, rgba(0,0,0,0.0) 80%, rgba(0,0,0,0.3))",
               }}
             />
-            <Flex flexDirection="column" px={3} py={5} flex="1 1 300px">
+            <Flex flexDirection="column" px={4} py={4} flex="1 1 300px">
               <Box marginTop="auto">
                 <Text fontSize="3xl" fontWeight={600}>
                   {song.name}
                 </Text>
                 <HStack py={2}>
-                  <ChannelPhoto channelId={song.channel_id} resizePhoto={30} />
-                  <Link>
-                    <Text fontSize="2xl" color="n2.300">
+                  <Link to={"/channel/" + song.channel_id}>
+                    <ChannelPhoto
+                      channelId={song.channel_id}
+                      resizePhoto={30}
+                    />
+                    <Text
+                      fontSize="2xl"
+                      color="n2.300"
+                      as="span"
+                      display="inline-block"
+                      lineHeight="48px"
+                      ml={2}
+                    >
                       {tn(song.channel.english_name, song.channel.name)}
                     </Text>
                   </Link>
