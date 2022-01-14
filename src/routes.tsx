@@ -49,12 +49,8 @@ const routes: RouteObject[] = [
     element: <Video />,
   },
   {
-    path: "/channel/:id",
+    path: "/channel/:id/*",
     element: <Channel />,
-  },
-  {
-    path: "/channel/:id/songs",
-    element: <ChannelSongs />,
   },
   {
     path: "/settings",

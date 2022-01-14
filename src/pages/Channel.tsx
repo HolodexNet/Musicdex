@@ -15,7 +15,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { FiList, FiShare2, FiTwitter, FiYoutube } from "react-icons/fi";
 import { useQuery } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link, Route, Routes, useParams } from "react-router-dom";
 import { ChannelCard } from "../components/channel/ChannelCard";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { CardCarousel } from "../components/common/CardCarousel";
@@ -39,6 +39,7 @@ import { SongCard } from "../components/song/SongCard";
 import { SongItem } from "../components/song/SongItem";
 import useNamePicker from "../modules/common/useNamePicker";
 import { useClipboardWithToast } from "../modules/common/clipboard";
+import ChannelSongs from "./ChannelSongs";
 
 export default function Channel() {
   // const history = useStoreState((store) => store.playback.history);
@@ -141,81 +142,105 @@ export default function Channel() {
         </SimpleGrid>
       </HStack>
       <ContainerInlay>
-        {/* <Box>{JSON.stringify(discovery)}</Box> */}
-        <Flex flexWrap="wrap" flexDirection="row">
-          {discovery?.recentSingingStream && (
-            <Box flex="1.3 0 580px" minWidth="480px" mr={4}>
-              <Heading size="md" marginBottom={2}>
-                Latest Stream:
-              </Heading>
-              <VideoPlaylistCard
-                video={discovery?.recentSingingStream?.video}
-                playlist={discovery?.recentSingingStream?.playlist}
-              />
-            </Box>
-          )}
-          {trending && (
-            <Box flex="1 1 140px" minWidth="300px">
-              <Heading size="md" marginBottom={2}>
-                Popular Songs:{" "}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  py={0}
-                  my={-2}
-                  colorScheme="n2"
-                  onClick={() => {
-                    queueSongs({ songs: trending, immediatelyPlay: false });
-                  }}
-                >
-                  Queue All ({trending.length})
-                </Button>
-              </Heading>
-              <Box overflow="auto" height="300px">
-                {trending?.map((x) => (
-                  <SongItem song={x}></SongItem>
-                ))}
-              </Box>
-            </Box>
-          )}
-        </Flex>
-        <Heading size="md" my={2}>
-          Playlists with {name}
-        </Heading>
-        <CardCarousel height={250} width={160} scrollMultiplier={1}>
-          {discovery &&
-            discovery.recommended.playlists.map((x: any) => {
-              return <PlaylistCard playlist={x} marginX={2}></PlaylistCard>;
-            })}
-        </CardCarousel>
-        <ContainerInlay width="100%" pt={0}>
-          <Center>
-            <Button
-              variant="ghost"
-              size="lg"
-              my={4}
-              width="100%"
-              height="50px"
-              colorScheme="n2"
-              leftIcon={<FiList />}
-              as={Link}
-              to={"/channel/" + channel.id + "/songs"}
-            >
-              See All Songs
-            </Button>
-          </Center>
-        </ContainerInlay>
-        <Heading size="md" my={2}>
-          Discover more from {channel.org}
-        </Heading>
-        {discovery && (
-          <CardCarousel height={210} width={160} scrollMultiplier={2}>
-            {discovery.channels.map((c: Channel) => (
-              <ChannelCard channel={c} key={c.id} marginX={2} />
-            ))}
-          </CardCarousel>
-        )}
+        <Routes>
+          <Route
+            path="/"
+            element={channelContent(
+              discovery,
+              trending,
+              queueSongs,
+              name,
+              channel
+            )}
+          ></Route>
+          <Route path="/songs" element={<ChannelSongs />}></Route>
+        </Routes>
       </ContainerInlay>
     </PageContainer>
+  );
+}
+function channelContent(
+  discovery: any,
+  trending: Song[] | undefined,
+  queueSongs: (_: { songs: Song[]; immediatelyPlay: boolean }) => void,
+  name: any,
+  channel: any
+) {
+  return (
+    <>
+      <Flex flexWrap="wrap" flexDirection="row">
+        {discovery?.recentSingingStream && (
+          <Box flex="1.3 0 580px" minWidth="480px" mr={4}>
+            <Heading size="md" marginBottom={2}>
+              Latest Stream:
+            </Heading>
+            <VideoPlaylistCard
+              video={discovery?.recentSingingStream?.video}
+              playlist={discovery?.recentSingingStream?.playlist}
+            />
+          </Box>
+        )}
+        {trending && (
+          <Box flex="1 1 140px" minWidth="300px">
+            <Heading size="md" marginBottom={2}>
+              Popular Songs:{" "}
+              <Button
+                variant="ghost"
+                size="sm"
+                py={0}
+                my={-2}
+                colorScheme="n2"
+                onClick={() => {
+                  queueSongs({ songs: trending, immediatelyPlay: false });
+                }}
+              >
+                Queue All ({trending.length})
+              </Button>
+            </Heading>
+            <Box overflow="auto" height="300px">
+              {trending?.map((x) => (
+                <SongItem song={x}></SongItem>
+              ))}
+            </Box>
+          </Box>
+        )}
+      </Flex>
+      <Heading size="md" my={2}>
+        Playlists with {name}
+      </Heading>
+      <CardCarousel height={250} width={160} scrollMultiplier={1}>
+        {discovery &&
+          discovery.recommended.playlists.map((x: any) => {
+            return <PlaylistCard playlist={x} marginX={2}></PlaylistCard>;
+          })}
+      </CardCarousel>
+      <ContainerInlay width="100%" pt={0}>
+        <Center>
+          <Button
+            variant="ghost"
+            size="lg"
+            my={4}
+            width="100%"
+            height="50px"
+            colorScheme="n2"
+            leftIcon={<FiList />}
+            as={Link}
+            to={"/channel/" + channel.id + "/songs"}
+          >
+            See All Songs
+          </Button>
+        </Center>
+      </ContainerInlay>
+      <Heading size="md" my={2}>
+        Discover more from {channel.org}
+      </Heading>
+      {discovery && (
+        <CardCarousel height={210} width={160} scrollMultiplier={2}>
+          {discovery.channels.map((c: Channel) => (
+            <ChannelCard channel={c} key={c.id} marginX={2} />
+          ))}
+        </CardCarousel>
+      )}
+    </>
   );
 }
