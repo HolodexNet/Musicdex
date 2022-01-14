@@ -33,5 +33,5 @@ export const BGImg = styled.div<{
   background: url(${({ banner_url }) => banner_url});
   background-position: center;
   background-size: cover;
-  ${(blur) => blur && "filter: blur(8px);"}
+  ${({ blur }) => blur && "filter: blur(8px);"}
 `;
