@@ -1,4 +1,4 @@
-import { Flex, IconButton } from "@chakra-ui/react";
+import { Flex, FlexProps, IconButton } from "@chakra-ui/react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 import { useStoreActions, useStoreState } from "../../../store";
@@ -19,7 +19,7 @@ function ShuffleIcon(shuffleMode: boolean) {
   return <MdShuffle size={24} color={shuffleMode ? "" : "grey"} />;
 }
 
-interface PlayerOptionProps {
+interface PlayerOptionProps extends FlexProps {
   isExpanded: boolean;
   toggleExpanded: () => void;
 }
@@ -27,6 +27,7 @@ interface PlayerOptionProps {
 export const PlayerOption = ({
   isExpanded,
   toggleExpanded,
+  ...rest
 }: PlayerOptionProps) => {
   const shuffleMode = useStoreState((state) => state.playback.shuffleMode);
   const toggleShuffleMode = useStoreActions(
@@ -38,7 +39,7 @@ export const PlayerOption = ({
     (actions) => actions.playback.toggleRepeat
   );
   return (
-    <Flex alignItems="center">
+    <Flex alignItems="center" {...rest}>
       <IconButton
         aria-label="Shuffle"
         icon={ShuffleIcon(shuffleMode)}
