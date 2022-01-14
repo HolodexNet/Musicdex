@@ -4,7 +4,6 @@ import {
   IconButton,
   Input,
   InputGroup,
-  InputRightAddon,
   InputRightElement,
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";

@@ -16,6 +16,9 @@ import {
   TagLeftIcon,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { BiMovie } from "react-icons/bi";
+import { FiFilter, FiSearch } from "react-icons/fi";
 import {
   createSearchParams,
   useNavigate,
@@ -25,9 +28,6 @@ import {
   SearchParams,
   SearchResponseFacetCountSchema,
 } from "../../modules/services/search.service";
-import { useForm, Controller } from "react-hook-form";
-import { FiFilter, FiSearch } from "react-icons/fi";
-import { BiMovie } from "react-icons/bi";
 import { SearchableSong } from "../../pages/Search";
 
 export interface AdvancedSearchProps {

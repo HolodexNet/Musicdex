@@ -1,17 +1,15 @@
 import {
-  HStack,
-  MenuButton,
-  Icon,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   Box,
-  Menu,
+  HStack,
   Link,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
   Text,
 } from "@chakra-ui/react";
 import { useContextMenu } from "react-contexify";
-import { FaPlay } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useClipboardWithToast } from "../../../modules/common/clipboard";
 import useNamePicker from "../../../modules/common/useNamePicker";

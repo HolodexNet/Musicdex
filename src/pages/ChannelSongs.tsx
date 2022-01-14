@@ -2,53 +2,21 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Center,
   Editable,
   EditableInput,
   EditablePreview,
-  Flex,
   Heading,
-  HStack,
-  IconButton,
-  SimpleGrid,
-  Spacer,
-  Stack,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { Suspense, useEffect, useMemo, useState } from "react";
-import {
-  FiArrowLeft,
-  FiArrowRight,
-  FiList,
-  FiShare2,
-  FiTwitter,
-  FiYoutube,
-} from "react-icons/fi";
+import { Suspense, useMemo, useState } from "react";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { ChannelCard } from "../components/channel/ChannelCard";
-import { ChannelPhoto } from "../components/channel/ChannelPhoto";
-import { CardCarousel } from "../components/common/CardCarousel";
-import { MTHolodexIcon } from "../components/common/MTHolodex";
 import { QueryStatus } from "../components/common/QueryStatus";
-import { VideoPlaylistCard } from "../components/common/VideoPlaylistCard";
 import { SongTable } from "../components/data/SongTable";
-import { ContainerInlay } from "../components/layout/ContainerInlay";
-import { PageContainer } from "../components/layout/PageContainer";
-import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
-import { PlaylistCard } from "../components/playlist/PlaylistCard";
-import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
-import { useDiscoveryChannel } from "../modules/services/discovery.service";
-import { useHistory } from "../modules/services/history.service";
-import { usePlaylist } from "../modules/services/playlist.service";
+import { useSongAPI } from "../modules/services/songs.service";
 import { useStoreActions } from "../store";
-import { BGImgContainer, BGImg } from "../components/common/BGImgContainer";
-import {
-  useSongAPI,
-  useTrendingSongs,
-} from "../modules/services/songs.service";
 const PERPAGE = 10;
 export default function ChannelSongs() {
   // const history = useStoreState((store) => store.playback.history);

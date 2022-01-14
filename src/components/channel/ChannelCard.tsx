@@ -1,10 +1,4 @@
-import {
-  Flex,
-  FlexProps,
-  Text,
-  useColorMode,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Flex, FlexProps, Text, useColorModeValue } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import useNamePicker from "../../modules/common/useNamePicker";
 import { ChannelPhoto } from "./ChannelPhoto";

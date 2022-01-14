@@ -1,12 +1,10 @@
-import { Box, Heading, Stack, useColorModeValue } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import { Fragment, Suspense } from "react";
-import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { useClient } from "../modules/client";
-import { useHistory } from "../modules/services/history.service";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 import { formatPlaylistID } from "../utils/SGPFunctions";
