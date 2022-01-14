@@ -26,7 +26,7 @@ import {
   FiYoutube,
 } from "react-icons/fi";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ChannelCard } from "../components/channel/ChannelCard";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { CardCarousel } from "../components/common/CardCarousel";
@@ -86,6 +86,7 @@ export default function ChannelSongs() {
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const tn = useNamePicker();
   const copy = useClipboardWithToast();
+  const navigate = useNavigate();
 
   if (!channelStatus.isSuccess)
     return <QueryStatus queryStatus={channelStatus} />;
@@ -110,6 +111,11 @@ export default function ChannelSongs() {
           borderRadius={4}
           mr={6}
           shadow="lg"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/channel/" + channel.id);
+          }}
+          cursor="pointer"
         ></ChannelPhoto>
         <PlaylistHeading
           title={name}
@@ -120,6 +126,24 @@ export default function ChannelSongs() {
           max={0}
           textShadow="1px 1px 5px var(--chakra-colors-bgAlpha-500);"
         />
+        <Button
+          variant="solid"
+          width="35px"
+          height="35px"
+          size="40px"
+          left="10px"
+          borderRadius="full"
+          position="relative"
+          as="a"
+          href={"/channel/" + channel.id}
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/channel/" + channel.id);
+          }}
+        >
+          <FiArrowLeft />
+        </Button>
+
         <Spacer />
         <SimpleGrid spacing={2} columns={2}>
           <IconButton
@@ -164,6 +188,7 @@ export default function ChannelSongs() {
       </HStack>
       <ContainerInlay>
         {/* <Box>{JSON.stringify(discovery)}</Box> */}
+
         {latest && (
           <Box flex="1 1 140px" minWidth="300px">
             <Heading size="md" marginBottom={2}>

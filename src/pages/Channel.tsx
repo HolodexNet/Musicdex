@@ -15,7 +15,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { FiList, FiShare2, FiTwitter, FiYoutube } from "react-icons/fi";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ChannelCard } from "../components/channel/ChannelCard";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { CardCarousel } from "../components/common/CardCarousel";
@@ -198,6 +198,8 @@ export default function Channel() {
               height="50px"
               colorScheme="n2"
               leftIcon={<FiList />}
+              as={Link}
+              to={"/channel/" + channel.id + "/songs"}
             >
               See All Songs
             </Button>
