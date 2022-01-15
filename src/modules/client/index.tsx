@@ -60,6 +60,16 @@ export function useClient() {
     [token]
   );
 
+  async function refreshUser(): Promise<"OK" | null> {
+    if (user) {
+      const resp = await AxiosInstance("/user/check");
+      if (resp.status === 200 && resp.data) setUser(resp.data as User);
+      else throw new Error("Strange bug occured with user checking...");
+      return "OK";
+    }
+    return null;
+  }
+
   // function login() {
   //   if (isLoggedIn) return;
   // }
@@ -74,6 +84,7 @@ export function useClient() {
     user,
     AxiosInstance,
     // login,
+    refreshUser,
     logout,
   };
 }

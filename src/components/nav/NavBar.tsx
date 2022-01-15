@@ -96,7 +96,7 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
                     ml="2"
                   >
                     <Text fontSize="sm" color="gray.300">
-                      User {user?.id}
+                      {user?.username}
                     </Text>
                     <Text
                       textTransform="capitalize"
