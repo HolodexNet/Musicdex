@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FiMoreHorizontal } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { Column, Row, useSortBy, useTable } from "react-table";
 import useNamePicker from "../../modules/common/useNamePicker";
 import { useStoreActions, useStoreState } from "../../store";
@@ -75,8 +76,18 @@ const TitleGrid = ({
 }) => {
   return (
     <VStack alignItems="start" spacing={1}>
-      <span>{row?.original?.name}</span>
-      <Text opacity={0.66} fontWeight={300} fontSize="sm">
+      <span style={{ cursor: "default" }}>{row?.original?.name}</span>
+      <Text
+        opacity={0.66}
+        fontWeight={300}
+        fontSize="sm"
+        as={Link}
+        to={"/channel/" + row?.original?.channel_id}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        _hover={{ opacity: 0.9 }}
+      >
         {row?.values?.channel}
       </Text>
     </VStack>
