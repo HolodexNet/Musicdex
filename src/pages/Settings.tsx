@@ -15,6 +15,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import OrgManager from "../components/common/OrgManagement";
 import { UserSettings } from "../components/common/UserSettings";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
@@ -84,6 +85,7 @@ function LanguagePrefs() {
     { value: "en", display: "English" },
     { value: "zh", display: "Chinese" },
     { value: "ja", display: "Japanese" },
+    { value: "cimode", display: "Internal Translation Use" },
   ];
 
   const channelNamePrefs: LanguageOpts[] = [
@@ -94,6 +96,11 @@ function LanguagePrefs() {
   const useEN = useStoreState((s) => s.settings.useEN);
   const changeUseEN = useStoreActions((s) => s.settings.setUseEN);
 
+  const { t, i18n } = useTranslation();
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
+
   return (
     <SimpleGrid minChildWidth="300px" spacing="40px">
       <Box>
@@ -102,7 +109,7 @@ function LanguagePrefs() {
         </Heading>
         <LanguageSelector
           options={displayLangPrefs}
-          onChange={console.log}
+          onChange={(v) => changeLanguage(v)}
           defaultValue="en"
         />
       </Box>

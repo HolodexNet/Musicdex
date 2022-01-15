@@ -1,5 +1,6 @@
-import { Box, useColorModeValue } from "@chakra-ui/react";
+import { Box, useColorModeValue, Text } from "@chakra-ui/react";
 import { Fragment, Suspense } from "react";
+import { XHRError } from "../components/common/XHRError";
 import { SongTable } from "../components/data/SongTable";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
@@ -67,7 +68,7 @@ export default function History() {
         p={{ base: 2, xl: 4 }}
         borderRadius={5}
       >
-        {isLoggedIn ? <Content /> : <div>Please login</div>}
+        {isLoggedIn ? <Content /> : <XHRError />}
       </Box>
     </PageContainer>
   );

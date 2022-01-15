@@ -1,14 +1,16 @@
 {
+  "NO_TL": {
+    "absoluteDate": "{{date, absolute}}",
+    "longDate": "{{date, long}}",
+    "relativeDate": "{{date, ago}}",
+    "shortDate": "{{date, short}}",
+    "shortDateTime": "{{date, datetime}}"
+  },
   "add": "Add",
-  "load": "Load",
-  "save": "Save",
   "close": "Close",
   "edit": "Edit",
+  "load": "Load",
   "remove": "Remove",
-  "set": "Set",
-  "shortDate": "{{date, short}}",
-  "shortDateTime": "{{date, datetime}}",
-  "longDate": "{{date, long}}",
-  "relativeDate": "{{date, ago}}",
-  "absoluteDate": "{{date, absolute}}"
+  "save": "Save",
+  "set": "Set"
 }

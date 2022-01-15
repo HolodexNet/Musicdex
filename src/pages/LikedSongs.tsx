@@ -1,45 +1,13 @@
-import {
-  Box,
-  BoxProps,
-  Button,
-  Center,
-  Heading,
-  HStack,
-  Spacer,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Heading, HStack, Spacer, Stack } from "@chakra-ui/react";
 import { Suspense, useMemo, useState } from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
-import { ErrorFallback } from "../ErrorFallback";
-import { useClient } from "../modules/client";
 import { useLikedSongs } from "../modules/services/like.service";
 import { useStoreActions } from "../store";
-
-function XHRError({ error, ...props }: BoxProps & { error: Error }) {
-  const { isLoggedIn } = useClient();
-  return (
-    <Center {...props}>
-      {isLoggedIn ? (
-        // <Text>You are logged in, but there has been an error.</Text>
-        <ErrorFallback
-          error={error}
-          resetErrorBoundary={() => {
-            console.log("hi");
-          }}
-        />
-      ) : (
-        <Text my="20vh">
-          Unfortunately it looks like you need to login to use this feature.
-        </Text>
-      )}
-    </Center>
-  );
-}
+import { XHRError } from "../components/common/XHRError";
 
 export default function LikedSongs() {
   // const history = useStoreState((store) => store.playback.history);

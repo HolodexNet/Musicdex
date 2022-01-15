@@ -1,4 +1,18 @@
-import { Box, CloseButton, Divider, BoxProps, Text } from "@chakra-ui/react";
+import {
+  Box,
+  CloseButton,
+  Divider,
+  BoxProps,
+  Text,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { IconType } from "react-icons";
 import {
   FiClock,
@@ -6,7 +20,6 @@ import {
   FiHeart,
   FiHome,
   FiPlusCircle,
-  FiServer,
   FiSettings,
 } from "react-icons/fi";
 import { useClient } from "../../modules/client";
@@ -32,6 +45,7 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useRef } from "react";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -58,27 +72,12 @@ export function SidebarContent({
   ...rest
 }: SidebarProps) {
   const { user } = useClient();
-  const { mutate: writePlaylist, isSuccess, isError } = usePlaylistWriter();
   const { data: playlistList, isLoading: loadingMine } = useMyPlaylists();
   const { data: starredList, isLoading: loadingStars } = useStarredPlaylists();
   const { pathname } = useLocation();
   const isDragging = useStoreState((s) => s.dnd.dragging);
-
-  const createNewPlaylistHandler = async () => {
-    if (!user?.id) return alert("You must be logged in to create Playlists");
-
-    const playlist: Partial<WriteablePlaylist> = {};
-    const name = prompt("Create Playlist: Title of Playlist:");
-    if (!name) return alert("Please enter a title.");
-    playlist.title = name;
-    const description = prompt("Create Playlist: Description of Playlist:");
-    playlist.description = description || "";
-    playlist.owner = user?.id;
-    playlist.type = "ugp";
-    playlist.content = [];
-
-    writePlaylist(playlist);
-  };
+  const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
+  const toast = useToast();
 
   return (
     <Box
@@ -92,6 +91,16 @@ export function SidebarContent({
       h="full"
       {...rest}
     >
+      <Modal isOpen={isOpen} onClose={closeModal} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create New Playlist</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <CreateNewPlaylistForm />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       <Flex
         h="20"
         alignItems="center"
@@ -117,7 +126,16 @@ export function SidebarContent({
       <NavItem
         key="playlist"
         icon={FiPlusCircle}
-        onClick={createNewPlaylistHandler}
+        onClick={(e) => {
+          if (!user?.id)
+            return toast({
+              variant: "solid",
+              status: "warning",
+              description: "You need to be logged in to create playlists.",
+            });
+
+          onOpen();
+        }}
       >
         Create New Playlist
       </NavItem>
@@ -141,55 +159,70 @@ export function SidebarContent({
 export default function CreateNewPlaylistForm(): JSX.Element {
   const { mutate: writePlaylist, isSuccess, isError } = usePlaylistWriter();
 
+  const form = useRef<any>(undefined);
+  const toast = useToast();
+  const { user } = useClient();
+
   return (
-    <Flex
-      minH={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
+    <Stack
+      w={"full"}
+      rounded={"xl"}
+      mb={6}
+      as="form"
+      ref={form}
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target as any);
+        const formProps: Record<string, string> = Object.fromEntries(
+          formData
+        ) as Record<string, string>;
+        if (
+          formProps.name.trim().length > 0 &&
+          formProps.description.trim().length > 0
+        ) {
+          const playlist = {
+            title: formProps.name,
+            description: formProps.description,
+            owner: user?.id,
+            type: "ugp",
+            content: [],
+          };
+          writePlaylist(playlist);
+        } else {
+          toast({
+            variant: "solid",
+            status: "warning",
+            description: "You need to provide both name and description.",
+          });
+        }
+      }}
     >
-      <Stack
-        spacing={4}
-        w={"full"}
-        maxW={"md"}
-        bg={useColorModeValue("white", "gray.700")}
-        rounded={"xl"}
-        boxShadow={"lg"}
-        p={6}
-        my={12}
-        as="form"
-        onSubmit={(e) => alert(JSON.stringify(e))}
-      >
-        <Heading lineHeight={1.1} fontSize={{ base: "2xl", md: "3xl" }}>
+      {/* <Heading lineHeight={1.1} fontSize={{ base: "2xl", md: "3xl" }}>
           Create New Playlist
-        </Heading>
-        <FormControl id="name" isRequired>
-          <FormLabel>
-            Name (Can start a playlist with an emoji to set it as the icon)
-          </FormLabel>
-          <Input
-            placeholder="Playlist Name"
-            _placeholder={{ color: "gray.500" }}
-            type="text"
-          />
-        </FormControl>
-        <FormControl id="description" isRequired>
-          <FormLabel>Description</FormLabel>
-          <Input type="text" />
-        </FormControl>
-        <Stack spacing={6}>
-          <Button
-            bg={"green.400"}
-            color={"white"}
-            _hover={{
-              bg: "green.500",
-            }}
-            type="submit"
-          >
-            Create
-          </Button>
-        </Stack>
+        </Heading> */}
+      <FormControl id="name" isRequired>
+        <FormLabel>
+          Name (Can start a playlist with an emoji to set it as the icon)
+        </FormLabel>
+        <Input _placeholder={{ color: "gray.500" }} type="text" name="name" />
+      </FormControl>
+      <FormControl id="description" isRequired>
+        <FormLabel>Description</FormLabel>
+        <Input type="text" name="description" />
+      </FormControl>
+      <Stack spacing={6}>
+        <Button
+          bg={"green.400"}
+          color={"white"}
+          _hover={{
+            bg: "green.500",
+          }}
+          type="submit"
+        >
+          Create
+        </Button>
       </Stack>
-    </Flex>
+    </Stack>
+    // </Flex>
   );
 }

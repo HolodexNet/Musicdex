@@ -88,7 +88,9 @@ export default function Song() {
                 </Text>
                 <Text fontSize="md" opacity={0.75}>
                   {formatSeconds(song.end - song.start)} •{" "}
-                  {t("relativeDate", { date: new Date(song.available_at) })}
+                  {t("NO_TL.relativeDate", {
+                    date: new Date(song.available_at),
+                  })}
                   {song.is_mv && (
                     <Icon mb="-3px" ml={3} as={BiMovie} title="MV"></Icon>
                   )}

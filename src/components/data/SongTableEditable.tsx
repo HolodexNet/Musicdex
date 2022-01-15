@@ -92,7 +92,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
         id: "date",
         Header: "Sang On",
         accessor: (row: { available_at: Date }) =>
-          t("relativeDate", { date: new Date(row?.available_at) }),
+          t("NO_TL.relativeDate", { date: new Date(row?.available_at) }),
       },
       {
         id: "...",

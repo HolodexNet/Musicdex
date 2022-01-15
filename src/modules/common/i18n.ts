@@ -8,10 +8,15 @@ import {
   formatRelative,
   isDate,
 } from "date-fns";
-import { enUS, ja, zhTW } from "date-fns/locale"; // import all locales we need
+import { enUS, ja, zhTW, enGB } from "date-fns/locale"; // import all locales we need
 import I18NextHttpBackend from "i18next-http-backend";
 
-const locales: { [key: string]: Locale } = { "en-US": enUS, ja, zhTW }; // used to look up the required locale
+const locales: { [key: string]: Locale } = {
+  en: enUS,
+  "en-GB": enGB,
+  ja,
+  zh: zhTW,
+}; // used to look up the required locale
 
 const SYSTEM_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -24,10 +29,11 @@ i18n
     debug: true,
     fallbackLng: "en",
     saveMissing: true,
-    supportedLngs: ["en", "ja"],
+    supportedLngs: ["en", "ja", "zh"],
     interpolation: {
       escapeValue: false,
       format: (value, format, lng, options) => {
+        console.log(lng);
         if (isDate(value) && lng) {
           const locale = locales[lng];
           if (format === "short") return formatDate(value, "P", { locale });
