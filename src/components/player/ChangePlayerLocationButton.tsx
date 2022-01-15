@@ -13,7 +13,7 @@ import { MdPictureInPicture, MdPictureInPictureAlt } from "react-icons/md";
 import { useStoreActions, useStoreState } from "../../store";
 import { PlayerPosition } from "../../store/player";
 
-const LocationIcons: Record<PlayerPosition, JSX.Element> = {
+const LocationIcons: Record<string, JSX.Element> = {
   "hover-top": <MdPictureInPicture />,
   "hover-bottom": <MdPictureInPictureAlt />,
   background: <FiMaximize />,

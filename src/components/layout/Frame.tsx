@@ -51,6 +51,14 @@ const POSITIONS: { [key: string]: ChakraProps } = {
     right: "20px",
     zIndex: 10,
   },
+  "full-player": {
+    position: "fixed",
+    top: "calc(40vh/2 - min(40vh, calc(100vw * .5625))/2 + 56px) ",
+    left: "0",
+    width: "100vw",
+    h: "min(40vh, calc(100vw * .5625))",
+    zIndex: 15,
+  },
   hidden: {
     visibility: "hidden",
     zIndex: -4,
@@ -122,7 +130,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
             position="relative"
             flexGrow={1}
             flexShrink={1}
-            zIndex={0}
+            // zIndex={0}
           >
             <Flex overflowY="scroll" flex="1" direction="column">
               {children}
@@ -131,7 +139,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
             </Flex>
             <MotionBox
               {...props}
-              transition={{ duration: 0.5, type: "tween", ease: "easeInOut" }}
+              transition={{ duration: 0.3, type: "tween", ease: "easeInOut" }}
               layout
             >
               <Box

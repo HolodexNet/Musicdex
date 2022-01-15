@@ -4,20 +4,25 @@ import {
   SliderFilledTrack,
   Tooltip,
   SliderThumb,
+  SliderProps,
+  SliderMark,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { formatSeconds } from "../../../utils/SongHelper";
 
-interface TimeSliderProps {
+interface TimeSliderProps extends SliderProps {
   progress: number;
   onChange: (e: number) => void;
   totalDuration: number;
+  fullPlayer?: boolean;
 }
 
 export const TimeSlider = ({
   progress,
   onChange,
   totalDuration,
+  fullPlayer = false,
+  ...rest
 }: TimeSliderProps) => {
   const [hovering, setHovering] = useState(false);
   return (
@@ -32,7 +37,19 @@ export const TimeSlider = ({
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       onChange={onChange}
+      {...rest}
     >
+      {fullPlayer && (
+        <>
+          <SliderMark value={0} mt="1" fontSize="md">
+            {formatSeconds((progress / 100) * totalDuration)}
+          </SliderMark>
+          <SliderMark value={100} mt="1" ml="-1.75rem" fontSize="md">
+            {formatSeconds(totalDuration)}
+          </SliderMark>
+        </>
+      )}
+
       <SliderTrack height={hovering ? "10px" : "6px"}>
         <SliderFilledTrack
           background={`linear-gradient(to right, var(--chakra-colors-brand-400), var(--chakra-colors-n2-400))`}
@@ -46,7 +63,9 @@ export const TimeSlider = ({
         isOpen={hovering}
         label={<span>{formatSeconds((progress / 100) * totalDuration)}</span>}
       >
-        <SliderThumb visibility={hovering ? "visible" : "hidden"} />
+        <SliderThumb
+          visibility={hovering || fullPlayer ? "visible" : "hidden"}
+        />
       </Tooltip>
     </Slider>
   );

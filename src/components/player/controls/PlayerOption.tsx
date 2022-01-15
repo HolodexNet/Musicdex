@@ -1,32 +1,35 @@
-import { Flex, FlexProps, IconButton } from "@chakra-ui/react";
+import { Button, Flex, FlexProps, HStack, IconButton } from "@chakra-ui/react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
+import { RiPlayListFill } from "react-icons/ri";
 import { useStoreActions, useStoreState } from "../../../store";
 import { ChangePlayerLocationButton } from "../ChangePlayerLocationButton";
 
-function RepeatIcon(repeatMode: string) {
+function RepeatIcon(repeatMode: string, size: number = 24) {
   switch (repeatMode) {
     case "repeat":
-      return <MdRepeat size={24} />;
+      return <MdRepeat size={size} />;
     case "repeat-one":
-      return <MdRepeatOne size={24} />;
+      return <MdRepeatOne size={size} />;
     default:
-      return <MdRepeat size={24} color="grey" />;
+      return <MdRepeat size={size} color="grey" />;
   }
 }
 
-function ShuffleIcon(shuffleMode: boolean) {
-  return <MdShuffle size={24} color={shuffleMode ? "" : "grey"} />;
+function ShuffleIcon(shuffleMode: boolean, size: number = 24) {
+  return <MdShuffle size={size} color={shuffleMode ? "" : "grey"} />;
 }
 
 interface PlayerOptionProps extends FlexProps {
   isExpanded: boolean;
   toggleExpanded: () => void;
+  fullPlayer?: boolean;
 }
 
 export const PlayerOption = ({
   isExpanded,
   toggleExpanded,
+  fullPlayer = false,
   ...rest
 }: PlayerOptionProps) => {
   const shuffleMode = useStoreState((state) => state.playback.shuffleMode);
@@ -39,29 +42,37 @@ export const PlayerOption = ({
     (actions) => actions.playback.toggleRepeat
   );
   return (
-    <Flex alignItems="center" {...rest}>
+    <Flex align="center" {...rest}>
       <IconButton
         aria-label="Shuffle"
-        icon={ShuffleIcon(shuffleMode)}
+        icon={ShuffleIcon(shuffleMode, fullPlayer ? 36 : 24)}
         variant="ghost"
         onClick={() => toggleShuffleMode()}
         size="lg"
       />
+      {fullPlayer && (
+        <Button leftIcon={<RiPlayListFill />} marginX={4}>
+          Upcoming
+        </Button>
+      )}
       <IconButton
-        aria-label="Shuffle"
-        icon={RepeatIcon(repeatMode)}
+        aria-label="Repeat Mode"
+        icon={RepeatIcon(repeatMode, fullPlayer ? 36 : 24)}
         variant="ghost"
         onClick={() => toggleRepeatMode()}
         size="lg"
       />
-      <ChangePlayerLocationButton />
-
-      <IconButton
-        aria-label="Expand"
-        icon={isExpanded ? <FaChevronDown /> : <FaChevronUp />}
-        variant="ghost"
-        onClick={() => toggleExpanded()}
-      />
+      {!fullPlayer && (
+        <>
+          <ChangePlayerLocationButton />
+          <IconButton
+            aria-label="Expand"
+            icon={isExpanded ? <FaChevronDown /> : <FaChevronUp />}
+            variant="ghost"
+            onClick={() => toggleExpanded()}
+          />
+        </>
+      )}
     </Flex>
   );
 };

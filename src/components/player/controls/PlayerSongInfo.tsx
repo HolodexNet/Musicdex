@@ -1,5 +1,6 @@
 import {
   Box,
+  Flex,
   HStack,
   Link,
   Menu,
@@ -7,6 +8,8 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  Stack,
+  StackProps,
   Text,
 } from "@chakra-ui/react";
 import { useContextMenu } from "react-contexify";
@@ -17,10 +20,15 @@ import { useStoreActions } from "../../../store";
 import { DEFAULT_MENU_ID } from "../../common/CommonContext";
 import { SongArtwork } from "../../song/SongArtwork";
 
-interface SongInfoProps {
+interface SongInfoProps extends StackProps {
   song: Song;
+  fullPlayer?: boolean;
 }
-export const SongInfo = ({ song }: SongInfoProps) => {
+export const SongInfo = ({
+  song,
+  fullPlayer = false,
+  ...rest
+}: SongInfoProps) => {
   const copyToClipboard = useClipboardWithToast();
   const navigate = useNavigate();
   const addPlaylist = useStoreActions(
@@ -30,16 +38,21 @@ export const SongInfo = ({ song }: SongInfoProps) => {
   const tn = useNamePicker();
 
   return (
-    <HStack onContextMenu={show}>
+    <HStack onContextMenu={show} {...rest}>
       <Menu
         eventListeners={{ scroll: false }}
         isLazy
         boundary="scrollParent"
         gutter={10}
-        placement="top-start"
+        placement={fullPlayer ? "bottom-end" : "top-start"}
       >
         <MenuButton position="relative">
-          <SongArtwork song={song} size={50} marginRight={2} />
+          <SongArtwork
+            song={song}
+            size={fullPlayer ? 70 : 50}
+            marginRight={2}
+            resizeHint={70}
+          />
         </MenuButton>
         <MenuList>
           <MenuItem
@@ -83,20 +96,24 @@ export const SongInfo = ({ song }: SongInfoProps) => {
       </Menu>
 
       <Box>
-        <Link
-          as={NavLink}
-          to={`/song/${song.id}`}
-          // display="inline-block"
+        {/* <Link as={NavLink} to={`/song/${song.id}`}> */}
+        <Text
+          fontWeight={fullPlayer ? 600 : 500}
+          noOfLines={fullPlayer ? 2 : 1}
+          fontSize={fullPlayer ? "lg" : "md"}
         >
-          <Text fontWeight={500} noOfLines={1}>
-            {song.name}
-          </Text>
-        </Link>
-        <Link as={NavLink} to={`/channel/${song.channel_id}`}>
-          <Text noOfLines={1} opacity={0.66}>
-            {tn(song.channel.english_name, song.channel.name)}
-          </Text>
-        </Link>
+          {song.name}
+        </Text>
+        {/* </Link> */}
+        {/* <Link as={NavLink} to={`/channel/${song.channel_id}`}> */}
+        <Text
+          noOfLines={fullPlayer ? 2 : 1}
+          opacity={0.66}
+          fontSize={fullPlayer ? "lg" : "md"}
+        >
+          {tn(song.channel.english_name, song.channel.name)}
+        </Text>
+        {/* </Link> */}
       </Box>
     </HStack>
   );
