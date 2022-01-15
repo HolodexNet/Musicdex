@@ -1,4 +1,5 @@
 import { Icon, Menu } from "@chakra-ui/react";
+import { useRef, useState } from "react";
 import {
   Item,
   Separator,
@@ -30,10 +31,26 @@ export const CommonContextMenu = () => {
 
   const navigate = useNavigate();
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
+  const [song, setSong] = useState<Song | undefined>(undefined);
+
+  const openUrl = (
+    url: string,
+    event: MouseEvent | TouchEvent | KeyboardEvent
+  ) => {
+    if (event.shiftKey) {
+      window.open(url, "_blank", "width:500,height:500");
+    } else if (event.ctrlKey) {
+      window.open(url, "_blank");
+    } else navigate(url);
+  };
 
   return (
     <CMenu id={DEFAULT_MENU_ID} theme="dark" animation="fade">
       <Item
+        hidden={(x) => {
+          setSong(x.props);
+          return false;
+        }}
         onClick={(x: ItemParams) => {
           queueSongs({ songs: [x.props], immediatelyPlay: false });
         }}
@@ -88,16 +105,31 @@ export const CommonContextMenu = () => {
       <Separator />
       <Item
         onClick={(x: ItemParams) => {
-          navigate("/song/" + x.props.id);
+          openUrl("/song/" + x.props.id, x.event as any);
+        }}
+        onAuxClick={(e) => {
+          song && window.open("/song/" + song.id, "_blank");
         }}
       >
         <Icon mr={2} as={FiChevronRight}></Icon> Go To Song Page
       </Item>
-      <Item onClick={(x: ItemParams) => navigate("/video/" + x.props.video_id)}>
+      <Item
+        onClick={(x: ItemParams) => {
+          openUrl("/video/" + x.props.video_id, x.event as any);
+        }}
+        onAuxClick={(e) => {
+          song && window.open("/video/" + song.video_id, "_blank");
+        }}
+      >
         <Icon mr={2} as={FiChevronRight}></Icon> Go To Video Page
       </Item>
       <Item
-        onClick={(x: ItemParams) => navigate(`/channel/${x.props.channel_id}/`)}
+        onClick={(x: ItemParams) => {
+          openUrl("/channel/" + x.props.channel_id, x.event as any);
+        }}
+        onAuxClick={(e) => {
+          song && window.open("/channel/" + song.channel_id, "_blank");
+        }}
       >
         <Icon mr={2} as={FiChevronRight}></Icon> Go To Channel Page
       </Item>
