@@ -71,11 +71,12 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
           <Button
             w={"full"}
             colorScheme={"twitter"}
+            disabled
             leftIcon={<FaTwitter />}
             onClick={TwitterAuth}
           >
             <Center>
-              <Text>Login with Twitter</Text>
+              <Text>Login with Twitter (broken until beta)</Text>
             </Center>
           </Button>
         )}
