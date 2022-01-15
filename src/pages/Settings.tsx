@@ -82,7 +82,8 @@ export default function Settings() {
 
 function LanguagePrefs() {
   const displayLangPrefs: LanguageOpts[] = [
-    { value: "en", display: "English" },
+    { value: "en", display: "English (US)" },
+    { value: "enGB", display: "English (British)" },
     { value: "zh", display: "Chinese" },
     { value: "ja", display: "Japanese" },
     { value: "cimode", display: "Internal Translation Use" },
