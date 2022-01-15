@@ -16,7 +16,7 @@ import {
   TagLeftIcon,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { BiMovie } from "react-icons/bi";
 import { FiFilter, FiSearch } from "react-icons/fi";
 import {
@@ -52,92 +52,6 @@ export function AdvancedSearchFiltersForm({
     () => Object.fromEntries(search.entries()),
     [search]
   );
-  const {
-    handleSubmit,
-    register,
-    control,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm();
-
-  const [counter, incr] = useState(1000);
-  function onSubmit(values: any) {
-    const {
-      q,
-      original_artist,
-      facets: { is_mv, org, suborg },
-    }: {
-      q: string;
-      original_artist: string;
-      facets: {
-        is_mv: "0" | "1" | "2";
-        org?: [boolean | string];
-        suborg?: [boolean | string];
-      };
-    } = values;
-
-    const part1 =
-      original_artist &&
-      original_artist.trim().length > 0 &&
-      "original_artist:" + original_artist.trim();
-    const part2 =
-      is_mv &&
-      is_mv !== "0" &&
-      (is_mv === "1" ? "is_mv:=true" : "is_mv:=false");
-    const part3 =
-      org &&
-      org.length > 0 &&
-      !org.every((x) => !x) &&
-      !org.every((x) => x) &&
-      `channel_org:=[${org
-        .filter((x) => x)
-        .map((x) => "`" + x + "`")
-        .join(",")}]`;
-    const part4 =
-      suborg &&
-      suborg.length > 0 &&
-      !suborg.every((x) => !x) &&
-      !suborg.every((x) => x) &&
-      `channel_suborg:=[${suborg
-        .filter((x) => x)
-        .map((x) => "`" + x + "`")
-        .join(",")}]`;
-
-    const filter_by = [part1, part2, part3, part4].filter((x) => x).join("&&");
-    console.log(filter_by);
-
-    navigate({
-      pathname: "/search",
-      search: `?${createSearchParams({
-        q,
-        ...(filter_by && { filter_by }),
-      } as any)}`,
-    });
-    fullreset();
-  }
-
-  const is_mv_facets = useMemo(() => {
-    return Object.fromEntries(
-      facets
-        ?.find((x) => x.field_name === "is_mv")
-        ?.counts?.map((cv) => [cv.value, cv.count]) || []
-    );
-  }, [facets]);
-  const orgsFacets: [string, number][] = useMemo(() => {
-    return (
-      facets
-        ?.find((x) => x.field_name === "channel_org")
-        ?.counts?.map((cv) => [cv.value, cv.count]) || []
-    );
-  }, [facets]);
-  const suborgsFacets: [string, number][] = useMemo(() => {
-    return (
-      facets
-        ?.find((x) => x.field_name === "channel_suborg")
-        ?.counts?.map((cv) => [cv.value, cv.count]) || []
-    );
-  }, [facets]);
-
   const [original_artist, is_mv, orgs, suborgs] = useMemo(() => {
     const filter = qObj.filter_by || "";
     const match1 = FILTER_BY_EXTRACT_ORIGINAL_ARTIST_REGEX.exec(filter);
@@ -162,6 +76,98 @@ export function AdvancedSearchFiltersForm({
     return [oa, is_mv, orgs, suborgs];
   }, [qObj]);
 
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm({
+    defaultValues: {
+      q: qObj.q,
+      original_artist: original_artist,
+      orgs: orgs,
+      suborgs: suborgs,
+      is_mv: is_mv,
+    },
+  });
+
+  const [counter, incr] = useState(1000);
+  function onSubmit(values: any) {
+    console.log(values);
+    const {
+      q,
+      original_artist,
+      is_mv,
+      orgs,
+      suborgs,
+    }: {
+      q: string;
+      original_artist: string;
+      is_mv: "0" | "1" | "2";
+      orgs?: [string];
+      suborgs?: [string];
+    } = values;
+
+    const part1 =
+      original_artist &&
+      original_artist.trim().length > 0 &&
+      "original_artist:" + original_artist.trim();
+    const part2 =
+      is_mv &&
+      is_mv !== "0" &&
+      (is_mv === "1" ? "is_mv:=true" : "is_mv:=false");
+    const part3 =
+      orgs &&
+      orgs.length > 0 &&
+      `channel_org:=[${orgs
+        .filter((x) => x)
+        .map((x) => "`" + x + "`")
+        .join(",")}]`;
+    const part4 =
+      suborgs &&
+      suborgs.length > 0 &&
+      `channel_suborg:=[${suborgs
+        .filter((x) => x)
+        .map((x) => "`" + x + "`")
+        .join(",")}]`;
+
+    const filter_by = [part1, part2, part3, part4].filter((x) => x).join("&&");
+    console.log(filter_by);
+    // fullreset();
+
+    navigate({
+      pathname: "/search",
+      search: `?${createSearchParams({
+        q,
+        ...(filter_by && { filter_by }),
+      } as any)}`,
+    });
+    // fullreset();
+  }
+
+  const is_mv_facets = useMemo(() => {
+    return Object.fromEntries(
+      facets
+        ?.find((x) => x.field_name === "is_mv")
+        ?.counts?.map((cv) => [cv.value, cv.count]) || []
+    );
+  }, [facets]);
+  const orgsFacets: [string, number][] = useMemo(() => {
+    return (
+      facets
+        ?.find((x) => x.field_name === "channel_org")
+        ?.counts?.map((cv) => [cv.value, cv.count]) || []
+    );
+  }, [facets]);
+  const suborgsFacets: [string, number][] = useMemo(() => {
+    return (
+      facets
+        ?.find((x) => x.field_name === "channel_suborg")
+        ?.counts?.map((cv) => [cv.value, cv.count]) || []
+    );
+  }, [facets]);
+
   const coordinatedOrgs = useMemo(() => {
     return [
       ...orgsFacets,
@@ -183,8 +189,7 @@ export function AdvancedSearchFiltersForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      {/* {JSON.stringify(facets)} */}
-      <FormControl isInvalid={errors.q} mb={4}>
+      <FormControl isInvalid={!!errors.q} mb={4}>
         <FormLabel htmlFor="q">
           <Tag size="md" variant="subtle" colorScheme="cyan">
             <TagLeftIcon boxSize="12px" as={FiSearch} />
@@ -206,7 +211,7 @@ export function AdvancedSearchFiltersForm({
         <FormErrorMessage>{errors.q && errors.q.message}</FormErrorMessage>
       </FormControl>
       <SimpleGrid spacing={4} minChildWidth="500px" my={4}>
-        <FormControl isInvalid={errors.original_artist}>
+        <FormControl isInvalid={!!errors.original_artist}>
           <FormLabel htmlFor="original_artist">
             <Tag size="md" variant="subtle" colorScheme="cyan">
               <TagLeftIcon boxSize="12px" as={FiFilter} />
@@ -231,13 +236,13 @@ export function AdvancedSearchFiltersForm({
 
           <RadioGroup defaultValue={String(is_mv)}>
             <Stack direction="row">
-              <Radio value="0" id="ismv" {...register("facets.is_mv")}>
+              <Radio value="0" id="ismv" {...register("is_mv")}>
                 All Song Types
               </Radio>
-              <Radio value="1" id="ismv" {...register("facets.is_mv")}>
+              <Radio value="1" id="ismv" {...register("is_mv")}>
                 <Icon as={BiMovie}></Icon> MV Only ({is_mv_facets["true"]})
               </Radio>
-              <Radio value="2" id="ismv" {...register("facets.is_mv")}>
+              <Radio value="2" id="ismv" {...register("is_mv")}>
                 Non MV Only (Karaokes, etc) ({is_mv_facets["false"]})
               </Radio>
             </Stack>
@@ -252,18 +257,37 @@ export function AdvancedSearchFiltersForm({
           </Tag>
         </FormLabel>
         <SimpleGrid spacing={2} direction="row" minChildWidth="220px">
-          {coordinatedOrgs.map((org, i) => {
-            return (
-              <Checkbox
-                defaultIsChecked={!!orgs?.includes(org[0])}
-                key={counter + "facet-org-" + org[0] + i}
-                value={org[0]}
-                {...register("facets.org." + i)}
-              >
-                {org[0]} ({org[1]})
-              </Checkbox>
-            );
-          })}
+          <Controller
+            control={control}
+            name="orgs"
+            render={({ field }) => (
+              <>
+                {coordinatedOrgs.map((org, i) => {
+                  return (
+                    <Checkbox
+                      isChecked={field.value?.includes(org[0])}
+                      key={counter + "facet-org-" + org[0] + i}
+                      value={org[0]}
+                      onChange={(e) => {
+                        e.target.checked
+                          ? field.onChange([
+                              ...(field.value || []),
+                              e.target.value,
+                            ])
+                          : field.onChange(
+                              (field.value as [string]).filter(
+                                (value: string) => value !== e.target.value
+                              )
+                            );
+                      }}
+                    >
+                      {org[0]} ({org[1]})
+                    </Checkbox>
+                  );
+                })}
+              </>
+            )}
+          />
         </SimpleGrid>
       </FormControl>
       <FormControl mt={2} mb={2}>
@@ -274,18 +298,37 @@ export function AdvancedSearchFiltersForm({
           </Tag>
         </FormLabel>
         <SimpleGrid spacing={2} direction="row" minChildWidth="220px">
-          {coordinatedSubOrgs.map((suborg, i) => {
-            return (
-              <Checkbox
-                defaultIsChecked={suborgs?.includes(suborg[0])}
-                {...register("facets.suborg." + i)}
-                key={counter + "facet-org-" + suborg[0] + i}
-                value={suborg[0]}
-              >
-                {suborg[0]} ({suborg[1]})
-              </Checkbox>
-            );
-          })}
+          <Controller
+            control={control}
+            name="suborgs"
+            render={({ field }) => (
+              <>
+                {coordinatedSubOrgs.map((suborg, i) => {
+                  return (
+                    <Checkbox
+                      isChecked={field.value?.includes(suborg[0])}
+                      key={counter + "facet-suborg-" + suborg[0] + i}
+                      value={suborg[0]}
+                      onChange={(e) => {
+                        e.target.checked
+                          ? field.onChange([
+                              ...(field.value || []),
+                              e.target.value,
+                            ])
+                          : field.onChange(
+                              (field.value as [string]).filter(
+                                (value: string) => value !== e.target.value
+                              )
+                            );
+                      }}
+                    >
+                      {suborg[0]} ({suborg[1]})
+                    </Checkbox>
+                  );
+                })}
+              </>
+            )}
+          />
         </SimpleGrid>
       </FormControl>
       <ButtonGroup mt={4} spacing={4}>
@@ -297,10 +340,6 @@ export function AdvancedSearchFiltersForm({
           colorScheme="teal"
           onClick={() => {
             reset();
-            // reset({
-            //   q: qObj.q,
-            //   facets: null,
-            // });
             navigate({
               pathname: "/search",
               search: `?${createSearchParams({
@@ -308,7 +347,6 @@ export function AdvancedSearchFiltersForm({
               } as any)}`,
             });
             incr((x) => x + 1000);
-            fullreset();
           }}
         >
           Reset
