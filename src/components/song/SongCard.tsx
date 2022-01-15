@@ -1,6 +1,7 @@
 import { Flex, FlexProps, Icon, Text } from "@chakra-ui/react";
 import { useContextMenu } from "react-contexify";
 import { FaPlay } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { useStoreActions } from "../../store";
 import { ChannelPhoto } from "../channel/ChannelPhoto";
 import { DEFAULT_MENU_ID } from "../common/CommonContext";
@@ -74,7 +75,15 @@ export const SongCard = ({ song, ...rest }: SongCardProps) => {
           </MotionBox>
         </MotionBox>
       </Flex>
-      <Text noOfLines={2} height="44px" fontSize={14} my={1}>
+      <Text
+        noOfLines={2}
+        height="44px"
+        fontSize={14}
+        my={1}
+        as={Link}
+        to={`/song/${song.id}`}
+        _hover={{ textDecoration: "underline" }}
+      >
         {song.name}
       </Text>
     </Flex>
