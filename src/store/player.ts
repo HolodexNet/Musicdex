@@ -5,6 +5,7 @@ export type PlayerPosition =
   | "hover-bottom"
   | "background"
   | "sidebar"
+  | "full-player"
   | "hidden";
 
 export interface PlayerModel {

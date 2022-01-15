@@ -6,18 +6,20 @@ interface SongArtworkProps extends ImageProps {
   artUrl?: string;
   song?: Song;
   size: number;
+  resizeHint?: number;
 }
 
 export function SongArtwork({
   artUrl,
   song,
   size = 200,
+  resizeHint,
   ...rest
 }: SongArtworkProps) {
   let url = `https://via.placeholder.com/${size}x${size}.jpg`;
   if (song) {
     url = song.art
-      ? resizeArtwork(song.art, size)
+      ? resizeArtwork(song.art, resizeHint || size)
       : getVideoThumbnails(song.video_id).maxres;
   }
 
@@ -25,6 +27,7 @@ export function SongArtwork({
     <Image
       src={url}
       alt={song?.name || ""}
+      minWidth={size + "px"}
       width={size + "px"}
       height={size + "px"}
       loading="lazy"
