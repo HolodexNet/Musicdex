@@ -110,7 +110,7 @@ function LanguagePrefs() {
         <LanguageSelector
           options={displayLangPrefs}
           onChange={(v) => changeLanguage(v)}
-          defaultValue="en"
+          defaultValue={i18n.language}
         />
       </Box>
       <Box>
