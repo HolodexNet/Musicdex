@@ -8,7 +8,7 @@ import { VolumeSlider } from "./controls/VolumeSlider";
 import { TimeSlider } from "./controls/TimeSlider";
 import { useEffect, useState } from "react";
 import { MotionBox } from "../common/MotionBox";
-import { LayoutGroup } from "framer-motion";
+import { AnimatePresence, LayoutGroup } from "framer-motion";
 import { useStoreActions, useStoreState } from "../../store";
 import { PlayerPosition } from "../../store/player";
 import { FaChevronDown } from "react-icons/fa";
@@ -80,6 +80,7 @@ export const PlayerBar = React.memo(
     }
     return (
       <PlayerContainer expanded={fullPlayer}>
+        {/* <AnimatePresence> */}
         {!fullPlayer && (
           <>
             <TimeSlider
@@ -152,106 +153,110 @@ export const PlayerBar = React.memo(
             </MotionBox>
           </>
         )}
-        {fullPlayer && (
-          <MotionBox
-            padding={6}
-            paddingTop={3}
-            display="flex"
-            flex="1"
-            flexDirection="column"
-          >
-            <LayoutGroup>
-              <IconButton
-                aria-label="Close Full Player"
-                onClick={() => toggleFullPlayer()}
-                icon={<FaChevronDown size={20} />}
-                variant="ghost"
-                position="fixed"
-                top="0"
-                left="0"
-                size="lg"
-                margin={2}
-              ></IconButton>
-              <Spacer />
-              <MotionBox
-                layout
-                layoutId="songInfo"
-                transition={springTransition}
-              >
+        {/* </AnimatePresence> */}
+        <AnimatePresence>
+          {fullPlayer && (
+            <MotionBox
+              padding={6}
+              paddingTop={3}
+              display="flex"
+              flex="1"
+              flexDirection="column"
+              exit={{ opacity: 0 }}
+            >
+              <LayoutGroup>
+                <IconButton
+                  aria-label="Close Full Player"
+                  onClick={() => toggleFullPlayer()}
+                  icon={<FaChevronDown size={20} />}
+                  variant="ghost"
+                  position="fixed"
+                  top="0"
+                  left="0"
+                  size="lg"
+                  margin={2}
+                ></IconButton>
+                <Spacer />
+                <MotionBox
+                  layout
+                  layoutId="songInfo"
+                  transition={springTransition}
+                >
+                  {currentSong && (
+                    <SongInfo song={currentSong} fullPlayer={true} />
+                  )}
+                </MotionBox>
+
+                <MotionBox layoutId="slider" marginY={6}>
+                  <TimeSlider
+                    progress={progress}
+                    onChange={onProgressChange}
+                    totalDuration={totalDuration}
+                    fullPlayer={true}
+                  />
+                </MotionBox>
+
+                <MotionBox
+                  initial={{ opacity: 0, y: "20vh", scale: 0 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  // transition={{ ease: "easeOut", duration: 0.3 }}
+                  transition={springTransition}
+                >
+                  <PlaybackControl
+                    isPlaying={isPlaying}
+                    togglePlay={togglePlay}
+                    fullPlayer={true}
+                    justifyContent="space-around"
+                    flexGrow="1"
+                  />
+                </MotionBox>
                 {currentSong && (
-                  <SongInfo song={currentSong} fullPlayer={true} />
+                  <Box
+                    backgroundImage={resizeArtwork(currentSong.art, 70)}
+                    backgroundSize="cover"
+                    backgroundPosition="center"
+                    filter="blur(6px) brightness(10%)"
+                    zIndex={-1}
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    width="100%"
+                    height="100vh"
+                  ></Box>
                 )}
-              </MotionBox>
-
-              <MotionBox layoutId="slider" marginY={6}>
-                <TimeSlider
-                  progress={progress}
-                  onChange={onProgressChange}
-                  totalDuration={totalDuration}
-                  fullPlayer={true}
-                />
-              </MotionBox>
-
-              <MotionBox
-                initial={{ opacity: 0, y: "20vh", scale: 0 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                // transition={{ ease: "easeOut", duration: 0.3 }}
-                transition={springTransition}
-              >
-                <PlaybackControl
-                  isPlaying={isPlaying}
-                  togglePlay={togglePlay}
-                  fullPlayer={true}
-                  justifyContent="space-around"
-                  flexGrow="1"
-                />
-              </MotionBox>
-              {currentSong && (
                 <Box
-                  backgroundImage={resizeArtwork(currentSong.art, 70)}
+                  bgGradient="linear-gradient(
+                     to bottom,
+                     var(--chakra-colors-brand-300) 20%,
+                     var(--chakra-colors-n2-300) 80%
+                   );"
                   backgroundSize="cover"
                   backgroundPosition="center"
-                  filter="blur(6px) brightness(10%)"
                   zIndex={-1}
                   position="absolute"
                   top="0"
                   left="0"
                   width="100%"
-                  height="100vh"
+                  height="100%"
+                  opacity={0.2}
                 ></Box>
-              )}
-              <Box
-                bgGradient="linear-gradient(
-                     to bottom,
-                     var(--chakra-colors-brand-300) 20%,
-                     var(--chakra-colors-n2-300) 80%
-                   );"
-                backgroundSize="cover"
-                backgroundPosition="center"
-                zIndex={-1}
-                position="absolute"
-                top="0"
-                left="0"
-                width="100%"
-                height="100%"
-                opacity={0.2}
-              ></Box>
-              <Spacer />
-              <MotionBox
-                initial={{ opacity: 0, y: "20vh" }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ type: "tween", duration: 0.3 }}
-              >
-                <PlayerOption
-                  isExpanded={isExpanded}
-                  toggleExpanded={toggleExpanded}
-                  justifyContent="center"
-                  fullPlayer={true}
-                />
-              </MotionBox>
-            </LayoutGroup>
-          </MotionBox>
-        )}
+                <Spacer />
+                <MotionBox
+                  initial={{ opacity: 0, y: "20vh" }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ type: "tween", duration: 0.3 }}
+                >
+                  <PlayerOption
+                    isExpanded={isExpanded}
+                    toggleExpanded={toggleExpanded}
+                    justifyContent="center"
+                    fullPlayer={true}
+                  />
+                </MotionBox>
+              </LayoutGroup>
+            </MotionBox>
+          )}
+        </AnimatePresence>
       </PlayerContainer>
     );
   }
