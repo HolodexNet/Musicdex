@@ -13,20 +13,14 @@ export function OrgSelector() {
   const orglist = useStoreState((s) => s.org.orgsList);
 
   const { data: orgs, isLoading } = useServerOrgList();
-  const sortedOrgList = useMemo(() => {
-    return orgs?.sort((a, b) => {
-      const av = orglist[a.name];
-      const bv = orglist[b.name];
-      if (av !== undefined && bv !== undefined) {
-        return av - bv;
-      } else if (av !== undefined) return -1;
-      else if (bv !== undefined) return 1;
-      else {
-        return a.name.localeCompare(b.name);
-      }
-    });
-  }, [orglist, orgs]);
 
+  const usableOrgs = useMemo(() => {
+    return orglist
+      ? (orglist
+          .map((x) => orgs?.find((o) => o.name === x))
+          .filter((x) => !!x) as Org[])
+      : [];
+  }, [orglist, orgs]);
   // CSS for .orgselector is in global.css
   return (
     <motion.div
@@ -44,7 +38,7 @@ export function OrgSelector() {
         placeholder="Select org"
         value={org.name}
         onChange={(e) => {
-          const tgt = sortedOrgList?.find((x) => x.name === e.target.value);
+          const tgt = orgs?.find((x) => x.name === e.target.value);
           if (tgt) setOrg(tgt);
         }}
         // mb={3}
@@ -52,7 +46,7 @@ export function OrgSelector() {
         // width="89%"
         // pl="11%"
       >
-        {sortedOrgList?.map((x) => {
+        {usableOrgs?.map((x) => {
           return (
             <option key={x.name + "opt_os"} value={x.name}>
               {x.name}

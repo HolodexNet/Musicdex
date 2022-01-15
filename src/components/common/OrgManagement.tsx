@@ -2,74 +2,166 @@ import { useEffect, useMemo } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useStoreActions, useStoreState } from "../../store";
 import { useServerOrgList } from "../../modules/services/statics.service";
-import { Box, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  BoxProps,
+  Button,
+  CloseButton,
+  Flex,
+  HStack,
+  Icon,
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+  SimpleGrid,
+  VStack,
+} from "@chakra-ui/react";
 import React from "react";
+import { FiChevronDown, FiChevronUp, FiStar } from "react-icons/fi";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import { LayoutGroup, motion, Reorder } from "framer-motion";
+import { MdDragHandle, MdDragIndicator } from "react-icons/md";
+import { Org } from "../../store/org";
 
 export default function OrgManager() {
+  return (
+    <Flex direction="column" flexWrap="wrap">
+      <OrgPickerPanel></OrgPickerPanel>
+    </Flex>
+  );
+}
+
+export function OrgPickerPanel({
+  pickOrg,
+  ...rest
+}: { pickOrg?: (org: Org | undefined) => void } & BoxProps) {
   const orglist = useStoreState((s) => s.org.orgsList);
   const setOrglist = useStoreActions((s) => s.org.setOrgsList);
 
   const { data: orgs, isLoading } = useServerOrgList();
 
-  const sortedOrgList = useMemo(() => {
-    return orgs?.sort((a, b) => {
-      const av = orglist[a.name];
-      const bv = orglist[b.name];
-      if (av !== undefined && bv !== undefined) {
-        return av - bv;
-      } else if (av !== undefined) return -1;
-      else if (bv !== undefined) return 1;
-      else {
-        return a.name.localeCompare(b.name);
-      }
-    });
-  }, [orglist, orgs]);
+  const [search, setSearch] = React.useState("");
+  const handleChange = (event: any) => setSearch(event.target.value);
 
-  const handleOnDragEnd = (result: any) => {
-    if (!sortedOrgList) return;
-    const items = Array.from(sortedOrgList);
-    if (!result.destination) {
-      items.splice(result.source.index, 1);
-      return setOrglist(items.map((x) => x.name));
-    }
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    setOrglist(items.map((x) => x.name));
+  // nan orgs:
+  const nonfavs = useMemo(() => {
+    return orgs?.filter((x) => !orglist.includes(x.name));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orglist.length, orgs]);
+
+  const favOrg = (name: string) => {
+    setOrglist([...orglist, name]);
+  };
+  const unfavOrg = (name: string) => {
+    setOrglist([...orglist.filter((x) => x !== name)]);
   };
 
-  if (!sortedOrgList) return <div></div>;
-
   return (
-    <SimpleGrid minChildWidth="120px" spacing="40px">
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId="list">
-          {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps}>
-              {sortedOrgList.map((org, index) => (
-                <Draggable
-                  key={"orm-" + org.name}
-                  draggableId={org.name}
-                  index={index}
-                >
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
+    <Box {...rest}>
+      <InputGroup size="md">
+        <Input
+          pr="4.5rem"
+          type="text"
+          placeholder="Search Orgs"
+          value={search}
+          onChange={handleChange}
+        />
+        <InputRightElement width="4.5rem">
+          <CloseButton onClick={() => setSearch("")}></CloseButton>
+        </InputRightElement>
+      </InputGroup>
+      <Box>
+        <VStack>
+          <Reorder.Group
+            axis="y"
+            values={orglist}
+            onReorder={setOrglist}
+            as="div"
+            style={{ width: "100%" }}
+          >
+            {orglist
+              .filter((x) =>
+                search ? x.toLowerCase().includes(search.toLowerCase()) : true
+              )
+              .map((org) => {
+                return (
+                  <Reorder.Item
+                    // is="div"
+                    key={"orgselect" + org}
+                    value={org}
+                    as="div"
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      marginTop: "0.5rem",
+                    }}
+                  >
+                    <IconButton
+                      icon={<FaStar />}
+                      aria-label="favorite"
+                      variant="ghost"
+                      onClick={() => {
+                        unfavOrg(org);
+                      }}
+                    ></IconButton>
+                    <Button
+                      fontWeight="400"
+                      flex="1"
+                      variant="ghost"
+                      marginRight="0.5rem"
+                      onClick={() => {
+                        pickOrg && pickOrg(orgs?.find((x) => x.name === org));
+                      }}
                     >
-                      <Box>
-                        {index + 1}. {org.name}
-                      </Box>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </SimpleGrid>
+                      {org}
+                    </Button>
+                    <MdDragHandle
+                      size="30px"
+                      width="30px"
+                      style={{ marginRight: "0px" }}
+                    ></MdDragHandle>
+                  </Reorder.Item>
+                );
+              })}
+          </Reorder.Group>
+          {nonfavs
+            ?.filter((x) =>
+              search
+                ? x.name.toLowerCase().includes(search.toLowerCase())
+                : true
+            )
+            .map((org) => {
+              return (
+                <Flex
+                  width="100%"
+                  // is="div"
+                  key={"orgselect" + org.name}
+                  // value={org}
+                >
+                  <IconButton
+                    icon={<FaRegStar />}
+                    aria-label="favorite"
+                    variant="outline"
+                    onClick={() => {
+                      favOrg(org.name);
+                    }}
+                  ></IconButton>
+                  <Button
+                    fontWeight="400"
+                    flex="1"
+                    variant="ghost"
+                    onClick={() => {
+                      pickOrg && pickOrg(org);
+                    }}
+                  >
+                    {org.name}
+                  </Button>
+                </Flex>
+              );
+            })}
+        </VStack>
+      </Box>
+    </Box>
   );
 }

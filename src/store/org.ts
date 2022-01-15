@@ -11,9 +11,20 @@ export interface OrgModel {
   currentOrg: Org;
   setOrg: Action<OrgModel, Org>;
 
-  orgsList: Record<string, number>;
+  orgsList: string[];
   setOrgsList: Action<OrgModel, string[]>;
 }
+
+export const DEFAULT_ORG_LIST = {
+  Hololive: -12669,
+  Independents: -7791,
+  Nijisanji: -2243,
+  "Riot Music": -636,
+  KAMITSUBAKI: -430,
+  "774inc": -400,
+  GuildCQ: -283,
+  ReACT: -184,
+};
 
 const orgModel: OrgModel = {
   currentOrg: { name: "Hololive", name_jp: "Hololive", short: "" },
@@ -22,18 +33,9 @@ const orgModel: OrgModel = {
     state.currentOrg = target;
   }),
 
-  orgsList: {
-    Hololive: -12669,
-    Independents: -7791,
-    Nijisanji: -2243,
-    "Riot Music": -636,
-    KAMITSUBAKI: -430,
-    "774inc": -400,
-    GuildCQ: -283,
-    ReACT: -184,
-  },
+  orgsList: Object.entries(DEFAULT_ORG_LIST).map((x) => x[0]),
   setOrgsList: action((state, order) => {
-    state.orgsList = Object.fromEntries(order.map((x, i) => [x, i]));
+    state.orgsList = order;
   }),
 };
 
