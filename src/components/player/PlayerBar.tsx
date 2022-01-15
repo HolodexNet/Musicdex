@@ -210,7 +210,7 @@ export const PlayerBar = React.memo(
                     flexGrow="1"
                   />
                 </MotionBox>
-                {currentSong && (
+                {/* {currentSong && (
                   <Box
                     backgroundImage={resizeArtwork(currentSong.art, 70)}
                     backgroundSize="cover"
@@ -223,7 +223,7 @@ export const PlayerBar = React.memo(
                     width="100%"
                     height="100vh"
                   ></Box>
-                )}
+                )} */}
                 <Box
                   bgGradient="linear-gradient(
                      to bottom,
