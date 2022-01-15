@@ -109,8 +109,8 @@ const SangOnGrid = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <span title={t("absoluteDate", { date: value as Date })}>
-      {t("relativeDate", { date: value })}
+    <span title={t("NO_TL.absoluteDate", { date: value as Date })}>
+      {t("NO_TL.relativeDate", { date: value })}
     </span>
   );
 };
@@ -122,7 +122,6 @@ export const SongTable = ({
   menuId = DEFAULT_MENU_ID,
 }: SongTableProps) => {
   const { t } = useTranslation();
-  // const t = (str: string, ..._: { date: Date; }[]) => str;
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const indexedSongs: IndexedSong[] = React.useMemo(() => {
     return songs.map((v, i) => {
