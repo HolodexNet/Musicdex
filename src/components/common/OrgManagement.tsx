@@ -7,6 +7,7 @@ import {
   BoxProps,
   Button,
   CloseButton,
+  Divider,
   Flex,
   HStack,
   Icon,
@@ -71,96 +72,105 @@ export function OrgPickerPanel({
           <CloseButton onClick={() => setSearch("")}></CloseButton>
         </InputRightElement>
       </InputGroup>
-      <Box>
-        <VStack>
-          <Reorder.Group
-            axis="y"
-            values={orglist}
-            onReorder={setOrglist}
-            as="div"
-            style={{ width: "100%" }}
-          >
-            {orglist
-              .filter((x) =>
-                search ? x.toLowerCase().includes(search.toLowerCase()) : true
-              )
-              .map((org) => {
-                return (
-                  <Reorder.Item
-                    // is="div"
-                    key={"orgselect" + org}
-                    value={org}
-                    as="div"
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      marginTop: "0.5rem",
-                    }}
-                  >
-                    <IconButton
-                      icon={<FaStar />}
-                      aria-label="favorite"
-                      variant="ghost"
-                      onClick={() => {
-                        unfavOrg(org);
-                      }}
-                    ></IconButton>
-                    <Button
-                      fontWeight="400"
-                      flex="1"
-                      variant="ghost"
-                      marginRight="0.5rem"
-                      onClick={() => {
-                        pickOrg && pickOrg(orgs?.find((x) => x.name === org));
-                      }}
-                    >
-                      {org}
-                    </Button>
-                    <MdDragHandle
-                      size="30px"
-                      width="30px"
-                      style={{ marginRight: "0px" }}
-                    ></MdDragHandle>
-                  </Reorder.Item>
-                );
-              })}
-          </Reorder.Group>
-          {nonfavs
-            ?.filter((x) =>
-              search
-                ? x.name.toLowerCase().includes(search.toLowerCase())
-                : true
+      <Box
+        maxH="70vh"
+        overflowY="auto"
+        overflowX="hidden"
+        minWidth="200px"
+        maxWidth="450px"
+        pr="2"
+      >
+        {/* <VStack> */}
+        <Reorder.Group
+          axis="y"
+          values={orglist}
+          onReorder={setOrglist}
+          as="div"
+          style={{ minWidth: "300px", maxWidth: "400px", width: "100%" }}
+        >
+          {orglist
+            .filter((x) =>
+              search ? x.toLowerCase().includes(search.toLowerCase()) : true
             )
             .map((org) => {
               return (
-                <Flex
-                  width="100%"
+                <Reorder.Item
                   // is="div"
-                  key={"orgselect" + org.name}
-                  // value={org}
+                  key={"orgselect" + org}
+                  value={org}
+                  as="div"
+                  style={{
+                    display: "flex",
+                    marginTop: "0.5rem",
+                  }}
                 >
                   <IconButton
-                    icon={<FaRegStar />}
+                    icon={<FaStar />}
                     aria-label="favorite"
-                    variant="outline"
+                    variant="ghost"
+                    colorScheme="yellow"
                     onClick={() => {
-                      favOrg(org.name);
+                      unfavOrg(org);
                     }}
                   ></IconButton>
                   <Button
+                    colorScheme="grey"
                     fontWeight="400"
                     flex="1"
                     variant="ghost"
+                    marginRight="0.5rem"
                     onClick={() => {
-                      pickOrg && pickOrg(org);
+                      pickOrg && pickOrg(orgs?.find((x) => x.name === org));
                     }}
                   >
-                    {org.name}
+                    {org}
                   </Button>
-                </Flex>
+                  <MdDragHandle
+                    size="30px"
+                    width="30px"
+                    style={{ marginRight: "0px" }}
+                  ></MdDragHandle>
+                </Reorder.Item>
               );
             })}
-        </VStack>
+        </Reorder.Group>
+        <Divider mt={2} />
+        {nonfavs
+          ?.filter((x) =>
+            search ? x.name.toLowerCase().includes(search.toLowerCase()) : true
+          )
+          .map((org) => {
+            return (
+              <Flex
+                width="100%"
+                // is="div"
+                mt={2}
+                style={{ minWidth: "300px", maxWidth: "400px" }}
+                key={"orgselect" + org.name}
+                // value={org}
+              >
+                <IconButton
+                  icon={<FaRegStar />}
+                  aria-label="favorite"
+                  variant="ghost"
+                  onClick={() => {
+                    favOrg(org.name);
+                  }}
+                ></IconButton>
+                <Button
+                  fontWeight="400"
+                  flex="1"
+                  variant="ghost"
+                  onClick={() => {
+                    pickOrg && pickOrg(org);
+                  }}
+                >
+                  {org.name}
+                </Button>
+              </Flex>
+            );
+          })}
+        {/* </VStack> */}
       </Box>
     </Box>
   );
