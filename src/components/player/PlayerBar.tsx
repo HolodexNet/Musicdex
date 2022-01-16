@@ -105,7 +105,7 @@ export const PlayerBar = React.memo(
     }
 
     return (
-      <PlayerContainer expanded={fullPlayer}>
+      <PlayerContainer expanded={fullPlayer} dense={breakpoint === "base"}>
         {!fullPlayer && (
           <>
             <TimeSlider
@@ -291,11 +291,13 @@ export const PlayerBar = React.memo(
 const PlayerContainer = styled.div<{
   expanded: boolean;
   backgroundUrl?: string;
+  dense?: boolean;
 }>`
   overflow: hidden;
   width: 100%;
   padding-top: ${({ expanded }) => (expanded ? "calc(40vh + 56px)" : "0")};
-  height: ${({ expanded }) => (expanded ? "100vh" : "80px")};
+  height: ${({ expanded, dense }) =>
+    expanded ? "100vh" : dense ? "64px" : "80px"};
   position: ${({ expanded }) => (expanded ? "absolute" : "relative")};
   flex-basis: 1;
   flex-shrink: 0;
@@ -310,6 +312,7 @@ const PlayerContainer = styled.div<{
     display: flex;
     width: 100%;
     align-items: center;
-    margin-top: 8px;
+    /* Need static margin, cuz Framer motion is miscalculating layout */
+    margin-top: ${({ dense }) => (dense ? "2px" : "8px")};
   }
 `;

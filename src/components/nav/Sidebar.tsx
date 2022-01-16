@@ -109,7 +109,7 @@ export function SidebarContent({
         display={{ base: "flex", lg: "none" }}
       >
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
+          Musicdex
         </Text>
         <CloseButton display={{ base: "flex", lg: "none" }} onClick={onClose} />
       </Flex>

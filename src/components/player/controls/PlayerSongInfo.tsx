@@ -19,7 +19,7 @@ export const SongInfo = ({
 
   return (
     <HStack onContextMenu={(e) => show(e, { props: song })} {...rest}>
-      <SongArtwork song={song} size={fullPlayer ? 70 : 50} resizeHint={70} />
+      <SongArtwork song={song} size={fullPlayer ? 70 : 40} resizeHint={70} />
 
       <Box>
         <Link as={NavLink} to={`/song/${song.id}`}>

@@ -12,6 +12,7 @@ import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState } from "../../store";
 import { CommonContextMenu } from "../common/CommonContext";
 import { MotionBox } from "../common/MotionBox";
+import { BottomNav } from "../nav/BottomNav";
 import { NavBar } from "../nav/NavBar";
 import { SidebarContent } from "../nav/Sidebar";
 import { Player } from "../player/Player";
@@ -156,6 +157,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
           </Flex>
         </Flex>
         <Player player={player} />
+        <BottomNav />
         <AddToPlaylistModal />
       </Flex>
       <CommonContextMenu />
