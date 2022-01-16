@@ -244,27 +244,21 @@ export const PlayerBar = React.memo(
                   ></Box>
                 )} */}
                 <Box
+                  bgGradient="linear-gradient(
+                    to bottom,
+                    var(--chakra-colors-brand-300) 30%,
+                    var(--chakra-colors-n2-300) 80%
+                  );"
+                  backgroundSize="cover"
+                  backgroundPosition="center"
                   zIndex={-1}
                   position="absolute"
                   top="0"
                   left="0"
                   width="100%"
                   height="100%"
-                  bgColor="bg.800"
-                >
-                  <Box
-                    bgGradient="linear-gradient(
-                    to bottom,
-                    var(--chakra-colors-brand-300) 30%,
-                    var(--chakra-colors-n2-300) 80%
-                  );"
-                    backgroundSize="cover"
-                    backgroundPosition="center"
-                    opacity={0.25}
-                    width="100%"
-                    height="100%"
-                  ></Box>
-                </Box>
+                  opacity={0.25}
+                />
 
                 <Spacer />
                 <MotionBox
@@ -295,8 +289,7 @@ const PlayerContainer = styled.div<{
   /* padding-top: ${({ expanded }) =>
     expanded ? "calc(env(safe-area-inset-top))" : "0"};
     padding-bottom: env(safe-area-inset-top); */
-  background: ${({ expanded }) =>
-    expanded ? "transparent" : "var(--chakra-colors-bg-800)"};
+  background: var(--chakra-colors-bg-800);
 
   width: 100%;
   overflow: hidden;
