@@ -44,8 +44,8 @@ export function SongLikeButton({ song }: { song: Song }) {
       colorScheme={"brand"}
       variant="ghost"
       opacity={liked ? 1 : 0.3}
-      mr={2}
-      ml={-1}
+      // mr={2}
+      // ml={-1}
     ></IconButton>
   );
 }

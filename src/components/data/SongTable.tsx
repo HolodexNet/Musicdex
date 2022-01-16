@@ -1,35 +1,32 @@
 import {
+  Box,
+  BoxProps,
   CSSObject,
+  Flex,
   Icon,
   IconButton,
-  Table,
-  Tbody,
-  Td,
   Text,
-  Th,
-  Thead,
   Tr,
   useBreakpointValue,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useMemo } from "react";
 import { ContextMenuParams, useContextMenu } from "react-contexify";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { Column, Row, useSortBy, useTable } from "react-table";
+import { areEqual, FixedSizeList } from "react-window";
 import useNamePicker from "../../modules/common/useNamePicker";
 import { useStoreActions, useStoreState } from "../../store";
 import { formatSeconds } from "../../utils/SongHelper";
 import { DEFAULT_MENU_ID } from "../common/CommonContext";
 import { NowPlayingIcon } from "../common/NowPlayingIcon";
-import { SongLikeButton } from "../song/SongLikeButton";
 import { useDraggableSong } from "./DraggableSong";
-
-type IndexedSong = Song & { idx: number };
+import AutoSizer from "react-virtualized-auto-sizer";
+import memoize from "memoize-one";
+import { SongLikeButton } from "../song/SongLikeButton";
 
 interface SongTableProps {
   songs: Song[];
@@ -39,321 +36,253 @@ interface SongTableProps {
   songDropdownMenuRenderer?: (cellInfo: any) => JSX.Element;
 
   // table controls:
-  isSortable?: boolean; // default true
 
   menuId?: string;
 }
 
-const COLUMN_MIN_WIDTHS: { [key: string]: string | any } = {
-  idx: "40px",
-  // 'dur': '20px',
-  "...": { base: "80px", md: "100px" },
-};
-
-const IdxGrid = ({
-  row: { original },
-  value,
-}: {
-  row: { original: Song };
-  value: any;
-}) => {
+const IdxGrid = ({ id, songId }: { id: number; songId: string }) => {
   const currentId = useStoreState(
     (state) => state.playback.currentlyPlaying?.song?.id
   );
 
-  return original.id === currentId ? (
+  return songId === currentId ? (
     <NowPlayingIcon style={{ color: "var(--chakra-colors-n2-400)" }} />
   ) : (
-    value
+    <span>{id + 1}</span>
   );
 };
 
 const TitleGrid = ({
-  row, //: { original, channel },
+  song, //: { original, channel },
 }: {
-  row: any;
+  song: Song;
   // row: { original: Song; channel: string };
 }) => {
+  const tn = useNamePicker();
+
   return (
-    <VStack alignItems="start" spacing={1}>
-      <span style={{ cursor: "default" }}>{row?.original?.name}</span>
+    <VStack alignItems="start" spacing={0}>
+      <Box style={{ cursor: "default" }} noOfLines={1} title={song.name}>
+        {song.name}
+      </Box>
       <Text
         opacity={0.66}
         fontWeight={300}
         fontSize="sm"
         as={Link}
-        to={"/channel/" + row?.original?.channel_id}
+        to={"/channel/" + song.channel_id}
         onClick={(e) => {
           e.stopPropagation();
         }}
         _hover={{ opacity: 0.9 }}
       >
-        {row?.values?.channel}
+        {tn(song.channel?.english_name, song.channel?.name)}
       </Text>
     </VStack>
   );
 };
 
-const DurationGrid = ({
-  row: { original },
-  value,
-}: {
-  row: { original: Song };
-  value: any;
-}) => {
+const DurationGrid = ({ song }: { song: Song }) => {
   return (
     <>
-      {original.is_mv && (
+      {song.is_mv && (
         <Icon mb="-3px" mr={3} as={BiMovie} title="MV" color="gray.500"></Icon>
       )}{" "}
-      {value}
+      {formatSeconds(song.end - song.start)}
     </>
   );
 };
 
-const SangOnGrid = ({
-  row: { original },
-  value,
-}: {
-  row: { original: Song };
-  value: any;
-}) => {
+const SangOnGrid = ({ value }: { value: Date }) => {
   const { t } = useTranslation();
   return (
-    <span title={t("NO_TL.absoluteDate", { date: value as Date })}>
+    <span title={t("NO_TL.absoluteDate", { date: value })}>
       {t("NO_TL.relativeDate", { date: value })}
     </span>
   );
 };
+const columns = ["#", "Title", "Original Artist", "Duration", "Sang On", "..."];
+
+const memoized = memoize(
+  (
+    songList: Song[],
+    songMenuRenderer?: (cellInfo: any) => JSX.Element,
+    menuId?: any,
+    songClicked?: (e: React.MouseEvent, s: Song) => void
+  ) => ({
+    songList,
+    songMenuRenderer,
+    menuId,
+    songClicked,
+  })
+);
 export const SongTable = ({
   songs,
   songClicked,
   songDropdownMenuRenderer,
-  isSortable = true,
   menuId = DEFAULT_MENU_ID,
-}: SongTableProps) => {
+  ...rest
+}: SongTableProps & BoxProps) => {
   const { t } = useTranslation();
-  const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
-  const indexedSongs: IndexedSong[] = React.useMemo(() => {
-    return songs.map((v, i) => {
-      return { ...v, idx: i + 1 };
-    });
-  }, [songs]);
+  // const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
+  // const indexedSongs: IndexedSong[] = React.useMemo(() => {
+  //   return songs.map((v, i) => {
+  //     return { ...v, idx: i + 1 };
+  //   });
+  // }, [songs]);
 
-  const { show } = useContextMenu({ id: menuId });
+  // useEffect(() => {
+  //   if (isXL === undefined) return;
+  //   toggleHideColumn("original_artist", isXL < 3);
+  //   toggleHideColumn("idx", isXL < 3);
+  //   toggleHideColumn("date", isXL < 2);
+  //   toggleHideColumn("dur", isXL < 1);
+  // }, [isXL, toggleHideColumn]);
+
+  const columns = [
+    "#",
+    "Title",
+    "Original Artist",
+    "Duration",
+    "Sang On",
+    "...",
+  ];
+
+  const data = memoized(songs, songDropdownMenuRenderer, menuId, songClicked);
+
+  // const defaultClickBehavior = useCallback(
+  //   (e: React.MouseEvent<any, MouseEvent>, song: Song) => {
+  //     queueSongs({
+  //       songs: [song],
+  //       immediatelyPlay: true,
+  //     });
+  //   },
+  //   [queueSongs]
+  // );
+
+  return (
+    <Box height="80vh" mt={6} {...rest}>
+      <AutoSizer disableWidth defaultWidth="100%" defaultHeight={200}>
+        {({ height }: { height: number }) => (
+          // console.log(height);
+          <FixedSizeList
+            height={height}
+            width="100%"
+            itemCount={songs.length}
+            itemSize={60}
+            itemData={data}
+          >
+            {MemoizedRow}
+          </FixedSizeList>
+        )}
+      </AutoSizer>
+    </Box>
+  );
+};
+const MemoizedRow = React.memo(Row, areEqual);
+
+function Row({
+  index,
+  style,
+  data,
+}: {
+  index: number;
+  style: any;
+  data: {
+    songList: Song[];
+    songMenuRenderer: ((cellInfo: any) => JSX.Element) | undefined;
+    menuId: any;
+    songClicked: ((e: React.MouseEvent, s: Song) => void) | undefined;
+  };
+}) {
+  // const { t } = useTranslation();
+  const song = useMemo(() => data.songList[index], [data.songList, index]);
+  const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
+
+  const { show } = useContextMenu({ id: data.menuId });
+  const detailLevel = useBreakpointValue(
+    {
+      base: 0,
+      xs: 0,
+      sm: 1,
+      md: 2,
+      xl: 3,
+    },
+    "xl"
+  );
+
+  const HOVER_ROW_STYLE: CSSObject = {
+    backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
+  };
+  const dragSongProps = useDraggableSong(song);
 
   const dropDownUsageFn = React.useMemo(
     () =>
-      songDropdownMenuRenderer
-        ? songDropdownMenuRenderer
-        : (cellInfo: any) => (
-            <IconButton
-              //   py={2}
-              icon={<FiMoreHorizontal />}
-              rounded="full"
-              size="sm"
-              mr={-2}
-              variant="ghost"
-              colorScheme="n2"
-              aria-label="More"
-              onClick={(e) => show(e, { props: cellInfo?.row?.original })}
-            ></IconButton>
-          ),
-    [songDropdownMenuRenderer]
-  );
-  // const [front,front2] = useCOlorMode
-
-  const tn = useNamePicker();
-  const columns: Column<IndexedSong>[] = React.useMemo<Column<IndexedSong>[]>(
-    () => [
-      {
-        Header: "#",
-        accessor: "idx",
-        maxWidth: 40,
-        minWidth: 40,
-        width: 40,
-        Cell: IdxGrid,
-      },
-      {
-        Header: "Title",
-        accessor: "name",
-        Cell: TitleGrid,
-      },
-      {
-        id: "channel",
-        Header: "ChannelName",
-        accessor: (row: IndexedSong) => {
-          return tn(row.channel?.english_name, row.channel?.name);
-        },
-      },
-      {
-        Header: "Original Artist",
-        accessor: "original_artist",
-      },
-      {
-        id: "dur",
-        Header: "Duration",
-        accessor: (row: { end: number; start: number }) => {
-          return formatSeconds(row.end - row.start);
-        },
-        isNumeric: true,
-        Cell: DurationGrid,
-      },
-      {
-        id: "date",
-        Header: "Sang On",
-        accessor: (row: { available_at: Date }) => new Date(row?.available_at),
-        Cell: SangOnGrid,
-      },
-      {
-        id: "...",
-        Header: "",
-        disableSortBy: true,
-        accessor: "idx",
-        Cell: dropDownUsageFn,
-      },
-    ],
-    [dropDownUsageFn, tn]
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    toggleHideColumn,
-  } = useTable(
-    {
-      columns: columns as any,
-      data: indexedSongs,
-      initialState: { hiddenColumns: ["channel"] },
-      disableSortBy: !isSortable,
-    },
-    useSortBy
-  );
-
-  const isXL = useBreakpointValue({ base: 0, xs: 0, sm: 1, md: 2, xl: 3 });
-
-  useEffect(() => {
-    if (isXL === undefined) return;
-    toggleHideColumn("original_artist", isXL < 3);
-    toggleHideColumn("idx", isXL < 3);
-    toggleHideColumn("date", isXL < 2);
-    toggleHideColumn("dur", isXL < 1);
-  }, [isXL, toggleHideColumn]);
-
-  const defaultClickBehavior = useCallback(
-    (e: React.MouseEvent<any, MouseEvent>, song: Song) => {
-      queueSongs({
-        songs: [song],
-        immediatelyPlay: true,
-      });
-    },
-    [queueSongs]
+      data.songMenuRenderer ? (
+        data.songMenuRenderer(song)
+      ) : (
+        <IconButton
+          //   py={2}
+          icon={<FiMoreHorizontal />}
+          rounded="full"
+          size="sm"
+          // mr={-2}
+          ml={2}
+          variant="ghost"
+          colorScheme="n2"
+          aria-label="More"
+          onClick={(e) => show(e, { props: song })}
+        ></IconButton>
+      ),
+    [data, show, song]
   );
 
   return (
-    <>
-      <Table {...getTableProps()} size={isXL! >= 1 ? "md" : "sm"}>
-        <Thead>
-          {headerGroups.map((headerGroup) => (
-            <Tr {...headerGroup.getHeaderGroupProps()} px={2}>
-              {headerGroup.headers.map((column) => (
-                <Th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  isNumeric={(column as any).isNumeric}
-                  px={{ xl: 3, md: 2, base: 1 }}
-                >
-                  {column.isSorted &&
-                    (column.isSortedDesc ? (
-                      <Icon as={FaChevronDown} display="inline" mr="2" />
-                    ) : (
-                      <Icon as={FaChevronUp} display="inline" mr="2" />
-                    ))}
-                  {column.render("Header")}
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody {...getTableBodyProps()}>
-          {rows.map((row, index) => {
-            prepareRow(row);
-            return (
-              <MemoizedRow
-                key={"_" + row.original.id + "_" + index}
-                {...{
-                  row,
-                  show,
-                  songClicked,
-                  defaultClickBehavior,
-                }}
-              />
-            );
-          })}
-        </Tbody>
-      </Table>
-    </>
-  );
-};
-const MemoizedRow = React.memo(
-  ({
-    row,
-    show,
-    songClicked,
-    defaultClickBehavior,
-  }: {
-    row: Row<IndexedSong>;
-    show?: (
-      event: any,
-      params?: Pick<ContextMenuParams, "id" | "props" | "position"> | undefined
-    ) => void;
-    songClicked: ((e: React.MouseEvent, s: Song) => void) | undefined;
-    defaultClickBehavior: (
-      e: React.MouseEvent<any, MouseEvent>,
-      song: Song
-    ) => void;
-  }): JSX.Element => {
-    const HOVER_ROW_STYLE: CSSObject = {
-      backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
-    };
-    const dragSongProps = useDraggableSong(row.original);
-    return (
-      <Tr
-        {...row.getRowProps()}
-        onContextMenu={(e) => {
-          show?.(e, { props: row.original });
-        }}
-        _hover={HOVER_ROW_STYLE}
+    <div style={style}>
+      <Flex
+        height="100%"
+        py={1.5}
+        px={2}
         {...dragSongProps}
+        onContextMenu={(e) => show?.(e, { props: song })}
+        onClick={(e) =>
+          data.songClicked
+            ? data.songClicked(e, song)
+            : queueSongs({ songs: [song], immediatelyPlay: true })
+        }
+        borderTop="1px solid var(--chakra-colors-whiteAlpha-200)"
+        boxSizing="border-box"
+        _hover={HOVER_ROW_STYLE}
       >
-        {row.cells.map((cell) => (
-          <Td
-            {...cell.getCellProps()}
-            isNumeric={(cell.column as any).isNumeric}
-            {...{
-              width: COLUMN_MIN_WIDTHS?.[cell.column.id] || "auto",
-            }}
-            {...(cell.column.id === "idx" && { cursor: "move" })}
-            {...(cell.column.id !== "..."
-              ? {
-                  onClick: (e) => {
-                    if (window.getSelection()?.toString()?.length)
-                      return e.preventDefault();
-                    songClicked
-                      ? songClicked(e, row.original)
-                      : defaultClickBehavior(e as any, row.original);
-                  },
-                }
-              : {})}
-            px={{ xl: 3, md: 2, base: 1 }}
-          >
-            {cell.column.id === "..." && <SongLikeButton song={row.original} />}
-            {cell.render("Cell")}
-          </Td>
-        ))}
-      </Tr>
-    );
-  }
-);
+        {/* IDX: */}
+        {detailLevel && detailLevel >= 3 ? (
+          <Box width="30px">
+            <IdxGrid id={index} songId={song.id} />
+          </Box>
+        ) : undefined}
+        <Box flex="1.4 1 90px" px={2}>
+          <TitleGrid song={song} />
+        </Box>
+        {detailLevel && detailLevel >= 3 ? (
+          <Box flex="1 1 60px" noOfLines={2} px={2}>
+            {song.original_artist}
+          </Box>
+        ) : undefined}
+        {detailLevel && detailLevel >= 1 ? (
+          <Box flex="0 1 80px" noOfLines={1} textAlign="right">
+            <DurationGrid song={song} />
+          </Box>
+        ) : undefined}
+        {detailLevel && detailLevel >= 2 ? (
+          <Box flex="0 1 150px" noOfLines={2} textAlign="right">
+            <SangOnGrid value={new Date(song.available_at)} />
+          </Box>
+        ) : undefined}
+        <Box flex="0 0 90px" textAlign="right">
+          <SongLikeButton song={song} />
+          {dropDownUsageFn}
+        </Box>
+      </Flex>
+    </div>
+  );
+}

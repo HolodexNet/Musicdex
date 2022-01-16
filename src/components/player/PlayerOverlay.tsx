@@ -210,8 +210,8 @@ const OverlayWrapper = styled.div<{ visible: boolean }>`
   }
 `;
 
-function OverlayDropDownMenu(cellInfo: any) {
-  const song: Song = cellInfo.row.original;
+function OverlayDropDownMenu(song: Song) {
+  // const song: Song = song;
   const queueRemove = useStoreActions((store) => store.playback.queueRemove);
   const addPlaylist = useStoreActions(
     (store) => store.addPlaylist.showPlaylistAddDialog
