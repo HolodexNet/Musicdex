@@ -6,6 +6,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Portal,
 } from "@chakra-ui/react";
 import React from "react";
 import { FiEyeOff, FiMaximize, FiSidebar } from "react-icons/fi";
@@ -36,28 +37,30 @@ function _ChangePlayerLocationButton() {
               variant="ghost"
             />
           </PopoverTrigger>
-          <PopoverContent width="-webkit-fit-content">
-            <PopoverArrow />
-            <PopoverBody>
-              <HStack spacing={2}>
-                {Object.keys(LocationIcons).map((x: any) => {
-                  return (
-                    <IconButton
-                      key={`yt-player-loc-${x}`}
-                      aria-label="Expand"
-                      icon={LocationIcons[x as PlayerPosition]}
-                      variant="ghost"
-                      colorScheme={x === pos ? "brand" : "bgAlpha"}
-                      onClick={() => {
-                        setPos(x);
-                        onClose();
-                      }}
-                    />
-                  );
-                })}
-              </HStack>
-            </PopoverBody>
-          </PopoverContent>
+          <Portal>
+            <PopoverContent width="-webkit-fit-content">
+              <PopoverArrow />
+              <PopoverBody>
+                <HStack spacing={2}>
+                  {Object.keys(LocationIcons).map((x: any) => {
+                    return (
+                      <IconButton
+                        key={`yt-player-loc-${x}`}
+                        aria-label="Expand"
+                        icon={LocationIcons[x as PlayerPosition]}
+                        variant="ghost"
+                        colorScheme={x === pos ? "brand" : "bgAlpha"}
+                        onClick={() => {
+                          setPos(x);
+                          onClose();
+                        }}
+                      />
+                    );
+                  })}
+                </HStack>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
         </>
       )}
     </Popover>

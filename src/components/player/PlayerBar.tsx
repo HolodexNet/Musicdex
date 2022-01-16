@@ -1,4 +1,13 @@
-import { Box, IconButton, Spacer, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Spacer,
+  Text,
+  useBreakpoint,
+  useBreakpointValue,
+  VStack,
+} from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { formatSeconds } from "../../utils/SongHelper";
 import { SongInfo } from "./controls/PlayerSongInfo";
@@ -14,6 +23,7 @@ import { PlayerPosition } from "../../store/player";
 import { FaChevronDown } from "react-icons/fa";
 import { resizeArtwork } from "../../modules/songs/utils";
 import React from "react";
+import { useLocation } from "react-router-dom";
 interface PlayerBarProps {
   progress: number;
   onProgressChange: (e: number) => void;
@@ -28,7 +38,7 @@ interface PlayerBarProps {
   toggleExpanded: () => void;
 }
 
-const springTransition = { type: "spring", stiffness: 350, damping: 25 };
+const springTransition = { type: "spring", stiffness: 350, damping: 23 };
 
 export const PlayerBar = React.memo(
   ({
@@ -48,6 +58,9 @@ export const PlayerBar = React.memo(
     const pos = useStoreState((store) => store.player.position);
     const setPos = useStoreActions((store) => store.player.setPosition);
     const [lastPos, setLastPos] = useState<PlayerPosition>("sidebar");
+    const location = useLocation();
+    const breakpoint = useBreakpoint();
+
     useEffect(() => {
       if (!fullPlayer && pos === "full-player") setPos("sidebar");
       return () => {
@@ -55,14 +68,22 @@ export const PlayerBar = React.memo(
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+      if (fullPlayer) {
+        toggleFullPlayer();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location]);
+
     function toggleFullPlayer() {
-      if (!fullPlayer) {
+      setFullPlayer((prev) => !prev);
+      if (fullPlayer) {
+        setPos(lastPos);
+      } else {
         setLastPos(pos);
         setPos("full-player");
-      } else {
-        setPos(lastPos);
       }
-      setFullPlayer(!fullPlayer);
     }
 
     function handlePlayerbarClick(e: any) {
@@ -71,25 +92,29 @@ export const PlayerBar = React.memo(
         typeof e.target.className === "string" &&
         e?.target?.className.split(" ").length === 1
       ) {
-        console.log(e?.target?.className);
         toggleFullPlayer();
       }
     }
-    function onSongInfoClick(e: any) {
-      toggleFullPlayer();
+
+    function handleSongInfoClick(e: any) {
+      if (breakpoint === "base") {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleFullPlayer();
+      }
     }
+
     return (
       <PlayerContainer expanded={fullPlayer}>
-        {/* <AnimatePresence> */}
         {!fullPlayer && (
           <>
             <TimeSlider
               progress={progress}
               onChange={onProgressChange}
               totalDuration={totalDuration}
-              marginTop="-3px"
+              marginTop="-4px"
             />
-            <MotionBox className="main" onClick={handlePlayerbarClick}>
+            <MotionBox className="main" onClickCapture={handlePlayerbarClick}>
               <LayoutGroup>
                 <MotionBox
                   display="flex"
@@ -100,31 +125,33 @@ export const PlayerBar = React.memo(
                   layout
                   transition={springTransition}
                   layoutId="songInfo"
-                  onClick={onSongInfoClick}
                 >
-                  {currentSong && <SongInfo song={currentSong} />}
+                  {currentSong && (
+                    <SongInfo
+                      song={currentSong}
+                      onClickCapture={handleSongInfoClick}
+                    />
+                  )}
                 </MotionBox>
                 <MotionBox
                   display="flex"
                   flex={{ base: 0, sm: 1 }}
                   alignItems="center"
                   justifyContent={{ base: "flex-end", sm: "center" }}
-                  layout
+                  initial={{ opacity: 0, y: 200 }}
+                  animate={{ opacity: 1, y: 0 }}
                 >
                   <PlaybackControl
                     isPlaying={isPlaying}
                     togglePlay={togglePlay}
                   />
                 </MotionBox>
-                <MotionBox
-                  display="flex"
+                <Flex
                   flex={{ base: 0, sm: 1 }}
                   paddingRight={{ base: 0, sm: 3 }}
                   marginLeft="auto"
                   justifyContent="flex-end"
                   alignItems="center"
-                  layout
-                  transition={springTransition}
                 >
                   <Box
                     width={36}
@@ -148,12 +175,11 @@ export const PlayerBar = React.memo(
                     toggleExpanded={toggleExpanded}
                     display={{ base: "none", sm: "flex" }}
                   />
-                </MotionBox>
+                </Flex>
               </LayoutGroup>
             </MotionBox>
           </>
         )}
-        {/* </AnimatePresence> */}
         <AnimatePresence>
           {fullPlayer && (
             <MotionBox
@@ -162,7 +188,7 @@ export const PlayerBar = React.memo(
               display="flex"
               flex="1"
               flexDirection="column"
-              exit={{ opacity: 0 }}
+              exit={{ opacity: 0, pointerEvents: "none" }}
             >
               <LayoutGroup>
                 <IconButton
@@ -170,11 +196,11 @@ export const PlayerBar = React.memo(
                   onClick={() => toggleFullPlayer()}
                   icon={<FaChevronDown size={20} />}
                   variant="ghost"
-                  position="fixed"
-                  top="0"
-                  left="0"
                   size="lg"
                   margin={2}
+                  position="absolute"
+                  left={0}
+                  top={0}
                 ></IconButton>
                 <Spacer />
                 <MotionBox
@@ -187,17 +213,16 @@ export const PlayerBar = React.memo(
                   )}
                 </MotionBox>
 
-                <MotionBox layoutId="slider" marginY={6}>
-                  <TimeSlider
-                    progress={progress}
-                    onChange={onProgressChange}
-                    totalDuration={totalDuration}
-                    fullPlayer={true}
-                  />
-                </MotionBox>
+                <TimeSlider
+                  progress={progress}
+                  onChange={onProgressChange}
+                  totalDuration={totalDuration}
+                  fullPlayer={true}
+                  marginY={6}
+                />
 
                 <MotionBox
-                  initial={{ opacity: 0, y: "20vh", scale: 0 }}
+                  initial={{ opacity: 0, y: "30vh", scale: 0 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   // transition={{ ease: "easeOut", duration: 0.3 }}
                   transition={springTransition}
@@ -226,10 +251,10 @@ export const PlayerBar = React.memo(
                 )} */}
                 <Box
                   bgGradient="linear-gradient(
-                     to bottom,
-                     var(--chakra-colors-brand-300) 20%,
-                     var(--chakra-colors-n2-300) 80%
-                   );"
+                    to bottom,
+                    var(--chakra-colors-brand-300) 30%,
+                    var(--chakra-colors-n2-300) 80%
+                  );"
                   backgroundSize="cover"
                   backgroundPosition="center"
                   zIndex={-1}
@@ -238,13 +263,13 @@ export const PlayerBar = React.memo(
                   left="0"
                   width="100%"
                   height="100%"
-                  opacity={0.2}
+                  opacity={0.25}
                 ></Box>
                 <Spacer />
                 <MotionBox
                   initial={{ opacity: 0, y: "20vh" }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ type: "tween", duration: 0.3 }}
+                  transition={springTransition}
                 >
                   <PlayerOption
                     isExpanded={isExpanded}
@@ -276,7 +301,7 @@ const PlayerContainer = styled.div<{
   flex-shrink: 0;
   bottom: 0;
   transition: all 0.3s ease-out;
-  background: #1c1c1c;
+  background: var(--chakra-colors-bg-800);
   flex-direction: column;
   display: flex;
   z-index: 10;
