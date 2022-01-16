@@ -1,5 +1,6 @@
 import {
   Box,
+  BoxProps,
   HStack,
   IconButton,
   Input,
@@ -11,7 +12,7 @@ import { FiFilter, FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import { createSearchParams } from "react-router-dom";
 
-export function Searchbox(): JSX.Element {
+export function Searchbox(props: BoxProps) {
   let [isFocused, setFocused] = useState(false);
   let navigate = useNavigate();
 
@@ -29,7 +30,7 @@ export function Searchbox(): JSX.Element {
   };
 
   return (
-    <Box w={"40%"}>
+    <Box {...props}>
       <form onSubmit={submitHandler}>
         <InputGroup>
           <Input

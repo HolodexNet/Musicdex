@@ -53,7 +53,7 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
         aria-label="open menu"
         icon={<FiMenu />}
       />
-      <HStack>
+      <HStack display={{ base: "none", md: "flex" }}>
         <GradientLogo w={6} h={6} />
         <Heading
           display={{ base: "flex", lg: "flex" }}
@@ -65,7 +65,7 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
         </Heading>
       </HStack>
 
-      <Searchbox></Searchbox>
+      <Searchbox w={{ base: "100%", md: "40%" }} paddingX={4} />
 
       <HStack spacing={{ base: "0", lg: "6" }}>
         {/* You can put more icons in here tbh */}

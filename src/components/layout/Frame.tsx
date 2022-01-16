@@ -4,6 +4,7 @@ import {
   Drawer,
   DrawerContent,
   Flex,
+  useBreakpointValue,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -71,7 +72,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const colorMode = useColorModeValue("applight", "appdark");
-
+  const showBottomNav = useBreakpointValue({ base: true, md: false });
   const pos = useStoreState((state) => state.player.position);
 
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
@@ -157,7 +158,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
           </Flex>
         </Flex>
         <Player player={player} />
-        <BottomNav />
+        {showBottomNav && <BottomNav />}
         <AddToPlaylistModal />
       </Flex>
       <CommonContextMenu />
