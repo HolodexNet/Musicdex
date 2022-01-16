@@ -74,7 +74,10 @@ export default function Frame({ children }: { children?: ReactNode }) {
 
   const colorMode = useColorModeValue("applight", "appdark");
   const showBottomNav = useBreakpointValue({ base: true, md: false });
-  const pos = useStoreState((state) => state.player.position);
+
+  const override = useStoreState((state) => state.player.overridePosition);
+  const selected = useStoreState((state) => state.settings.selectedPosition);
+  const pos = override ?? selected;
 
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   function onReady(event: { target: YouTubePlayer }) {

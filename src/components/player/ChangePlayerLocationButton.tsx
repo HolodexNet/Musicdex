@@ -12,7 +12,7 @@ import React from "react";
 import { FiEyeOff, FiMaximize, FiSidebar } from "react-icons/fi";
 import { MdPictureInPicture, MdPictureInPictureAlt } from "react-icons/md";
 import { useStoreActions, useStoreState } from "../../store";
-import { PlayerPosition } from "../../store/player";
+import { SelectedPosition } from "../../store/settings";
 
 const LocationIcons: Record<string, JSX.Element> = {
   "hover-top": <MdPictureInPicture />,
@@ -23,8 +23,8 @@ const LocationIcons: Record<string, JSX.Element> = {
 };
 
 function _ChangePlayerLocationButton() {
-  const pos = useStoreState((store) => store.player.position);
-  const setPos = useStoreActions((store) => store.player.setPosition);
+  const pos = useStoreState((store) => store.settings.selectedPosition);
+  const setPos = useStoreActions((store) => store.settings.setSelectedPosition);
 
   return (
     <Popover placement="top">
@@ -47,7 +47,7 @@ function _ChangePlayerLocationButton() {
                       <IconButton
                         key={`yt-player-loc-${x}`}
                         aria-label="Expand"
-                        icon={LocationIcons[x as PlayerPosition]}
+                        icon={LocationIcons[x as SelectedPosition]}
                         variant="ghost"
                         colorScheme={x === pos ? "brand" : "bgAlpha"}
                         onClick={() => {

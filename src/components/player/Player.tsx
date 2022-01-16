@@ -1,10 +1,9 @@
-import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import { useStoreState, useStoreActions } from "../../store";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 import { formatSeconds } from "../../utils/SongHelper";
 import { PlayerBar } from "./PlayerBar";
-import { PlayerOverlay } from "./PlayerOverlay";
 import { usePlayer, getID } from "./YoutubePlayer";
 
 const retryCounts: Record<string, number> = {};

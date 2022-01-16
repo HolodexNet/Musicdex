@@ -1,53 +1,24 @@
 import { action, Action, computed, Computed } from "easy-peasy";
+import { SelectedPosition } from "./settings";
 
-export type PlayerPosition =
-  | "hover-top"
-  | "hover-bottom"
-  | "background"
-  | "sidebar"
-  | "full-player"
-  | "hidden";
-
+type PlayerPosition = SelectedPosition | "full-player";
 export interface PlayerModel {
-  position: PlayerPosition;
-  setPosition: Action<PlayerModel, PlayerPosition>;
-
   showUpcomingOverlay: boolean;
   setShowUpcomingOverlay: Action<PlayerModel, boolean>;
-
-  // target: string | null;
-
-  // isAvailable: Computed<PlayerModel, boolean>;
-
-  // setTarget: Action<PlayerModel, string | null>;
-  // toggledExpanded: Action<PlayerModel>;
-  // isExpanded: boolean;
+  overridePosition: PlayerPosition | undefined;
+  setOverridePosition: Action<PlayerModel, PlayerPosition | undefined>;
 }
 
 const playerModel: PlayerModel = {
-  position: "hover-top",
-  setPosition: action((state, newloc) => {
-    state.position = newloc;
-  }),
-
   showUpcomingOverlay: false,
   setShowUpcomingOverlay: action((state, val) => {
     state.showUpcomingOverlay = val;
   }),
 
-  // target: null,
-
-  // isExpanded: false,
-
-  // isAvailable: computed((state) => state.target != null),
-
-  // setTarget: action((state, target) => {
-  //   state.target = target;
-  // }),
-
-  // toggledExpanded: action((state) => {
-  //   state.isExpanded = !state.isExpanded;
-  // }),
+  overridePosition: undefined,
+  setOverridePosition: action((state, val) => {
+    state.overridePosition = val;
+  }),
 };
 
 export default playerModel;

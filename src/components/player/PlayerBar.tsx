@@ -19,7 +19,6 @@ import { useEffect, useState } from "react";
 import { MotionBox } from "../common/MotionBox";
 import { AnimatePresence, LayoutGroup } from "framer-motion";
 import { useStoreActions, useStoreState } from "../../store";
-import { PlayerPosition } from "../../store/player";
 import { FaChevronDown } from "react-icons/fa";
 import { resizeArtwork } from "../../modules/songs/utils";
 import React from "react";
@@ -51,19 +50,9 @@ export const PlayerBar = React.memo(
     totalDuration,
   }: PlayerBarProps) => {
     const [fullPlayer, setFullPlayer] = useState(false);
-    const pos = useStoreState((store) => store.player.position);
-    const setPos = useStoreActions((store) => store.player.setPosition);
-    const [lastPos, setLastPos] = useState<PlayerPosition>("sidebar");
+    const setPos = useStoreActions((store) => store.player.setOverridePosition);
     const location = useLocation();
     const breakpoint = useBreakpoint();
-
-    useEffect(() => {
-      if (!fullPlayer && pos === "full-player") setPos("sidebar");
-      return () => {
-        if (fullPlayer && lastPos) setPos(lastPos);
-      };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     useEffect(() => {
       if (fullPlayer) {
@@ -75,9 +64,8 @@ export const PlayerBar = React.memo(
     function toggleFullPlayer() {
       setFullPlayer((prev) => !prev);
       if (fullPlayer) {
-        setPos(lastPos);
+        setPos(undefined);
       } else {
-        setLastPos(pos);
         setPos("full-player");
       }
     }
