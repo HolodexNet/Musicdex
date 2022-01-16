@@ -15,7 +15,7 @@ import { PlaylistCard } from "../components/playlist/PlaylistCard";
 import { SongCard } from "../components/song/SongCard";
 import { useDiscoveryOrg } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
-import { useStoreState } from "../store";
+import { useStoreActions, useStoreState } from "../store";
 
 export default function Home() {
   const org = useStoreState((store) => store.org.currentOrg);
@@ -24,6 +24,7 @@ export default function Home() {
   );
 
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const queueSongs = useStoreActions((a) => a.playback.queueSongs);
 
   const { data: discovery, isSuccess } = useDiscoveryOrg(org.name);
 
@@ -86,11 +87,15 @@ export default function Home() {
             <HStack alignItems="flex-end" mb={3}>
               <Heading size="lg">Trending {org.name} Songs</Heading>
               <Spacer />
-              <Button variant="ghost" size="sm" colorScheme="n2">
+              <Button
+                variant="ghost"
+                size="sm"
+                colorScheme="n2"
+                onClick={() =>
+                  queueSongs({ songs: trendingSongs, immediatelyPlay: false })
+                }
+              >
                 Queue ({trendingSongs?.length})
-              </Button>
-              <Button variant="ghost" size="sm" colorScheme="n2">
-                See All
               </Button>
             </HStack>
             <CardCarousel height={180} width={128} scrollMultiplier={4}>
