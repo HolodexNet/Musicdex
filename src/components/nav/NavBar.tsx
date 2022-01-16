@@ -130,7 +130,7 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
             </Menu>
           ) : (
             <Link to="/login">
-              <Button size="lg" colorScheme="n2">
+              <Button size="md" colorScheme="n2">
                 Login
               </Button>
             </Link>

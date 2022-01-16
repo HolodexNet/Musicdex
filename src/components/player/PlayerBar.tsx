@@ -295,7 +295,9 @@ const PlayerContainer = styled.div<{
 }>`
   overflow: hidden;
   width: 100%;
-  padding-top: ${({ expanded }) => (expanded ? "calc(40vh + 56px)" : "0")};
+  padding-top: ${({ expanded }) =>
+    expanded ? "calc(40vh + 56px + env(safe-area-inset-top))" : "0"};
+  padding-bottom: env(safe-area-inset-top);
   height: ${({ expanded, dense }) =>
     expanded ? "100vh" : dense ? "64px" : "80px"};
   position: ${({ expanded }) => (expanded ? "absolute" : "relative")};
