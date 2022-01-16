@@ -13,6 +13,8 @@ import {
   Divider,
   SimpleGrid,
   Text,
+  Button,
+  Stack,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -29,7 +31,7 @@ export default function Settings() {
         <Heading size="lg" py={5}>
           Settings
         </Heading>
-        <Accordion allowMultiple defaultIndex={[0, 1, 2]} mb={12}>
+        <Accordion allowMultiple defaultIndex={[0, 1]} mb={12}>
           <AccordionItem>
             <AccordionButton>
               <AccordionIcon />
@@ -105,7 +107,7 @@ function LanguagePrefs() {
   return (
     <SimpleGrid minChildWidth="300px" spacing="40px">
       <Box>
-        <Heading size="sm" my={1}>
+        <Heading size="md" my={3}>
           Interface Language:
         </Heading>
         <LanguageSelector
@@ -115,7 +117,7 @@ function LanguagePrefs() {
         />
       </Box>
       <Box>
-        <Heading size="sm" my={1}>
+        <Heading size="md" my={3}>
           Channel Name:
         </Heading>
         <LanguageSelector
@@ -137,16 +139,19 @@ function RadioCard(props: UseRadioProps & { children: ReactNode }) {
   return (
     <Box as="label">
       <input {...input} />
-      <Box
+      <Button
+        as="div"
         {...checkbox}
         cursor="pointer"
         borderWidth="1px"
         borderRadius="md"
         boxShadow="md"
+        colorScheme={
+          (checkbox as any)?.["data-checked"] !== undefined ? "n2" : "gray"
+        }
+        variant="outline"
         _checked={{
-          bg: "teal.600",
-          color: "white",
-          borderColor: "teal.600",
+          boxShadow: "0px 0px 5px var(--chakra-colors-n2-200)",
         }}
         _focus={{
           boxShadow: "outline",
@@ -155,7 +160,7 @@ function RadioCard(props: UseRadioProps & { children: ReactNode }) {
         py={3}
       >
         {props.children}
-      </Box>
+      </Button>
     </Box>
   );
 }
@@ -186,7 +191,7 @@ function LanguageSelector({
   const group = getRootProps();
 
   return (
-    <HStack {...group}>
+    <Stack {...group} flexWrap="wrap">
       {options.map((opt) => {
         const radio = getRadioProps({ value: opt.value });
         return (
@@ -195,6 +200,6 @@ function LanguageSelector({
           </RadioCard>
         );
       })}
-    </HStack>
+    </Stack>
   );
 }
