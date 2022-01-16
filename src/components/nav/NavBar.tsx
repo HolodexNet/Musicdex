@@ -41,6 +41,8 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
       flexShrink={0}
       alignItems="center"
       // bg={bgColor}
+      paddingTop="env(safe-area-inset-top)"
+      boxSizing="content-box"
       borderBottomWidth="1px"
       borderBottomColor={borderColor}
       justifyContent={{ base: "space-between", lg: "space-between" }}
