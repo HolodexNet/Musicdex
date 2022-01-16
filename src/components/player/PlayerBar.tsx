@@ -178,7 +178,7 @@ export const PlayerBar = React.memo(
                 setDragStartY(info.point.y);
               }}
               onDragEnd={(event: any, info: any) => {
-                if (info.point.y - dragStartY > 200) {
+                if (info.point.y - dragStartY > 180) {
                   toggleFullPlayer();
                 }
               }}
@@ -289,20 +289,21 @@ const PlayerContainer = styled.div<{
   backgroundUrl?: string;
   dense?: boolean;
 }>`
-  overflow: hidden;
-  width: 100%;
-  padding-top: ${({ expanded }) =>
-    expanded ? "calc(env(safe-area-inset-top))" : "0"};
-  padding-bottom: env(safe-area-inset-top);
   height: ${({ expanded, dense }) =>
     expanded ? "100vh" : dense ? "64px" : "80px"};
   position: ${({ expanded }) => (expanded ? "absolute" : "relative")};
+  /* padding-top: ${({ expanded }) =>
+    expanded ? "calc(env(safe-area-inset-top))" : "0"};
+    padding-bottom: env(safe-area-inset-top); */
+  background: ${({ expanded }) =>
+    expanded ? "transparent" : "var(--chakra-colors-bg-800)"};
+
+  width: 100%;
+  overflow: hidden;
   flex-basis: 1;
   flex-shrink: 0;
   bottom: 0;
   transition: all 0.3s ease-out;
-  background: ${({ expanded }) =>
-    expanded ? "transparent" : "var(--chakra-colors-bg-800)"};
   flex-direction: column;
   display: flex;
   z-index: 10;
@@ -312,6 +313,6 @@ const PlayerContainer = styled.div<{
     width: 100%;
     align-items: center;
     /* Need static margin, cuz Framer motion is miscalculating layout */
-    margin-top: ${({ dense }) => (dense ? "2px" : "8px")};
+    margin-top: ${({ dense }) => (dense ? "1px" : "8px")};
   }
 `;
