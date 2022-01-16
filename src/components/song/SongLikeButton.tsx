@@ -34,7 +34,10 @@ export function SongLikeButton({ song }: { song: Song }) {
 
   return (
     <IconButton
-      size="sm"
+      // size="sm"
+      width="20px"
+      // padding="4px"
+      margin={-2}
       icon={isLoading ? <FiLoader /> : liked ? <FaHeart /> : <FaRegHeart />}
       aria-label="Like Song"
       onClick={toggleLike}

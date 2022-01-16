@@ -9,7 +9,10 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
+import { FaPlay } from "react-icons/fa";
 import { FiShare2, FiYoutube } from "react-icons/fi";
+import { IoMdPlay } from "react-icons/io";
+import { SiApplemusic } from "react-icons/si";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
@@ -103,8 +106,11 @@ export default function Song() {
                     queueSong({ songs: [song], immediatelyPlay: true });
                   }}
                   marginTop="auto"
-                  maxWidth="200px"
-                  minW="120px"
+                  // maxWidth="200px"
+                  // minW="120px"
+                  size="lg"
+                  title="Play"
+                  rightIcon={<FaPlay style={{ scale: "1" }} />}
                 >
                   Play
                 </Button>
@@ -114,7 +120,7 @@ export default function Song() {
                   size="md"
                   onClick={() => clip(window.location.toString(), false)}
                   colorScheme="n2"
-                  title="Share"
+                  title="Copy Song Link"
                 >
                   <FiShare2 />
                 </Button>
@@ -135,6 +141,18 @@ export default function Song() {
                 </Button>
 
                 <SongLikeButton song={song}></SongLikeButton>
+                {song.amUrl && (
+                  <Button
+                    as="a"
+                    href={song.amUrl}
+                    target="_blank"
+                    variant="ghost"
+                    colorScheme="red"
+                    leftIcon={<SiApplemusic style={{ scale: "1.5" }} />}
+                  >
+                    Listen to original on Apple Music
+                  </Button>
+                )}
               </HStack>
             </Flex>
           </Flex>
