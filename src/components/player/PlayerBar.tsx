@@ -172,12 +172,13 @@ export const PlayerBar = React.memo(
               flexDirection="column"
               exit={{ opacity: 0, pointerEvents: "none" }}
               drag="y"
+              whileDrag={{ opacity: 0.9 }}
               dragConstraints={{ top: 0, bottom: 0 }}
               onDragStart={(event: any, info: any) => {
                 setDragStartY(info.point.y);
               }}
               onDragEnd={(event: any, info: any) => {
-                if (Math.abs(dragStartY - info.point.y) > 200) {
+                if (info.point.y - dragStartY > 200) {
                   toggleFullPlayer();
                 }
               }}
@@ -243,21 +244,28 @@ export const PlayerBar = React.memo(
                   ></Box>
                 )} */}
                 <Box
-                  bgGradient="linear-gradient(
-                    to bottom,
-                    var(--chakra-colors-brand-300) 30%,
-                    var(--chakra-colors-n2-300) 80%
-                  );"
-                  backgroundSize="cover"
-                  backgroundPosition="center"
                   zIndex={-1}
                   position="absolute"
                   top="0"
                   left="0"
                   width="100%"
                   height="100%"
-                  opacity={0.25}
-                ></Box>
+                  bgColor="bg.800"
+                >
+                  <Box
+                    bgGradient="linear-gradient(
+                    to bottom,
+                    var(--chakra-colors-brand-300) 30%,
+                    var(--chakra-colors-n2-300) 80%
+                  );"
+                    backgroundSize="cover"
+                    backgroundPosition="center"
+                    opacity={0.25}
+                    width="100%"
+                    height="100%"
+                  ></Box>
+                </Box>
+
                 <Spacer />
                 <MotionBox
                   initial={{ opacity: 0, y: "20vh" }}
@@ -293,7 +301,8 @@ const PlayerContainer = styled.div<{
   flex-shrink: 0;
   bottom: 0;
   transition: all 0.3s ease-out;
-  background: var(--chakra-colors-bg-800);
+  background: ${({ expanded }) =>
+    expanded ? "transparent" : "var(--chakra-colors-bg-800)"};
   flex-direction: column;
   display: flex;
   z-index: 10;
