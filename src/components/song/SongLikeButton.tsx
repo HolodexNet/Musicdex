@@ -1,13 +1,18 @@
 import { IconButton, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FiLoader } from "react-icons/fi";
 import { useSongLikeUpdater } from "../../modules/services/like.service";
 
 export function SongLikeButton({ song }: { song: Song }) {
-  const [changed, setChanged] = useState(false);
-  const { mutate: updateLike, isSuccess, isError } = useSongLikeUpdater();
+  const {
+    mutate: updateLike,
+    isSuccess,
+    isError,
+    isLoading,
+  } = useSongLikeUpdater();
 
-  const liked = changed ? !song.liked : song.liked;
+  const liked = song.liked;
   const toast = useToast();
 
   useEffect(() => {
@@ -18,8 +23,6 @@ export function SongLikeButton({ song }: { song: Song }) {
       duration: 1000,
       isClosable: true,
     });
-
-    if (isSuccess) setChanged((prev) => !prev);
   }, [isSuccess, isError, toast]);
 
   function toggleLike() {
@@ -32,7 +35,7 @@ export function SongLikeButton({ song }: { song: Song }) {
   return (
     <IconButton
       size="sm"
-      icon={liked ? <FaHeart /> : <FaRegHeart />}
+      icon={isLoading ? <FiLoader /> : liked ? <FaHeart /> : <FaRegHeart />}
       aria-label="Like Song"
       onClick={toggleLike}
       colorScheme={"brand"}

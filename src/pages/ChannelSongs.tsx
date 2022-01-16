@@ -32,7 +32,7 @@ export default function ChannelSongs() {
   );
 
   const [offset, setOffset] = useState(0);
-  const { data, ...trendingStatus } = useSongAPI({
+  const { data, ...latestSongs } = useSongAPI({
     channel_id: channelId,
     paginated: true,
     limit: PERPAGE,

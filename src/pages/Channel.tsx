@@ -192,7 +192,7 @@ function channelContent(
             </Heading>
             <Box overflow="auto" height="300px">
               {trending?.map((x) => (
-                <SongItem song={x}></SongItem>
+                <SongItem song={x} key={"l-t-" + x.id}></SongItem>
               ))}
             </Box>
           </Box>

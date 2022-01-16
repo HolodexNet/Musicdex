@@ -1,3 +1,6 @@
+import { Dictionary } from "lodash";
+import uniq from "lodash-es/uniq";
+import zipObject from "lodash-es/zipObject";
 import {
   UseMutationOptions,
   UseQueryOptions,
@@ -32,6 +35,7 @@ export const useSongLikeUpdater = (
         queryClient.cancelQueries(["likedSongList"]);
         queryClient.invalidateQueries(["likedSongList"]);
         queryClient.invalidateQueries(["playlist-like"]);
+        queryClient.cancelQueries(["likedSongs"]);
         queryClient.invalidateQueries(["likedSongs"]);
         if (callbacks.onSuccess) {
           callbacks.onSuccess(data, payload, ...rest);
@@ -44,20 +48,26 @@ export const useSongLikeUpdater = (
 export const useLikedCheckSongs = (songIds: string[], enabled?: boolean) => {
   // const queryClient = useQueryClient();
   const { AxiosInstance, isLoggedIn } = useClient();
+  const uSongIds = uniq(songIds);
   const result = useQuery(
-    ["likedSongs", songIds],
-    async (q): Promise<boolean[]> => {
-      if (!isLoggedIn || !songIds.length) {
-        return [];
+    ["likedSongs", uSongIds],
+    async (q): Promise<Dictionary<boolean>> => {
+      console.log("fetching like status");
+      if (!isLoggedIn || !uSongIds.length) {
+        return {};
       }
       const req = await AxiosInstance<boolean[]>(
-        `/musicdex/like/check?song_id=${songIds.join(",")}`
+        `/musicdex/like/check?song_id=${uSongIds.join(",")}`
       );
-      return req.data;
+      return zipObject(uSongIds, req.data);
     },
     {
-      cacheTime: 24000,
-      staleTime: 24000,
+      ...DEFAULT_FETCH_CONFIG,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      cacheTime: 60 * 1000 * 60,
+      staleTime: 60 * 1000 * 60,
       enabled,
     }
   );

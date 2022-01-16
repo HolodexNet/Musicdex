@@ -1,7 +1,9 @@
+import { useMemo } from "react";
 import { UseQueryOptions, useQuery } from "react-query";
 import { useClient } from "../client";
 import { encodeUrl } from "../client/utils";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
+import { useLikedCheckSongs } from "./like.service";
 
 export const useSong = (
   songId: string,
@@ -17,7 +19,19 @@ export const useSong = (
     { ...DEFAULT_FETCH_CONFIG, ...config }
   );
 
-  return { ...result };
+  const likestatus = useLikedCheckSongs(
+    result?.data?.id ? [result.data.id] : [],
+    true
+  );
+
+  const newSongResult = useMemo(() => {
+    if (likestatus.data && result.data) {
+      return { ...result.data, liked: likestatus.data[result.data.id] };
+    } else {
+      return result.data;
+    }
+  }, [result.data, likestatus.data]);
+  return { ...result, data: newSongResult };
 };
 
 export const useTrendingSongs = (
@@ -41,7 +55,18 @@ export const useTrendingSongs = (
     { ...DEFAULT_FETCH_CONFIG, ...config }
   );
 
-  return { ...result };
+  // const likestatus = useLikedCheckSongs(result?.data ? result.data.map(x => x.id) : [], true);
+
+  // const newSongResult = useMemo(() => {
+  //   if (likestatus.data && result.data) {
+  //     return result.data.map(x => ({ ...x, liked: likestatus.data[x.id] }))
+  //   } else {
+  //     return result.data
+  //   }
+  // }, [result.data, likestatus.data])
+
+  // return { ...result, data: newSongResult };
+  return result;
 };
 
 export interface SongAPILookupObject {
@@ -57,9 +82,9 @@ export interface SongAPILookupObject {
 export const useSongAPI = (
   target: SongAPILookupObject,
   config: UseQueryOptions<
-    Song[],
+    { total: number; items: Song[] },
     unknown,
-    Song[],
+    { total: number; items: Song[] },
     [string, SongAPILookupObject]
   > = {}
 ) => {
@@ -67,9 +92,9 @@ export const useSongAPI = (
 
   const result = useQuery(
     ["songlist", target],
-    async (q): Promise<Song[]> => {
+    async (q): Promise<{ total: number; items: Song[] }> => {
       return (
-        await AxiosInstance<Song[]>(`/songs/latest`, {
+        await AxiosInstance<{ total: number; items: Song[] }>(`/songs/latest`, {
           method: "POST",
           data: q.queryKey[1],
         })
@@ -78,5 +103,31 @@ export const useSongAPI = (
     { ...DEFAULT_FETCH_CONFIG, ...config }
   );
 
-  return { ...result };
+  const likestatus = useLikedCheckSongs(
+    result?.data?.items ? result.data.items.map((x) => x.id) : [],
+    true
+  );
+
+  let newSongResult = useMemo(() => {
+    console.log(
+      "regenerating song list like state",
+      likestatus.data,
+      result.data?.items
+    );
+    if (likestatus.data && result.data?.items) {
+      return {
+        total: result.data.total,
+        items: result.data.items.map((x) => ({
+          ...x,
+          liked: likestatus.data[x.id],
+        })),
+      };
+    } else {
+      return result.data;
+    }
+  }, [result, likestatus]);
+
+  console.log(newSongResult?.items[0]);
+
+  return { ...result, data: newSongResult };
 };
