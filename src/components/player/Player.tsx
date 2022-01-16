@@ -9,11 +9,6 @@ import { usePlayer, getID } from "./YoutubePlayer";
 
 const retryCounts: Record<string, number> = {};
 export function Player({ player }: { player: any }) {
-  const {
-    isOpen: isExpanded,
-    onToggle: toggleExpanded,
-    onClose: toggleClose,
-  } = useDisclosure();
   const toast = useToast();
 
   // Current song
@@ -36,16 +31,19 @@ export function Player({ player }: { player: any }) {
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volumeSlider, setVolumeSlider] = useState(0);
-  const [firstPlay, setFirstPlay] = useState(true);
-
+  // Stop music from playing immediately on load
+  const [firstLoadPauseId, setFirstLoadPauseId] = useState("");
   // Player volume change event
   useEffect(() => {
     setVolumeSlider(volume ?? 0);
   }, [volume]);
 
+  useEffect(() => {
+    if (currentSong) setFirstLoadPauseId(currentSong?.video_id);
+  }, []);
   // Player State Event
   useEffect(() => {
-    if (firstPlay) {
+    if (firstLoadPauseId) {
       setIsPlaying(false);
       player?.pauseVideo();
       return;
@@ -55,7 +53,7 @@ export function Player({ player }: { player: any }) {
     } else {
       setIsPlaying(false);
     }
-  }, [firstPlay, player, state]);
+  }, [firstLoadPauseId, player, state]);
 
   // Sanity video id check event
   useEffect(() => {
@@ -81,6 +79,11 @@ export function Player({ player }: { player: any }) {
   // CurrentSong/repeat update event
   useEffect(() => {
     if (!player) return;
+
+    if (firstLoadPauseId && firstLoadPauseId !== currentSong?.video_id) {
+      setFirstLoadPauseId("");
+    }
+
     if (currentSong) {
       player.loadVideoById({
         videoId: currentSong.video_id,
@@ -88,7 +91,7 @@ export function Player({ player }: { player: any }) {
       });
       setError(false);
     } else {
-      player?.loadVideoById("");
+      player?.loadVideoById();
       setProgress(0);
     }
   }, [player, currentSong, repeat, setError]);
@@ -180,33 +183,28 @@ export function Player({ player }: { player: any }) {
   }, [progress, totalDuration]);
 
   function togglePlay() {
-    if (firstPlay) setFirstPlay(false);
+    if (firstLoadPauseId) setFirstLoadPauseId("");
     if (player) isPlaying ? player.pauseVideo() : player.playVideo();
     setIsPlaying((prev) => !prev);
   }
   return (
-    <Fragment>
-      <PlayerBar
-        {...{
-          progress,
-          onProgressChange,
-          currentSong,
-          isPlaying,
-          togglePlay,
-          next,
-          player,
-          seconds,
-          totalDuration,
-          isExpanded,
-          toggleExpanded,
-          volume: volumeSlider,
-          onVolumeChange: (e) => {
-            player?.setVolume(e);
-            setVolumeSlider(e);
-          },
-        }}
-      />
-      <PlayerOverlay isExpanded={isExpanded} close={toggleClose} />
-    </Fragment>
+    <PlayerBar
+      {...{
+        progress,
+        onProgressChange,
+        currentSong,
+        isPlaying,
+        togglePlay,
+        next,
+        player,
+        seconds,
+        totalDuration,
+        volume: volumeSlider,
+        onVolumeChange: (e) => {
+          player?.setVolume(e);
+          setVolumeSlider(e);
+        },
+      }}
+    />
   );
 }

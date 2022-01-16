@@ -20,166 +20,165 @@ import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { identifyLink, identifyTitle } from "../../utils/PlaylistHelper";
 import { Link } from "react-router-dom";
 
-export const PlayerOverlay = React.memo(
-  ({ isExpanded, close }: { isExpanded: boolean; close: () => void }) => {
-    const playlistQueue = useStoreState(
-      (state) => state.playback.playlistQueue
-    );
-    const playedPlaylistQueue = useStoreState(
-      (state) => state.playback.playedPlaylistQueue
-    );
+export const PlayerOverlay = React.memo(() => {
+  const expanded = useStoreState((state) => state.player.showUpcomingOverlay);
+  const setExpanded = useStoreActions(
+    (actions) => actions.player.setShowUpcomingOverlay
+  );
 
-    const currentlyPlaying = useStoreState(
-      (state) => state.playback.currentlyPlaying
-    );
+  const playlistQueue = useStoreState((state) => state.playback.playlistQueue);
+  const playedPlaylistQueue = useStoreState(
+    (state) => state.playback.playedPlaylistQueue
+  );
 
-    const currentPlaylist = useStoreState((s) => s.playback.currentPlaylist);
+  const currentlyPlaying = useStoreState(
+    (state) => state.playback.currentlyPlaying
+  );
 
-    const playlistTotalQueue = useMemo(() => {
-      const now =
-        currentlyPlaying.from === "playlist" ? [currentlyPlaying.song!] : [];
-      return [...now, ...playlistQueue, ...playedPlaylistQueue];
-    }, [
-      currentlyPlaying.from,
-      currentlyPlaying.song,
-      playedPlaylistQueue,
-      playlistQueue,
-    ]);
+  const currentPlaylist = useStoreState((s) => s.playback.currentPlaylist);
 
-    const location = useLocation();
+  const playlistTotalQueue = useMemo(() => {
+    const now =
+      currentlyPlaying.from === "playlist" ? [currentlyPlaying.song!] : [];
+    return [...now, ...playlistQueue, ...playedPlaylistQueue];
+  }, [
+    currentlyPlaying.from,
+    currentlyPlaying.song,
+    playedPlaylistQueue,
+    playlistQueue,
+  ]);
 
-    React.useEffect(() => {
-      // runs on location, i.e. route, change
-      close();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location]);
+  const location = useLocation();
 
-    const queue = useStoreState((state) => state.playback.queue);
+  React.useEffect(() => {
+    // runs on location, i.e. route, change
+    setExpanded(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
-    const currentQueue = useMemo(() => {
-      const now =
-        currentlyPlaying.from === "queue" ? [currentlyPlaying.song!] : [];
+  const queue = useStoreState((state) => state.playback.queue);
 
-      return [...now, ...queue];
-    }, [currentlyPlaying.from, currentlyPlaying.song, queue]);
+  const currentQueue = useMemo(() => {
+    const now =
+      currentlyPlaying.from === "queue" ? [currentlyPlaying.song!] : [];
 
-    const clearAll = useStoreActions((actions) => actions.playback.clearAll);
-    const clearQueue = useStoreActions(
-      (actions) => actions.playback._queueClear
-    );
+    return [...now, ...queue];
+  }, [currentlyPlaying.from, currentlyPlaying.song, queue]);
 
-    const clearPlaylist = useStoreActions(
-      (actions) => actions.playback.clearPlaylist
-    );
+  const clearAll = useStoreActions((actions) => actions.playback.clearAll);
+  const clearQueue = useStoreActions((actions) => actions.playback._queueClear);
 
-    const next = useStoreActions((actions) => actions.playback.next);
+  const clearPlaylist = useStoreActions(
+    (actions) => actions.playback.clearPlaylist
+  );
 
-    const currentTitle = useMemo(
-      () => currentPlaylist && identifyTitle(currentPlaylist),
-      [currentPlaylist]
-    );
+  const next = useStoreActions((actions) => actions.playback.next);
 
-    const urlLinkToPlaylist = useMemo(
-      () => currentPlaylist && identifyLink(currentPlaylist),
-      [currentPlaylist]
-    );
+  const currentTitle = useMemo(
+    () => currentPlaylist && identifyTitle(currentPlaylist),
+    [currentPlaylist]
+  );
 
-    return (
-      <OverlayWrapper visible={isExpanded}>
-        <div className="bgOver"></div>
-        <div className="overlay">
-          {isExpanded && (
-            <Container
-              alignContent="stretch"
-              maxW={{ lg: "5xl" }}
-              paddingTop="20px"
-            >
-              <HStack alignItems={"center"}>
-                <Button
-                  marginRight="auto"
-                  marginLeft="auto"
-                  leftIcon={<FiTrash />}
-                  colorScheme="red"
-                  onClick={() => {
-                    clearAll();
-                    close();
-                  }}
+  const urlLinkToPlaylist = useMemo(
+    () => currentPlaylist && identifyLink(currentPlaylist),
+    [currentPlaylist]
+  );
+
+  return (
+    <OverlayWrapper visible={expanded}>
+      <div className="bgOver"></div>
+      <div className="overlay">
+        {expanded && (
+          <Container
+            alignContent="stretch"
+            maxW={{ lg: "5xl" }}
+            paddingTop="20px"
+          >
+            <HStack alignItems={"center"}>
+              <Button
+                marginRight="auto"
+                marginLeft="auto"
+                leftIcon={<FiTrash />}
+                colorScheme="red"
+                onClick={() => {
+                  clearAll();
+                  setExpanded(false);
+                }}
+              >
+                Clear All
+              </Button>
+            </HStack>
+            {currentQueue.length > 0 && (
+              <React.Fragment>
+                <Heading mt={4}>
+                  Queue:
+                  <IconButton
+                    aria-label="clear playlist"
+                    icon={<FiTrash />}
+                    colorScheme="red"
+                    variant="ghost"
+                    onClick={() => clearQueue()}
+                    float="right"
+                  ></IconButton>
+                </Heading>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <SongTable
+                    songs={currentQueue}
+                    songClicked={(e, s) =>
+                      next({ count: (s as any).idx - 1, userSkipped: true })
+                    }
+                    songDropdownMenuRenderer={OverlayDropDownMenu}
+                  />
+                </Suspense>
+                <Divider />
+              </React.Fragment>
+            )}
+            {currentlyPlaying && (
+              <React.Fragment>
+                <Heading mt={4}>
+                  Playlist:
+                  <IconButton
+                    aria-label="clear playlist"
+                    icon={<FiTrash />}
+                    colorScheme="red"
+                    variant="ghost"
+                    onClick={() => clearPlaylist()}
+                    float="right"
+                  ></IconButton>
+                </Heading>
+                <Text
+                  fontSize="md"
+                  as={Link}
+                  to={urlLinkToPlaylist || "#"}
+                  onClick={() => setExpanded(false)}
+                  _hover={{ textDecoration: "underline" }}
                 >
-                  Clear All
-                </Button>
-              </HStack>
-              {currentQueue.length > 0 && (
-                <React.Fragment>
-                  <Heading mt={4}>
-                    Queue:
-                    <IconButton
-                      aria-label="clear playlist"
-                      icon={<FiTrash />}
-                      colorScheme="red"
-                      variant="ghost"
-                      onClick={() => clearQueue()}
-                      float="right"
-                    ></IconButton>
-                  </Heading>
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <SongTable
-                      songs={currentQueue}
-                      songClicked={(e, s) =>
-                        next({ count: (s as any).idx - 1, userSkipped: true })
-                      }
-                      songDropdownMenuRenderer={OverlayDropDownMenu}
-                    />
-                  </Suspense>
-                  <Divider />
-                </React.Fragment>
-              )}
-              {currentlyPlaying && (
-                <React.Fragment>
-                  <Heading mt={4}>
-                    Playlist:
-                    <IconButton
-                      aria-label="clear playlist"
-                      icon={<FiTrash />}
-                      colorScheme="red"
-                      variant="ghost"
-                      onClick={() => clearPlaylist()}
-                      float="right"
-                    ></IconButton>
-                  </Heading>
-                  <Text
-                    fontSize="md"
-                    as={Link}
-                    to={urlLinkToPlaylist || "#"}
-                    onClick={close}
-                    _hover={{ textDecoration: "underline" }}
-                  >
-                    {currentTitle}
-                    <IconButton
-                      variant="ghost"
-                      size="xs"
-                      aria-label="go to playlist"
-                      icon={<FiLink2 />}
-                      ml={1}
-                    ></IconButton>
-                  </Text>
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <SongTable
-                      songs={playlistTotalQueue}
-                      songClicked={(e, s) =>
-                        next({ count: (s as any).idx - 1, userSkipped: true })
-                      }
-                    />
-                  </Suspense>
-                </React.Fragment>
-              )}
-              <Box height="200px"></Box>
-            </Container>
-          )}
-        </div>
-      </OverlayWrapper>
-    );
-  }
-);
+                  {currentTitle}
+                  <IconButton
+                    variant="ghost"
+                    size="xs"
+                    aria-label="go to playlist"
+                    icon={<FiLink2 />}
+                    ml={1}
+                  ></IconButton>
+                </Text>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <SongTable
+                    songs={playlistTotalQueue}
+                    songClicked={(e, s) =>
+                      next({ count: (s as any).idx - 1, userSkipped: true })
+                    }
+                  />
+                </Suspense>
+              </React.Fragment>
+            )}
+            <Box height="200px"></Box>
+          </Container>
+        )}
+      </div>
+    </OverlayWrapper>
+  );
+});
 
 const OverlayWrapper = styled.div<{ visible: boolean }>`
   width: 100vw;
@@ -197,7 +196,6 @@ const OverlayWrapper = styled.div<{ visible: boolean }>`
     visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
     transition: top 0.4s ease, opacity 0.5s ease;
     width: 100%;
-    z-index: 6;
     clip-path: inset(0 0 0 0);
   }
   .bgOver {
@@ -209,7 +207,6 @@ const OverlayWrapper = styled.div<{ visible: boolean }>`
     background: black;
     position: fixed;
     width: 100%;
-    z-index: 4;
   }
 `;
 

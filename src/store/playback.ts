@@ -230,11 +230,6 @@ const playbackModel: PlaybackModel = {
       if (state.repeatMode === "repeat") {
         if (s.from === "playlist") {
           state.playedPlaylistQueue.push(s.song);
-        } else if (
-          state.currentlyPlaying.from === "queue" &&
-          state.repeatMode === "repeat"
-        ) {
-          state.queue.push(s.song);
         }
       }
     }

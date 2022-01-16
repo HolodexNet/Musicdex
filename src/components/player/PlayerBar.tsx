@@ -34,8 +34,6 @@ interface PlayerBarProps {
   volume: number;
   onVolumeChange: (e: number) => void;
   totalDuration: number;
-  isExpanded: boolean;
-  toggleExpanded: () => void;
 }
 
 const springTransition = { type: "spring", stiffness: 350, damping: 23 };
@@ -51,8 +49,6 @@ export const PlayerBar = React.memo(
     volume,
     onVolumeChange,
     totalDuration,
-    isExpanded,
-    toggleExpanded,
   }: PlayerBarProps) => {
     const [fullPlayer, setFullPlayer] = useState(false);
     const pos = useStoreState((store) => store.player.position);
@@ -170,11 +166,7 @@ export const PlayerBar = React.memo(
                       </Text>
                     </VStack>
                   </Box>
-                  <PlayerOption
-                    isExpanded={isExpanded}
-                    toggleExpanded={toggleExpanded}
-                    display={{ base: "none", sm: "flex" }}
-                  />
+                  <PlayerOption display={{ base: "none", sm: "flex" }} />
                 </Flex>
               </LayoutGroup>
             </MotionBox>
@@ -271,12 +263,7 @@ export const PlayerBar = React.memo(
                   animate={{ opacity: 1, y: 0 }}
                   transition={springTransition}
                 >
-                  <PlayerOption
-                    isExpanded={isExpanded}
-                    toggleExpanded={toggleExpanded}
-                    justifyContent="center"
-                    fullPlayer={true}
-                  />
+                  <PlayerOption justifyContent="center" fullPlayer={true} />
                 </MotionBox>
               </LayoutGroup>
             </MotionBox>

@@ -21,17 +21,20 @@ function ShuffleIcon(shuffleMode: boolean, size: number = 24) {
 }
 
 interface PlayerOptionProps extends FlexProps {
-  isExpanded: boolean;
-  toggleExpanded: () => void;
   fullPlayer?: boolean;
 }
 
 export const PlayerOption = ({
-  isExpanded,
-  toggleExpanded,
   fullPlayer = false,
   ...rest
 }: PlayerOptionProps) => {
+  const isExpanded = useStoreState((state) => state.player.showUpcomingOverlay);
+  const setExpanded = useStoreActions(
+    (actions) => actions.player.setShowUpcomingOverlay
+  );
+
+  const toggleExpanded = () => setExpanded(!isExpanded);
+
   const shuffleMode = useStoreState((state) => state.playback.shuffleMode);
   const toggleShuffleMode = useStoreActions(
     (actions) => actions.playback.toggleShuffle
@@ -51,7 +54,11 @@ export const PlayerOption = ({
         size="lg"
       />
       {fullPlayer && (
-        <Button leftIcon={<RiPlayListFill />} marginX={4}>
+        <Button
+          leftIcon={<RiPlayListFill />}
+          marginX={4}
+          onClick={() => toggleExpanded()}
+        >
           Upcoming
         </Button>
       )}
