@@ -54,6 +54,8 @@ export const PlayerBar = React.memo(
     const location = useLocation();
     const breakpoint = useBreakpoint();
 
+    const [dragStartY, setDragStartY] = useState(0);
+
     useEffect(() => {
       if (fullPlayer) {
         toggleFullPlayer();
@@ -169,6 +171,16 @@ export const PlayerBar = React.memo(
               flex="1"
               flexDirection="column"
               exit={{ opacity: 0, pointerEvents: "none" }}
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              onDragStart={(event: any, info: any) => {
+                setDragStartY(info.point.y);
+              }}
+              onDragEnd={(event: any, info: any) => {
+                if (Math.abs(dragStartY - info.point.y) > 200) {
+                  toggleFullPlayer();
+                }
+              }}
             >
               <LayoutGroup>
                 <IconButton
@@ -184,6 +196,7 @@ export const PlayerBar = React.memo(
                 ></IconButton>
                 <Spacer />
                 <MotionBox
+                  marginTop="calc(40vh + 56px)"
                   layout
                   layoutId="songInfo"
                   transition={springTransition}
@@ -202,7 +215,7 @@ export const PlayerBar = React.memo(
                 />
 
                 <MotionBox
-                  initial={{ opacity: 0, y: "30vh", scale: 0 }}
+                  initial={{ opacity: 0, y: "30vh", scale: 0.1 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   // transition={{ ease: "easeOut", duration: 0.3 }}
                   transition={springTransition}
@@ -271,7 +284,7 @@ const PlayerContainer = styled.div<{
   overflow: hidden;
   width: 100%;
   padding-top: ${({ expanded }) =>
-    expanded ? "calc(40vh + 56px + env(safe-area-inset-top))" : "0"};
+    expanded ? "calc(env(safe-area-inset-top))" : "0"};
   padding-bottom: env(safe-area-inset-top);
   height: ${({ expanded, dense }) =>
     expanded ? "100vh" : dense ? "64px" : "80px"};
