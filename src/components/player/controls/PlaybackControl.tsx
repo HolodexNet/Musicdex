@@ -45,13 +45,6 @@ export const PlaybackControl = ({
 
   return (
     <Flex {...rest}>
-      {/* <IconButton
-        aria-label="Previous Song"
-        icon={<FaStepBackward size={fullPlayer ? 32 : 16} />}
-        variant="ghost"
-        size="lg"
-        onClick={() => previous()}
-      /> */}
       <PlaybackButton
         icon={<FaStepBackward size={fullPlayer ? 32 : 16} />}
         onClick={() => previous()}
@@ -73,26 +66,6 @@ export const PlaybackControl = ({
         onClick={() => next({ count: 1, userSkipped: true })}
         marginX={3}
       />
-      {/* <IconButton
-        size="lg"
-        aria-label="Play"
-        icon={
-          isPlaying ? (
-            <FaPause size={fullPlayer ? 64 : 24} />
-          ) : (
-            <FaPlay size={fullPlayer ? 64 : 24} />
-          )
-        }
-        variant="ghost"
-        onClick={togglePlay}
-      />
-      <IconButton
-        aria-label="Next Song"
-        icon={<FaStepForward size={fullPlayer ? 32 : 16} />}
-        variant="ghost"
-        size="lg"
-        onClick={() => next({ count: 1, userSkipped: true })}
-      /> */}
     </Flex>
   );
 };
