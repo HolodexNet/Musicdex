@@ -200,7 +200,7 @@ export const PlayerBar = React.memo(
                   margin={2}
                   position="absolute"
                   left={0}
-                  top={0}
+                  top="env(safe-area-inset-top)"
                 ></IconButton>
                 <Spacer />
                 <MotionBox

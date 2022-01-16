@@ -34,6 +34,7 @@ export function BottomNav() {
           spacing={1}
           as={Link}
           to={path}
+          key={path}
           color={path === pathname ? "brand.100" : "white"}
         >
           <Icon as={icon} aria-label={name} w={4} h={4} />
