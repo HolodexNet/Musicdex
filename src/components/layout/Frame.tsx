@@ -78,13 +78,12 @@ export default function Frame({ children }: { children?: ReactNode }) {
   const override = useStoreState((state) => state.player.overridePosition);
   const selected = useStoreState((state) => state.settings.selectedPosition);
   const pos = override ?? selected;
+  const props = useMemo(() => POSITIONS[pos], [pos]);
 
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
   }
-
-  const props = useMemo(() => POSITIONS[pos], [pos]);
 
   return (
     <Box

@@ -1,6 +1,6 @@
-import { BoxProps, Flex, FlexProps, IconButton } from "@chakra-ui/react";
+import { BoxProps, Flex, FlexProps } from "@chakra-ui/react";
+import React from "react";
 import { ReactElement } from "react";
-import { IconType } from "react-icons";
 import { FaStepBackward, FaPause, FaPlay, FaStepForward } from "react-icons/fa";
 import { useStoreActions } from "../../../store";
 import { MotionBox } from "../../common/MotionBox";
@@ -34,38 +34,40 @@ const PlaybackButton = ({ icon, ...rest }: PlaybackButtonProps) => {
   );
 };
 
-export const PlaybackControl = ({
-  isPlaying,
-  togglePlay,
-  fullPlayer = false,
-  ...rest
-}: PlaybackControlProps) => {
-  const previous = useStoreActions((actions) => actions.playback.previous);
-  const next = useStoreActions((actions) => actions.playback.next);
+export const PlaybackControl = React.memo(
+  ({
+    isPlaying,
+    togglePlay,
+    fullPlayer = false,
+    ...rest
+  }: PlaybackControlProps) => {
+    const previous = useStoreActions((actions) => actions.playback.previous);
+    const next = useStoreActions((actions) => actions.playback.next);
 
-  return (
-    <Flex {...rest}>
-      <PlaybackButton
-        icon={<FaStepBackward size={fullPlayer ? 32 : 16} />}
-        onClick={() => previous()}
-        marginX={3}
-      />
-      <PlaybackButton
-        icon={
-          isPlaying ? (
-            <FaPause size={fullPlayer ? 48 : 24} />
-          ) : (
-            <FaPlay size={fullPlayer ? 48 : 24} />
-          )
-        }
-        onClick={togglePlay}
-        padding={fullPlayer ? 6 : 3}
-      />
-      <PlaybackButton
-        icon={<FaStepForward size={fullPlayer ? 32 : 16} />}
-        onClick={() => next({ count: 1, userSkipped: true })}
-        marginX={3}
-      />
-    </Flex>
-  );
-};
+    return (
+      <Flex {...rest}>
+        <PlaybackButton
+          icon={<FaStepBackward size={fullPlayer ? 32 : 16} />}
+          onClick={() => previous()}
+          marginX={3}
+        />
+        <PlaybackButton
+          icon={
+            isPlaying ? (
+              <FaPause size={fullPlayer ? 48 : 24} />
+            ) : (
+              <FaPlay size={fullPlayer ? 48 : 24} />
+            )
+          }
+          onClick={togglePlay}
+          padding={fullPlayer ? 6 : 3}
+        />
+        <PlaybackButton
+          icon={<FaStepForward size={fullPlayer ? 32 : 16} />}
+          onClick={() => next({ count: 1, userSkipped: true })}
+          marginX={3}
+        />
+      </Flex>
+    );
+  }
+);
