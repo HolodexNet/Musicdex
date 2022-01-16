@@ -20,7 +20,7 @@ export function SongArtwork({
   if (song) {
     url = song.art
       ? resizeArtwork(song.art, resizeHint || size)
-      : getVideoThumbnails(song.video_id).maxres;
+      : getVideoThumbnails(song.video_id).medium;
   }
 
   return (
