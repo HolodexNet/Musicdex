@@ -28,7 +28,7 @@ export function OrgSelector() {
     return orglist
       ? [
           ...(orglist
-            .map((x) => Array.isArray(org) && orgs?.find((o) => o.name === x))
+            .map((x) => Array.isArray(orgs) && orgs?.find((o) => o.name === x))
             .filter((x) => !!x) as Org[]),
           { name: "... Other Orgs" },
           ...(orglist.includes(org.name) ? [] : [org]),
