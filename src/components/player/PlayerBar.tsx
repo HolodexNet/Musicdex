@@ -171,6 +171,7 @@ export const PlayerBar = React.memo(
               display="flex"
               flex="1"
               flexDirection="column"
+              justifyContent="space-evenly"
               exit={{ opacity: 0, pointerEvents: "none" }}
               drag="y"
               whileDrag={{ opacity: 0.9 }}
@@ -196,12 +197,11 @@ export const PlayerBar = React.memo(
                   left={0}
                   top="env(safe-area-inset-top)"
                 ></IconButton>
-                <Spacer />
                 <MotionBox
-                  marginTop="calc(40vh + 56px)"
                   layout
                   layoutId="songInfo"
                   transition={springTransition}
+                  marginTop="calc(40vh + 56px)"
                 >
                   {currentSong && (
                     <SongInfo song={currentSong} fullPlayer={true} />
@@ -260,8 +260,6 @@ export const PlayerBar = React.memo(
                   height="100%"
                   opacity={0.25}
                 />
-
-                <Spacer />
                 <MotionBox
                   initial={{ opacity: 0, y: "20vh" }}
                   animate={{ opacity: 1, y: 0 }}
