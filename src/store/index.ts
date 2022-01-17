@@ -7,7 +7,7 @@ import playbackModel, { PlaybackModel } from "./playback";
 import playerModel, { PlayerModel } from "./player";
 import { settingsStore, SettingsStore } from "./settings";
 
-interface StoreModel {
+export interface StoreModel {
   auth: AuthModel;
   player: PlayerModel;
   playback: PlaybackModel;

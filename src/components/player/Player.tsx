@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/react";
-import { useStoreState, useStoreActions } from "../../store";
+import { useStoreState, useStoreActions, store } from "../../store";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 import { formatSeconds } from "../../utils/SongHelper";
@@ -9,7 +9,10 @@ import { usePlayer, getID } from "./YoutubePlayer";
 const retryCounts: Record<string, number> = {};
 export function Player({ player }: { player: any }) {
   const toast = useToast();
-
+  const position = useStoreState((store) => store.player.position);
+  const setOverridePos = useStoreActions(
+    (store) => store.player.setOverridePosition
+  );
   // Current song
   const currentSong = useStoreState(
     (state) => state.playback.currentlyPlaying.song
@@ -98,11 +101,14 @@ export function Player({ player }: { player: any }) {
     if (currentSong) {
       loadVideoAtTime(currentSong.video_id, currentSong.start);
       setError(false);
+      if (position === "hidden") setOverridePos(undefined);
     } else {
       player?.loadVideoById();
       player?.pauseVideo();
       setProgress(0);
+      setOverridePos("hidden");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, currentSong, repeat, setError]);
 
   // CurrentTime Event
@@ -195,6 +201,7 @@ export function Player({ player }: { player: any }) {
   }, [progress, totalDuration]);
 
   function togglePlay() {
+    if (!currentSong) return;
     if (firstLoadPauseId) setFirstLoadPauseId("");
     if (player) isPlaying ? player.pauseVideo() : player.playVideo();
     setIsPlaying((prev) => !prev);
