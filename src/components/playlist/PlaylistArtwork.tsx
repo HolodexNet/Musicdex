@@ -1,7 +1,9 @@
-import { Box, Flex, FlexProps, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, FlexProps, Icon, Image, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
 import { useMemo } from "react";
+import { IconType } from "react-icons";
+import { BiCalendar, BiMovie } from "react-icons/bi";
 import {
   identifyTitle,
   identifyDescription,
@@ -87,11 +89,20 @@ export const PlaylistArtwork = React.memo(
       );
     }
 
+    let iconType = undefined;
+    if (type === ":mv") {
+      iconType = BiMovie;
+    }
+    if (type === ":latest") {
+      iconType = BiCalendar;
+    }
+
     return (
       <OverlayTextArt
         titleText={title || ""}
         imageUrl={thumbnail || channelImg || ""}
         hideLogo={playlist.type === "ugp"}
+        iconType={iconType}
       />
     );
   }
@@ -101,10 +112,12 @@ function OverlayTextArt({
   titleText,
   imageUrl,
   hideLogo = false,
+  iconType = undefined,
 }: {
   titleText: string;
   imageUrl: string;
   hideLogo?: boolean;
+  iconType?: IconType;
 }) {
   const bgColor =
     titleText.length % 2 === 0
@@ -127,6 +140,7 @@ function OverlayTextArt({
       backgroundPosition="center"
       backgroundRepeat="no-repeat"
       bgSize="cover"
+      overflow="hidden"
     >
       <BrandColorGradientText bgColor={bgColor} />
       <Box p={2} position="absolute" mt={3} width="100%">
@@ -148,6 +162,17 @@ function OverlayTextArt({
           bottom="4px"
           zIndex={1}
         />
+      )}
+      {iconType && (
+        <Icon
+          width="80px"
+          height="80px"
+          opacity="0.4"
+          transform={`translate(63px, 75px) rotate(${Math.floor(
+            Math.random() * -30
+          )}deg)`}
+          as={iconType}
+        ></Icon>
       )}
     </Flex>
   );
