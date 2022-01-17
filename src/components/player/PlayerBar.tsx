@@ -167,6 +167,7 @@ export const PlayerBar = React.memo(
             <MotionBox
               padding={6}
               paddingTop={3}
+              paddingBottom="env(safe-area-inset-bottom)"
               display="flex"
               flex="1"
               flexDirection="column"
@@ -292,7 +293,6 @@ const PlayerContainer = styled.div<{
   background: var(--chakra-colors-bg-800);
 
   width: 100%;
-  overflow: hidden;
   flex-basis: 1;
   flex-shrink: 0;
   bottom: 0;
