@@ -133,7 +133,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
             position="relative"
             flexGrow={1}
             flexShrink={1}
-            // zIndex={0}
+            zIndex={pos === "background" ? 0 : "auto"}
           >
             <Flex overflowY="scroll" flex="1" direction="column">
               {children}
@@ -151,7 +151,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
                 height="100%"
                 position="absolute"
                 float="initial"
-                opacity={0.6}
+                opacity={0.4}
                 bgColor="bg.900"
               ></Box>
               <YoutubePlayer onReady={onReady} />
