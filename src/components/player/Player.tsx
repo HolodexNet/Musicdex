@@ -63,11 +63,10 @@ export function Player({ player }: { player: any }) {
       player?.pauseVideo();
       return;
     }
-    if (state === PlayerStates.BUFFERING || state === PlayerStates.PLAYING) {
-      setIsPlaying(true);
-    } else {
-      setIsPlaying(false);
-    }
+
+    setIsPlaying(
+      state === PlayerStates.BUFFERING || state === PlayerStates.PLAYING
+    );
   }, [firstLoadPauseId, player, state]);
 
   // Sanity video id check event
@@ -115,12 +114,22 @@ export function Player({ player }: { player: any }) {
     ) {
       return setProgress(0);
     }
-
-    setProgress(
+    const newProgress =
       ((currentTime - currentSong.start) * 100) /
-        (currentSong.end - currentSong.start)
-    );
-  }, [currentSong, currentTime, currentVideo]);
+      (currentSong.end - currentSong.start);
+
+    if (newProgress > 100) {
+      loadVideoAtTime(currentSong.video_id, currentSong.start);
+      return;
+    }
+    // Prevent time from playing before start time
+    if (newProgress < 0) {
+      player.seekTo(currentSong.start, true);
+      setProgress(0);
+      return;
+    }
+    setProgress(newProgress);
+  }, [currentSong, currentTime, currentVideo, loadVideoAtTime, player]);
 
   // End Progress Event
   useEffect(() => {
@@ -128,11 +137,7 @@ export function Player({ player }: { player: any }) {
     if (currentSong.video_id !== currentVideo) {
       return;
     }
-    // Prevent time from playing before start time
-    if (currentTime < currentSong.start) {
-      player.seekTo(currentSong.start, true);
-      return;
-    }
+
     // Proceeed to next song
     if (progress >= 100) {
       setProgress(0);
@@ -140,7 +145,7 @@ export function Player({ player }: { player: any }) {
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, isPlaying, currentSong, currentVideo, next, progress]);
+  }, [progress]);
 
   // Error Event Effect
   useEffect(() => {
