@@ -1,6 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 import { useStoreState, useStoreActions } from "../../store";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 import { formatSeconds } from "../../utils/SongHelper";
 import { PlayerBar } from "./PlayerBar";
@@ -37,6 +37,22 @@ export function Player({ player }: { player: any }) {
     setVolumeSlider(volume ?? 0);
   }, [volume]);
 
+  const loadVideoAtTime = useCallback(
+    (video_id: string, time: number) => {
+      if (player) {
+        if (getID(player.getVideoUrl()) === video_id) {
+          player.seekTo(time);
+        } else {
+          player.loadVideoById({
+            videoId: video_id,
+            startSeconds: time,
+          });
+        }
+      }
+    },
+    [player]
+  );
+
   useEffect(() => {
     if (currentSong) setFirstLoadPauseId(currentSong?.video_id);
   }, []);
@@ -61,10 +77,7 @@ export function Player({ player }: { player: any }) {
       currentSong?.video_id &&
       currentVideo !== currentSong?.video_id
     ) {
-      player?.loadVideoById({
-        videoId: currentSong.video_id,
-        startSeconds: currentSong.start,
-      });
+      loadVideoAtTime(currentSong.video_id, currentSong.start);
       setError(false);
     }
   }, [
@@ -84,13 +97,11 @@ export function Player({ player }: { player: any }) {
     }
 
     if (currentSong) {
-      player.loadVideoById({
-        videoId: currentSong.video_id,
-        startSeconds: currentSong.start,
-      });
+      loadVideoAtTime(currentSong.video_id, currentSong.start);
       setError(false);
     } else {
       player?.loadVideoById();
+      player?.pauseVideo();
       setProgress(0);
     }
   }, [player, currentSong, repeat, setError]);
@@ -147,10 +158,7 @@ export function Player({ player }: { player: any }) {
               retryCounts[currentSong.video_id] / 4
             }`
           );
-          player?.loadVideoById({
-            videoId: currentSong.video_id,
-            startSeconds: currentSong.start,
-          });
+          loadVideoAtTime(currentSong.video_id, currentSong.start);
           setError(false);
         }, 2000);
         retryCounts[currentSong.video_id] += 1;
