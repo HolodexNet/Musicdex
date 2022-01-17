@@ -6,7 +6,7 @@ export function useServerOrgList() {
   return useQuery<Org[]>(
     ["orgs"],
     async () => {
-      const list: any[] = (await axios.get("/api/statics/orgs.json")).data;
+      const list: any[] = (await axios.get("/statics/orgs.json")).data;
       // list.unshift({ name: "All Vtubers", name_jp: "", short: "All" });
       return list;
     },
