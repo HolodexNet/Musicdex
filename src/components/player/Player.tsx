@@ -166,10 +166,10 @@ export function Player({ player }: { player: any }) {
         setTimeout(() => {
           console.log(
             `Retrying ${currentSong.name} - attempt #${
-              retryCounts[currentSong.video_id] / 4
-            }`
+              retryCounts[currentSong.video_id]
+            }/4`
           );
-          loadVideoAtTime(currentSong.video_id, currentSong.start);
+          player.loadVideoById(currentSong.video_id, currentSong.start);
           setError(false);
         }, 2000);
         retryCounts[currentSong.video_id] += 1;
