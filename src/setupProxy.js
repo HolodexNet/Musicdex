@@ -13,6 +13,7 @@ const targets = {
       changeOrigin: true,
       pathRewrite: {
         "^/api/v2": "/v2",
+        "^/statics": "/statics",
       },
     }),
 };
@@ -25,4 +26,5 @@ module.exports = function (app) {
   }
 
   app.use("/api", getMiddleware());
+  app.use("/statics", getMiddleware());
 };
