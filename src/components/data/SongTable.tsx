@@ -34,8 +34,7 @@ interface SongTableProps {
   // reactive hooks:
   songClicked?: (e: React.MouseEvent, s: Song) => void;
   songDropdownMenuRenderer?: (cellInfo: any) => JSX.Element;
-
-  // table controls:
+  virtualized?: boolean;
 
   menuId?: string;
 }
@@ -121,6 +120,7 @@ export const SongTable = ({
   songClicked,
   songDropdownMenuRenderer,
   menuId = DEFAULT_MENU_ID,
+  virtualized = false,
   ...rest
 }: SongTableProps & BoxProps) => {
   const { t } = useTranslation();
@@ -163,10 +163,10 @@ export const SongTable = ({
   return (
     <Flex flex="1" flexDirection="column">
       <Box {...rest} height="100%">
-        <AutoSizer>
-          {({ height, width }: { height: number; width: number }) => {
-            console.log("height", height);
-            return (
+        {virtualized ? (
+          <AutoSizer disableWidth defaultWidth="100%" defaultHeight={200}>
+            {({ height, width }: { height: number; width: number }) => (
+              // console.log(height);
               <FixedSizeList
                 height={height}
                 width={width}
@@ -176,9 +176,18 @@ export const SongTable = ({
               >
                 {MemoizedRow}
               </FixedSizeList>
-            );
-          }}
-        </AutoSizer>
+            )}
+          </AutoSizer>
+        ) : (
+          data.songList.map((song, index) => (
+            <MemoizedRow
+              data={data}
+              index={index}
+              style={{}}
+              key={`${data.menuId}${index}`}
+            />
+          ))
+        )}
       </Box>
     </Flex>
   );
