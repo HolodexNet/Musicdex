@@ -256,29 +256,29 @@ function Row({
       >
         {/* IDX: */}
         {detailLevel && detailLevel >= 3 ? (
-          <Box width="30px">
+          <Box width="30px" margin="auto">
             <IdxGrid id={index} songId={song.id} />
           </Box>
         ) : undefined}
-        <Box flex="1.4 1 90px" px={2}>
+        <Box flex="1.4 1 90px" px={2} margin="auto">
           <TitleGrid song={song} />
         </Box>
         {detailLevel && detailLevel >= 3 ? (
-          <Box flex="1 1 60px" noOfLines={2} px={2}>
+          <Box flex="1 1 60px" noOfLines={2} px={2} margin="auto">
             {song.original_artist}
           </Box>
         ) : undefined}
         {detailLevel && detailLevel >= 1 ? (
-          <Box flex="0 1 80px" noOfLines={1} textAlign="right">
+          <Box flex="0 1 80px" noOfLines={1} textAlign="right" margin="auto">
             <DurationGrid song={song} />
           </Box>
         ) : undefined}
         {detailLevel && detailLevel >= 2 ? (
-          <Box flex="0 1 150px" noOfLines={2} textAlign="right">
+          <Box flex="0 1 150px" noOfLines={2} textAlign="right" margin="auto">
             <SangOnGrid value={new Date(song.available_at)} />
           </Box>
         ) : undefined}
-        <Box flex="0 0 90px" textAlign="right">
+        <Box flex="0 0 90px" textAlign="right" margin="auto">
           <SongLikeButton song={song} />
           {dropDownUsageFn}
         </Box>
