@@ -50,7 +50,7 @@ export default function ChannelSongs() {
     return <QueryStatus queryStatus={channelStatus} />;
 
   return latest ? (
-    <Box flex="1 1 140px" minWidth="300px">
+    <>
       <Heading size="md" marginBottom={2}>
         <Button
           variant="solid"
@@ -83,11 +83,11 @@ export default function ChannelSongs() {
           Queue All ({latest.length})
         </Button>
       </Heading>
-      <Box>
-        <Suspense fallback={<div>Loading...</div>}>
-          <SongTable songs={latest}></SongTable>
-        </Suspense>
-      </Box>
+      {/* <Box maxHeight="100vh" minHeight="200px"> */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <SongTable songs={latest}></SongTable>
+      </Suspense>
+      {/* </Box> */}
       <ButtonGroup colorScheme="brand" mt="3" spacing="5">
         <Button
           onClick={() =>
@@ -139,7 +139,7 @@ export default function ChannelSongs() {
           <FiArrowRight />
         </Button>
       </ButtonGroup>
-    </Box>
+    </>
   ) : (
     <div>Loading...</div>
   );

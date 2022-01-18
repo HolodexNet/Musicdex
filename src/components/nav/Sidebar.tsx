@@ -157,7 +157,11 @@ export function SidebarContent({
 }
 
 export default function CreateNewPlaylistForm(): JSX.Element {
-  const { mutate: writePlaylist, isSuccess, isError } = usePlaylistWriter();
+  const {
+    mutateAsync: writePlaylist,
+    isSuccess,
+    isError,
+  } = usePlaylistWriter();
 
   const form = useRef<any>(undefined);
   const toast = useToast();
@@ -187,7 +191,22 @@ export default function CreateNewPlaylistForm(): JSX.Element {
             type: "ugp",
             content: [],
           };
-          writePlaylist(playlist);
+          writePlaylist(playlist).then(
+            () => {
+              toast({
+                status: "success",
+                position: "top-right",
+                title: "Created",
+              });
+            },
+            () => {
+              toast({
+                status: "warning",
+                position: "top-right",
+                title: "Something went wrong",
+              });
+            }
+          );
         } else {
           toast({
             variant: "solid",
