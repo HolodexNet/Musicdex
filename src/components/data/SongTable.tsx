@@ -11,7 +11,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { ContextMenuParams, useContextMenu } from "react-contexify";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
@@ -24,9 +24,10 @@ import { formatSeconds } from "../../utils/SongHelper";
 import { DEFAULT_MENU_ID } from "../common/CommonContext";
 import { NowPlayingIcon } from "../common/NowPlayingIcon";
 import { useDraggableSong } from "./DraggableSong";
-import AutoSizer from "react-virtualized-auto-sizer";
 import memoize from "memoize-one";
 import { SongLikeButton } from "../song/SongLikeButton";
+import WindowScroller from "react-virtualized/dist/es/WindowScroller";
+import { FrameRef } from "../layout/Frame";
 
 interface SongTableProps {
   songs: Song[];
@@ -159,37 +160,43 @@ export const SongTable = ({
   //   },
   //   [queueSongs]
   // );
+  const frameRef = useContext(FrameRef);
+  const list = React.useRef<any>(null);
+  const onScroll = useCallback(({ scrollTop }) => {
+    list.current?.scrollTo(scrollTop);
+  }, []);
 
-  return (
-    <Flex flex="1" flexDirection="column">
-      <Box {...rest} height="100%">
-        {virtualized ? (
-          <AutoSizer disableWidth defaultWidth="100%" defaultHeight={200}>
-            {({ height, width }: { height: number; width: number }) => (
-              // console.log(height);
-              <FixedSizeList
-                height={height}
-                width={width}
-                itemCount={songs.length}
-                itemSize={60}
-                itemData={data}
-              >
-                {MemoizedRow}
-              </FixedSizeList>
-            )}
-          </AutoSizer>
-        ) : (
-          data.songList.map((song, index) => (
-            <MemoizedRow
-              data={data}
-              index={index}
-              style={{}}
-              key={`${data.menuId}${index}`}
-            />
-          ))
-        )}
-      </Box>
-    </Flex>
+  return virtualized ? (
+    <>
+      <WindowScroller onScroll={onScroll} scrollElement={frameRef.current}>
+        {({ height }) => {
+          return (
+            <FixedSizeList
+              height={height || frameRef.current.getBoundingClientRect().height}
+              width="100%"
+              itemCount={songs.length}
+              itemSize={60}
+              itemData={data}
+              ref={list}
+              style={{ height: "100vh !important" }}
+            >
+              {MemoizedRow}
+            </FixedSizeList>
+          );
+        }}
+      </WindowScroller>
+    </>
+  ) : (
+    <Box>
+      {data.songList.map((song, index) => (
+        <MemoizedRow
+          data={data}
+          index={index}
+          style={{}}
+          key={`${data.menuId}${index}`}
+        />
+      ))}
+    </Box>
   );
 };
 const MemoizedRow = React.memo(Row, areEqual);

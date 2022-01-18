@@ -8,7 +8,15 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ReactNode, useMemo, useState } from "react";
+import {
+  createContext,
+  DOMElement,
+  ReactNode,
+  RefObject,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState } from "../../store";
 import { CommonContextMenu } from "../common/CommonContext";
@@ -68,6 +76,7 @@ const POSITIONS: { [key: string]: ChakraProps } = {
     position: "absolute",
   },
 };
+export const FrameRef = createContext<any>(null);
 
 export default function Frame({ children }: { children?: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -77,6 +86,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
 
   const pos = useStoreState((state) => state.player.position);
   const props = useMemo(() => POSITIONS[pos], [pos]);
+  const frameRef = useRef<any>(undefined);
 
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   function onReady(event: { target: YouTubePlayer }) {
@@ -135,11 +145,18 @@ export default function Frame({ children }: { children?: ReactNode }) {
             flexShrink={1}
             zIndex={pos === "background" ? 0 : "auto"}
           >
-            <Flex overflowY="scroll" flex="1" direction="column">
-              {children}
-              {/* <Footer></Footer> */}
-              {/* <Box minH={pos === "hover-bottom" ? "250px" : "0px"}></Box> */}
-            </Flex>
+            <FrameRef.Provider value={frameRef}>
+              <Flex
+                overflowY="scroll"
+                flex="1"
+                direction="column"
+                ref={frameRef}
+              >
+                {children}
+                {/* <Footer></Footer> */}
+                {/* <Box minH={pos === "hover-bottom" ? "250px" : "0px"}></Box> */}
+              </Flex>
+            </FrameRef.Provider>
             <MotionBox
               {...props}
               transition={{ duration: 0.3, type: "tween", ease: "easeInOut" }}

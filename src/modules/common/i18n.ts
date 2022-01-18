@@ -33,7 +33,6 @@ i18n
     interpolation: {
       escapeValue: false,
       format: (value, format, lng, options) => {
-        console.log(lng);
         if (isDate(value) && lng) {
           const locale = locales[lng];
           if (format === "short") return formatDate(value, "P", { locale });
