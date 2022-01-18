@@ -137,8 +137,8 @@ export default function Frame({ children }: { children?: ReactNode }) {
           >
             <Flex overflowY="scroll" flex="1" direction="column">
               {children}
-              <Footer></Footer>
-              <Box minH={pos === "hover-bottom" ? "250px" : "0px"}></Box>
+              {/* <Footer></Footer> */}
+              {/* <Box minH={pos === "hover-bottom" ? "250px" : "0px"}></Box> */}
             </Flex>
             <MotionBox
               {...props}
@@ -151,7 +151,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
                 height="100%"
                 position="absolute"
                 float="initial"
-                opacity={0.4}
+                opacity={0.6}
                 bgColor="bg.900"
               ></Box>
               <YoutubePlayer onReady={onReady} />

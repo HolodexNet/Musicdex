@@ -1,4 +1,4 @@
-import { Box, useColorModeValue, useToast } from "@chakra-ui/react";
+import { Box, Flex, useColorModeValue, useToast } from "@chakra-ui/react";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
@@ -144,21 +144,19 @@ export default function Playlist() {
           }}
           onFinishEditClick={finishSongEditing}
         />
-        <Box>
-          {playlist.content &&
-            (editMode ? (
-              <Suspense fallback={<div>Loading...</div>}>
-                <SongEditableTable
-                  songs={playlist.content}
-                  songsEdited={setNewSongIds}
-                />
-              </Suspense>
-            ) : (
-              // <Suspense fallback={<div>Loading...</div>}>
-              <SongTable songs={playlist.content} />
-              // </Suspense>
-            ))}
-        </Box>
+        {playlist.content &&
+          (editMode ? (
+            <Suspense fallback={<div>Loading...</div>}>
+              <SongEditableTable
+                songs={playlist.content}
+                songsEdited={setNewSongIds}
+              />
+            </Suspense>
+          ) : (
+            // <Suspense fallback={<div>Loading...</div>}>
+            <SongTable songs={playlist.content} />
+            // </Suspense>
+          ))}
       </ContainerInlay>
     </PageContainer>
   );

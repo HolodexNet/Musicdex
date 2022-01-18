@@ -2,6 +2,7 @@ import { Box, useColorModeValue, Text } from "@chakra-ui/react";
 import { Fragment, Suspense } from "react";
 import { XHRError } from "../components/common/XHRError";
 import { SongTable } from "../components/data/SongTable";
+import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
@@ -61,15 +62,9 @@ export default function History() {
 
   return (
     <PageContainer>
-      <Box
-        bgColor={bgColor}
-        position="relative"
-        mt="12"
-        p={{ base: 2, xl: 4 }}
-        borderRadius={5}
-      >
+      <ContainerInlay mt="12">
         {isLoggedIn ? <Content /> : <XHRError />}
-      </Box>
+      </ContainerInlay>
     </PageContainer>
   );
 }

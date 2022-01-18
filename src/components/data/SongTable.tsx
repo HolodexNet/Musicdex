@@ -161,22 +161,24 @@ export const SongTable = ({
   // );
 
   return (
-    <Box height="80vh" mt={6} {...rest}>
-      <AutoSizer disableWidth defaultWidth="100%" defaultHeight={200}>
-        {({ height }: { height: number }) => (
-          // console.log(height);
-          <FixedSizeList
-            height={height}
-            width="100%"
-            itemCount={songs.length}
-            itemSize={60}
-            itemData={data}
-          >
-            {MemoizedRow}
-          </FixedSizeList>
-        )}
-      </AutoSizer>
-    </Box>
+    <Flex flex="1" flexDirection="column">
+      <Box {...rest} height="100%">
+        <AutoSizer>
+          {({ height, width }: { height: number; width: number }) => (
+            // console.log(height);
+            <FixedSizeList
+              height={height}
+              width={width}
+              itemCount={songs.length}
+              itemSize={60}
+              itemData={data}
+            >
+              {MemoizedRow}
+            </FixedSizeList>
+          )}
+        </AutoSizer>
+      </Box>
+    </Flex>
   );
 };
 const MemoizedRow = React.memo(Row, areEqual);
