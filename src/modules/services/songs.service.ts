@@ -1,5 +1,11 @@
 import { useMemo } from "react";
-import { UseQueryOptions, useQuery } from "react-query";
+import {
+  UseQueryOptions,
+  useQuery,
+  UseMutationOptions,
+  useQueryClient,
+  useMutation,
+} from "react-query";
 import { useClient } from "../client";
 import { encodeUrl } from "../client/utils";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
@@ -130,4 +136,38 @@ export const useSongAPI = (
   console.log(newSongResult?.items[0]);
 
   return { ...result, data: newSongResult };
+};
+
+export const useTrackSong = (
+  callbacks: UseMutationOptions<any, unknown, { song_id: string }> = {}
+) => {
+  const { AxiosInstance, user } = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (payload) =>
+      (
+        await AxiosInstance(`/musicdex/history/${payload.song_id}`, {
+          method: "GET",
+        })
+      ).data,
+    {
+      ...callbacks,
+      onSuccess: (data, payload, ...rest) => {
+        if (user?.id) {
+          queryClient.cancelQueries([
+            "playlist",
+            `:history[user_id=${user?.id}]`,
+          ]);
+          queryClient.invalidateQueries([
+            "playlist",
+            `:history[user_id=${user?.id}]`,
+          ]);
+        }
+        if (callbacks.onSuccess) {
+          callbacks.onSuccess(data, payload, ...rest);
+        }
+      },
+    }
+  );
 };

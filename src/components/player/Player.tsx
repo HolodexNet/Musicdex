@@ -1,12 +1,15 @@
-import { useToast } from "@chakra-ui/react";
+import { usePrevious, useToast } from "@chakra-ui/react";
 import { useStoreState, useStoreActions, store } from "../../store";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 import { formatSeconds } from "../../utils/SongHelper";
 import { PlayerBar } from "./PlayerBar";
 import { usePlayer, getID } from "./YoutubePlayer";
+import { useTrackSong } from "../../modules/services/songs.service";
 
 const retryCounts: Record<string, number> = {};
+const trackedSongs: Set<string> = new Set();
+
 export function Player({ player }: { player: any }) {
   const toast = useToast();
   const position = useStoreState((store) => store.player.position);
@@ -26,6 +29,8 @@ export function Player({ player }: { player: any }) {
     () => (currentSong ? currentSong.end - currentSong.start : 0),
     [currentSong]
   );
+
+  const { mutate: trackSong, isSuccess, isError, isLoading } = useTrackSong();
 
   const { currentVideo, state, currentTime, setError, hasError, volume } =
     usePlayer(player);
@@ -70,7 +75,6 @@ export function Player({ player }: { player: any }) {
       player?.pauseVideo();
       return;
     }
-
     setIsPlaying(
       state === PlayerStates.BUFFERING || state === PlayerStates.PLAYING
     );
@@ -94,7 +98,6 @@ export function Player({ player }: { player: any }) {
     currentSong?.start,
     setError,
   ]);
-
   // CurrentSong/repeat update event
   useEffect(() => {
     if (!player) return;
@@ -105,6 +108,7 @@ export function Player({ player }: { player: any }) {
     }
 
     if (currentSong) {
+      console.log("[Player] Going to next song", currentSong.name);
       loadVideoAtTime(currentSong.video_id, currentSong.start);
       setError(false);
       if (position === "hidden") setOverridePos(undefined);
@@ -131,7 +135,7 @@ export function Player({ player }: { player: any }) {
       (currentSong.end - currentSong.start);
 
     // Something caused it to skip far ahead (eg. user scrubbed, song time changed on the same video)
-    if (newProgress > 103) {
+    if (newProgress > 105) {
       loadVideoAtTime(currentSong.video_id, currentSong.start);
       return;
     }
@@ -152,14 +156,22 @@ export function Player({ player }: { player: any }) {
       return;
     }
 
+    if (progress > 80 && progress < 105 && !trackedSongs.has(currentSong.id)) {
+      console.log("[Player] Track song play: ", currentSong.name);
+      trackedSongs.add(currentSong.id);
+      trackSong({ song_id: currentSong.id });
+    }
+    // Progress will never reach 100 because player ended. Video length != song start/end
+    // Example id: KiUvL-rp1zg
+    const earlyEnd = state === PlayerStates.ENDED && progress < 100;
     // Proceeed to next song
-    if (progress >= 100) {
+    if (progress >= 100 || earlyEnd) {
       setProgress(0);
       next({ count: 1, userSkipped: false });
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [progress]);
+  }, [currentSong, player, progress, state]);
 
   // Error Event Effect
   useEffect(() => {
@@ -169,13 +181,13 @@ export function Player({ player }: { player: any }) {
         retryCounts[currentSong.video_id] = 0;
 
       // Allow up to 3 retries
-      if (retryCounts[currentSong.video_id] <= 3) {
+      if (retryCounts[currentSong.video_id] <= 2) {
         if (getID(player.getVideoUrl()) !== currentSong.video_id) return;
         setTimeout(() => {
           console.log(
-            `Retrying ${currentSong.name} - attempt #${
+            `[Player] Retrying ${currentSong.name} - attempt #${
               retryCounts[currentSong.video_id]
-            }/4`
+            }/3`
           );
           player.loadVideoById(currentSong.video_id, currentSong.start);
           setError(false);
@@ -185,7 +197,7 @@ export function Player({ player }: { player: any }) {
       }
 
       console.log(
-        "SKIPPING____ DUE TO VIDEO PLAYBACK FAILURE (maybe the video is blocked in your country)"
+        "[PLAYER] SKIPPING____ DUE TO VIDEO PLAYBACK FAILURE (maybe the video is blocked in your country)"
       );
       toast({
         position: "top-right",
