@@ -28,7 +28,6 @@ import {
   useMyPlaylists,
   useStarredPlaylists,
 } from "../../modules/services/playlist.service";
-import { SidebarPlaylists } from "./SidebarPlaylists";
 import { NavItem } from "./NavItem";
 import { OrgSelector } from "./OrgSelector";
 import { useLocation } from "react-router-dom";
@@ -46,6 +45,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useRef } from "react";
+import { PlaylistList } from "../playlist/PlaylistList";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -140,17 +140,11 @@ export function SidebarContent({
         Create New Playlist
       </NavItem>
       {playlistList && (
-        <SidebarPlaylists
-          playlistStubs={playlistList as any}
-          vibe={isDragging}
-        />
+        <PlaylistList playlistStubs={playlistList as any} vibe={isDragging} />
       )}
       <Divider my={2} />
       {starredList && (
-        <SidebarPlaylists
-          playlistStubs={starredList as any}
-          defaultIcon={FiStar}
-        />
+        <PlaylistList playlistStubs={starredList as any} defaultIcon={FiStar} />
       )}
     </Box>
   );

@@ -1,6 +1,7 @@
-import { Flex, HStack, Icon, IconButton, Stack, Text } from "@chakra-ui/react";
+import { Flex, Icon, Stack, Text } from "@chakra-ui/react";
 import { IconType } from "react-icons";
-import { FiClock, FiHeart, FiHome, FiServer, FiSettings } from "react-icons/fi";
+import { FaBookmark } from "react-icons/fa";
+import { FiClock, FiHeart, FiHome } from "react-icons/fi";
 import { Link, useLocation } from "react-router-dom";
 export interface LinkItemProps {
   name: string;
@@ -13,6 +14,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, path: "/" },
   { name: "Recently Played", icon: FiClock, path: "/history" },
   { name: "Liked Songs", icon: FiHeart, path: "/liked" },
+  { name: "Library", icon: FaBookmark, path: "library" },
   //   { name: "My Playlists", icon: FiServer, path: "/playlists" },
   //   { name: "Settings", icon: FiSettings, path: "/settings" },
 ];

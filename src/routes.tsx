@@ -8,6 +8,7 @@ import Song from "./pages/Song";
 import Home from "./pages/Home";
 import ChannelSongs from "./pages/ChannelSongs";
 import { Queue } from "./pages/Queue";
+import Library from "./pages/Library";
 
 const Channel = React.lazy(() => import("./pages/Channel"));
 // const History = React.lazy(() => import("./pages/History"));
@@ -64,6 +65,10 @@ const routes: RouteObject[] = [
   {
     path: "/queue",
     element: <Queue />,
+  },
+  {
+    path: "/library",
+    element: <Library />,
   },
 ];
 export default function Routes() {

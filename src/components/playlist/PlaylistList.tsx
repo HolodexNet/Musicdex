@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { usePlaylistUpdater } from "../../modules/services/playlist.service";
 import { identifyTitle } from "../../utils/PlaylistHelper";
 
-export const SidebarPlaylists = ({
+export const PlaylistList = ({
   playlistStubs,
   vibe = false,
   defaultIcon = FiFolder,
@@ -61,12 +61,10 @@ export const SidebarPlaylists = ({
                   }}
                   onDrop={(e) => {
                     const s = e.dataTransfer.getData("song");
-                    console.log("huh");
                     (e.target as any).style.boxShadow = "";
                     if (s) {
                       e.preventDefault();
                       const song = JSON.parse(s);
-                      console.log(song);
                       mutateAsync({
                         action: "add",
                         playlistId: x.id,
@@ -104,7 +102,7 @@ export const SidebarPlaylists = ({
                       as={defaultIcon}
                     />
                   )}
-                  <Text as={VibeText} noOfLines={1} vibe={vibe}>
+                  <Text noOfLines={1} vibe={vibe} as={VibeText}>
                     {rest?.[0]}
                   </Text>
                 </Flex>
