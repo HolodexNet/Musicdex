@@ -146,8 +146,26 @@ export function Player({ player }: { player: any }) {
       setProgress(0);
       return;
     }
+
+    if (
+      newProgress > 80 &&
+      newProgress < 105 &&
+      !trackedSongs.has(currentSong.id)
+    ) {
+      console.log("[Player] Track song play: ", currentSong.name);
+      trackedSongs.add(currentSong.id);
+      trackSong({ song_id: currentSong.id });
+    }
+
     setProgress(newProgress);
-  }, [currentSong, currentTime, currentVideo, loadVideoAtTime, player]);
+  }, [
+    currentSong,
+    currentTime,
+    currentVideo,
+    loadVideoAtTime,
+    player,
+    trackSong,
+  ]);
 
   // End Progress Event
   useEffect(() => {
@@ -156,11 +174,6 @@ export function Player({ player }: { player: any }) {
       return;
     }
 
-    if (progress > 80 && progress < 105 && !trackedSongs.has(currentSong.id)) {
-      console.log("[Player] Track song play: ", currentSong.name);
-      trackedSongs.add(currentSong.id);
-      trackSong({ song_id: currentSong.id });
-    }
     // Progress will never reach 100 because player ended. Video length != song start/end
     // Example id: KiUvL-rp1zg
     const earlyEnd = state === PlayerStates.ENDED && progress < 100;
