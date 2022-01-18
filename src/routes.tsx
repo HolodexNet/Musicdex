@@ -7,6 +7,7 @@ import Video from "./pages/Video";
 import Song from "./pages/Song";
 import Home from "./pages/Home";
 import ChannelSongs from "./pages/ChannelSongs";
+import { Queue } from "./pages/Queue";
 
 const Channel = React.lazy(() => import("./pages/Channel"));
 // const History = React.lazy(() => import("./pages/History"));
@@ -59,6 +60,10 @@ const routes: RouteObject[] = [
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/queue",
+    element: <Queue />,
   },
 ];
 export default function Routes() {

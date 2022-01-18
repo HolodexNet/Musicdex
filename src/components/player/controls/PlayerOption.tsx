@@ -1,8 +1,9 @@
 import { Button, Flex, FlexProps, IconButton } from "@chakra-ui/react";
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 import { RiPlayListFill } from "react-icons/ri";
+import { useLocation, useNavigate } from "react-router";
 import { useStoreActions, useStoreState } from "../../../store";
 import { ChangePlayerLocationButton } from "../ChangePlayerLocationButton";
 
@@ -27,14 +28,20 @@ interface PlayerOptionProps extends FlexProps {
 
 export const PlayerOption = React.memo(
   ({ fullPlayer = false, ...rest }: PlayerOptionProps) => {
-    const isExpanded = useStoreState(
-      (state) => state.player.showUpcomingOverlay
-    );
-    const setExpanded = useStoreActions(
-      (actions) => actions.player.setShowUpcomingOverlay
-    );
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    const toggleExpanded = () => setExpanded(!isExpanded);
+    const queueActive = useMemo(() => {
+      return location.pathname === "/queue";
+    }, [location]);
+
+    function toggleQueue() {
+      if (queueActive) {
+        navigate(-1);
+      } else {
+        navigate("/queue");
+      }
+    }
 
     const shuffleMode = useStoreState((state) => state.playback.shuffleMode);
     const toggleShuffleMode = useStoreActions(
@@ -58,7 +65,7 @@ export const PlayerOption = React.memo(
           <Button
             leftIcon={<RiPlayListFill />}
             marginX={4}
-            onClick={() => toggleExpanded()}
+            onClick={() => toggleQueue()}
           >
             Upcoming
           </Button>
@@ -75,9 +82,10 @@ export const PlayerOption = React.memo(
             <ChangePlayerLocationButton />
             <IconButton
               aria-label="Expand"
-              icon={isExpanded ? <FaChevronDown /> : <FaChevronUp />}
+              icon={<RiPlayListFill />}
+              color={queueActive ? "brand.200" : "gray"}
               variant="ghost"
-              onClick={() => toggleExpanded()}
+              onClick={() => toggleQueue()}
             />
           </>
         )}
