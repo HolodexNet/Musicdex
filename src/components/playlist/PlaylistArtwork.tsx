@@ -167,10 +167,11 @@ function OverlayTextArt({
         <Icon
           width="80px"
           height="80px"
-          opacity="0.4"
-          transform={`translate(63px, 75px) rotate(${Math.floor(
+          opacity="0.7"
+          transform={`translate(8px, 21px) rotate(${Math.floor(
             Math.random() * -30
           )}deg)`}
+          blendMode="soft-light"
           as={iconType}
         ></Icon>
       )}
