@@ -124,10 +124,13 @@ export function Player({ player }: { player: any }) {
       ((currentTime - currentSong.start) * 100) /
       (currentSong.end - currentSong.start);
 
-    if (newProgress > 100) {
+    // Something caused it to skip far ahead (eg. user scrubbed, song time changed on the same video)
+    if (newProgress > 103) {
+      console.log("wooo");
       loadVideoAtTime(currentSong.video_id, currentSong.start);
       return;
     }
+
     // Prevent time from playing before start time
     if (newProgress < 0) {
       player.seekTo(currentSong.start, true);
