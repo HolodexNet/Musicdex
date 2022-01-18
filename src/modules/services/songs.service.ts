@@ -133,7 +133,7 @@ export const useSongAPI = (
     }
   }, [result, likestatus]);
 
-  console.log(newSongResult?.items[0]);
+  // console.log(newSongResult?.items[0]);
 
   return { ...result, data: newSongResult };
 };

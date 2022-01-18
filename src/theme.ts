@@ -26,11 +26,11 @@ function makeColor(color: Color, alpha?: string) {
       const hsl = convert["hex"]["hsl"].raw("#" + x.value);
       hsl[1] = hsl[1] * (1 - SATURATION_MAP[i]);
       const hex = convert["hsl"]["hex"].raw(hsl);
-      console.log(hex);
+      // console.log(hex);
       return [AR[i] * 10, "#" + hex + (alpha || "")];
     })
   );
-  console.log(x);
+  // console.log(x);
   return x;
 }
 
@@ -41,7 +41,7 @@ const localColors = {
   bgAlpha: makeColor(new Color("hex", ["#46464cB3"]), "B3"),
 };
 
-console.log(localColors);
+// console.log(localColors);
 
 export const theme = extendTheme(
   {

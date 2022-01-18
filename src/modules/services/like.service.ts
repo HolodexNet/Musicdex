@@ -52,7 +52,7 @@ export const useLikedCheckSongs = (songIds: string[], enabled?: boolean) => {
   const result = useQuery(
     ["likedSongs", uSongIds],
     async (q): Promise<Dictionary<boolean>> => {
-      console.log("fetching like status");
+      // console.log("fetching like status");
       if (!isLoggedIn || !uSongIds.length) {
         return {};
       }

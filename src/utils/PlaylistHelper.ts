@@ -4,7 +4,7 @@ import { extractUsingFn, isSGPPlaylist } from "./SGPFunctions";
 
 export function identifyPlaylistBannerImage(playlist: Partial<PlaylistFull>) {
   if (isSGPPlaylist(playlist.id!)) {
-    console.log('extracting..."');
+    // console.log('extracting..."');
     return extractUsingFn(playlist, {
       ":dailyrandom": (p, { ch }, d) => {
         return `/api/statics/channelImg/${ch || d?.channel?.id}/banner/3.jpeg`;
@@ -45,7 +45,7 @@ export function identifyPlaylistBannerImage(playlist: Partial<PlaylistFull>) {
       },
     });
   } else {
-    console.log(playlist);
+    // console.log(playlist);
     if (playlist.content && playlist.content[0]) {
       return `/api/statics/channelImg/${playlist.content[0].channel_id}/banner/3.jpeg`;
     } else {

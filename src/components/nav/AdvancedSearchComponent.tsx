@@ -94,7 +94,7 @@ export function AdvancedSearchFiltersForm({
 
   const [counter, incr] = useState(1000);
   function onSubmit(values: any) {
-    console.log(values);
+    // console.log(values);
     const {
       q,
       original_artist,
@@ -133,7 +133,7 @@ export function AdvancedSearchFiltersForm({
         .join(",")}]`;
 
     const filter_by = [part1, part2, part3, part4].filter((x) => x).join("&&");
-    console.log(filter_by);
+    // console.log(filter_by);
     // fullreset();
 
     navigate({

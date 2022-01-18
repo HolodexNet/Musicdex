@@ -123,7 +123,7 @@ export function useClientLogin() {
       setToken(jwt);
       setUser(user);
       navigate("/settings");
-      console.log(res);
+      // console.log(res);
     },
     onFailure: onFailure,
   });

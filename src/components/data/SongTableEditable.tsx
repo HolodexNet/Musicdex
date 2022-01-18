@@ -149,8 +149,8 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
   };
 
   const moveOrDeleteItem = (idx: number, toIdx: number | undefined) => {
-    console.log(newSongIds);
-    console.log(idx, toIdx);
+    // console.log(newSongIds);
+    // console.log(idx, toIdx);
 
     const arrayAroundDragged = [
       ...newSongIds.slice(0, idx),
@@ -160,7 +160,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
       arrayAroundDragged.splice(toIdx, 0, newSongIds[idx]);
     setNewSongIds(arrayAroundDragged);
     songsEdited(arrayAroundDragged);
-    console.log(arrayAroundDragged);
+    // console.log(arrayAroundDragged);
   };
 
   const onDragEnd = (result: DropResult) => {

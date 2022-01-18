@@ -248,7 +248,7 @@ function OverlayDropDownMenu(song: Song) {
       <MenuList>
         <MenuItem
           onClick={() => {
-            console.log((song as any).idx);
+            // console.log((song as any).idx);
             if (
               (song as any).idx > 1 ||
               ((song as any).idx >= 1 && currentlyPlaying.from !== "queue")
