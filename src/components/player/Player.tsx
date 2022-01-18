@@ -33,8 +33,9 @@ export function Player({ player }: { player: any }) {
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volumeSlider, setVolumeSlider] = useState(0);
-  // Stop music from playing immediately on load
+  // Stop song from playing on initial page load
   const [firstLoadPauseId, setFirstLoadPauseId] = useState("");
+
   // Player volume change event
   useEffect(() => {
     setVolumeSlider(volume ?? 0);
@@ -56,11 +57,14 @@ export function Player({ player }: { player: any }) {
     [player]
   );
 
+  // Jot down the song that the page loaded on, and keep this paused
   useEffect(() => {
-    if (currentSong) setFirstLoadPauseId(currentSong?.video_id);
+    if (currentSong?.id) setFirstLoadPauseId(currentSong?.id);
   }, []);
+
   // Player State Event
   useEffect(() => {
+    // A seek to caused player to unpause, pause on loaded
     if (firstLoadPauseId) {
       setIsPlaying(false);
       player?.pauseVideo();
@@ -82,6 +86,7 @@ export function Player({ player }: { player: any }) {
       loadVideoAtTime(currentSong.video_id, currentSong.start);
       setError(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     player,
     currentVideo,
@@ -94,7 +99,8 @@ export function Player({ player }: { player: any }) {
   useEffect(() => {
     if (!player) return;
 
-    if (firstLoadPauseId && firstLoadPauseId !== currentSong?.video_id) {
+    // Song changed, and is no longer the paause locked song, allow autoplay
+    if (firstLoadPauseId && firstLoadPauseId !== currentSong?.id) {
       setFirstLoadPauseId("");
     }
 
@@ -126,7 +132,6 @@ export function Player({ player }: { player: any }) {
 
     // Something caused it to skip far ahead (eg. user scrubbed, song time changed on the same video)
     if (newProgress > 103) {
-      console.log("wooo");
       loadVideoAtTime(currentSong.video_id, currentSong.start);
       return;
     }
@@ -205,6 +210,7 @@ export function Player({ player }: { player: any }) {
 
   function togglePlay() {
     if (!currentSong) return;
+    // User action, unlock the first load pause
     if (firstLoadPauseId) setFirstLoadPauseId("");
     if (player) isPlaying ? player.pauseVideo() : player.playVideo();
     setIsPlaying((prev) => !prev);
