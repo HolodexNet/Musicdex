@@ -31,7 +31,9 @@ export const SongItem = ({ song, showChannelImg, ...rest }: SongItemProps) => {
       to={`/song/${song.id}`}
       {...rest}
       {...dragSongProps}
-      onContextMenu={show}
+      onContextMenu={(e) => {
+        show(e, { props: song });
+      }}
     >
       <SongArtwork song={song} size={50} />
       {showChannelImg && (

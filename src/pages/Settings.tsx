@@ -86,8 +86,8 @@ function LanguagePrefs() {
   const displayLangPrefs: LanguageOpts[] = [
     { value: "en", display: "English (US)" },
     { value: "enGB", display: "English (British)" },
-    { value: "zh", display: "Chinese" },
-    { value: "ja", display: "Japanese" },
+    { value: "zh", display: "Chinese (Not Started)" },
+    { value: "ja", display: "Japanese (Not Started)" },
     { value: "cimode", display: "Internal Translation Use" },
   ];
 
