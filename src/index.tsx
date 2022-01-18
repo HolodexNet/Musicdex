@@ -27,6 +27,7 @@ import "@fontsource/manrope/700.css";
 import "@fontsource/assistant/400.css";
 import "@fontsource/assistant/500.css";
 import { BrowserRouter as Router } from "react-router-dom";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 console.log(`${process.env.REACT_APP_NAME} ${process.env.REACT_APP_VERSION}`);
 (window as any)["App_Version"] = process.env.REACT_APP_VERSION;
@@ -53,6 +54,8 @@ store.persist.resolveRehydration().then(() => {
     document.getElementById("root")
   );
 });
+
+serviceWorkerRegistration.register();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
