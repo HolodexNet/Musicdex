@@ -111,9 +111,10 @@ export const Queue = React.memo(() => {
               <SongTable
                 songs={queue}
                 menuId={QUEUE_MENU_ID}
-                songClicked={(e, s) =>
-                  next({ count: (s as any).idx - 1, userSkipped: true })
-                }
+                rowProps={{
+                  songClicked: (e, s) =>
+                    next({ count: (s as any).idx - 1, userSkipped: true }),
+                }}
               />
             </Suspense>
             <Divider />
@@ -151,9 +152,10 @@ export const Queue = React.memo(() => {
             <Suspense fallback={<div>Loading...</div>}>
               <SongTable
                 songs={playlistTotalQueue}
-                songClicked={(e, s) =>
-                  next({ count: (s as any).idx - 1, userSkipped: true })
-                }
+                rowProps={{
+                  songClicked: (e, s) =>
+                    next({ count: (s as any).idx - 1, userSkipped: true }),
+                }}
               />
             </Suspense>
           </React.Fragment>

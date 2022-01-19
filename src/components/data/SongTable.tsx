@@ -3,6 +3,7 @@ import {
   BoxProps,
   CSSObject,
   Flex,
+  HStack,
   Icon,
   IconButton,
   Text,
@@ -11,7 +12,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import { ContextMenuParams, useContextMenu } from "react-contexify";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
@@ -28,41 +29,83 @@ import memoize from "memoize-one";
 import { SongLikeButton } from "../song/SongLikeButton";
 import WindowScroller from "react-virtualized/dist/es/WindowScroller";
 import { FrameRef } from "../layout/Frame";
+import { FaPlay } from "react-icons/fa";
+import { MotionBox } from "../common/MotionBox";
+import { SongArtwork } from "../song/SongArtwork";
 
 interface SongTableProps {
   songs: Song[];
-
   // reactive hooks:
-  songClicked?: (e: React.MouseEvent, s: Song) => void;
   songDropdownMenuRenderer?: (cellInfo: any) => JSX.Element;
   virtualized?: boolean;
 
   menuId?: string;
+  rowProps?: RowProps;
+}
+interface RowProps {
+  songClicked?: (e: React.MouseEvent, s: Song) => void;
+  showArtwork?: boolean;
+  flipNames?: boolean;
 }
 
-const IdxGrid = ({ id, songId }: { id: number; songId: string }) => {
+const IdxGrid = ({
+  id,
+  songId,
+  active,
+  onPlayClick,
+}: {
+  id: number;
+  songId: string;
+  active: boolean;
+  onPlayClick: (e: any) => void;
+}) => {
   const currentId = useStoreState(
     (state) => state.playback.currentlyPlaying?.song?.id
   );
-
-  return songId === currentId ? (
-    <NowPlayingIcon style={{ color: "var(--chakra-colors-n2-400)" }} />
-  ) : (
-    <span>{id + 1}</span>
-  );
+  switch (true) {
+    case songId === currentId:
+      return (
+        <NowPlayingIcon style={{ color: "var(--chakra-colors-n2-400)" }} />
+      );
+    case active:
+      return (
+        <MotionBox
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          color="brand.400"
+          _hover={{ color: "brand.200" }}
+          onClick={onPlayClick}
+          cursor="pointer"
+          marginLeft="1px"
+        >
+          <FaPlay />
+        </MotionBox>
+      );
+    default:
+      return <span>{id + 1}</span>;
+  }
 };
 
 const TitleGrid = ({
   song, //: { original, channel },
+  onTitleClick,
+  flipNames,
 }: {
   song: Song;
+  onTitleClick: (e: any) => void;
+  flipNames?: boolean;
   // row: { original: Song; channel: string };
 }) => {
   const tn = useNamePicker();
 
   return (
     <VStack alignItems="start" spacing={0}>
-      <Box style={{ cursor: "default" }} noOfLines={1} title={song.name}>
+      <Box
+        noOfLines={1}
+        title={song.name}
+        onClick={onTitleClick}
+        cursor="pointer"
+      >
         {song.name}
       </Box>
       <Text
@@ -70,13 +113,15 @@ const TitleGrid = ({
         fontWeight={300}
         fontSize="sm"
         as={Link}
-        to={"/channel/" + song.channel_id}
+        to={flipNames ? "" : "/channel/" + song.channel_id}
         onClick={(e) => {
           e.stopPropagation();
         }}
         _hover={{ opacity: 0.9 }}
       >
-        {tn(song.channel?.english_name, song.channel?.name)}
+        {flipNames
+          ? song.original_artist
+          : tn(song.channel?.english_name, song.channel?.name)}
       </Text>
     </VStack>
   );
@@ -101,53 +146,24 @@ const SangOnGrid = ({ value }: { value: Date }) => {
     </span>
   );
 };
-const columns = ["#", "Title", "Original Artist", "Duration", "Sang On", "..."];
 
 const memoized = memoize(
-  (
-    songList: Song[],
-    menuId?: any,
-    songClicked?: (e: React.MouseEvent, s: Song) => void
-  ) => ({
+  (songList: Song[], menuId?: any, rowProps?: RowProps) => ({
     songList,
     menuId,
-    songClicked,
+    rowProps,
   })
 );
 export const SongTable = ({
   songs,
-  songClicked,
   menuId = DEFAULT_MENU_ID,
   virtualized = false,
+  rowProps,
   ...rest
 }: SongTableProps & BoxProps) => {
   const { t } = useTranslation();
-  // const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
-  // const indexedSongs: IndexedSong[] = React.useMemo(() => {
-  //   return songs.map((v, i) => {
-  //     return { ...v, idx: i + 1 };
-  //   });
-  // }, [songs]);
 
-  // useEffect(() => {
-  //   if (isXL === undefined) return;
-  //   toggleHideColumn("original_artist", isXL < 3);
-  //   toggleHideColumn("idx", isXL < 3);
-  //   toggleHideColumn("date", isXL < 2);
-  //   toggleHideColumn("dur", isXL < 1);
-  // }, [isXL, toggleHideColumn]);
-
-  const data = memoized(songs, menuId, songClicked);
-
-  // const defaultClickBehavior = useCallback(
-  //   (e: React.MouseEvent<any, MouseEvent>, song: Song) => {
-  //     queueSongs({
-  //       songs: [song],
-  //       immediatelyPlay: true,
-  //     });
-  //   },
-  //   [queueSongs]
-  // );
+  const data = memoized(songs, menuId, rowProps);
   const frameRef = useContext(FrameRef);
   const list = React.useRef<any>(null);
   const onScroll = useCallback(({ scrollTop }) => {
@@ -199,7 +215,7 @@ function Row({
   data: {
     songList: Song[];
     menuId: any;
-    songClicked: ((e: React.MouseEvent, s: Song) => void) | undefined;
+    rowProps?: RowProps;
   };
 }) {
   // const { t } = useTranslation();
@@ -218,12 +234,16 @@ function Row({
     },
     "xl"
   );
-
+  const rowProps = data.rowProps;
   const HOVER_ROW_STYLE: CSSObject = {
     backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
   };
   const dragSongProps = useDraggableSong(song);
-
+  const [hoveredRowIndex, setHoveredRowIndex] = useState(false);
+  const clickFn = (e: React.MouseEvent) =>
+    rowProps?.songClicked
+      ? rowProps.songClicked(e, song)
+      : queueSongs({ songs: [song], immediatelyPlay: true });
   return (
     <div style={style}>
       <Flex
@@ -232,24 +252,31 @@ function Row({
         px={2}
         {...dragSongProps}
         onContextMenu={(e) => show?.(e, { props: song })}
-        onClick={(e) =>
-          data.songClicked
-            ? data.songClicked(e, song)
-            : queueSongs({ songs: [song], immediatelyPlay: true })
-        }
         borderTop="1px solid var(--chakra-colors-whiteAlpha-200)"
         boxSizing="border-box"
         _hover={HOVER_ROW_STYLE}
+        onMouseEnter={() => setHoveredRowIndex(true)}
+        onMouseLeave={() => setHoveredRowIndex(false)}
       >
         {/* IDX: */}
         {detailLevel && detailLevel >= 3 ? (
           <Box width="30px" margin="auto">
-            <IdxGrid id={index} songId={song.id} />
+            <IdxGrid
+              id={index}
+              songId={song.id}
+              active={hoveredRowIndex}
+              onPlayClick={() =>
+                queueSongs({ songs: [song], immediatelyPlay: true })
+              }
+            />
           </Box>
         ) : undefined}
-        <Box flex="1.4 1 90px" px={2} margin="auto">
-          <TitleGrid song={song} />
-        </Box>
+        <HStack flex="1.4 1 90px" px={2} margin="auto">
+          {rowProps?.showArtwork && (
+            <SongArtwork song={song} size={40} rounded="sm" />
+          )}
+          <TitleGrid song={song} onTitleClick={clickFn} />
+        </HStack>
         {detailLevel && detailLevel >= 3 ? (
           <Box flex="1 1 60px" noOfLines={2} px={2} margin="auto">
             {song.original_artist}

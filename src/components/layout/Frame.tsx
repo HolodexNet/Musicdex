@@ -25,7 +25,6 @@ import { BottomNav } from "../nav/BottomNav";
 import { NavBar } from "../nav/NavBar";
 import { SidebarContent } from "../nav/Sidebar";
 import { Player } from "../player/Player";
-import { PlayerOverlay } from "../player/PlayerOverlay";
 import { YoutubePlayer } from "../player/YoutubePlayer";
 import { AddToPlaylistModal } from "../playlist/AddToPlaylistModal";
 import Footer from "./Footer";
@@ -176,7 +175,6 @@ export default function Frame({ children }: { children?: ReactNode }) {
           </Flex>
         </Flex>
         <Player player={player} />
-        <PlayerOverlay />
         {showBottomNav && <BottomNav />}
         <AddToPlaylistModal />
       </Flex>
