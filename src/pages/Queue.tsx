@@ -14,6 +14,10 @@ import styled from "@emotion/styled";
 import React, { Suspense, useMemo } from "react";
 import { FiTrash, FiLink2, FiMoreHorizontal } from "react-icons/fi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  QueueContextMenu,
+  QUEUE_MENU_ID,
+} from "../components/common/QueueContext";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
@@ -39,15 +43,8 @@ export const Queue = React.memo(() => {
   const currentPlaylist = useStoreState((s) => s.playback.currentPlaylist);
 
   const playlistTotalQueue = useMemo(() => {
-    const now =
-      currentlyPlaying.from === "playlist" ? [currentlyPlaying.song!] : [];
-    return [...now, ...playlistQueue, ...playedPlaylistQueue];
-  }, [
-    currentlyPlaying.from,
-    currentlyPlaying.song,
-    playedPlaylistQueue,
-    playlistQueue,
-  ]);
+    return [...playlistQueue, ...playedPlaylistQueue];
+  }, [playedPlaylistQueue, playlistQueue]);
 
   const location = useLocation();
 
@@ -58,13 +55,6 @@ export const Queue = React.memo(() => {
   }, [location]);
 
   const queue = useStoreState((state) => state.playback.queue);
-
-  const currentQueue = useMemo(() => {
-    const now =
-      currentlyPlaying.from === "queue" ? [currentlyPlaying.song!] : [];
-
-    return [...now, ...queue];
-  }, [currentlyPlaying.from, currentlyPlaying.song, queue]);
 
   const clearAll = useStoreActions((actions) => actions.playback.clearAll);
   const clearQueue = useStoreActions((actions) => actions.playback._queueClear);
@@ -88,6 +78,7 @@ export const Queue = React.memo(() => {
   return (
     <PageContainer>
       <div className="bgOver"></div>
+      <QueueContextMenu />
       <ContainerInlay>
         <HStack alignItems={"center"}>
           <Button
@@ -103,7 +94,7 @@ export const Queue = React.memo(() => {
             Clear All
           </Button>
         </HStack>
-        {currentQueue.length > 0 && (
+        {queue.length > 0 && (
           <React.Fragment>
             <Heading mt={4}>
               Queue:
@@ -118,11 +109,11 @@ export const Queue = React.memo(() => {
             </Heading>
             <Suspense fallback={<div>Loading...</div>}>
               <SongTable
-                songs={currentQueue}
+                songs={queue}
+                menuId={QUEUE_MENU_ID}
                 songClicked={(e, s) =>
                   next({ count: (s as any).idx - 1, userSkipped: true })
                 }
-                songDropdownMenuRenderer={OverlayDropDownMenu}
               />
             </Suspense>
             <Divider />
@@ -201,99 +192,3 @@ export const Queue = React.memo(() => {
 //     width: 100%;
 //   }
 // `;
-
-function OverlayDropDownMenu(song: Song) {
-  // const song: Song = song;
-  const queueRemove = useStoreActions((store) => store.playback.queueRemove);
-  const addPlaylist = useStoreActions(
-    (store) => store.addPlaylist.showPlaylistAddDialog
-  );
-  const currentlyPlaying = useStoreState(
-    (state) => state.playback.currentlyPlaying
-  );
-  const next = useStoreActions((s) => s.playback.next);
-
-  const copyToClipboard = useClipboardWithToast();
-  const navigate = useNavigate();
-
-  return (
-    <Menu
-      eventListeners={{ scroll: false }}
-      isLazy
-      boundary="scrollParent"
-      computePositionOnMount={true}
-      gutter={10}
-      placement="left"
-      closeOnBlur={true}
-    >
-      <MenuButton
-        //   py={2}
-        icon={<FiMoreHorizontal />}
-        as={IconButton}
-        rounded="full"
-        size="sm"
-        mr={-2}
-        variant="ghost"
-        colorScheme="n2"
-        aria-label="More"
-      ></MenuButton>
-      <MenuList>
-        <MenuItem
-          onClick={() => {
-            console.log((song as any).idx);
-            if (
-              (song as any).idx > 1 ||
-              ((song as any).idx >= 1 && currentlyPlaying.from !== "queue")
-            )
-              // when the song you want to remove is on the queue.
-              queueRemove(
-                (song as any).idx -
-                  1 -
-                  (currentlyPlaying.from === "queue" ? 1 : 0)
-              );
-            else if (
-              (song as any).idx === 1 &&
-              currentlyPlaying.from === "queue"
-            )
-              // when the song you want to remove is NOW PLAYING.
-              next({ count: 1, userSkipped: true });
-          }}
-          color="red.400"
-        >
-          Remove from Queue
-        </MenuItem>
-        <MenuItem
-          onClick={() =>
-            copyToClipboard(`${window.location.origin}/song/${song.id}`)
-          }
-        >
-          Copy Song Link
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            addPlaylist(song);
-          }}
-        >
-          Add To Playlist...
-        </MenuItem>
-        <MenuDivider />
-        <MenuItem
-          onClick={() => {
-            navigate("/song/" + song.id);
-          }}
-        >
-          Go To Song Page
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            navigate("/video/" + song.video_id);
-          }}
-        >
-          Go To Video Page
-        </MenuItem>
-        <MenuItem>Go to Channel Page</MenuItem>
-        {/* <MenuDivider /> */}
-      </MenuList>
-    </Menu>
-  );
-}

@@ -92,7 +92,8 @@ const playbackModel: PlaybackModel = {
 
   queue: [],
   _queueAdd: action((state, songs) => {
-    state.queue.push(...songs);
+    const goodsongs = songs.filter((x) => x.id && x.video_id);
+    state.queue.push(...goodsongs);
   }),
   _queueClear: action((state) => {
     state.queue = [];
@@ -314,7 +315,7 @@ const playbackModel: PlaybackModel = {
   }),
 
   queueSongs: thunk((actions, { songs, immediatelyPlay }, h) => {
-    if (songs.length === 0) return;
+    if (songs.length === 0 || !songs[0]) return;
     if (immediatelyPlay) {
       // songs should be singular.
       actions._forceInsertCurrentlyPlaying(songs[0]);

@@ -106,12 +106,10 @@ const columns = ["#", "Title", "Original Artist", "Duration", "Sang On", "..."];
 const memoized = memoize(
   (
     songList: Song[],
-    songMenuRenderer?: (cellInfo: any) => JSX.Element,
     menuId?: any,
     songClicked?: (e: React.MouseEvent, s: Song) => void
   ) => ({
     songList,
-    songMenuRenderer,
     menuId,
     songClicked,
   })
@@ -119,7 +117,6 @@ const memoized = memoize(
 export const SongTable = ({
   songs,
   songClicked,
-  songDropdownMenuRenderer,
   menuId = DEFAULT_MENU_ID,
   virtualized = false,
   ...rest
@@ -140,16 +137,7 @@ export const SongTable = ({
   //   toggleHideColumn("dur", isXL < 1);
   // }, [isXL, toggleHideColumn]);
 
-  const columns = [
-    "#",
-    "Title",
-    "Original Artist",
-    "Duration",
-    "Sang On",
-    "...",
-  ];
-
-  const data = memoized(songs, songDropdownMenuRenderer, menuId, songClicked);
+  const data = memoized(songs, menuId, songClicked);
 
   // const defaultClickBehavior = useCallback(
   //   (e: React.MouseEvent<any, MouseEvent>, song: Song) => {
@@ -188,12 +176,12 @@ export const SongTable = ({
     </>
   ) : (
     <Box>
-      {data.songList.map((song, index) => (
+      {songs.map((song, index) => (
         <MemoizedRow
           data={data}
           index={index}
           style={{}}
-          key={`${data.menuId}${index}`}
+          key={`${data.menuId}${song.id}`}
         />
       ))}
     </Box>
@@ -210,12 +198,12 @@ function Row({
   style: any;
   data: {
     songList: Song[];
-    songMenuRenderer: ((cellInfo: any) => JSX.Element) | undefined;
     menuId: any;
     songClicked: ((e: React.MouseEvent, s: Song) => void) | undefined;
   };
 }) {
   // const { t } = useTranslation();
+  console.log(data.songList, index);
   const song = useMemo(() => data.songList[index], [data.songList, index]);
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
 
@@ -235,27 +223,6 @@ function Row({
     backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
   };
   const dragSongProps = useDraggableSong(song);
-
-  const dropDownUsageFn = React.useMemo(
-    () =>
-      data.songMenuRenderer ? (
-        data.songMenuRenderer(song)
-      ) : (
-        <IconButton
-          //   py={2}
-          icon={<FiMoreHorizontal />}
-          rounded="full"
-          size="sm"
-          // mr={-2}
-          ml={2}
-          variant="ghost"
-          colorScheme="n2"
-          aria-label="More"
-          onClick={(e) => show(e, { props: song })}
-        ></IconButton>
-      ),
-    [data, show, song]
-  );
 
   return (
     <div style={style}>
@@ -298,9 +265,23 @@ function Row({
             <SangOnGrid value={new Date(song.available_at)} />
           </Box>
         ) : undefined}
-        <Box flex="0 0 90px" textAlign="right" margin="auto">
+        <Box
+          flex="0 0 90px"
+          textAlign="right"
+          margin="auto"
+          onClick={(e) => e.stopPropagation()}
+        >
           <SongLikeButton song={song} />
-          {dropDownUsageFn}
+          <IconButton
+            icon={<FiMoreHorizontal />}
+            rounded="full"
+            size="sm"
+            ml={2}
+            variant="ghost"
+            colorScheme="n2"
+            aria-label="More"
+            onClick={(e) => show(e, { props: song })}
+          ></IconButton>
         </Box>
       </Flex>
     </div>
