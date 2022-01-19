@@ -82,7 +82,7 @@ export const PlaylistArtwork = React.memo(
         (description.id && getVideoThumbnails(description.id).medium) || "";
       return (
         <StackedTextArt
-          typeText="Archive Playlist"
+          typeText="Setlist"
           titleText={description?.title}
           imageUrl={image}
         />
