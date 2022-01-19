@@ -8,6 +8,7 @@ import {
   IconButton,
   SimpleGrid,
   Spacer,
+  useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -58,6 +59,7 @@ export default function Channel() {
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const tn = useNamePicker();
   const copy = useClipboardWithToast();
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   if (!channelStatus.isSuccess)
     return <QueryStatus queryStatus={channelStatus} />;
@@ -74,26 +76,36 @@ export default function Channel() {
         ></BGImg>
       </BGImgContainer>
 
-      <HStack mx={6} my={6}>
-        <ChannelPhoto
-          channelId={channel.id}
-          resizePhoto={150}
-          size="2xl"
-          borderRadius={4}
-          mr={6}
-          shadow="lg"
-        ></ChannelPhoto>
-        <PlaylistHeading
-          title={name}
-          description={channel.org + " — " + channel?.suborg?.slice(2)}
-          canEdit={false}
-          editMode={false}
-          count={0}
-          max={0}
-          textShadow="1px 1px 5px var(--chakra-colors-bgAlpha-500);"
-        />
-        <Spacer />
-        <SimpleGrid spacing={2} columns={2}>
+      <HStack
+        mx={isMobile ? 3 : 6}
+        my={6}
+        flexWrap={isMobile ? "wrap" : "unset"}
+      >
+        <HStack>
+          <ChannelPhoto
+            channelId={channel.id}
+            resizePhoto={150}
+            size="2xl"
+            borderRadius={4}
+            mr={6}
+            shadow="lg"
+          ></ChannelPhoto>
+          <PlaylistHeading
+            title={name}
+            description={channel.org + " — " + channel?.suborg?.slice(2)}
+            canEdit={false}
+            editMode={false}
+            count={0}
+            max={0}
+            textShadow="1px 1px 5px var(--chakra-colors-bgAlpha-500);"
+          />
+        </HStack>
+        {!isMobile && <Spacer />}
+        <SimpleGrid
+          spacing={isMobile ? 4 : 2}
+          columns={isMobile ? 4 : 2}
+          {...(isMobile ? { pt: 2, mb: -2, width: "100%", pr: "0.5rem" } : {})}
+        >
           <IconButton
             colorScheme="bgAlpha"
             icon={<FiShare2 />}
@@ -138,13 +150,15 @@ export default function Channel() {
         <Routes>
           <Route
             path="/"
-            element={channelContent(
-              discovery,
-              trending,
-              queueSongs,
-              name,
-              channel
-            )}
+            element={
+              <ChannelContent
+                discovery={discovery}
+                trending={trending}
+                queueSongs={queueSongs}
+                name={name}
+                channel={channel}
+              ></ChannelContent>
+            }
           ></Route>
           <Route path="/songs" element={<ChannelSongs />}></Route>
         </Routes>
@@ -152,27 +166,49 @@ export default function Channel() {
     </PageContainer>
   );
 }
-function channelContent(
-  discovery: any,
-  trending: Song[] | undefined,
-  queueSongs: (_: { songs: Song[]; immediatelyPlay: boolean }) => void,
-  name: any,
-  channel: any
-) {
+function ChannelContent({
+  discovery,
+  trending,
+  queueSongs,
+  name,
+  channel,
+}: {
+  discovery: any;
+  trending: Song[] | undefined;
+  queueSongs: (_: { songs: Song[]; immediatelyPlay: boolean }) => void;
+  name: any;
+  channel: any;
+}) {
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   return (
     <>
       <Flex flexWrap="wrap" flexDirection="row">
-        {discovery?.recentSingingStream && (
-          <Box flex="1.3 0 580px" minWidth="480px" mr={4}>
-            <Heading size="md" marginBottom={2}>
-              Latest Stream:
-            </Heading>
-            <VideoPlaylistCard
-              video={discovery?.recentSingingStream?.video}
-              playlist={discovery?.recentSingingStream?.playlist}
-            />
-          </Box>
-        )}
+        {discovery?.recentSingingStream &&
+          (!isMobile ? (
+            <Box flex="1.3 0 580px" minWidth="480px" mr={4}>
+              <Heading size="md" marginBottom={2}>
+                Latest Stream:
+              </Heading>
+              <VideoPlaylistCard
+                video={discovery?.recentSingingStream?.video}
+                playlist={discovery?.recentSingingStream?.playlist}
+              />
+            </Box>
+          ) : (
+            discovery?.recentSingingStream?.playlist && (
+              <Box mb={4}>
+                <Heading size="md" marginBottom={2}>
+                  Latest Stream:
+                </Heading>
+
+                <PlaylistCard
+                  playlist={discovery?.recentSingingStream?.playlist}
+                  key={"kpc" + discovery?.recentSingingStream?.playlist.id}
+                />
+              </Box>
+            )
+          ))}
         {trending && (
           <Box flex="1 1 140px" minWidth="300px">
             <Heading size="md" marginBottom={2}>
