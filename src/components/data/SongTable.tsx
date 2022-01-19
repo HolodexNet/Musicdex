@@ -33,6 +33,14 @@ import { FaPlay } from "react-icons/fa";
 import { MotionBox } from "../common/MotionBox";
 import { SongArtwork } from "../song/SongArtwork";
 
+export type SongTableCol =
+  | "idx"
+  | "title"
+  | "og_artist"
+  | "duration"
+  | "sang_on"
+  | "menu";
+
 interface SongTableProps {
   songs: Song[];
   // reactive hooks:
@@ -46,6 +54,7 @@ interface RowProps {
   songClicked?: (e: React.MouseEvent, s: Song) => void;
   showArtwork?: boolean;
   flipNames?: boolean;
+  hideCol?: SongTableCol[];
 }
 
 const IdxGrid = ({
@@ -162,8 +171,20 @@ export const SongTable = ({
   ...rest
 }: SongTableProps & BoxProps) => {
   const { t } = useTranslation();
-
-  const data = memoized(songs, menuId, rowProps);
+  const detailLevel = useBreakpointValue<SongTableCol[] | undefined>(
+    {
+      base: ["idx", "og_artist", "sang_on", "duration"],
+      sm: ["idx", "og_artist", "sang_on"],
+      md: ["idx", "og_artist"],
+      xl: undefined,
+    },
+    "xl"
+  );
+  const props = useMemo(
+    () => ({ ...rowProps, hideCol: rowProps?.hideCol ?? detailLevel }),
+    [detailLevel, rowProps]
+  );
+  const data = memoized(songs, menuId, props);
   const frameRef = useContext(FrameRef);
   const list = React.useRef<any>(null);
   const onScroll = useCallback(({ scrollTop }) => {
@@ -224,22 +245,13 @@ function Row({
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
 
   const { show } = useContextMenu({ id: data.menuId });
-  const detailLevel = useBreakpointValue(
-    {
-      base: 0,
-      xs: 0,
-      sm: 1,
-      md: 2,
-      xl: 3,
-    },
-    "xl"
-  );
   const rowProps = data.rowProps;
   const HOVER_ROW_STYLE: CSSObject = {
     backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
   };
   const dragSongProps = useDraggableSong(song);
   const [hoveredRowIndex, setHoveredRowIndex] = useState(false);
+  const hideCol = rowProps?.hideCol;
   const clickFn = (e: React.MouseEvent) =>
     rowProps?.songClicked
       ? rowProps.songClicked(e, song)
@@ -259,7 +271,7 @@ function Row({
         onMouseLeave={() => setHoveredRowIndex(false)}
       >
         {/* IDX: */}
-        {detailLevel && detailLevel >= 3 ? (
+        {!hideCol?.includes("idx") ? (
           <Box width="30px" margin="auto">
             <IdxGrid
               id={index}
@@ -271,45 +283,53 @@ function Row({
             />
           </Box>
         ) : undefined}
-        <HStack flex="1.4 1 90px" px={2} margin="auto">
-          {rowProps?.showArtwork && (
-            <SongArtwork song={song} size={40} rounded="sm" />
-          )}
-          <TitleGrid song={song} onTitleClick={clickFn} />
-        </HStack>
-        {detailLevel && detailLevel >= 3 ? (
+        {!hideCol?.includes("title") && (
+          <HStack flex="1.4 1 90px" px={2} margin="auto">
+            {rowProps?.showArtwork && (
+              <SongArtwork song={song} size={40} rounded="sm" />
+            )}
+            <TitleGrid
+              song={song}
+              onTitleClick={clickFn}
+              flipNames={rowProps?.flipNames}
+            />
+          </HStack>
+        )}
+        {!hideCol?.includes("og_artist") ? (
           <Box flex="1 1 60px" noOfLines={2} px={2} margin="auto">
             {song.original_artist}
           </Box>
         ) : undefined}
-        {detailLevel && detailLevel >= 1 ? (
+        {!hideCol?.includes("duration") ? (
           <Box flex="0 1 80px" noOfLines={1} textAlign="right" margin="auto">
             <DurationGrid song={song} />
           </Box>
         ) : undefined}
-        {detailLevel && detailLevel >= 2 ? (
+        {!hideCol?.includes("sang_on") ? (
           <Box flex="0 1 150px" noOfLines={2} textAlign="right" margin="auto">
             <SangOnGrid value={new Date(song.available_at)} />
           </Box>
         ) : undefined}
-        <Box
-          flex="0 0 90px"
-          textAlign="right"
-          margin="auto"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <SongLikeButton song={song} />
-          <IconButton
-            icon={<FiMoreHorizontal />}
-            rounded="full"
-            size="sm"
-            ml={2}
-            variant="ghost"
-            colorScheme="n2"
-            aria-label="More"
-            onClick={(e) => show(e, { props: song })}
-          ></IconButton>
-        </Box>
+        {!hideCol?.includes("menu") && (
+          <Box
+            flex="0 0 90px"
+            textAlign="right"
+            margin="auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <SongLikeButton song={song} />
+            <IconButton
+              icon={<FiMoreHorizontal />}
+              rounded="full"
+              size="sm"
+              ml={2}
+              variant="ghost"
+              colorScheme="n2"
+              aria-label="More"
+              onClick={(e) => show(e, { props: song })}
+            ></IconButton>
+          </Box>
+        )}
       </Flex>
     </div>
   );

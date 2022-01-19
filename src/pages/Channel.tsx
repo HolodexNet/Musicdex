@@ -22,6 +22,7 @@ import { CardCarousel } from "../components/common/CardCarousel";
 import { MTHolodexIcon } from "../components/common/MTHolodex";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { VideoPlaylistCard } from "../components/common/VideoPlaylistCard";
+import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistCard } from "../components/playlist/PlaylistCard";
@@ -227,9 +228,17 @@ function ChannelContent({
               </Button>
             </Heading>
             <Box overflow="auto" height="300px">
-              {trending?.map((x) => (
+              {/* {trending?.map((x) => (
                 <SongItem song={x} key={"l-t-" + x.id}></SongItem>
-              ))}
+              ))} */}
+              <SongTable
+                songs={trending}
+                rowProps={{
+                  hideCol: ["idx", "og_artist", "duration", "menu", "sang_on"],
+                  flipNames: true,
+                  showArtwork: true,
+                }}
+              />
             </Box>
           </Box>
         )}

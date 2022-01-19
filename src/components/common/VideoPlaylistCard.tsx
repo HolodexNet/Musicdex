@@ -22,6 +22,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useNamePicker from "../../modules/common/useNamePicker";
 import { useStoreActions, useStoreState } from "../../store";
 import { useDraggableSong } from "../data/DraggableSong";
+import { SongTable } from "../data/SongTable";
 import { DEFAULT_MENU_ID } from "./CommonContext";
 import { MotionBox } from "./MotionBox";
 import { NowPlayingIcon } from "./NowPlayingIcon";
@@ -108,29 +109,23 @@ export const VideoPlaylistCard = React.memo(
               flexBasis={900 / 34 + "%"}
               height="100%"
               bgColor="bgAlpha.800"
+              overflowY="scroll"
             >
               {playlist?.content ? (
-                <List
-                  spacing={1}
-                  py={2}
-                  height="100%"
-                  overflowY="auto"
-                  display="block"
-                  flexDir="column"
-                >
-                  {playlist?.content.map((x, idx) => (
-                    <HighlightListItem
-                      key={"wph" + x.id}
-                      song={x}
-                      index={idx}
-                      active={currentlyPlayingId === x.id}
-                      songClicked={() => {
-                        if (!playlist) return;
-                        setPlaylist({ playlist, startPos: idx });
-                      }}
-                    />
-                  ))}
-                </List>
+                <SongTable
+                  songs={playlist.content}
+                  rowProps={{
+                    hideCol: ["og_artist", "duration", "sang_on", "menu"],
+                    flipNames: true,
+                    songClicked: (e, song) =>
+                      setPlaylist({
+                        playlist,
+                        startPos: playlist.content?.findIndex(
+                          (s) => s.id === song.id
+                        ),
+                      }),
+                  }}
+                />
               ) : (
                 <Center height="100%">
                   {new Date(video.available_at) < new Date() ? (
