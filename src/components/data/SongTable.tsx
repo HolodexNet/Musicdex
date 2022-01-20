@@ -240,7 +240,6 @@ function Row({
   };
 }) {
   // const { t } = useTranslation();
-  console.log(data.songList, index);
   const song = useMemo(() => data.songList[index], [data.songList, index]);
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
 
