@@ -44,11 +44,13 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { PlaylistList } from "../playlist/PlaylistList";
+import { LogoWithText } from "./LogoWithText";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
+  closeOnNav?: boolean;
   linkItems?: LinkItemProps[];
 }
 export interface LinkItemProps {
@@ -68,6 +70,7 @@ const LinkItems: Array<LinkItemProps> = [
 
 export function SidebarContent({
   linkItems = LinkItems,
+  closeOnNav = false,
   onClose,
   ...rest
 }: SidebarProps) {
@@ -79,6 +82,9 @@ export function SidebarContent({
   const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
   const toast = useToast();
 
+  useEffect(() => {
+    if (closeOnNav) onClose();
+  }, [pathname]);
   return (
     <Box
       transition="3s ease"
@@ -108,9 +114,7 @@ export function SidebarContent({
         justifyContent="space-between"
         display={{ base: "flex", lg: "none" }}
       >
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Musicdex
-        </Text>
+        <LogoWithText />
         <CloseButton display={{ base: "flex", lg: "none" }} onClick={onClose} />
       </Flex>
       <NavItem icon={FiHome} key={"Home"} mb={4} path="/">

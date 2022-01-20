@@ -119,7 +119,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
           size="full"
         >
           <DrawerContent>
-            <SidebarContent onClose={onClose} />
+            <SidebarContent onClose={onClose} closeOnNav />
           </DrawerContent>
         </Drawer>
         <Flex

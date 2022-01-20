@@ -55,6 +55,7 @@ export const PlayerBar = React.memo(
     const breakpoint = useBreakpoint();
 
     const [dragStartY, setDragStartY] = useState(0);
+    const canEnlarge = useBreakpointValue({ base: true, lg: false });
 
     useEffect(() => {
       if (fullPlayer) {
@@ -76,7 +77,9 @@ export const PlayerBar = React.memo(
       if (
         e?.target?.className &&
         typeof e.target.className === "string" &&
-        e?.target?.className.split(" ").length === 1
+        e?.target?.className.split(" ").length === 1 &&
+        canEnlarge && //only allow toggling on Mobile?
+        currentSong
       ) {
         toggleFullPlayer();
       }

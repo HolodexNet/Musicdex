@@ -10,7 +10,6 @@ import {
   Avatar,
   VStack,
   Box,
-  Heading,
   MenuList,
   MenuItem,
   MenuDivider,
@@ -21,7 +20,7 @@ import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useClient } from "../../modules/client";
 import { Searchbox } from "../header/Searchbox";
-import { GradientLogo } from "../icons/GradientLogo";
+import { LogoWithText } from "./LogoWithText";
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
@@ -55,17 +54,7 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
         aria-label="open menu"
         icon={<FiMenu />}
       />
-      <HStack display={{ base: "none", md: "flex" }}>
-        <GradientLogo w={6} h={6} />
-        <Heading
-          display={{ base: "flex", lg: "flex" }}
-          fontSize="2xl"
-          // fontFamily="monospace"
-          // fontWeight="bold"
-        >
-          Musicdex
-        </Heading>
-      </HStack>
+      <LogoWithText />
 
       <Searchbox w={{ base: "100%", md: "40%" }} paddingX={4} />
 
