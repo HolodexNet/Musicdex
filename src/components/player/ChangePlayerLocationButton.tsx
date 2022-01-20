@@ -11,6 +11,7 @@ import {
 import React from "react";
 import { FiEyeOff, FiMaximize, FiSidebar } from "react-icons/fi";
 import { MdPictureInPicture, MdPictureInPictureAlt } from "react-icons/md";
+import { RiDragMoveFill } from "react-icons/ri";
 import { useStoreActions, useStoreState } from "../../store";
 import { SelectedPosition } from "../../store/settings";
 
@@ -20,6 +21,7 @@ const LocationIcons: Record<string, JSX.Element> = {
   background: <FiMaximize />,
   sidebar: <FiSidebar />,
   hidden: <FiEyeOff />,
+  drag: <RiDragMoveFill />,
 };
 
 function _ChangePlayerLocationButton() {

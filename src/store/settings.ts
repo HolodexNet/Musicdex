@@ -6,7 +6,8 @@ export type SelectedPosition =
   | "background"
   | "sidebar"
   // | "full-player"
-  | "hidden";
+  | "hidden"
+  | "drag";
 export interface SettingsStore {
   //leveraging context menu for drag drop
   useEN: boolean;

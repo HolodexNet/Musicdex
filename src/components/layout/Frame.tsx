@@ -8,11 +8,13 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useAnimation } from "framer-motion";
 import {
   createContext,
   DOMElement,
   ReactNode,
   RefObject,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -74,6 +76,13 @@ const POSITIONS: { [key: string]: ChakraProps } = {
     zIndex: -4,
     position: "absolute",
   },
+  drag: {
+    position: "absolute",
+    width: "350px",
+    height: "200px",
+    bottom: "20px",
+    left: "20px",
+  },
 };
 export const FrameRef = createContext<any>(null);
 
@@ -82,9 +91,8 @@ export default function Frame({ children }: { children?: ReactNode }) {
 
   const colorMode = useColorModeValue("applight", "appdark");
   const showBottomNav = useBreakpointValue({ base: true, md: false });
-
   const pos = useStoreState((state) => state.player.position);
-  const props = useMemo(() => POSITIONS[pos], [pos]);
+
   const frameRef = useRef<any>(undefined);
 
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
@@ -156,22 +164,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
                 {/* <Box minH={pos === "hover-bottom" ? "250px" : "0px"}></Box> */}
               </Flex>
             </FrameRef.Provider>
-            <MotionBox
-              {...props}
-              transition={{ duration: 0.3, type: "tween", ease: "easeInOut" }}
-              layout
-            >
-              <Box
-                visibility={pos === "background" ? "visible" : "hidden"}
-                width="100%"
-                height="100%"
-                position="absolute"
-                float="initial"
-                opacity={0.6}
-                bgColor="bg.900"
-              ></Box>
-              <YoutubePlayer onReady={onReady} />
-            </MotionBox>
+            <MovablePlayer onReady={onReady} />
           </Flex>
         </Flex>
         <Player player={player} />
@@ -180,5 +173,58 @@ export default function Frame({ children }: { children?: ReactNode }) {
       </Flex>
       <CommonContextMenu />
     </Box>
+  );
+}
+function MovablePlayer({
+  onReady,
+}: {
+  onReady: (event: { target: YouTubePlayer }) => void;
+}) {
+  const pos = useStoreState((state) => state.player.position);
+  const props = useMemo(() => POSITIONS[pos], [pos]);
+  const controls = useAnimation();
+
+  useEffect(() => {
+    if (pos === "drag") controls.start("draggable");
+    else controls.start("normal");
+  }, [pos]);
+  return (
+    <MotionBox
+      {...props}
+      transition={{ duration: 0.3, type: "tween", ease: "easeInOut" }}
+      layout
+      controls={controls}
+      drag={pos === "drag"}
+      // dragConstraints={boundingRef} <- yeah drag constraints dont work
+      dragElastic={0.2}
+      dragMomentum={false}
+      dragConstraints={
+        pos === "drag" ? undefined : { left: 0, right: 0, top: 0, bottom: 0 }
+      }
+      variants={{
+        normal: { y: 0, x: 0, transform: "none" },
+        draggable: {},
+      }}
+    >
+      <Box
+        visibility={pos === "background" ? "visible" : "hidden"}
+        width="100%"
+        height="100%"
+        position="absolute"
+        float="initial"
+        opacity={0.6}
+        bgColor="bg.900"
+      ></Box>
+      <Box
+        width="30px"
+        height="10px"
+        bgColor="red.200"
+        borderRadius="5px"
+        position="absolute"
+        top="-5px"
+        visibility={pos === "drag" ? "visible" : "hidden"}
+      ></Box>
+      <YoutubePlayer onReady={onReady} />
+    </MotionBox>
   );
 }
