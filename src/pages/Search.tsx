@@ -96,8 +96,9 @@ export default function Search() {
               Prev
             </Button>
             <Text>
-              1 ~ {(searchResult?.page || 0) * 10 - 10 + (songs?.length || 0)}{" "}
-              out of {searchResult?.found}
+              {(searchResult?.page || 0) * 10 - 9} ~{" "}
+              {(searchResult?.page || 0) * 10 - 10 + (songs?.length || 0)} out
+              of {searchResult?.found}
             </Text>
 
             <Button

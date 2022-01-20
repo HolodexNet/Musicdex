@@ -152,7 +152,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
                 ref={frameRef}
               >
                 {children}
-                {/* <Footer></Footer> */}
+                <Footer></Footer>
                 {/* <Box minH={pos === "hover-bottom" ? "250px" : "0px"}></Box> */}
               </Flex>
             </FrameRef.Provider>
