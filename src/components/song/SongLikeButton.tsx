@@ -2,7 +2,11 @@ import { IconButton, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FiLoader } from "react-icons/fi";
-import { useSongLikeUpdater } from "../../modules/services/like.service";
+import { useQueryClient } from "react-query";
+import {
+  useSongLikeUpdater,
+  useSongLikeBulkCheck,
+} from "../../modules/services/like.service";
 
 export function SongLikeButton({ song }: { song: Song }) {
   const {
@@ -12,7 +16,6 @@ export function SongLikeButton({ song }: { song: Song }) {
     isLoading,
   } = useSongLikeUpdater();
 
-  const liked = song.liked;
   const toast = useToast();
 
   useEffect(() => {
@@ -24,26 +27,36 @@ export function SongLikeButton({ song }: { song: Song }) {
       isClosable: true,
     });
   }, [isSuccess, isError, toast]);
+  const { data, isLoading: isLoadingStatus } = useSongLikeBulkCheck(song.id);
 
   function toggleLike() {
     updateLike({
       song_id: song.id,
-      action: liked ? "delete" : "add",
+      action: data ? "delete" : "add",
     });
   }
 
+  // console.log(data);
   return (
     <IconButton
       // size="sm"
       width="20px"
       // padding="4px"
       margin={-2}
-      icon={isLoading ? <FiLoader /> : liked ? <FaHeart /> : <FaRegHeart />}
+      icon={
+        isLoading || isLoadingStatus ? (
+          <FiLoader />
+        ) : data ? (
+          <FaHeart />
+        ) : (
+          <FaRegHeart />
+        )
+      }
       aria-label="Like Song"
       onClick={toggleLike}
       colorScheme={"brand"}
       variant="ghost"
-      opacity={liked ? 1 : 0.3}
+      opacity={data ? 1 : 0.3}
       // mr={2}
       // ml={-1}
     ></IconButton>

@@ -1,12 +1,18 @@
+import "setimmediate";
 import { Dictionary } from "lodash";
 import uniq from "lodash-es/uniq";
 import zipObject from "lodash-es/zipObject";
+import { useMemo } from "react";
+import Dataloader, { BatchLoadFn } from "dataloader";
+
 import {
   UseMutationOptions,
   UseQueryOptions,
   useMutation,
   useQuery,
   useQueryClient,
+  useQueries,
+  QueryFunctionContext,
 } from "react-query";
 import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
@@ -32,11 +38,12 @@ export const useSongLikeUpdater = (
     {
       ...callbacks,
       onSuccess: (data, payload, ...rest) => {
-        queryClient.cancelQueries(["likedSongList"]);
-        queryClient.invalidateQueries(["likedSongList"]);
-        queryClient.invalidateQueries(["playlist-like"]);
-        queryClient.cancelQueries(["likedSongs"]);
-        queryClient.invalidateQueries(["likedSongs"]);
+        // queryClient.cancelQueries(["likedSongList"]);
+        // queryClient.invalidateQueries(["likedSongList"]);
+        // queryClient.invalidateQueries(["playlist-like"]);
+        // queryClient.cancelQueries(["likedSongs"]);
+        // queryClient.invalidateQueries(["likedSongs"]);
+        queryClient.invalidateQueries([BULKLIKE_, payload.song_id]);
         if (callbacks.onSuccess) {
           callbacks.onSuccess(data, payload, ...rest);
         }
@@ -45,65 +52,65 @@ export const useSongLikeUpdater = (
   );
 };
 
-export const useLikedCheckSongs = (songIds: string[], enabled?: boolean) => {
-  // const queryClient = useQueryClient();
-  const { AxiosInstance, isLoggedIn } = useClient();
-  const uSongIds = uniq(songIds);
-  const result = useQuery(
-    ["likedSongs", uSongIds],
-    async (q): Promise<Dictionary<boolean>> => {
-      // console.log("fetching like status");
-      if (!isLoggedIn || !uSongIds.length) {
-        return {};
-      }
-      const req = await AxiosInstance<boolean[]>(
-        `/musicdex/like/check?song_id=${uSongIds.join(",")}`
-      );
-      return zipObject(uSongIds, req.data);
-    },
-    {
-      ...DEFAULT_FETCH_CONFIG,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      cacheTime: 60 * 1000 * 60,
-      staleTime: 60 * 1000 * 60,
-      enabled,
-    }
-  );
-  return result;
-};
+// export const useLikedCheckSongs = (songIds: string[], enabled?: boolean) => {
+//   // const queryClient = useQueryClient();
+//   const { AxiosInstance, isLoggedIn } = useClient();
+//   const uSongIds = uniq(songIds);
+//   const result = useQuery(
+//     ["likedSongs", uSongIds],
+//     async (q): Promise<Dictionary<boolean>> => {
+//       // console.log("fetching like status");
+//       if (!isLoggedIn || !uSongIds.length) {
+//         return {};
+//       }
+//       const req = await AxiosInstance<boolean[]>(
+//         `/musicdex/like/check?song_id=${uSongIds.join(",")}`
+//       );
+//       return zipObject(uSongIds, req.data);
+//     },
+//     {
+//       ...DEFAULT_FETCH_CONFIG,
+//       refetchOnMount: false,
+//       refetchOnWindowFocus: false,
+//       refetchOnReconnect: false,
+//       cacheTime: 60 * 1000 * 60,
+//       staleTime: 60 * 1000 * 60,
+//       enabled,
+//     }
+//   );
+//   return result;
+// };
 
-export const useLikedCheckPlaylist = (playlistId: string) => {
-  const { AxiosInstance, isLoggedIn } = useClient();
-  const results = useQuery<boolean[], unknown, boolean[], string[]>(
-    ["playlist-like", playlistId],
-    async (q): Promise<boolean[]> => {
-      if (!isLoggedIn) {
-        return [];
-      }
-      // fetch cached
-      // const cached: boolean[] | undefined = queryClient.getQueryData([
-      //   "playlist-like",
-      //   playlistId,
-      // ]);
+// export const useLikedCheckPlaylist = (playlistId: string) => {
+//   const { AxiosInstance, isLoggedIn } = useClient();
+//   const results = useQuery<boolean[], unknown, boolean[], string[]>(
+//     ["playlist-like", playlistId],
+//     async (q): Promise<boolean[]> => {
+//       if (!isLoggedIn) {
+//         return [];
+//       }
+//       // fetch cached
+//       // const cached: boolean[] | undefined = queryClient.getQueryData([
+//       //   "playlist-like",
+//       //   playlistId,
+//       // ]);
 
-      // if (cached) {
-      //   return cached;
-      // }
-      // cache miss:
-      return (
-        await AxiosInstance<boolean[]>(
-          `/musicdex/playlist/${q.queryKey[1]}/likeCheck`
-        )
-      ).data;
-    },
-    {
-      ...DEFAULT_FETCH_CONFIG,
-    }
-  );
-  return results;
-};
+//       // if (cached) {
+//       //   return cached;
+//       // }
+//       // cache miss:
+//       return (
+//         await AxiosInstance<boolean[]>(
+//           `/musicdex/playlist/${q.queryKey[1]}/likeCheck`
+//         )
+//       ).data;
+//     },
+//     {
+//       ...DEFAULT_FETCH_CONFIG,
+//     }
+//   );
+//   return results;
+// };
 
 export const useLikedSongs = (
   page?: number,
@@ -118,7 +125,7 @@ export const useLikedSongs = (
   const { AxiosInstance } = useClient();
 
   const result = useQuery(
-    ["likedSongList"],
+    ["likedSongList", String(page || 1)],
     async (q): Promise<PaginatedSongs> => {
       // fetch cached
       // const cached: Song[] | undefined = queryClient.getQueryData(["likedSongList"]);
@@ -141,7 +148,9 @@ export const useLikedSongs = (
       // }
       // cache miss:
       const songs = (
-        await AxiosInstance<PaginatedSongs>(`/musicdex/like?page=${page ?? 1}`)
+        await AxiosInstance<PaginatedSongs>(
+          `/musicdex/like?page=${Number.parseInt(q.queryKey[1]) ?? 1}`
+        )
       ).data;
       songs?.content?.forEach((x) => (x.liked = true));
       return songs;
@@ -162,4 +171,43 @@ export function mergeSongsWithLikeCheck(songs: Song[], likeStatus: boolean[]) {
     return;
   }
   songs.forEach((x, index) => (x.liked = likeStatus[index]));
+}
+
+const BULKLIKE_ = "BLK:";
+let dataloader: Dataloader<string, boolean, unknown> | undefined = undefined;
+export function useSongLikeCheck_Loader():
+  | Dataloader<string, boolean, unknown>
+  | undefined {
+  const { AxiosInstance, isLoggedIn } = useClient();
+
+  if (!dataloader && isLoggedIn) {
+    const fetchDataPromise: BatchLoadFn<string, boolean> = async (
+      ids: readonly string[]
+    ) => {
+      const out = Array.from(new Set(ids));
+      const resp = await AxiosInstance<boolean[]>(
+        `/musicdex/like/check?song_id=${out.join(",")}`
+      );
+      const obj = zipObject(out, resp.data);
+      return ids.map((x) => obj[x]);
+    };
+    dataloader = new Dataloader<string, boolean>(fetchDataPromise, {
+      cache: false, // <-- IMPORTANT, dataloader doesn't have the same cache management as react-query
+    });
+  }
+
+  return dataloader;
+}
+
+export function useSongLikeBulkCheck(songId: string) {
+  const loader = useSongLikeCheck_Loader();
+  const result = useQuery(
+    [BULKLIKE_, songId],
+    () => {
+      if (loader) return loader.load(songId);
+      else throw new Error("not logged in");
+    },
+    { ...DEFAULT_FETCH_CONFIG }
+  );
+  return result;
 }

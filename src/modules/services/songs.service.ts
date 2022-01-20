@@ -9,7 +9,7 @@ import {
 import { useClient } from "../client";
 import { encodeUrl } from "../client/utils";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
-import { useLikedCheckSongs } from "./like.service";
+// import { useLikedCheckSongs } from "./like.service";
 
 export const useSong = (
   songId: string,
@@ -25,19 +25,20 @@ export const useSong = (
     { ...DEFAULT_FETCH_CONFIG, ...config }
   );
 
-  const likestatus = useLikedCheckSongs(
-    result?.data?.id ? [result.data.id] : [],
-    true
-  );
+  // const likestatus = useLikedCheckSongs(
+  //   result?.data?.id ? [result.data.id] : [],
+  //   true
+  // );
 
-  const newSongResult = useMemo(() => {
-    if (likestatus.data && result.data) {
-      return { ...result.data, liked: likestatus.data[result.data.id] };
-    } else {
-      return result.data;
-    }
-  }, [result.data, likestatus.data]);
-  return { ...result, data: newSongResult };
+  // const newSongResult = useMemo(() => {
+  //   if (likestatus.data && result.data) {
+  //     return { ...result.data, liked: likestatus.data[result.data.id] };
+  //   } else {
+  //     return result.data;
+  //   }
+  // }, [result.data, likestatus.data]);
+  // return { ...result, data: newSongResult };
+  return result;
 };
 
 export const useTrendingSongs = (
@@ -109,33 +110,33 @@ export const useSongAPI = (
     { ...DEFAULT_FETCH_CONFIG, ...config }
   );
 
-  const likestatus = useLikedCheckSongs(
-    result?.data?.items ? result.data.items.map((x) => x.id) : [],
-    true
-  );
+  // const likestatus = useLikedCheckSongs(
+  //   result?.data?.items ? result.data.items.map((x) => x.id) : [],
+  //   true
+  // );
 
-  let newSongResult = useMemo(() => {
-    console.log(
-      "regenerating song list like state",
-      likestatus.data,
-      result.data?.items
-    );
-    if (likestatus.data && result.data?.items) {
-      return {
-        total: result.data.total,
-        items: result.data.items.map((x) => ({
-          ...x,
-          liked: likestatus.data[x.id],
-        })),
-      };
-    } else {
-      return result.data;
-    }
-  }, [result, likestatus]);
+  // let newSongResult = useMemo(() => {
+  //   console.log(
+  //     "regenerating song list like state",
+  //     likestatus.data,
+  //     result.data?.items
+  //   );
+  //   if (likestatus.data && result.data?.items) {
+  //     return {
+  //       total: result.data.total,
+  //       items: result.data.items.map((x) => ({
+  //         ...x,
+  //         liked: likestatus.data[x.id],
+  //       })),
+  //     };
+  //   } else {
+  //     return result.data;
+  //   }
+  // }, [result, likestatus]);
 
   // console.log(newSongResult?.items[0]);
 
-  return { ...result, data: newSongResult };
+  return result;
 };
 
 export const useTrackSong = (

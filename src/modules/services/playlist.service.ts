@@ -7,7 +7,6 @@ import {
 } from "react-query";
 import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
-import { mergeSongsWithLikeCheck, useLikedCheckPlaylist } from "./like.service";
 
 export const usePlaylistWriter = (
   callbacks: UseMutationOptions<
@@ -180,11 +179,11 @@ export const usePlaylist = (
     }
   );
 
-  const likeCheck = useLikedCheckPlaylist(playlistId);
+  // const likeCheck = useLikedCheckPlaylist(playlistId);
 
-  if (result.data?.content?.length && likeCheck.data?.length) {
-    mergeSongsWithLikeCheck(result.data.content, likeCheck.data);
-  }
+  // if (result.data?.content?.length && likeCheck.data?.length) {
+  //   mergeSongsWithLikeCheck(result.data.content, likeCheck.data);
+  // }
 
   return result;
 };
