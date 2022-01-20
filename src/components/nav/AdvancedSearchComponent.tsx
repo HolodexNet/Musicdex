@@ -14,6 +14,7 @@ import {
   Tag,
   TagLabel,
   TagLeftIcon,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -185,6 +186,8 @@ export function AdvancedSearchFiltersForm({
     ];
   }, [suborgs, suborgsFacets]);
 
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   // console.log(errors);
 
   return (
@@ -193,7 +196,7 @@ export function AdvancedSearchFiltersForm({
         <FormLabel htmlFor="q">
           <Tag size="md" variant="subtle" colorScheme="cyan">
             <TagLeftIcon boxSize="12px" as={FiSearch} />
-            <TagLabel>
+            <TagLabel noOfLines={2} whiteSpace="normal">
               Search by Everything (Name, Original Artist, Channel,
               Organization)
             </TagLabel>
@@ -210,7 +213,7 @@ export function AdvancedSearchFiltersForm({
         />
         <FormErrorMessage>{errors.q && errors.q.message}</FormErrorMessage>
       </FormControl>
-      <SimpleGrid spacing={4} minChildWidth="500px" my={4}>
+      <SimpleGrid spacing={4} minChildWidth="200px" my={4}>
         <FormControl isInvalid={!!errors.original_artist}>
           <FormLabel htmlFor="original_artist">
             <Tag size="md" variant="subtle" colorScheme="cyan">

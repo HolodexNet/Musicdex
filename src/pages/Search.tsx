@@ -6,6 +6,7 @@ import {
   HStack,
   Spacer,
   Text,
+  useBreakpointValue,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -134,14 +135,15 @@ function AdvancedSearchFilters({ ...props }: AdvancedSearchProps) {
   }, [onOpen, search]);
 
   const [id, incr] = useState(200);
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
     <Box
       style={{
         width: isOpen ? "100%" : "120px",
         backgroundColor: isOpen ? "#222" : "transparent",
-        padding: isOpen ? "1.5rem" : "0px",
-        borderRadius: isOpen ? "1.5rem" : "auto",
+        padding: isOpen ? (isMobile ? "0.5rem" : "1.5rem") : "0px",
+        borderRadius: isOpen ? (isMobile ? "0.5rem" : "1.5rem") : "auto",
         // marginLeft: "auto",
         // marginRight: "0px",
       }}
