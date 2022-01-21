@@ -1,9 +1,16 @@
 {
+  "NO_TL": {
+    "absoluteDate": "{{date, absolute}}",
+    "longDate": "{{date, long}}",
+    "relativeDate": "{{date, ago}}",
+    "shortDate": "{{date, short}}",
+    "shortDateTime": "{{date, datetime}}"
+  },
   "add": "追加",
-  "load": "ロード",
-  "save": "保存",
   "close": "閉じる",
   "edit": "編集",
+  "load": "ロード",
   "remove": "削除",
+  "save": "保存",
   "set": "確定"
 }
