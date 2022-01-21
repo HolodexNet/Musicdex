@@ -112,7 +112,7 @@ export function SidebarContent({
         display={{ base: "flex", lg: "none" }}
       >
         <LogoWithText />
-        <CloseButton display={{ base: "flex", lg: "none" }} onClick={onClose} />
+        <CloseButton onClick={onClose} />
       </Flex>
       <NavItem icon={FiHome} key={"Home"} mb={4} path="/">
         Home
