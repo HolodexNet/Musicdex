@@ -59,44 +59,41 @@ export function register(config?: Config) {
   }
 }
 
+function listenForWaitingServiceWorker(
+  reg: ServiceWorkerRegistration,
+  callback: (reg: ServiceWorkerRegistration) => void
+) {
+  function awaitStateChange() {
+    reg.installing?.addEventListener("statechange", function () {
+      if (this.state === "installed") callback(reg);
+    });
+  }
+  if (!reg) return;
+  if (reg.waiting) return callback(reg);
+  if (reg.installing) awaitStateChange();
+  reg.addEventListener("updatefound", awaitStateChange);
+}
+
+// reload once when the new Service Worker starts activating
+let refreshing: boolean;
+navigator.serviceWorker.addEventListener("controllerchange", function () {
+  if (refreshing) return;
+  refreshing = true;
+  window.location.reload();
+});
+function promptUserToRefresh(reg: ServiceWorkerRegistration) {
+  // this is just an example
+  // don't use window.confirm in real life; it's terrible
+  // if (window.confirm("New version available! OK to refresh?")) {
+  reg.waiting?.postMessage("skipWaiting");
+  // }
+}
+
 function registerValidSW(swUrl: string, config?: Config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      registration.onupdatefound = () => {
-        const installingWorker = registration.installing;
-        if (installingWorker == null) {
-          return;
-        }
-        installingWorker.onstatechange = () => {
-          if (installingWorker.state === "installed") {
-            if (navigator.serviceWorker.controller) {
-              // At this point, the updated precached content has been fetched,
-              // but the previous service worker will still serve the older
-              // content until all client tabs are closed.
-              console.log(
-                "New content is available and will be used when all " +
-                  "tabs for this page are closed. See https://cra.link/PWA."
-              );
-
-              // Execute callback
-              if (config && config.onUpdate) {
-                config.onUpdate(registration);
-              }
-            } else {
-              // At this point, everything has been precached.
-              // It's the perfect time to display a
-              // "Content is cached for offline use." message.
-              console.log("Content is cached for offline use.");
-
-              // Execute callback
-              if (config && config.onSuccess) {
-                config.onSuccess(registration);
-              }
-            }
-          }
-        };
-      };
+      listenForWaitingServiceWorker(registration, promptUserToRefresh);
     })
     .catch((error) => {
       console.error("Error during service worker registration:", error);
