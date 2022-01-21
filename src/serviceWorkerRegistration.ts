@@ -85,7 +85,7 @@ function promptUserToRefresh(reg: ServiceWorkerRegistration) {
   // this is just an example
   // don't use window.confirm in real life; it's terrible
   // if (window.confirm("New version available! OK to refresh?")) {
-  reg.waiting?.postMessage("skipWaiting");
+  reg.waiting?.postMessage({ type: "SKIP_WAITING" });
   // }
 }
 
