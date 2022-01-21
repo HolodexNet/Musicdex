@@ -82,9 +82,6 @@ export function SidebarContent({
   const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
   const toast = useToast();
 
-  useEffect(() => {
-    if (closeOnNav) onClose();
-  }, [pathname]);
   return (
     <Box
       transition="3s ease"
