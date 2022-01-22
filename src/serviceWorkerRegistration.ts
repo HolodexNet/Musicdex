@@ -1,6 +1,9 @@
 // This optional code is used to register a service worker.
 // register() is not called by default.
 
+import { createStandaloneToast } from "@chakra-ui/react";
+import { theme } from "./theme";
+
 // This lets the app load faster on subsequent visits in production, and gives
 // it offline capabilities. However, it also means that developers (and users)
 // will only see deployed updates on subsequent visits to a page, after all the
@@ -85,7 +88,17 @@ function promptUserToRefresh(reg: ServiceWorkerRegistration) {
   // this is just an example
   // don't use window.confirm in real life; it's terrible
   // if (window.confirm("New version available! OK to refresh?")) {
-  reg.waiting?.postMessage({ type: "SKIP_WAITING" });
+  const toast = createStandaloneToast({ theme: theme });
+  toast({
+    position: "top-left",
+    title: "Updating...",
+    status: "success",
+    duration: 2000,
+  });
+  setTimeout(() => {
+    reg.waiting?.postMessage({ type: "SKIP_WAITING" });
+  }, 2000);
+
   // }
 }
 
