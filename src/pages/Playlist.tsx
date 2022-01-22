@@ -1,4 +1,13 @@
-import { Box, Flex, useColorModeValue, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Code,
+  Flex,
+  Heading,
+  useColorModeValue,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
@@ -20,6 +29,7 @@ import React from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { BGImgContainer, BGImg } from "../components/common/BGImgContainer";
+import { ErrorFallback } from "../ErrorFallback";
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
 );
@@ -96,8 +106,22 @@ export default function Playlist() {
       setEditMode(false);
     }
   };
+  console.log(status.error);
 
-  // if (status.error.status === 401) { .. you need to login .. }
+  if (status.error) {
+    return (
+      <Box pt="10vh" px={6}>
+        <Center role="alert" my={10}>
+          <VStack spacing={4}>
+            <Heading>
+              You do not have access to this playlist (or it doesn't exist)
+            </Heading>
+            <Code>{(status?.error as Error)?.toString()}</Code>
+          </VStack>
+        </Center>
+      </Box>
+    );
+  }
 
   if (!playlist)
     return (
