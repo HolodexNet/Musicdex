@@ -1,21 +1,15 @@
-import { Icon, Menu } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { Icon } from "@chakra-ui/react";
+import { useState } from "react";
 import {
   Item,
-  Separator,
   ItemParams,
   Menu as CMenu,
+  Separator,
   Submenu,
 } from "react-contexify";
 import { BiListPlus } from "react-icons/bi";
 import { BsInputCursorText } from "react-icons/bs";
-import {
-  FiChevronRight,
-  FiCopy,
-  FiFolderPlus,
-  FiLink,
-  FiPlusCircle,
-} from "react-icons/fi";
+import { FiChevronRight, FiCopy, FiFolderPlus, FiLink } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions } from "../../store";

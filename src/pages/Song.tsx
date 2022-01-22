@@ -108,6 +108,7 @@ export default function Song() {
                   marginTop="auto"
                   // maxWidth="200px"
                   // minW="120px"
+                  bgColor="brand.100"
                   size="lg"
                   title="Play"
                   rightIcon={<FaPlay style={{ scale: "1" }} />}
