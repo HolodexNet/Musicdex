@@ -60,6 +60,7 @@ export const usePlaylistUpdater = (
     {
       ...config,
       onSuccess: (data, payload, ...rest) => {
+        console.log("invalidating queries:", ["playlist", payload.playlistId]);
         queryClient.cancelQueries(["playlist", payload.playlistId]);
         queryClient.cancelQueries(["playlist-like", payload.playlistId]);
         // apparently start-ui has some support for querying the cache and doing stuff to it?... seems interesting.
@@ -145,6 +146,7 @@ export const usePlaylist = (
     ["playlist", playlistId],
     async (q): Promise<PlaylistFull> => {
       // fetch cached
+      console.log("fetching", q);
       const cached: PlaylistFull | undefined = queryClient.getQueryData([
         "playlist",
         playlistId,
@@ -152,6 +154,10 @@ export const usePlaylist = (
 
       if (cached) {
         try {
+          console.log(
+            "updated at: ",
+            cached.updated_at?.toString() ?? cached.updated_at
+          );
           const newdata = await AxiosInstance<PlaylistFull>(
             `/musicdex/playlist/${q.queryKey[1]}`,
             {
@@ -164,6 +170,7 @@ export const usePlaylist = (
           if (!newdata.data?.id) return cached;
           else return newdata.data;
         } catch (e) {
+          console.log(e);
           return cached;
         }
       }
@@ -196,7 +203,6 @@ export const useMyPlaylists = (
     string[]
   > = {}
 ) => {
-  const queryClient = useQueryClient();
   const { AxiosInstance, isLoggedIn } = useClient();
 
   const result = useQuery(
