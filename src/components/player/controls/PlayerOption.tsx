@@ -1,8 +1,7 @@
 import { Button, Flex, FlexProps, IconButton } from "@chakra-ui/react";
-import React, { useCallback, useMemo } from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import React, { useMemo } from "react";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
-import { RiPlayListFill } from "react-icons/ri";
+import { RiPlayList2Fill } from "react-icons/ri";
 import { useLocation, useNavigate } from "react-router";
 import { useStoreActions, useStoreState } from "../../../store";
 import { ChangePlayerLocationButton } from "../ChangePlayerLocationButton";
@@ -63,7 +62,7 @@ export const PlayerOption = React.memo(
         />
         {fullPlayer && (
           <Button
-            leftIcon={<RiPlayListFill />}
+            leftIcon={<RiPlayList2Fill />}
             marginX={4}
             onClick={() => toggleQueue()}
           >
@@ -82,7 +81,7 @@ export const PlayerOption = React.memo(
             <ChangePlayerLocationButton />
             <IconButton
               aria-label="Expand"
-              icon={<RiPlayListFill />}
+              icon={<RiPlayList2Fill />}
               color={queueActive ? "brand.200" : "gray"}
               variant="ghost"
               onClick={() => toggleQueue()}

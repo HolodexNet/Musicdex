@@ -73,13 +73,11 @@ export const PlaybackControl = React.memo(
           onClick={togglePlay}
           padding={sizeMultiplier * 3}
         />
-        {!mobilePlayer && (
-          <PlaybackButton
-            icon={<FaStepForward size={sizeMultiplier * 16} />}
-            onClick={() => next({ count: 1, userSkipped: true })}
-            marginX={3}
-          />
-        )}
+        <PlaybackButton
+          icon={<FaStepForward size={sizeMultiplier * 16} />}
+          onClick={() => next({ count: 1, userSkipped: true })}
+          marginX={3}
+        />
       </Flex>
     );
   }
