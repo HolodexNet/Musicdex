@@ -2,7 +2,6 @@ import {
   Box,
   Flex,
   IconButton,
-  Spacer,
   Text,
   useBreakpoint,
   useBreakpointValue,
@@ -18,9 +17,8 @@ import { TimeSlider } from "./controls/TimeSlider";
 import { useEffect, useState } from "react";
 import { MotionBox } from "../common/MotionBox";
 import { AnimatePresence, LayoutGroup } from "framer-motion";
-import { useStoreActions, useStoreState } from "../../store";
+import { useStoreActions } from "../../store";
 import { FaChevronDown } from "react-icons/fa";
-import { resizeArtwork } from "../../modules/songs/utils";
 import React from "react";
 import { useLocation } from "react-router-dom";
 interface PlayerBarProps {
@@ -133,6 +131,7 @@ export const PlayerBar = React.memo(
                   <PlaybackControl
                     isPlaying={isPlaying}
                     togglePlay={togglePlay}
+                    mobilePlayer={breakpoint === "base"}
                   />
                 </MotionBox>
                 <Flex

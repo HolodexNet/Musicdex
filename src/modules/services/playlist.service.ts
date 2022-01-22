@@ -60,6 +60,7 @@ export const usePlaylistUpdater = (
     {
       ...config,
       onSuccess: (data, payload, ...rest) => {
+        console.log("invalidating queries:", ["playlist", payload.playlistId]);
         queryClient.cancelQueries(["playlist", payload.playlistId]);
         queryClient.cancelQueries(["playlist-like", payload.playlistId]);
         // apparently start-ui has some support for querying the cache and doing stuff to it?... seems interesting.
@@ -139,51 +140,82 @@ export const usePlaylist = (
   config: UseQueryOptions<PlaylistFull, unknown, PlaylistFull, string[]> = {}
 ) => {
   const queryClient = useQueryClient();
-  const { AxiosInstance } = useClient();
-
+  const { AxiosInstance, isLoggedIn } = useClient();
   const result = useQuery(
     ["playlist", playlistId],
     async (q): Promise<PlaylistFull> => {
       // fetch cached
+      console.log("fetching", q);
       const cached: PlaylistFull | undefined = queryClient.getQueryData([
         "playlist",
         playlistId,
       ]);
 
+      let playlistReq = AxiosInstance<PlaylistFull>(
+        `/musicdex/playlist/${playlistId}`
+      );
+      const likeStatusReq = AxiosInstance<boolean[]>(
+        `/musicdex/playlist/${playlistId}/likeCheck`
+      );
+
+      // Cached flow
       if (cached) {
-        try {
-          const newdata = await AxiosInstance<PlaylistFull>(
-            `/musicdex/playlist/${q.queryKey[1]}`,
-            {
-              headers: {
-                "If-Modified-Since":
-                  cached.updated_at?.toString() ?? cached.updated_at,
-              },
-            }
-          ); // try fetching with If-Modified-Since, Server returns 304 if not modified.
-          if (!newdata.data?.id) return cached;
-          else return newdata.data;
-        } catch (e) {
-          return cached;
+        const cacheCheckReq = AxiosInstance<PlaylistFull>(
+          `/musicdex/playlist/${q.queryKey[1]}`,
+          {
+            headers: {
+              "If-Modified-Since":
+                cached.updated_at?.toString() ?? cached.updated_at,
+            },
+          }
+        ); // try fetching with If-Modified-Since, Server returns 304 if not modified.
+
+        // Not logged in, just check cache 304
+        if (!isLoggedIn) {
+          const { data: newdata } = await cacheCheckReq;
+          if (!newdata?.id) return cached;
+          else return newdata;
         }
+
+        // Parallel request
+        const [{ data: playlist }, { data: likeStatus }] = await Promise.all([
+          cacheCheckReq,
+          likeStatusReq,
+        ]);
+
+        // Check if content matches, and update cache
+        if (likeStatus.length === playlist.content?.length) {
+          playlist.content.forEach((song, index) => {
+            queryClient.setQueryData(["BLK:", song.id], likeStatus[index]);
+          });
+        }
+        return playlist;
       }
 
-      // cache miss:
-      return (
-        await AxiosInstance<PlaylistFull>(`/musicdex/playlist/${q.queryKey[1]}`)
-      ).data;
+      // Uncached request flow
+
+      // Not logged in, just request
+      if (!isLoggedIn) return (await playlistReq).data;
+
+      // Parallel request for like status and playlist
+      const [{ data: playlist }, { data: likeStatus }] = await Promise.all([
+        playlistReq,
+        likeStatusReq,
+      ]);
+
+      if (likeStatus.length === playlist.content?.length) {
+        playlist.content.forEach((song, index) => {
+          queryClient.setQueryData(["BLK:", song.id], likeStatus[index]);
+        });
+      }
+
+      return playlist;
     },
     {
       ...DEFAULT_FETCH_CONFIG,
       ...config,
     }
   );
-
-  // const likeCheck = useLikedCheckPlaylist(playlistId);
-
-  // if (result.data?.content?.length && likeCheck.data?.length) {
-  //   mergeSongsWithLikeCheck(result.data.content, likeCheck.data);
-  // }
 
   return result;
 };
@@ -196,7 +228,6 @@ export const useMyPlaylists = (
     string[]
   > = {}
 ) => {
-  const queryClient = useQueryClient();
   const { AxiosInstance, isLoggedIn } = useClient();
 
   const result = useQuery(

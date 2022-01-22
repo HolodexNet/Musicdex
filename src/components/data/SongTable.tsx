@@ -176,7 +176,8 @@ export const SongTable = ({
       base: ["idx", "og_artist", "sang_on", "duration"],
       sm: ["idx", "og_artist", "sang_on"],
       md: ["idx", "og_artist"],
-      xl: undefined,
+      lg: [],
+      xl: [],
     },
     "xl"
   );
