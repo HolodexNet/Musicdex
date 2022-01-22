@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Heading,
   HStack,
@@ -26,7 +27,11 @@ export default function Home() {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const queueSongs = useStoreActions((a) => a.playback.queueSongs);
 
-  const { data: discovery, isSuccess } = useDiscoveryOrg(org.name);
+  const {
+    data: discovery,
+    isSuccess,
+    ...discoveryRest
+  } = useDiscoveryOrg(org.name);
 
   return (
     <PageContainer>
@@ -47,7 +52,7 @@ export default function Home() {
           </Heading>
 
           {isMobile ? (
-            discovery?.recentSingingStreams && (
+            isSuccess || discovery?.recentSingingStreams ? (
               <CardCarousel height={230} width={160} scrollMultiplier={4}>
                 {discovery.recentSingingStreams
                   .filter((stream: any) => stream.playlist?.content?.length)
@@ -59,6 +64,8 @@ export default function Home() {
                     />
                   ))}
               </CardCarousel>
+            ) : (
+              <Box height={230}></Box>
             )
           ) : (
             <VideoPlaylistCarousel
@@ -67,13 +74,13 @@ export default function Home() {
           )}
         </HomeSection>
 
-        {discovery?.recommended?.playlists && (
+        {(discovery?.recommended?.playlists || discoveryRest.isLoading) && (
           <HomeSection>
             <Heading size="lg" mb={3}>
               {org.name} Playlists
             </Heading>
             <CardCarousel height={230} width={160} scrollMultiplier={4}>
-              {discovery.recommended.playlists.map(
+              {discovery?.recommended.playlists.map(
                 (p: Partial<PlaylistFull>) => (
                   <PlaylistCard playlist={p} key={"rec" + p.id} mx={2} />
                 )
@@ -82,7 +89,7 @@ export default function Home() {
           </HomeSection>
         )}
 
-        {trendingSongs && (
+        {(trendingSongs || rest.isLoading) && (
           <HomeSection>
             <HStack alignItems="flex-end" mb={3}>
               <Heading size="lg">Trending {org.name} Songs</Heading>
@@ -92,27 +99,30 @@ export default function Home() {
                 size="sm"
                 colorScheme="n2"
                 onClick={() =>
-                  queueSongs({ songs: trendingSongs, immediatelyPlay: false })
+                  queueSongs({
+                    songs: trendingSongs || [],
+                    immediatelyPlay: false,
+                  })
                 }
               >
                 Queue ({trendingSongs?.length})
               </Button>
             </HStack>
             <CardCarousel height={180} width={128} scrollMultiplier={4}>
-              {trendingSongs.map((song) => (
+              {trendingSongs?.map((song) => (
                 <SongCard song={song} key={song.id} mx={2} />
               ))}
             </CardCarousel>
           </HomeSection>
         )}
 
-        {discovery?.channels && (
+        {(discovery?.channels || discoveryRest.isLoading) && (
           <HomeSection>
             <Heading size="lg" mb={3}>
               Discover {org.name}
             </Heading>
             <CardCarousel height={180} width={160} scrollMultiplier={4} mb={2}>
-              {discovery.channels.map((c: Channel) => (
+              {discovery?.channels.map((c: Channel) => (
                 <ChannelCard channel={c} key={c.id} marginX={2} />
               ))}
             </CardCarousel>

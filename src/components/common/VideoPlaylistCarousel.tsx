@@ -8,6 +8,7 @@ import {
   SnapItem,
 } from "react-snaplist-carousel";
 import { useStoreState } from "../../store";
+import { QueryStatus } from "./QueryStatus";
 import { VideoPlaylistCard } from "./VideoPlaylistCard";
 
 export function VideoPlaylistCarousel({
@@ -54,7 +55,12 @@ export function VideoPlaylistCarousel({
 
   const [hovering, { on, off }] = useBoolean(false);
 
-  if (!videoPlaylists) return null;
+  if (!videoPlaylists)
+    return (
+      <Box height="200px">
+        <QueryStatus queryStatus={{ isLoading: true }}></QueryStatus>
+      </Box>
+    );
 
   return (
     <HStack spacing={0} onMouseEnter={on} onMouseLeave={off}>

@@ -12,7 +12,7 @@ import {
   Button,
   Icon,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { Suspense } from "react";
 import { useState } from "react";
 import { useContextMenu } from "react-contexify";
 import { FaPlay } from "react-icons/fa";
@@ -26,6 +26,7 @@ import { SongTable } from "../data/SongTable";
 import { DEFAULT_MENU_ID } from "./CommonContext";
 import { MotionBox } from "./MotionBox";
 import { NowPlayingIcon } from "./NowPlayingIcon";
+import { QueryStatus } from "./QueryStatus";
 
 export const VideoPlaylistCard = React.memo(
   ({ video, playlist }: { video: any; playlist?: PlaylistFull }) => {
@@ -112,20 +113,24 @@ export const VideoPlaylistCard = React.memo(
               overflowY="scroll"
             >
               {playlist?.content ? (
-                <SongTable
-                  songs={playlist.content}
-                  rowProps={{
-                    hideCol: ["og_artist", "duration", "sang_on", "menu"],
-                    flipNames: true,
-                    songClicked: (e, song) =>
-                      setPlaylist({
-                        playlist,
-                        startPos: playlist.content?.findIndex(
-                          (s) => s.id === song.id
-                        ),
-                      }),
-                  }}
-                />
+                <Suspense
+                  fallback={<QueryStatus queryStatus={{ isLoading: true }} />}
+                >
+                  <SongTable
+                    songs={playlist.content}
+                    rowProps={{
+                      hideCol: ["og_artist", "duration", "sang_on", "menu"],
+                      flipNames: true,
+                      songClicked: (e, song) =>
+                        setPlaylist({
+                          playlist,
+                          startPos: playlist.content?.findIndex(
+                            (s) => s.id === song.id
+                          ),
+                        }),
+                    }}
+                  />
+                </Suspense>
               ) : (
                 <Center height="100%">
                   {new Date(video.available_at) < new Date() ? (
