@@ -97,6 +97,8 @@ export default function Playlist() {
     }
   };
 
+  // if (status.error.status === 401) { .. you need to login .. }
+
   if (!playlist)
     return (
       <QueryStatus queryStatus={status} height="100%" justifyContent="center" />
