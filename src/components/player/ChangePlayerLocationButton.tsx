@@ -22,7 +22,7 @@ const LocationIcons: Record<string, JSX.Element> = {
   hidden: <FiEyeOff />,
 };
 
-function _ChangePlayerLocationButton() {
+function _ChangePlayerLocationButton({ size }: { size?: string }) {
   const pos = useStoreState((store) => store.settings.selectedPosition);
   const setPos = useStoreActions((store) => store.settings.setSelectedPosition);
 
@@ -35,6 +35,7 @@ function _ChangePlayerLocationButton() {
               aria-label="Expand"
               icon={LocationIcons[pos]}
               variant="ghost"
+              size={size}
             />
           </PopoverTrigger>
           <Portal>
@@ -49,6 +50,7 @@ function _ChangePlayerLocationButton() {
                         aria-label="Expand"
                         icon={LocationIcons[x as SelectedPosition]}
                         variant="ghost"
+                        size={size}
                         colorScheme={x === pos ? "brand" : "bgAlpha"}
                         onClick={() => {
                           setPos(x);
