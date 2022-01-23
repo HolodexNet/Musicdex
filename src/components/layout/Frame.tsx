@@ -130,7 +130,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
         >
           <SidebarContent
             onClose={onClose}
-            display={{ base: "none", lg: "block" }}
+            display={{ base: "none", lg: "flex" }}
             paddingTop="4"
           />
 
