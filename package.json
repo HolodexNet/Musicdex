@@ -15,7 +15,7 @@
     "dev": "react-scripts start",
     "dev:local-api": "cross-env API_TARGET=local react-scripts start",
     "eject": "react-scripts eject",
-    "prepare": "husky install & npm run build",
+    "prepare": "husky install",
     "test": "react-scripts test"
   },
   "dependencies": {
