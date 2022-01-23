@@ -108,7 +108,7 @@ export default function Playlist() {
   };
   console.log(status.error);
 
-  if (status.error) {
+  if (status.error && (status?.error as any)?.status >= 400) {
     return (
       <Box pt="10vh" px={6}>
         <Center role="alert" my={10}>
