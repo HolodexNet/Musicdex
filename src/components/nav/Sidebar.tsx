@@ -84,6 +84,8 @@ export function SidebarContent({
 
   return (
     <Box
+      display="flex"
+      flexDirection="column"
       transition="3s ease"
       bg={useColorModeValue("bg.100", "bg.900")}
       borderRight="1px"
@@ -124,29 +126,37 @@ export function SidebarContent({
         </NavItem>
       ))}
       <Divider mb={2} />
-      <NavItem
-        key="playlist"
-        icon={FiPlusCircle}
-        onClick={(e) => {
-          if (!user?.id)
-            return toast({
-              variant: "solid",
-              status: "warning",
-              description: "You need to be logged in to create playlists.",
-            });
+      <Flex flexDirection="column" overflowY="auto" flex="1">
+        <NavItem
+          key="playlist"
+          icon={FiPlusCircle}
+          onClick={(e) => {
+            if (!user?.id)
+              return toast({
+                variant: "solid",
+                status: "warning",
+                description: "You need to be logged in to create playlists.",
+              });
 
-          onOpen();
-        }}
-      >
-        Create New Playlist
-      </NavItem>
-      {playlistList && (
-        <PlaylistList playlistStubs={playlistList as any} vibe={isDragging} />
-      )}
-      <Divider my={2} />
-      {starredList && (
-        <PlaylistList playlistStubs={starredList as any} defaultIcon={FiStar} />
-      )}
+            onOpen();
+          }}
+          m="1"
+          px="2"
+          py="1"
+        >
+          Create New Playlist
+        </NavItem>
+        {playlistList && (
+          <PlaylistList playlistStubs={playlistList as any} vibe={isDragging} />
+        )}
+        <Divider my={2} />
+        {starredList && (
+          <PlaylistList
+            playlistStubs={starredList as any}
+            defaultIcon={FiStar}
+          />
+        )}
+      </Flex>
     </Box>
   );
 }

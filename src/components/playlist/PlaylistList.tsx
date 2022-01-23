@@ -36,10 +36,9 @@ export const PlaylistList = ({
               <Link to={"/playlists/" + x.id}>
                 <Flex
                   align="center"
+                  m="1"
                   px="2"
-                  mx="2"
-                  py="2"
-                  my="1"
+                  py="1"
                   borderRadius="lg"
                   role="group"
                   cursor="pointer"
