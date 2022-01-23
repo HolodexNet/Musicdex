@@ -15,9 +15,8 @@
     "dev": "react-scripts start",
     "dev:local-api": "cross-env API_TARGET=local react-scripts start",
     "eject": "react-scripts eject",
-    "prepare": "husky install && react-scripts build",
-    "test": "react-scripts test",
-    "install": "npm run build"
+    "prepare": "husky install & npm run build",
+    "test": "react-scripts test"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.7.4",
