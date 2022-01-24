@@ -108,8 +108,9 @@ export function Player({ player }: { player: any }) {
     }
 
     if (currentSong) {
-      console.log("[Player] Going to next song", currentSong.name);
+      console.log("[Player] Playing Song:", currentSong.name);
       loadVideoAtTime(currentSong.video_id, currentSong.start);
+      setProgress(0);
       setError(false);
       if (position === "hidden") setOverridePos(undefined);
     } else {
@@ -174,11 +175,17 @@ export function Player({ player }: { player: any }) {
       return;
     }
 
+    // console.log("Current Progress:", progress, state);
+
     // Progress will never reach 100 because player ended. Video length != song start/end
     // Example id: KiUvL-rp1zg
     const earlyEnd = state === PlayerStates.ENDED && progress < 100;
     // Proceeed to next song
-    if (progress >= 100 || earlyEnd) {
+    if ((progress >= 100 && state === PlayerStates.PLAYING) || earlyEnd) {
+      console.log(
+        "Auto advancing due to: " +
+          (progress >= 100 ? "prog>100" : "playerStatus=Ended")
+      );
       setProgress(0);
       next({ count: 1, userSkipped: false });
       return;
