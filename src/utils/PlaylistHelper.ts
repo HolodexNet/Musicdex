@@ -100,7 +100,7 @@ export function identifyTitle(playlist: Partial<PlaylistFull>) {
   if (isSGPPlaylist(playlist.id!)) {
     return extractUsingFn(playlist, {
       ":dailyrandom": (p, { ch }, d) => {
-        return `Daily Mix: ${d?.channel.english_name}`;
+        return `Daily Mix: ${d?.channel.english_name || d?.channel.name}`;
       },
       ":userweekly": (p, { user }, _) => {
         return `Your Weekly Mix`;
