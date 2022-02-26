@@ -1,6 +1,6 @@
 import { ButtonProps, chakra, ChakraProps } from "@chakra-ui/react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { ReactNode, useCallback } from "react";
+import { ReactNode, useCallback, useEffect } from "react";
 import OAuth2Login from "react-simple-oauth2-login";
 import { useStoreActions, useStoreState } from "../../store";
 import { useGoogleLogin } from "react-google-login";
@@ -61,7 +61,7 @@ export function useClient() {
   );
 
   async function refreshUser(): Promise<"OK" | null> {
-    if (user) {
+    if (token) {
       const resp = await AxiosInstance("/user/check");
       if (resp.status === 200 && resp.data) setUser(resp.data as User);
       else throw new Error("Strange bug occured with user checking...");
@@ -207,4 +207,20 @@ export async function getToken({
     body: JSON.stringify(body),
   });
   return res.json();
+}
+
+export function useCookieTokenFallback() {
+  const setToken = useStoreActions((actions) => actions.auth.setToken);
+  const token = useStoreState((state) => state.auth.token);
+  const user = useStoreState((state) => state.auth.user);
+  const { refreshUser } = useClient();
+  useEffect(() => {
+    const match = document.cookie.match(/HOLODEX_JWT=([^;]+)/);
+    if ((!token || !user) && match?.[1]) {
+      console.log("Falling back on token found in cookie");
+      setToken(match[1]);
+      refreshUser();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 }
