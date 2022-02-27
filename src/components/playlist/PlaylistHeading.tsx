@@ -64,7 +64,7 @@ export function PlaylistHeading({
       <Heading
         lineHeight={1.1}
         fontWeight={500}
-        fontSize={{ base: "3xl", sm: "4xl", md: "5xl", lg: "5xl" }}
+        fontSize={{ base: "2xl", sm: "3xl", md: "4xl", lg: "5xl" }}
       >
         {editTitle ? (
           <form onSubmit={submitHandlerTitle}>
@@ -137,9 +137,9 @@ export function PlaylistHeading({
           variant="link"
           icon={<FiEdit3 />}
         ></IconButton>{" "}
-        <Text color="bg.400" float="right">
-          {count > 0 ? count : ""}
-          {count > 0 && max > 0 ? `/ ${max}` : ""}
+        <Text color="bg.400" float="right" fontSize={"xl"}>
+          {count > 0 ? count : ""} songs
+          {/* {count > 0 && max > 0 ? `/ ${max}` : ""} */}
         </Text>
       </Text>
     </Box>

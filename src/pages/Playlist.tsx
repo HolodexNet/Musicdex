@@ -1,13 +1,4 @@
-import {
-  Box,
-  Center,
-  Code,
-  Flex,
-  Heading,
-  useColorModeValue,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Center, Code, Heading, useToast, VStack } from "@chakra-ui/react";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
@@ -29,7 +20,6 @@ import React from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { BGImgContainer, BGImg } from "../components/common/BGImgContainer";
-import { ErrorFallback } from "../ErrorFallback";
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
 );
@@ -106,7 +96,6 @@ export default function Playlist() {
       setEditMode(false);
     }
   };
-  console.log(status.error);
 
   if (status.error && (status?.error as any)?.status >= 400) {
     return (
@@ -129,15 +118,15 @@ export default function Playlist() {
     );
 
   return (
-    <PageContainer key={"playlist_" + playlistId}>
+    <PageContainer>
       <BGImgContainer height="200px">
         <BGImg banner_url={banner || ""} height="200px"></BGImg>
       </BGImgContainer>
       <ContainerInlay mt="12">
         <PlaylistHeading
-          title={title || "..."}
-          description={description || "..."}
-          canEdit={isLoggedIn && playlist.owner == user?.id}
+          title={title || "Untitled Playlist"}
+          description={description || ""}
+          canEdit={isLoggedIn && playlist.owner === user?.id}
           editMode={false}
           setDescription={(text) => {
             writeNewPlaylist({ ...writablePlaylist, description: text });
@@ -179,9 +168,7 @@ export default function Playlist() {
               />
             </Suspense>
           ) : (
-            // <Suspense fallback={<div>Loading...</div>}>
             <SongTable songs={playlist.content} virtualized />
-            // </Suspense>
           ))}
       </ContainerInlay>
     </PageContainer>

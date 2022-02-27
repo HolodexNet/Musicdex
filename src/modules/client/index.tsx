@@ -70,10 +70,6 @@ export function useClient() {
     return null;
   }
 
-  // function login() {
-  //   if (isLoggedIn) return;
-  // }
-
   function logout() {
     setToken(null);
     setUser(null);
