@@ -1,9 +1,6 @@
 // This optional code is used to register a service worker.
 // register() is not called by default.
 
-import { createStandaloneToast } from "@chakra-ui/react";
-import { theme } from "./theme";
-
 // This lets the app load faster on subsequent visits in production, and gives
 // it offline capabilities. However, it also means that developers (and users)
 // will only see deployed updates on subsequent visits to a page, after all the
@@ -62,38 +59,44 @@ export function register(config?: Config) {
   }
 }
 
-function listenForWaitingServiceWorker(
-  reg: ServiceWorkerRegistration,
-  callback: (reg: ServiceWorkerRegistration) => void
-) {
-  function awaitStateChange() {
-    reg.installing?.addEventListener("statechange", function () {
-      if (this.state === "installed") callback(reg);
-    });
-  }
-  if (!reg) return;
-  if (reg.waiting) return callback(reg);
-  if (reg.installing) awaitStateChange();
-  reg.addEventListener("updatefound", awaitStateChange);
-}
-
-function promptUserToRefresh(reg: ServiceWorkerRegistration) {
-  const toast = createStandaloneToast({ theme: theme });
-  toast({
-    position: "top-left",
-    title: "New update available, please refresh the page",
-    status: "info",
-    duration: 10000,
-    isClosable: true,
-  });
-  reg.waiting?.postMessage({ type: "SKIP_WAITING" });
-}
-
 function registerValidSW(swUrl: string, config?: Config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      listenForWaitingServiceWorker(registration, promptUserToRefresh);
+      registration.onupdatefound = () => {
+        const installingWorker = registration.installing;
+        if (installingWorker == null) {
+          return;
+        }
+        installingWorker.onstatechange = () => {
+          if (installingWorker.state === "installed") {
+            if (navigator.serviceWorker.controller) {
+              // At this point, the updated precached content has been fetched,
+              // but the previous service worker will still serve the older
+              // content until all client tabs are closed.
+              console.log(
+                "New content is available and will be used when all " +
+                  "tabs for this page are closed. See https://cra.link/PWA."
+              );
+
+              // Execute callback
+              if (config && config.onUpdate) {
+                config.onUpdate(registration);
+              }
+            } else {
+              // At this point, everything has been precached.
+              // It's the perfect time to display a
+              // "Content is cached for offline use." message.
+              console.log("Content is cached for offline use.");
+
+              // Execute callback
+              if (config && config.onSuccess) {
+                config.onSuccess(registration);
+              }
+            }
+          }
+        };
+      };
     })
     .catch((error) => {
       console.error("Error during service worker registration:", error);

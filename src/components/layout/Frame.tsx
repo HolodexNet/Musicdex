@@ -21,6 +21,7 @@ import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState } from "../../store";
 import { CommonContextMenu } from "../common/CommonContext";
 import { MotionBox } from "../common/MotionBox";
+import ServiceWorkerWrapper from "../common/ServiceWorkerWrapper";
 import { BottomNav } from "../nav/BottomNav";
 import { NavBar } from "../nav/NavBar";
 import { SidebarContent } from "../nav/Sidebar";
@@ -179,6 +180,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
         <AddToPlaylistModal />
       </Flex>
       <CommonContextMenu />
+      <ServiceWorkerWrapper />
     </Box>
   );
 }
