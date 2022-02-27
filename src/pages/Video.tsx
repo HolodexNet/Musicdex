@@ -1,6 +1,7 @@
 import { Box, Text, Button } from "@chakra-ui/react";
 import axios from "axios";
 import { Suspense } from "react";
+import { useTranslation } from "react-i18next";
 import { FiYoutube } from "react-icons/fi";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
@@ -18,6 +19,7 @@ import { useStoreActions } from "../store";
 export default function Video() {
   // const history = useStoreState((store) => store.playback.history);
   let params = useParams();
+  const { t } = useTranslation();
   let videoId = params.id!;
 
   const { data: playlist, ...status } = usePlaylist(`:video[id=${videoId}]`);
@@ -36,17 +38,12 @@ export default function Video() {
 
   const tn = useNamePicker();
 
-  // const {description, }
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const setPlaylist = useStoreActions(
     (actions) => actions.playback.setPlaylist
   );
 
-  // useEffect(() => console.log(playlist), [playlist])
-
   if (videoStatus.isLoading) return <QueryStatus queryStatus={status} />;
-
-  // if (!videoStatus.isSuccess) return <QueryStatus queryStatus={videoStatus} />;
 
   return (
     <PageContainer>
@@ -54,14 +51,19 @@ export default function Video() {
         <PlaylistHeading
           title={video.title}
           description={
+            "Sang by " +
             tn(video.channel.english_name, video.channel.name) +
-            ". Streamed on:" +
-            video.available_at
+            " " +
+            t("NO_TL.relativeDate", { date: new Date(video.available_at) })
           }
           canEdit={false}
           editMode={false}
           count={playlist?.content?.length || 0}
           max={0}
+          totalLengthSecs={playlist?.content?.reduce(
+            (a, c) => a + c.end - c.start,
+            0
+          )}
         />
         {playlist?.content && (
           <PlaylistButtonArray

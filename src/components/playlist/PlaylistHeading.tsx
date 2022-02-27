@@ -9,7 +9,8 @@ import {
   InputRightAddon,
   BoxProps,
 } from "@chakra-ui/react";
-import { useState, FormEventHandler } from "react";
+import { intervalToDuration } from "date-fns";
+import { useState, FormEventHandler, useMemo } from "react";
 import { FiEdit3 } from "react-icons/fi";
 
 type PlaylistHeadingProps = {
@@ -20,6 +21,7 @@ type PlaylistHeadingProps = {
   setTitle?: (text: string) => void;
   setDescription?: (text: string) => void;
   count: number;
+  totalLengthSecs?: number;
   max?: number;
 };
 
@@ -31,6 +33,7 @@ export function PlaylistHeading({
   setTitle,
   setDescription,
   count,
+  totalLengthSecs,
   max = 500,
   ...props
 }: PlaylistHeadingProps & BoxProps) {
@@ -58,6 +61,16 @@ export function PlaylistHeading({
 
   const isValid = (t: string, min: number, max: number) =>
     t.length > min && t.length < max;
+
+  const durationString = useMemo(() => {
+    if (!totalLengthSecs) return "";
+    const duration = intervalToDuration({
+      start: 0,
+      end: totalLengthSecs * 1000,
+    });
+    const hr = duration.hours ? duration.hours + "hr" : "";
+    return `${hr} ${duration.minutes}m`;
+  }, [totalLengthSecs]);
 
   return (
     <Box as={"header"} mb="2" position="relative" {...props}>
@@ -137,9 +150,9 @@ export function PlaylistHeading({
           variant="link"
           icon={<FiEdit3 />}
         ></IconButton>{" "}
-        <Text color="bg.400" float="right" fontSize={"xl"}>
+        <Text color="bg.200" float="right" fontSize={"xl"}>
           {count > 0 ? count : ""} songs
-          {/* {count > 0 && max > 0 ? `/ ${max}` : ""} */}
+          {durationString ? ` • ${durationString}` : ""}
         </Text>
       </Text>
     </Box>

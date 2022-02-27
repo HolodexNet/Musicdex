@@ -139,6 +139,10 @@ export default function Playlist() {
               ? newSongIds?.length ?? playlist?.content?.length
               : playlist?.content?.length) || 0
           }
+          totalLengthSecs={playlist.content?.reduce(
+            (a, c) => a + c.end - c.start,
+            0
+          )}
         />
         <PlaylistButtonArray
           playlist={playlist}
