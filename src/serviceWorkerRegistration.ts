@@ -86,6 +86,7 @@ function promptUserToRefresh(reg: ServiceWorkerRegistration) {
     duration: 10000,
     isClosable: true,
   });
+  reg.waiting?.postMessage({ type: "SKIP_WAITING" });
 }
 
 function registerValidSW(swUrl: string, config?: Config) {
