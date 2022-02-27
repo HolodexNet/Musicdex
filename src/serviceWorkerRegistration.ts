@@ -77,29 +77,15 @@ function listenForWaitingServiceWorker(
   reg.addEventListener("updatefound", awaitStateChange);
 }
 
-// reload once when the new Service Worker starts activating
-let refreshing: boolean;
-navigator.serviceWorker.addEventListener("controllerchange", function () {
-  if (refreshing) return;
-  refreshing = true;
-  window.location.reload();
-});
 function promptUserToRefresh(reg: ServiceWorkerRegistration) {
-  // this is just an example
-  // don't use window.confirm in real life; it's terrible
-  // if (window.confirm("New version available! OK to refresh?")) {
   const toast = createStandaloneToast({ theme: theme });
   toast({
     position: "top-left",
-    title: "Updating...",
-    status: "success",
-    duration: 2000,
+    title: "New update available, please refresh the page",
+    status: "info",
+    duration: 10000,
+    isClosable: true,
   });
-  setTimeout(() => {
-    reg.waiting?.postMessage({ type: "SKIP_WAITING" });
-  }, 2000);
-
-  // }
 }
 
 function registerValidSW(swUrl: string, config?: Config) {
