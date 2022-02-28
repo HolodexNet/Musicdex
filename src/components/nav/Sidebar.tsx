@@ -3,7 +3,6 @@ import {
   CloseButton,
   Divider,
   BoxProps,
-  Text,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -39,12 +38,11 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Heading,
   Input,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useEffect, useRef } from "react";
+import { Suspense, useRef } from "react";
 import { PlaylistList } from "../playlist/PlaylistList";
 import { LogoWithText } from "./LogoWithText";
 
@@ -146,16 +144,21 @@ export function SidebarContent({
         >
           Create New Playlist
         </NavItem>
-        {playlistList && (
-          <PlaylistList playlistStubs={playlistList as any} vibe={isDragging} />
-        )}
-        <Divider my={2} />
-        {starredList && (
-          <PlaylistList
-            playlistStubs={starredList as any}
-            defaultIcon={FiStar}
-          />
-        )}
+        <Suspense fallback={"..."}>
+          {playlistList && (
+            <PlaylistList
+              playlistStubs={playlistList as any}
+              vibe={isDragging}
+            />
+          )}
+          <Divider my={2} />
+          {starredList && (
+            <PlaylistList
+              playlistStubs={starredList as any}
+              defaultIcon={FiStar}
+            />
+          )}
+        </Suspense>
       </Flex>
     </Box>
   );
