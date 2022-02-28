@@ -12,6 +12,7 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import useNamePicker from "../modules/common/useNamePicker";
+import { usePlaylistTitleDesc } from "../modules/playlist/useFormatPlaylist";
 import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
@@ -19,11 +20,9 @@ import { useStoreActions } from "../store";
 export default function Video() {
   // const history = useStoreState((store) => store.playback.history);
   let params = useParams();
-  const { t } = useTranslation();
   let videoId = params.id!;
-
   const { data: playlist, ...status } = usePlaylist(`:video[id=${videoId}]`);
-
+  const { title, description } = usePlaylistTitleDesc(playlist);
   const { data: video, ...videoStatus } = useQuery(
     ["video", videoId],
     async (q) => {
@@ -49,13 +48,8 @@ export default function Video() {
     <PageContainer>
       <ContainerInlay>
         <PlaylistHeading
-          title={video.title}
-          description={
-            "Sang by " +
-            tn(video.channel.english_name, video.channel.name) +
-            " " +
-            t("NO_TL.relativeDate", { date: new Date(video.available_at) })
-          }
+          title={title || "Video"}
+          description={description || ""}
           canEdit={false}
           editMode={false}
           count={playlist?.content?.length || 0}

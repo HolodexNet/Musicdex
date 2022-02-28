@@ -11,8 +11,8 @@ import { FaPlay } from "react-icons/fa";
 import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import { useClient } from "../../modules/client";
+import { usePlaylistTitleDesc } from "../../modules/playlist/useFormatPlaylist";
 import { useStoreActions } from "../../store";
-import { identifyDescription, identifyTitle } from "../../utils/PlaylistHelper";
 import { MotionBox } from "../common/MotionBox";
 import { PlaylistArtwork } from "./PlaylistArtwork";
 
@@ -30,10 +30,8 @@ export const PlaylistCard = ({
   const queryClient = useQueryClient();
   const setPlaylist = useStoreActions((action) => action.playback.setPlaylist);
   const toast = useToast();
-
+  const { title, description } = usePlaylistTitleDesc(playlist);
   if (!playlist) return <div>{playlist}???</div>;
-  const title = identifyTitle(playlist);
-  const description = identifyDescription(playlist);
   async function handlePlayClick(e: any) {
     e.stopPropagation();
     e.preventDefault();
