@@ -258,7 +258,9 @@ function ChannelContent({
       <CardCarousel height={250} width={160} scrollMultiplier={1}>
         {discovery &&
           discovery.recommended.playlists.map((x: any) => {
-            return <PlaylistCard playlist={x} marginX={2}></PlaylistCard>;
+            return (
+              <PlaylistCard playlist={x} marginX={2} key={x.id}></PlaylistCard>
+            );
           })}
       </CardCarousel>
       <ContainerInlay width="100%" pt={0}>
