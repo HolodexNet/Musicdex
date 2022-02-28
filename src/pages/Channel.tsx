@@ -62,7 +62,11 @@ export default function Channel() {
   const copy = useClipboardWithToast();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  if (!channelStatus.isSuccess)
+  if (
+    channelStatus.isLoading ||
+    discoveryStatus.isLoading ||
+    trendingStatus.isLoading
+  )
     return <QueryStatus queryStatus={channelStatus} />;
 
   const name = tn(channel.english_name, channel.name);
@@ -93,7 +97,12 @@ export default function Channel() {
           ></ChannelPhoto>
           <PlaylistHeading
             title={name}
-            description={channel.org + " — " + channel?.suborg?.slice(2)}
+            description={
+              channel.org +
+              (channel?.suborg?.slice(2)
+                ? " — " + channel?.suborg?.slice(2)
+                : "")
+            }
             canEdit={false}
             editMode={false}
             count={0}

@@ -151,7 +151,7 @@ export function PlaylistHeading({
           icon={<FiEdit3 />}
         ></IconButton>{" "}
         <Text color="bg.200" float="right" fontSize={"xl"}>
-          {count > 0 ? count : ""} songs
+          {count > 0 ? `${count} songs` : ""}
           {durationString ? ` • ${durationString}` : ""}
         </Text>
       </Text>
