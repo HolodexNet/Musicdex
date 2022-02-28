@@ -22,8 +22,8 @@ import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { useClipboardWithToast } from "../modules/common/clipboard";
+import { useFormatPlaylist } from "../modules/playlist/useFormatPlaylist";
 import { useStoreActions, useStoreState } from "../store";
-import { identifyTitle, identifyLink } from "../utils/PlaylistHelper";
 
 export const Queue = React.memo(() => {
   const expanded = useStoreState((state) => state.player.showUpcomingOverlay);
@@ -64,15 +64,14 @@ export const Queue = React.memo(() => {
   );
 
   const next = useStoreActions((actions) => actions.playback.next);
-
-  const currentTitle = useMemo(
-    () => currentPlaylist && identifyTitle(currentPlaylist),
-    [currentPlaylist]
-  );
-
-  const urlLinkToPlaylist = useMemo(
-    () => currentPlaylist && identifyLink(currentPlaylist),
-    [currentPlaylist]
+  const formatPlaylist = useFormatPlaylist();
+  const { currentTitle, urlLinkToPlaylist } = useMemo(
+    () => ({
+      currentTitle: currentPlaylist && formatPlaylist("title", currentPlaylist),
+      urlLinkToPlaylist:
+        currentPlaylist && formatPlaylist("link", currentPlaylist),
+    }),
+    [currentPlaylist, formatPlaylist]
   );
 
   return (

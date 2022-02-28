@@ -10,16 +10,12 @@ import {
   usePlaylistWriter,
 } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
-import {
-  identifyDescription,
-  identifyPlaylistBannerImage,
-  identifyTitle,
-} from "../utils/PlaylistHelper";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import React from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { BGImgContainer, BGImg } from "../components/common/BGImgContainer";
+import { useFormatPlaylist } from "../modules/playlist/useFormatPlaylist";
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
 );
@@ -38,17 +34,18 @@ export default function Playlist() {
   useEffect(() => {
     setEditMode(false);
   }, [playlistId]);
+  const formatPlaylist = useFormatPlaylist();
 
   const { banner, title, description } = useMemo(() => {
     return (
       (playlist && {
-        banner: identifyPlaylistBannerImage(playlist),
-        title: identifyTitle(playlist),
-        description: identifyDescription(playlist),
+        banner: formatPlaylist("bannerImage", playlist),
+        title: formatPlaylist("title", playlist),
+        description: formatPlaylist("description", playlist),
       }) ||
       {}
     );
-  }, [playlist]);
+  }, [formatPlaylist, playlist]);
 
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const setPlaylist = useStoreActions(

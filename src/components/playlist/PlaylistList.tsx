@@ -4,8 +4,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { IconType } from "react-icons";
 import { FiFolder } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useFormatPlaylist } from "../../modules/playlist/useFormatPlaylist";
 import { usePlaylistUpdater } from "../../modules/services/playlist.service";
-import { identifyTitle } from "../../utils/PlaylistHelper";
 
 export const PlaylistList = ({
   playlistStubs,
@@ -18,12 +18,12 @@ export const PlaylistList = ({
 }) => {
   const { mutateAsync } = usePlaylistUpdater();
   const toast = useToast();
-
+  const formatPlaylist = useFormatPlaylist();
   return (
     <div>
       <AnimatePresence>
         {playlistStubs.map((x) => {
-          const title = identifyTitle(x) || "...";
+          const title = formatPlaylist("title", x) || "...";
           const emoji = title.match(/^(?!\d)\p{Emoji}/gu); // Match a emoji that's not preceeded by a number
           const rest = title.match(/(?!^(?!\d)\p{Emoji})(.*)$/gu); // a bit confusing. double negative lookahead. Match <.*> that's not preceeded by a Emoji, but the Emoji can't be a number.
           return (

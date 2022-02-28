@@ -107,6 +107,16 @@ export function usePlaylistTitleDesc(playlist: PlaylistLike | undefined) {
   };
 }
 
+export function parsePlaylistDesc(playlist: PlaylistLike) {
+  if (isSGPPlaylist(playlist.id!)) {
+    const { type } = parsePlaylistID(playlist.id!);
+    const descParser =
+      formatters[type]?.descParser || DEF_PARSER_GROUP.descParser;
+    return descParser(playlist.description);
+  }
+  return playlist.description;
+}
+
 export function formatPlaylist(
   fn: FormatFunctions,
   playlist: PlaylistLike,
@@ -117,16 +127,12 @@ export function formatPlaylist(
     return formatters.default[fn]?.(playlist, undefined, undefined, context);
   }
   const { type, params } = parsePlaylistID(playlist.id!);
-  const descParser =
-    formatters[type]?.descParser || DEF_PARSER_GROUP.descParser;
   const formatFn = formatters[type]?.[fn] || formatters.default[fn];
 
   return formatFn?.(
     playlist,
     params,
-    (playlist?.description
-      ? descParser?.(playlist?.description)
-      : undefined) as any,
+    (playlist?.description ? parsePlaylistDesc(playlist) : undefined) as any,
     context
   );
 }

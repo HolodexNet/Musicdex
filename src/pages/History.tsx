@@ -7,9 +7,9 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { useClient } from "../modules/client";
+import { formatPlaylistID } from "../modules/playlist/useFormatPlaylist";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
-import { formatPlaylistID } from "../utils/SGPFunctions";
 
 export default function History() {
   // const history = useStoreState((store) => store.playback.history);
