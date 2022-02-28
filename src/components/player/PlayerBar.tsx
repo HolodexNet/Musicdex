@@ -54,7 +54,6 @@ export const PlayerBar = React.memo(
 
     const [dragStartY, setDragStartY] = useState(0);
     const canEnlarge = useBreakpointValue({ base: true, lg: false });
-
     useEffect(() => {
       if (fullPlayer) {
         toggleFullPlayer();

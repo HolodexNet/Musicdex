@@ -54,7 +54,9 @@ export default function History() {
           />
         )}
         <Suspense fallback={<div>Loading...</div>}>
-          {playlist?.content && <SongTable songs={playlist.content} />}
+          {playlist?.content && (
+            <SongTable songs={playlist.content} virtualized />
+          )}
         </Suspense>
       </Fragment>
     );
