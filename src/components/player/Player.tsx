@@ -63,7 +63,8 @@ export function Player({ player }: { player: any }) {
 
   // Jot down the song that the page loaded on, and keep this paused
   useEffect(() => {
-    if (currentSong?.id) setFirstLoadPauseId(currentSong?.id);
+    if (currentSong?.id)
+      setFirstLoadPauseId(`${currentSong?.id || ""}${repeat || ""}`);
   }, []);
 
   // Player State Event
@@ -102,13 +103,17 @@ export function Player({ player }: { player: any }) {
     if (!player) return;
 
     // Song changed, and is no longer the paause locked song, allow autoplay
-    if (firstLoadPauseId && firstLoadPauseId !== currentSong?.id) {
+    if (
+      firstLoadPauseId &&
+      firstLoadPauseId !== `${currentSong?.id || ""}${repeat || ""}`
+    ) {
       setFirstLoadPauseId("");
     }
 
     if (currentSong) {
       console.log("[Player] Playing Song:", currentSong.name);
       loadVideoAtTime(currentSong.video_id, currentSong.start);
+      player.playVideo();
       setProgress(0);
       setError(false);
       if (position === "hidden") setOverridePos(undefined);

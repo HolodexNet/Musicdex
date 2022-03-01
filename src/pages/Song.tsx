@@ -40,7 +40,6 @@ export default function Song() {
       md: 250,
       lg: 300,
     }) || 300;
-  console.log(imageSize);
   const { data: song, ...rest } = useSong(songId);
 
   const queueSong = useStoreActions((actions) => actions.playback.queueSongs);
