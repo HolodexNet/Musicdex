@@ -117,17 +117,10 @@ export const VideoPlaylistCard = React.memo(
                   fallback={<QueryStatus queryStatus={{ isLoading: true }} />}
                 >
                   <SongTable
-                    songs={playlist.content}
+                    playlist={playlist}
                     rowProps={{
                       hideCol: ["og_artist", "duration", "sang_on", "menu"],
                       flipNames: true,
-                      songClicked: (e, song) =>
-                        setPlaylist({
-                          playlist,
-                          startPos: playlist.content?.findIndex(
-                            (s) => s.id === song.id
-                          ),
-                        }),
                     }}
                   />
                 </Suspense>
@@ -182,69 +175,6 @@ export const VideoPlaylistCard = React.memo(
           {tn(video.channel.english_name, video.channel.name)}
         </Text>
       </Box>
-    );
-  }
-);
-
-const HighlightListItem = React.memo(
-  ({
-    song,
-    songClicked,
-    index = 0,
-    active,
-  }: {
-    song: Song;
-    songClicked: () => void;
-    index: number;
-    active: boolean;
-  }) => {
-    const dragProps = useDraggableSong(song);
-    const [hover, setHover] = useState(false);
-    const { show } = useContextMenu({ id: DEFAULT_MENU_ID });
-
-    function LeftIcon() {
-      if (active)
-        return (
-          <NowPlayingIcon style={{ color: "var(--chakra-colors-n2-400)" }} />
-        );
-      if (hover)
-        return (
-          <MotionBox
-            whileHover={{
-              scale: 1.2,
-              transition: { duration: 0.3, type: "tween", ease: "easeOut" },
-            }}
-            whileTap={{ scale: 0.8 }}
-          >
-            <ListIcon as={IoMdPlay} width="20px" mr={0} color="n2.300" />
-          </MotionBox>
-        );
-      return <Text width="20px">{index + 1}.</Text>;
-    }
-    return (
-      <ListItem
-        key={song.id + "highlightsong"}
-        scrollSnapAlign="start"
-        _hover={{ bgColor: "whiteAlpha.200", cursor: "pointer" }}
-        bgColor={active ? "whiteAlpha.200" : ""}
-        transition="0.3s"
-        pl={2}
-        onClick={songClicked}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        {...dragProps}
-        onContextMenu={(e) => show(e, { props: song })}
-      >
-        <HStack>
-          <LeftIcon />
-          <Box>
-            <Text noOfLines={0}>{song.name}</Text>
-            <Text noOfLines={0} color="gray.500" fontSize="sm">
-              {song.original_artist}
-            </Text>
-          </Box>
-        </HStack>
-      </ListItem>
     );
   }
 );

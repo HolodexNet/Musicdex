@@ -169,7 +169,7 @@ export default function Playlist() {
               />
             </Suspense>
           ) : (
-            <SongTable songs={playlist.content} virtualized />
+            <SongTable playlist={playlist} virtualized />
           ))}
       </ContainerInlay>
     </PageContainer>

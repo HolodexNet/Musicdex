@@ -91,7 +91,7 @@ export default function Video() {
           </PlaylistButtonArray>
         )}
         <Suspense fallback={<div>Loading...</div>}>
-          {playlist?.content && <SongTable songs={playlist.content} />}{" "}
+          {playlist?.content && <SongTable playlist={playlist} />}{" "}
         </Suspense>
         {!playlist && status.isError && (
           <Box>
