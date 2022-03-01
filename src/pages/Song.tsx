@@ -11,7 +11,6 @@ import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
 import { FaPlay } from "react-icons/fa";
 import { FiShare2, FiYoutube } from "react-icons/fi";
-import { IoMdPlay } from "react-icons/io";
 import { SiApplemusic } from "react-icons/si";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
@@ -37,11 +36,11 @@ export default function Song() {
   const imageSize =
     useBreakpointValue({
       sm: 200,
-      base: 300,
-      md: 400,
-      lg: 400,
+      base: 200,
+      md: 250,
+      lg: 300,
     }) || 300;
-
+  console.log(imageSize);
   const { data: song, ...rest } = useSong(songId);
 
   const queueSong = useStoreActions((actions) => actions.playback.queueSongs);
@@ -53,7 +52,11 @@ export default function Song() {
       <ContainerInlay>
         <QueryStatus queryStatus={rest} />
         {song && (
-          <Flex wrap="wrap">
+          <Flex
+            flexDirection={["column", null, null, "row"]}
+            justifyContent="start"
+            alignItems={["center", null, null, "end"]}
+          >
             <SongArtwork
               song={song}
               size={imageSize}
@@ -63,54 +66,52 @@ export default function Song() {
                   "below 0px linear-gradient(to bottom, rgba(0,0,0,0.0) 80%, rgba(0,0,0,0.3))",
               }}
             />
-            <Flex flexDirection="column" px={4} py={4} flex="1 1 300px">
-              <Box marginTop="auto">
-                <Text fontSize="3xl" fontWeight={600}>
-                  {song.name}
-                </Text>
-                <HStack py={2}>
-                  <Link to={"/channel/" + song.channel_id}>
-                    <ChannelPhoto
-                      channelId={song.channel_id}
-                      resizePhoto={30}
-                    />
-                    <Text
-                      fontSize="2xl"
-                      color="n2.300"
-                      as="span"
-                      display="inline-block"
-                      lineHeight="48px"
-                      ml={2}
-                    >
-                      {tn(song.channel.english_name, song.channel.name)}
-                    </Text>
-                  </Link>
-                </HStack>
-                <Text opacity={0.75} fontSize="lg">
-                  {song.original_artist}
-                </Text>
-                <Text fontSize="md" opacity={0.75}>
-                  {formatSeconds(song.end - song.start)} •{" "}
-                  {t("NO_TL.relativeDate", {
-                    date: new Date(song.available_at),
-                  })}
-                  {song.is_mv && (
-                    <Icon mb="-3px" ml={3} as={BiMovie} title="MV"></Icon>
-                  )}
-                </Text>
-              </Box>
+            <Flex
+              flexDirection="column"
+              p={4}
+              alignItems={["center", null, null, "start"]}
+            >
+              <Text fontSize="3xl" fontWeight={600}>
+                {song.name}
+              </Text>
+              <HStack py={2}>
+                <Link to={"/channel/" + song.channel_id}>
+                  <ChannelPhoto channelId={song.channel_id} resizePhoto={30} />
+                  <Text
+                    fontSize="2xl"
+                    color="n2.300"
+                    as="span"
+                    display="inline-block"
+                    lineHeight="48px"
+                    ml={2}
+                  >
+                    {tn(song.channel.english_name, song.channel.name)}
+                  </Text>
+                </Link>
+              </HStack>
+              <Text opacity={0.75} fontSize="lg">
+                {song.original_artist}
+              </Text>
+              <Text fontSize="md" opacity={0.75}>
+                {formatSeconds(song.end - song.start)} •{" "}
+                {t("NO_TL.relativeDate", {
+                  date: new Date(song.available_at),
+                })}
+                {song.is_mv && (
+                  <Icon mb="-3px" ml={3} as={BiMovie} title="MV"></Icon>
+                )}
+              </Text>
 
-              <HStack spacing={2} mt={4}>
+              <HStack spacing={2} mt={4} flexWrap="wrap">
                 <Button
                   onClick={() => {
                     queueSong({ songs: [song], immediatelyPlay: true });
                   }}
                   marginTop="auto"
-                  // maxWidth="200px"
-                  // minW="120px"
                   bgColor="brand.100"
-                  size="lg"
+                  size="md"
                   title="Play"
+                  flexBasis={["100%", "auto"]}
                   rightIcon={<FaPlay style={{ scale: "1" }} />}
                 >
                   Play
@@ -151,7 +152,7 @@ export default function Song() {
                     colorScheme="red"
                     leftIcon={<SiApplemusic style={{ scale: "1.5" }} />}
                   >
-                    Listen to original on Apple Music
+                    Apple Music
                   </Button>
                 )}
               </HStack>
