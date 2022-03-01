@@ -1,19 +1,9 @@
 import { Button } from "@chakra-ui/button";
-import { Box, Container, Heading, HStack } from "@chakra-ui/layout";
-import {
-  Divider,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
-  Text,
-} from "@chakra-ui/react";
-import styled from "@emotion/styled";
+import { Heading, HStack } from "@chakra-ui/layout";
+import { Divider, IconButton, Text } from "@chakra-ui/react";
 import React, { Suspense, useMemo } from "react";
-import { FiTrash, FiLink2, FiMoreHorizontal } from "react-icons/fi";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FiTrash, FiLink2 } from "react-icons/fi";
+import { Link, useLocation } from "react-router-dom";
 import {
   QueueContextMenu,
   QUEUE_MENU_ID,
@@ -21,7 +11,6 @@ import {
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
-import { useClipboardWithToast } from "../modules/common/clipboard";
 import { useFormatPlaylist } from "../modules/playlist/useFormatPlaylist";
 import { useStoreActions, useStoreState } from "../store";
 
@@ -114,6 +103,7 @@ export const Queue = React.memo(() => {
                   songClicked: (e, s) =>
                     next({ count: (s as any).idx - 1, userSkipped: true }),
                 }}
+                limit={10}
               />
             </Suspense>
             <Divider />
@@ -155,6 +145,7 @@ export const Queue = React.memo(() => {
                   songClicked: (e, s) =>
                     next({ count: (s as any).idx - 1, userSkipped: true }),
                 }}
+                limit={10}
               />
             </Suspense>
           </React.Fragment>

@@ -1,5 +1,5 @@
-import { Box, BoxProps, useBreakpointValue } from "@chakra-ui/react";
-import React, { useCallback, useContext, useMemo } from "react";
+import { Box, BoxProps, Button, useBreakpointValue } from "@chakra-ui/react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import { FixedSizeList } from "react-window";
 import WindowScroller from "react-virtualized/dist/es/WindowScroller";
 import { memoize } from "lodash-es";
@@ -24,6 +24,7 @@ interface SongTableProps {
 
   menuId?: string;
   rowProps?: RowProps;
+  limit?: number;
 }
 
 const memoized = memoize(
@@ -45,6 +46,7 @@ export const SongTable = ({
   virtualized = false,
   rowProps,
   playlist,
+  limit,
   ...rest
 }: SongTableProps & BoxProps) => {
   const detailLevel = useBreakpointValue<SongTableCol[] | undefined>(
@@ -65,10 +67,11 @@ export const SongTable = ({
   const data = memoized(songList!, menuId, props, playlist);
   const frameRef = useContext(FrameRef);
   const list = React.useRef<any>(null);
+  const [expanded, setExpanded] = useState(false);
   const onScroll = useCallback(({ scrollTop }) => {
     list.current?.scrollTo(scrollTop);
   }, []);
-
+  console.log("expanded? ", expanded);
   if (!songList) return <>No Songs</>;
 
   return virtualized ? (
@@ -91,14 +94,21 @@ export const SongTable = ({
     </WindowScroller>
   ) : (
     <Box {...rest}>
-      {songList.map((song, index) => (
-        <SongRow
-          data={data}
-          index={index}
-          style={{}}
-          key={`${data.menuId}${song.id}`}
-        />
-      ))}
+      {songList
+        .slice(0, (!expanded && limit) || songList.length)
+        .map((song, index) => (
+          <SongRow
+            data={data}
+            index={index}
+            style={{}}
+            key={`${data.menuId}${song.id}`}
+          />
+        ))}
+      {limit && songList.length > limit && (
+        <Button onClick={() => setExpanded((prev) => !prev)}>
+          {expanded ? "Hide" : "Show all"}
+        </Button>
+      )}
     </Box>
   );
 };
