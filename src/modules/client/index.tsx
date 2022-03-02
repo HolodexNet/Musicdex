@@ -64,7 +64,10 @@ export function useClient() {
     if (token) {
       const resp = await AxiosInstance("/user/check");
       if (resp.status === 200 && resp.data) setUser(resp.data as User);
-      else throw new Error("Strange bug occured with user checking...");
+      else {
+        logout();
+        throw new Error("Strange bug occured with user checking...");
+      }
       return "OK";
     }
     return null;
@@ -73,7 +76,6 @@ export function useClient() {
   function logout() {
     setToken(null);
     setUser(null);
-    document.cookie = "HOLODEX_JWT=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
   }
 
   return {
@@ -218,5 +220,6 @@ export function useCookieTokenFallback() {
       setToken(match[1]);
       refreshUser();
     }
-  }, [refreshUser, setToken, token, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshUser, setToken]);
 }
