@@ -111,17 +111,35 @@ export const SongRow = React.memo(
             </HStack>
           )}
           {!hideCol?.includes("og_artist") ? (
-            <Box flex="1 1 60px" noOfLines={2} px={2} margin="auto">
+            <Box
+              flex="1 1 60px"
+              noOfLines={2}
+              px={2}
+              margin="auto"
+              opacity={0.8}
+            >
               {song.original_artist}
             </Box>
           ) : undefined}
           {!hideCol?.includes("duration") ? (
-            <Box flex="0 1 80px" noOfLines={1} textAlign="right" margin="auto">
+            <Box
+              flex="0 1 80px"
+              noOfLines={1}
+              textAlign="right"
+              margin="auto"
+              opacity={0.8}
+            >
               <DurationGrid song={song} />
             </Box>
           ) : undefined}
           {!hideCol?.includes("sang_on") ? (
-            <Box flex="0 1 150px" noOfLines={2} textAlign="right" margin="auto">
+            <Box
+              flex="0 1 150px"
+              noOfLines={2}
+              textAlign="right"
+              margin="auto"
+              opacity={0.8}
+            >
               <SangOnGrid value={new Date(song.available_at)} />
             </Box>
           ) : undefined}

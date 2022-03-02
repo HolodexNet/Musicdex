@@ -71,7 +71,6 @@ export const SongTable = ({
   const onScroll = useCallback(({ scrollTop }) => {
     list.current?.scrollTo(scrollTop);
   }, []);
-  console.log("expanded? ", expanded);
   if (!songList) return <>No Songs</>;
 
   return virtualized ? (
