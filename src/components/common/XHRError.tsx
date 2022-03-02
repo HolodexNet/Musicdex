@@ -12,7 +12,7 @@ export function XHRError({ error, ...props }: BoxProps & { error?: Error }) {
           <ErrorFallback
             error={error}
             resetErrorBoundary={() => {
-              console.log("hi");
+              console.log("Error Reset");
             }}
           />
         ) : (
