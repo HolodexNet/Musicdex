@@ -99,6 +99,7 @@ export const PlayerBar = React.memo(
               onChange={onProgressChange}
               totalDuration={totalDuration}
               marginTop="-4px"
+              marginBottom="-3px"
             />
             <MotionBox className="main" onClickCapture={handlePlayerbarClick}>
               <LayoutGroup>
@@ -305,6 +306,6 @@ const PlayerContainer = styled.div<{
     width: 100%;
     align-items: center;
     /* Need static margin, cuz Framer motion is miscalculating layout */
-    margin-top: ${({ dense }) => (dense ? "1px" : "8px")};
+    margin-top: ${({ dense }) => (dense ? "3.5px" : "11.5px")};
   }
 `;
