@@ -73,6 +73,7 @@ export function useClient() {
   function logout() {
     setToken(null);
     setUser(null);
+    document.cookie = "HOLODEX_JWT=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
   }
 
   return {
@@ -217,6 +218,5 @@ export function useCookieTokenFallback() {
       setToken(match[1]);
       refreshUser();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refreshUser, setToken, token, user]);
 }
