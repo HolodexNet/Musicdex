@@ -1,9 +1,9 @@
-import { Button } from "@chakra-ui/button";
-import { Flex, Heading, HStack, Spacer } from "@chakra-ui/layout";
-import { Divider, IconButton, Text } from "@chakra-ui/react";
+import { Flex, Heading, Spacer } from "@chakra-ui/layout";
+import { IconButton, Text } from "@chakra-ui/react";
 import React, { Suspense, useMemo } from "react";
 import { FiTrash } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { DEFAULT_MENU_ID } from "../components/common/CommonContext";
 import {
   QueueContextMenu,
   QUEUE_MENU_ID,
@@ -33,7 +33,7 @@ export const Queue = React.memo(() => {
 
   const queue = useStoreState((state) => state.playback.queue);
 
-  const clearAll = useStoreActions((actions) => actions.playback.clearAll);
+  // const clearAll = useStoreActions((actions) => actions.playback.clearAll);
   const clearQueue = useStoreActions((actions) => actions.playback._queueClear);
 
   const clearPlaylist = useStoreActions(
@@ -63,7 +63,7 @@ export const Queue = React.memo(() => {
             style={{ borderTop: "none" }}
             data={{
               songList: [currentlyPlaying.song],
-              menuId: QUEUE_MENU_ID,
+              menuId: DEFAULT_MENU_ID,
               rowProps: {
                 showArtwork: true,
               },
