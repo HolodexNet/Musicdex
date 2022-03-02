@@ -15,7 +15,7 @@ const NowPlayingIconContainer = styled.div`
   height: 0.9em;
   justify-content: start;
   align-items: flex-end;
-  margin-top: 5px;
+  /* margin-top: 5px; */
 
   > span {
     width: 0.24em;

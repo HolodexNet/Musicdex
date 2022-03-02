@@ -31,14 +31,9 @@ export const QueueContextMenu = () => {
   const copyToClipboard = useClipboardWithToast();
 
   const navigate = useNavigate();
-  // const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const [song, setSong] = useState<Song | undefined>(undefined);
   const queue = useStoreState((x) => x.playback.queue);
-  // const next = useStoreActions((s) => s.playback.next);
   const queueRemove = useStoreActions((store) => store.playback.queueRemove);
-  // const currentlyPlaying = useStoreState(
-  //   (state) => state.playback.currentlyPlaying
-  // );
 
   const openUrl = (
     url: string,

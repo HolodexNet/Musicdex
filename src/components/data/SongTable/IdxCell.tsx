@@ -2,6 +2,7 @@ import { FaPlay } from "react-icons/fa";
 import { useStoreState } from "../../../store";
 import { MotionBox } from "../../common/MotionBox";
 import { NowPlayingIcon } from "../../common/NowPlayingIcon";
+import { Text } from "@chakra-ui/react";
 
 export const IdxGrid = ({
   id,
@@ -37,6 +38,10 @@ export const IdxGrid = ({
         </MotionBox>
       );
     default:
-      return <span>{id + 1}</span>;
+      return (
+        <Text as={"span"} opacity={0.8}>
+          {id + 1}
+        </Text>
+      );
   }
 };

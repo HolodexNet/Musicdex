@@ -1,25 +1,21 @@
 import { Button } from "@chakra-ui/button";
-import { Heading, HStack } from "@chakra-ui/layout";
+import { Flex, Heading, HStack, Spacer } from "@chakra-ui/layout";
 import { Divider, IconButton, Text } from "@chakra-ui/react";
 import React, { Suspense, useMemo } from "react";
-import { FiTrash, FiLink2 } from "react-icons/fi";
-import { Link, useLocation } from "react-router-dom";
+import { FiTrash } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import {
   QueueContextMenu,
   QUEUE_MENU_ID,
 } from "../components/common/QueueContext";
 import { SongTable } from "../components/data/SongTable";
+import { SongRow } from "../components/data/SongTable/SongRow";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { useFormatPlaylist } from "../modules/playlist/useFormatPlaylist";
 import { useStoreActions, useStoreState } from "../store";
 
 export const Queue = React.memo(() => {
-  const expanded = useStoreState((state) => state.player.showUpcomingOverlay);
-  const setExpanded = useStoreActions(
-    (actions) => actions.player.setShowUpcomingOverlay
-  );
-
   const playlistQueue = useStoreState((state) => state.playback.playlistQueue);
   const playedPlaylistQueue = useStoreState(
     (state) => state.playback.playedPlaylistQueue
@@ -34,14 +30,6 @@ export const Queue = React.memo(() => {
   const playlistTotalQueue = useMemo(() => {
     return [...playlistQueue, ...playedPlaylistQueue];
   }, [playedPlaylistQueue, playlistQueue]);
-
-  const location = useLocation();
-
-  React.useEffect(() => {
-    // runs on location, i.e. route, change
-    setExpanded(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
 
   const queue = useStoreState((state) => state.playback.queue);
 
@@ -68,33 +56,42 @@ export const Queue = React.memo(() => {
       <div className="bgOver"></div>
       <QueueContextMenu />
       <ContainerInlay>
-        <HStack alignItems={"center"}>
-          <Button
-            marginRight="auto"
-            marginLeft="auto"
-            leftIcon={<FiTrash />}
-            colorScheme="red"
-            onClick={() => {
-              clearAll();
-              setExpanded(false);
+        <Heading size="lg">Now Playing</Heading>
+        {currentlyPlaying.song ? (
+          <SongRow
+            index={0}
+            style={{ borderTop: "none" }}
+            data={{
+              songList: [currentlyPlaying.song],
+              menuId: QUEUE_MENU_ID,
+              rowProps: {
+                showArtwork: true,
+              },
             }}
-          >
-            Clear All
-          </Button>
-        </HStack>
+          />
+        ) : (
+          <Text fontSize="lg" opacity={0.66}>
+            Nothing to play...
+          </Text>
+        )}
+
         {queue.length > 0 && (
           <React.Fragment>
-            <Heading mt={4}>
-              Queue:
+            <Flex mt={4} alignItems="center">
+              <Text fontSize="lg">
+                <Text opacity={0.66} as={"span"}>
+                  Queue:
+                </Text>
+              </Text>
+              <Spacer />
               <IconButton
                 aria-label="clear playlist"
                 icon={<FiTrash />}
                 colorScheme="red"
                 variant="ghost"
                 onClick={() => clearQueue()}
-                float="right"
               ></IconButton>
-            </Heading>
+            </Flex>
             <Suspense fallback={<div>Loading...</div>}>
               <SongTable
                 songs={queue}
@@ -106,38 +103,33 @@ export const Queue = React.memo(() => {
                 limit={10}
               />
             </Suspense>
-            <Divider />
           </React.Fragment>
         )}
-        {currentlyPlaying && (
+        {currentPlaylist && (
           <React.Fragment>
-            <Heading mt={4}>
-              Playlist:
+            <Flex mt={4} alignItems="center">
+              <Text fontSize="lg">
+                <Text opacity={0.66} as={"span"}>
+                  Playlist:{" "}
+                </Text>
+                <Text
+                  fontWeight={600}
+                  as={Link}
+                  to={urlLinkToPlaylist || "#"}
+                  _hover={{ textDecoration: "underline" }}
+                >
+                  {currentTitle}
+                </Text>
+              </Text>
+              <Spacer />
               <IconButton
                 aria-label="clear playlist"
                 icon={<FiTrash />}
                 colorScheme="red"
                 variant="ghost"
                 onClick={() => clearPlaylist()}
-                float="right"
               ></IconButton>
-            </Heading>
-            <Text
-              fontSize="md"
-              as={Link}
-              to={urlLinkToPlaylist || "#"}
-              onClick={() => setExpanded(false)}
-              _hover={{ textDecoration: "underline" }}
-            >
-              {currentTitle}
-              <IconButton
-                variant="ghost"
-                size="xs"
-                aria-label="go to playlist"
-                icon={<FiLink2 />}
-                ml={1}
-              ></IconButton>
-            </Text>
+            </Flex>
             <Suspense fallback={<div>Loading...</div>}>
               <SongTable
                 songs={playlistTotalQueue}
@@ -154,33 +146,3 @@ export const Queue = React.memo(() => {
     </PageContainer>
   );
 });
-
-// const OverlayWrapper = styled.div<{ visible: boolean }>`
-//   width: 100vw;
-//   height: 100vh;
-//   overflow-x: hidden;
-//   overflow-y: ${({ visible }) => (visible ? "scroll" : "hidden")};
-//   position: fixed;
-//   top: 0;
-//   visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
-//   z-index: 5;
-
-//   .overlay {
-//     position: relative;
-//     top: ${({ visible }) => (visible ? "64px" : "100vh")};
-//     visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
-//     transition: top 0.4s ease, opacity 0.5s ease;
-//     width: 100%;
-//     clip-path: inset(0 0 0 0);
-//   }
-//   .bgOver {
-//     top: ${({ visible }) => (visible ? "64px" : "100vh")};
-//     visibility: ${({ visible }) => (visible ? "visible" : "hidden")};
-//     height: calc(100% - 64px - 80px);
-//     transition: top 0.4s ease, opacity 0.5s ease;
-
-//     background: black;
-//     position: fixed;
-//     width: 100%;
-//   }
-// `;
