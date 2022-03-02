@@ -11,7 +11,7 @@ export function ContainerInlay({ children, ...props }: FlexProps) {
       flex="1"
       position="relative"
       px={{ base: 2, md: 4, xl: 6 }}
-      pt={{ base: 4, xl: 6 }}
+      py={{ base: 4, xl: 6 }}
       borderRadius={5}
       {...props}
     >

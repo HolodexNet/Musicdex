@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import ChannelSongs from "./pages/ChannelSongs";
 import { Queue } from "./pages/Queue";
 import Library from "./pages/Library";
+import { RequireLogin } from "./components/common/RequireLogin";
 
 const Channel = React.lazy(() => import("./pages/Channel"));
 // const History = React.lazy(() => import("./pages/History"));
@@ -36,11 +37,19 @@ const routes: RouteObject[] = [
   },
   {
     path: "/liked",
-    element: <LikedSongs />,
+    element: (
+      <RequireLogin>
+        <LikedSongs />
+      </RequireLogin>
+    ),
   },
   {
     path: "/history",
-    element: <History />,
+    element: (
+      <RequireLogin>
+        <History />
+      </RequireLogin>
+    ),
   },
   {
     path: "/search",
@@ -68,7 +77,11 @@ const routes: RouteObject[] = [
   },
   {
     path: "/library",
-    element: <Library />,
+    element: (
+      <RequireLogin>
+        <Library />
+      </RequireLogin>
+    ),
   },
 ];
 export default function Routes() {

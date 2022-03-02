@@ -8,12 +8,23 @@ import {
   Text,
   HStack,
 } from "@chakra-ui/react";
+import { useMemo } from "react";
 
 export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+  const errorHeader = useMemo(() => {
+    switch (true) {
+      case error.message.includes("status code 401"):
+        return "Unauthorized";
+      case !!error.message.match(/status code 5\d\d/i):
+        return "Server error";
+      default:
+        return "Something went wrong";
+    }
+  }, [error.message]);
   return (
     <Center role="alert" my={10}>
       <VStack spacing={4}>
-        <Heading>Something went wrong:</Heading>
+        <Heading>{errorHeader}</Heading>
         <Code>{error.message}</Code>
         <Code
           maxW="800px"
