@@ -12,7 +12,7 @@ export const latestFormatter: PlaylistFormatter<
     }
   },
   title: (playlist, { org }, _) => {
-    return `${org} New Arrivals`;
+    return `Catchup on ${org}`;
   },
   description: (playlist, { org }, data, { tn }) => {
     return `Latest tagged songs in ${org}`;

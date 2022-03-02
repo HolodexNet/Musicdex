@@ -11,13 +11,18 @@ export const mvFormatter: PlaylistFormatter<
       return undefined;
     }
   },
-  title: (playlist, { org }, _) => {
-    return `${org} New Arrivals`;
+  title: (playlist, { org, sort }, _) => {
+    switch (sort) {
+      case "random":
+        return `Best of ${org}`;
+      case "latest":
+        return `Recent ${org} covers & originals`;
+    }
   },
   description: (playlist, { org, sort }, data, { tn }) => {
     switch (sort) {
       case "random":
-        return `Some of the best from ${org}`;
+        return `Relive the top hits from ${org}`;
       case "latest":
         return `Recent ${org} covers & originals`;
     }
