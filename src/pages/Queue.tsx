@@ -117,6 +117,7 @@ export const Queue = React.memo(() => {
                   as={Link}
                   to={urlLinkToPlaylist || "#"}
                   _hover={{ textDecoration: "underline" }}
+                  isTruncated
                 >
                   {currentTitle}
                 </Text>

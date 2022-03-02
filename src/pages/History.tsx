@@ -1,6 +1,5 @@
 import { Box, useColorModeValue, Text } from "@chakra-ui/react";
 import { Fragment, Suspense } from "react";
-import { XHRError } from "../components/common/XHRError";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
@@ -62,9 +61,7 @@ export default function History() {
 
   return (
     <PageContainer>
-      <ContainerInlay mt="12">
-        {isLoggedIn ? <Content /> : <XHRError />}
-      </ContainerInlay>
+      <ContainerInlay mt="12">{<Content />}</ContainerInlay>
     </PageContainer>
   );
 }
