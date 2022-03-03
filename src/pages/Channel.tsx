@@ -59,7 +59,6 @@ export default function Channel() {
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const tn = useNamePicker();
-  const copy = useClipboardWithToast();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   if (!channelStatus.isSuccess)
@@ -102,50 +101,7 @@ export default function Channel() {
           />
         </HStack>
         {!isMobile && <Spacer />}
-        <SimpleGrid
-          spacing={isMobile ? 4 : 2}
-          columns={isMobile ? 4 : 2}
-          {...(isMobile ? { pt: 2, mb: -2, width: "100%", pr: "0.5rem" } : {})}
-        >
-          <IconButton
-            colorScheme="bgAlpha"
-            icon={<FiShare2 />}
-            onClick={() => {
-              copy(window.location.toString());
-            }}
-            aria-label="Copy URL"
-            title="Copy Share URL"
-          />
-          <IconButton
-            colorScheme="bgAlpha"
-            icon={<MTHolodexIcon width="18px" />}
-            aria-label="Holodex"
-            title="Open In Holodex"
-            as="a"
-            href={"https://holodex.net/channel/" + channel.id}
-            target="_blank"
-          />
-          <IconButton
-            colorScheme="bgAlpha"
-            icon={<FiYoutube />}
-            aria-label="Youtube"
-            title="Youtube"
-            as="a"
-            href={"https://youtube.com/channel/" + channel.id}
-            target="_blank"
-          />
-          {channel.twitter && (
-            <IconButton
-              colorScheme="bgAlpha"
-              icon={<FiTwitter />}
-              aria-label="Twitter"
-              title="Twitter"
-              as="a"
-              href={"https://twitter.com/" + channel.twitter}
-              target="_blank"
-            />
-          )}
-        </SimpleGrid>
+        <ChannelSocialButtons isMobile={isMobile} channel={channel} />
       </HStack>
       <ContainerInlay>
         <Routes>
@@ -167,6 +123,75 @@ export default function Channel() {
     </PageContainer>
   );
 }
+function ChannelSocialButtons({
+  isMobile,
+  channel,
+}: {
+  isMobile: boolean | undefined;
+  channel: any;
+}) {
+  const copy = useClipboardWithToast();
+
+  const style = {
+    color: "white",
+    bgColor: "#fff2",
+    border: "2px solid #fff5",
+    _hover: {
+      bgColor: "var(--chakra-colors-n2-800)",
+      boxShadow: "lg",
+      transform: "translateY(-3px) scale(1.1);",
+    },
+  };
+  return (
+    <SimpleGrid
+      spacing={isMobile ? 4 : 2}
+      columns={isMobile ? 4 : 2}
+      {...(isMobile ? { pt: 2, mb: -2, width: "100%", pr: "0.5rem" } : {})}
+    >
+      <IconButton
+        {...style}
+        icon={<FiShare2 />}
+        onClick={() => {
+          copy(window.location.toString());
+        }}
+        aria-label="Copy URL"
+        title="Copy Share URL"
+      />
+      <IconButton
+        {...style}
+        icon={<MTHolodexIcon width="18px" back="#eee" />}
+        aria-label="Holodex"
+        title="Open In Holodex"
+        as="a"
+        href={"https://holodex.net/channel/" + channel.id}
+        target="_blank"
+      />
+      <IconButton
+        {...style}
+        icon={<FiYoutube />}
+        color="red.100"
+        aria-label="Youtube"
+        title="Youtube"
+        as="a"
+        href={"https://youtube.com/channel/" + channel.id}
+        target="_blank"
+      />
+      {channel.twitter && (
+        <IconButton
+          {...style}
+          color="twitter.100"
+          icon={<FiTwitter />}
+          aria-label="Twitter"
+          title="Twitter"
+          as="a"
+          href={"https://twitter.com/" + channel.twitter}
+          target="_blank"
+        />
+      )}
+    </SimpleGrid>
+  );
+}
+
 function ChannelContent({
   discovery,
   trending,
