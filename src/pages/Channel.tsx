@@ -77,17 +77,17 @@ export default function Channel() {
       </BGImgContainer>
 
       <HStack
-        mx={isMobile ? 3 : 6}
+        mx={isMobile ? 2 : 6}
         my={6}
         flexWrap={isMobile ? "wrap" : "unset"}
       >
         <HStack>
           <ChannelPhoto
             channelId={channel.id}
-            resizePhoto={150}
-            size="2xl"
+            resizePhoto={isMobile ? 100 : 150}
+            size={isMobile ? "xl" : "2xl"}
             borderRadius={4}
-            mr={6}
+            mr={isMobile ? 2 : 6}
             shadow="lg"
           ></ChannelPhoto>
           <PlaylistHeading
@@ -213,7 +213,7 @@ function ChannelContent({
         {discovery?.recentSingingStream &&
           (!isMobile ? (
             <Box flex="1.3 0 580px" minWidth="480px" mr={4}>
-              <Heading size="md" marginBottom={2}>
+              <Heading size="md" marginBottom={2} ml={2}>
                 Latest Stream:
               </Heading>
               <VideoPlaylistCard
@@ -224,7 +224,7 @@ function ChannelContent({
           ) : (
             discovery?.recentSingingStream?.playlist && (
               <Box mb={4}>
-                <Heading size="md" marginBottom={2}>
+                <Heading size="md" marginBottom={2} ml={2}>
                   Latest Stream:
                 </Heading>
 
@@ -237,7 +237,7 @@ function ChannelContent({
           ))}
         {trending && (
           <Box flex="1 1 140px" minWidth="300px">
-            <Heading size="md" marginBottom={2}>
+            <Heading size="md" marginBottom={2} ml={2}>
               Popular Songs:{" "}
               <Button
                 variant="ghost"
@@ -268,7 +268,7 @@ function ChannelContent({
           </Box>
         )}
       </Flex>
-      <Heading size="md" my={2}>
+      <Heading size="md" mt={2} ml={2}>
         Playlists with {name}
       </Heading>
       <CardCarousel height={250} width={160} scrollMultiplier={1}>
@@ -294,7 +294,7 @@ function ChannelContent({
           </Button>
         </Center>
       </ContainerInlay>
-      <Heading size="md" my={2}>
+      <Heading size="md" mt={2} ml={2}>
         Discover more from {channel.org}
       </Heading>
       {discovery && (
