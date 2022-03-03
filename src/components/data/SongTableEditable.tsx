@@ -28,6 +28,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FiTrash } from "react-icons/fi";
 import { Column, useSortBy, useTable } from "react-table";
 import useNamePicker from "../../modules/common/useNamePicker";
+import { SangOnGrid } from "./SongTable/SangOnCell";
 
 type IndexedSong = Song & { idx: number };
 interface SongEditableTableProps {
@@ -91,8 +92,10 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
       {
         id: "date",
         Header: "Sang On",
-        accessor: (row: { available_at: Date }) =>
-          t("NO_TL.relativeDate", { date: new Date(row?.available_at) }),
+        accessor: "available_at",
+        Cell: (cellInfo: any) => (
+          <SangOnGrid value={new Date(cellInfo.row.original.available_at)} />
+        ),
       },
       {
         id: "...",
