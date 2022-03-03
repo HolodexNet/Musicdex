@@ -31,8 +31,6 @@ export const usePlaylistWriter = (
       onSuccess: (data, payload, ...rest) => {
         queryClient.cancelQueries(["playlist", payload.id]);
         queryClient.invalidateQueries(["playlist", payload.id]);
-        queryClient.cancelQueries(["playlist-like", payload.id]);
-        queryClient.invalidateQueries(["playlist-like", payload.id]);
         queryClient.invalidateQueries(["allPlaylists"]);
         if (callbacks.onSuccess) {
           callbacks.onSuccess(data, payload, ...rest);
@@ -62,7 +60,6 @@ export const usePlaylistUpdater = (
       onSuccess: (data, payload, ...rest) => {
         console.log("invalidating queries:", ["playlist", payload.playlistId]);
         queryClient.cancelQueries(["playlist", payload.playlistId]);
-        queryClient.cancelQueries(["playlist-like", payload.playlistId]);
         // apparently start-ui has some support for querying the cache and doing stuff to it?... seems interesting.
         // TODO (optional): modify the query cache for playlist if the song is a full Song object already.
         // it seems this code is part of the Optimistic Updating: https://react-query.tanstack.com/guides/optimistic-updates
@@ -81,7 +78,6 @@ export const usePlaylistUpdater = (
         //         });
         //     });
         queryClient.invalidateQueries(["playlist", payload.playlistId]);
-        queryClient.invalidateQueries(["playlist-like", payload.playlistId]);
         if (config.onSuccess) {
           config.onSuccess(data, payload, ...rest);
         }
@@ -105,7 +101,6 @@ export const usePlaylistDeleter = (
       ...config,
       onSuccess: (data, payload, ...rest) => {
         queryClient.cancelQueries(["playlist", payload.playlistId]);
-        queryClient.cancelQueries(["playlist-like", payload.playlistId]);
         // apparently start-ui has some support for querying the cache and doing stuff to it?... seems interesting.
         // TODO (optional): modify the query cache for playlist if the song is a full Song object already.
         // it seems this code is part of the Optimistic Updating: https://react-query.tanstack.com/guides/optimistic-updates
@@ -124,7 +119,6 @@ export const usePlaylistDeleter = (
         //         });
         //     });
         queryClient.invalidateQueries(["playlist", payload.playlistId]);
-        queryClient.invalidateQueries(["playlist-like", payload.playlistId]);
         queryClient.invalidateQueries(["allPlaylists"]);
 
         if (config.onSuccess) {
@@ -140,9 +134,9 @@ export const usePlaylist = (
   config: UseQueryOptions<PlaylistFull, unknown, PlaylistFull, string[]> = {}
 ) => {
   const queryClient = useQueryClient();
-  const { AxiosInstance, isLoggedIn } = useClient();
+  const { AxiosInstance, isLoggedIn, uid } = useClient();
   const result = useQuery(
-    ["playlist", playlistId],
+    ["playlist", playlistId, uid],
     async (q): Promise<PlaylistFull> => {
       // fetch cached
       console.log("fetching", q);
@@ -205,7 +199,7 @@ export const usePlaylist = (
 
       if (likeStatus.length === playlist.content?.length) {
         playlist.content.forEach((song, index) => {
-          queryClient.setQueryData(["BLK:", song.id], likeStatus[index]);
+          queryClient.setQueryData(["BLK:", uid, song.id], likeStatus[index]);
         });
       }
 
@@ -228,10 +222,10 @@ export const useMyPlaylists = (
     string[]
   > = {}
 ) => {
-  const { AxiosInstance, isLoggedIn } = useClient();
+  const { AxiosInstance, isLoggedIn, uid } = useClient();
 
   const result = useQuery(
-    ["allPlaylists"],
+    ["allPlaylists", uid],
     async (q): Promise<PlaylistStub[]> => {
       // fetch cached
       if (!isLoggedIn) return [];
@@ -254,10 +248,10 @@ export const useMyPlaylists = (
 };
 
 export const useStarredPlaylists = () => {
-  const { AxiosInstance, isLoggedIn } = useClient();
+  const { AxiosInstance, isLoggedIn, uid } = useClient();
 
   return useQuery(
-    ["starredPlaylists"],
+    ["starredPlaylists", uid],
     async (): Promise<PlaylistStub[]> => {
       // fetch cached
       if (!isLoggedIn) return [];

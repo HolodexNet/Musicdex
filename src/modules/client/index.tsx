@@ -6,6 +6,7 @@ import { useStoreActions, useStoreState } from "../../store";
 import { useGoogleLogin } from "react-google-login";
 import open from "oauth-open";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "react-query";
 
 export interface OAuth2SuccessResponse {
   token_type: "Bearer";
@@ -60,7 +61,7 @@ export function useClient() {
     [token]
   );
 
-  async function refreshUser(): Promise<"OK" | null> {
+  const refreshUser = useCallback(async () => {
     if (user) {
       const resp = await AxiosInstance("/user/check");
       if (resp.status === 200 && resp.data) setUser(resp.data as User);
@@ -68,11 +69,7 @@ export function useClient() {
       return "OK";
     }
     return null;
-  }
-
-  // function login() {
-  //   if (isLoggedIn) return;
-  // }
+  }, []);
 
   function logout() {
     setToken(null);
@@ -86,6 +83,7 @@ export function useClient() {
     // login,
     refreshUser,
     logout,
+    uid: user?.id ?? "na",
   };
 }
 

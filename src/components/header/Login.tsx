@@ -61,7 +61,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
             onClick={GoogleAuthFn}
           >
             <Center>
-              <Text>Login with Google</Text>
+              <Text>Login with Google (try clicking twice)</Text>
             </Center>
           </Button>
         )}

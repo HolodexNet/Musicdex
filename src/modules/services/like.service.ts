@@ -16,6 +16,7 @@ import {
 } from "react-query";
 import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
+import { useStoreState } from "../../store";
 
 export const useSongLikeUpdater = (
   callbacks: UseMutationOptions<
@@ -40,7 +41,6 @@ export const useSongLikeUpdater = (
       onSuccess: (data, payload, ...rest) => {
         queryClient.cancelQueries(["likedSongList"]);
         queryClient.invalidateQueries(["likedSongList"]);
-        // queryClient.invalidateQueries(["playlist-like"]);
         // queryClient.cancelQueries(["likedSongs"]);
         // queryClient.invalidateQueries(["likedSongs"]);
         queryClient.invalidateQueries([BULKLIKE_, payload.song_id]);
@@ -62,14 +62,14 @@ export const useLikedSongs = (
   > = {}
 ) => {
   // const queryClient = useQueryClient();
-  const { AxiosInstance } = useClient();
+  const { AxiosInstance, uid } = useClient();
 
   const result = useQuery(
-    ["likedSongList", String(page || 1)],
+    ["likedSongList", uid, String(page || 1)],
     async (q): Promise<PaginatedSongs> => {
       const songs = (
         await AxiosInstance<PaginatedSongs>(
-          `/musicdex/like?page=${Number.parseInt(q.queryKey[1]) ?? 1}`
+          `/musicdex/like?page=${Number.parseInt(q.queryKey[2]) ?? 1}`
         )
       ).data;
       songs?.content?.forEach((x) => (x.liked = true));
@@ -121,8 +121,9 @@ export function useSongLikeCheck_Loader():
 
 export function useSongLikeBulkCheck(songId: string) {
   const loader = useSongLikeCheck_Loader();
+  const user = useStoreState((state) => state.auth.user);
   const result = useQuery(
-    [BULKLIKE_, songId],
+    [BULKLIKE_, user?.id ?? "na", songId],
     () => {
       if (loader) return loader.load(songId);
       else throw new Error("not logged in");
