@@ -76,6 +76,9 @@ i18n
     backend: {
       // reloadInterval: 5000,
     },
+    // react: {
+    //   useSuspense: false,
+    // },
   });
 
 i18n.on("missingKey", (lngs, namespace, key, res) => {

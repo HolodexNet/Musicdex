@@ -29,6 +29,7 @@ const PlaybackButton = ({ icon, ...rest }: PlaybackButtonProps) => {
       justifyContent="center"
       alignItems="center"
       color="brand.200"
+      cursor="pointer"
       {...rest}
     >
       {icon}

@@ -1,4 +1,4 @@
-import { Box, Button, Heading, HStack, Spacer, Stack } from "@chakra-ui/react";
+import { Button, HStack } from "@chakra-ui/react";
 import { Suspense, useMemo, useState } from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
@@ -7,7 +7,6 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { useLikedSongs } from "../modules/services/like.service";
 import { useStoreActions } from "../store";
-import { XHRError } from "../components/common/XHRError";
 
 export default function LikedSongs() {
   // const history = useStoreState((store) => store.playback.history);
@@ -34,11 +33,10 @@ export default function LikedSongs() {
           count={0}
           editMode={false}
         ></PlaylistHeading>
-        {status.isError ? (
-          <XHRError error={status.error as Error} />
+        {status.isLoading ? (
+          <QueryStatus queryStatus={status} />
         ) : (
           <>
-            <QueryStatus queryStatus={status} />
             <HStack spacing={4} flexShrink={1} flexWrap="wrap" my={2}>
               <Button
                 variant="solid"
@@ -78,7 +76,6 @@ export default function LikedSongs() {
             )}
           </>
         )}
-        {/* </Stack> */}
       </ContainerInlay>
     </PageContainer>
   );

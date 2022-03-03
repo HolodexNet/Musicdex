@@ -17,10 +17,12 @@ export function SongArtwork({
   ...rest
 }: SongArtworkProps) {
   let url = `https://via.placeholder.com/${size}x${size}.jpg`;
+  const resizeSize = resizeHint || size;
+  const videoArtSize = resizeSize > 200 ? "maxres" : "medium";
   if (song) {
     url = song.art
       ? resizeArtwork(song.art, resizeHint || size)
-      : getVideoThumbnails(song.video_id).medium;
+      : getVideoThumbnails(song.video_id)[videoArtSize];
   }
 
   return (

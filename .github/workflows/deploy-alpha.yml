@@ -1,9 +1,9 @@
-name: Deploy to Musicdex (Alpha)
+name: Deploy to Musicdex (Staging)
 
 on:
   push:
     branches:
-      - master
+      - dev
 
 jobs:
   deploy:
@@ -19,7 +19,7 @@ jobs:
           script_stop: true
           script: |
             cd /opt/alpha_musicdex_web || { echo "No directory found"; exit 1; } 
-            git pull origin master
+            git pull origin dev
             yarn
             yarn run build
             rm -r /var/www/html/musicdex-alpha.holodex.net/*

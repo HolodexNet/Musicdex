@@ -61,7 +61,11 @@ export default function Channel() {
   const tn = useNamePicker();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  if (!channelStatus.isSuccess)
+  if (
+    channelStatus.isLoading ||
+    discoveryStatus.isLoading ||
+    trendingStatus.isLoading
+  )
     return <QueryStatus queryStatus={channelStatus} />;
 
   const name = tn(channel.english_name, channel.name);
@@ -92,7 +96,12 @@ export default function Channel() {
           ></ChannelPhoto>
           <PlaylistHeading
             title={name}
-            description={channel.org + " — " + channel?.suborg?.slice(2)}
+            description={
+              channel.org +
+              (channel?.suborg?.slice(2)
+                ? " — " + channel?.suborg?.slice(2)
+                : "")
+            }
             canEdit={false}
             editMode={false}
             count={0}
@@ -274,7 +283,9 @@ function ChannelContent({
       <CardCarousel height={250} width={160} scrollMultiplier={1}>
         {discovery &&
           discovery.recommended.playlists.map((x: any) => {
-            return <PlaylistCard playlist={x} marginX={2}></PlaylistCard>;
+            return (
+              <PlaylistCard playlist={x} marginX={2} key={x.id}></PlaylistCard>
+            );
           })}
       </CardCarousel>
       <ContainerInlay width="100%" pt={0}>

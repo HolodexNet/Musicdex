@@ -5,15 +5,11 @@ import { useMemo } from "react";
 import { IconType } from "react-icons";
 import { BiCalendar, BiMovie } from "react-icons/bi";
 import {
-  identifyTitle,
-  identifyDescription,
-  identifyPlaylistChannelImage,
-} from "../../utils/PlaylistHelper";
-import {
   isSGPPlaylist,
+  parsePlaylistDesc,
   parsePlaylistID,
-  SGPDefinitions,
-} from "../../utils/SGPFunctions";
+  useFormatPlaylist,
+} from "../../modules/playlist/useFormatPlaylist";
 import { getVideoThumbnails } from "../../utils/SongHelper";
 import { LineLogo } from "../icons/LineLogo";
 
@@ -24,30 +20,23 @@ interface PlaylistArtworkProps extends FlexProps {
 
 export const PlaylistArtwork = React.memo(
   ({ playlist, renderType = "auto", ...rest }: PlaylistArtworkProps) => {
-    const { title, description, type, params } = useMemo(() => {
+    const formatPlaylist = useFormatPlaylist();
+    const { title, description, type } = useMemo(() => {
+      let type;
       if (isSGPPlaylist(playlist.id!)) {
-        const { type, params } = parsePlaylistID(playlist.id!);
-        const desc = (
-          playlist?.description
-            ? SGPDefinitions?.[type]?.descParser?.(playlist?.description)
-            : undefined
-        ) as any;
-        return {
-          title: identifyTitle(playlist),
-          type,
-          params,
-          description: desc,
-        };
+        const { type: t } = parsePlaylistID(playlist.id!);
+        type = t;
       }
       return {
-        title: identifyTitle(playlist),
-        description: identifyDescription(playlist),
+        title: formatPlaylist("title", playlist),
+        description: parsePlaylistDesc(playlist),
+        type,
       };
-    }, [playlist]);
+    }, [formatPlaylist, playlist]);
 
     const channelImg = useMemo(
-      () => playlist && identifyPlaylistChannelImage(playlist),
-      [playlist]
+      () => playlist && formatPlaylist("channelImage", playlist),
+      [formatPlaylist, playlist]
     );
     const thumbnail = useMemo(() => {
       const videoIds: string[] = (playlist as any).videoids;

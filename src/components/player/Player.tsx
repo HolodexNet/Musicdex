@@ -34,7 +34,6 @@ export function Player({ player }: { player: any }) {
 
   const { currentVideo, state, currentTime, setError, hasError, volume } =
     usePlayer(player);
-
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volumeSlider, setVolumeSlider] = useState(0);
@@ -64,7 +63,8 @@ export function Player({ player }: { player: any }) {
 
   // Jot down the song that the page loaded on, and keep this paused
   useEffect(() => {
-    if (currentSong?.id) setFirstLoadPauseId(currentSong?.id);
+    if (currentSong?.id)
+      setFirstLoadPauseId(`${currentSong?.id || ""}${repeat || ""}`);
   }, []);
 
   // Player State Event
@@ -103,13 +103,17 @@ export function Player({ player }: { player: any }) {
     if (!player) return;
 
     // Song changed, and is no longer the paause locked song, allow autoplay
-    if (firstLoadPauseId && firstLoadPauseId !== currentSong?.id) {
+    if (
+      firstLoadPauseId &&
+      firstLoadPauseId !== `${currentSong?.id || ""}${repeat || ""}`
+    ) {
       setFirstLoadPauseId("");
     }
 
     if (currentSong) {
       console.log("[Player] Playing Song:", currentSong.name);
       loadVideoAtTime(currentSong.video_id, currentSong.start);
+      player.playVideo();
       setProgress(0);
       setError(false);
       if (position === "hidden") setOverridePos(undefined);
@@ -171,6 +175,7 @@ export function Player({ player }: { player: any }) {
   // End Progress Event
   useEffect(() => {
     if (!player || !currentSong || currentTime === undefined) return;
+
     if (currentSong.video_id !== currentVideo) {
       return;
     }
@@ -230,40 +235,42 @@ export function Player({ player }: { player: any }) {
     }
   }, [hasError, currentSong, toast, next, setError, player]);
 
-  function onProgressChange(e: any) {
-    if (!currentSong) return;
-    setProgress(e);
-    player?.seekTo(currentSong.start + (e / 100) * totalDuration, true);
-  }
+  const onProgressChange = useCallback(
+    (e: any) => {
+      if (!currentSong) return;
+      setProgress(e);
+      player?.seekTo(currentSong.start + (e / 100) * totalDuration, true);
+    },
+    [currentSong, player, totalDuration]
+  );
 
   const seconds = useMemo(() => {
     return formatSeconds((progress / 100) * totalDuration);
   }, [progress, totalDuration]);
 
-  function togglePlay() {
+  const togglePlay = useCallback(() => {
     if (!currentSong) return;
     // User action, unlock the first load pause
     if (firstLoadPauseId) setFirstLoadPauseId("");
     if (player) isPlaying ? player.pauseVideo() : player.playVideo();
     setIsPlaying((prev) => !prev);
-  }
+  }, [currentSong, firstLoadPauseId, isPlaying, player]);
+
   return (
     <PlayerBar
-      {...{
-        progress,
-        onProgressChange,
-        currentSong,
-        isPlaying,
-        togglePlay,
-        next,
-        player,
-        seconds,
-        totalDuration,
-        volume: volumeSlider,
-        onVolumeChange: (e) => {
-          player?.setVolume(e);
-          setVolumeSlider(e);
-        },
+      progress={progress}
+      onProgressChange={onProgressChange}
+      currentSong={currentSong}
+      isPlaying={isPlaying}
+      togglePlay={togglePlay}
+      // next={(e: any) => next(e)}
+      // player={player}
+      seconds={seconds}
+      totalDuration={totalDuration}
+      volume={volumeSlider}
+      onVolumeChange={(e) => {
+        player?.setVolume(e);
+        setVolumeSlider(e);
       }}
     />
   );

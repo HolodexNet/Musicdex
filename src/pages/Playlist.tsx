@@ -1,13 +1,4 @@
-import {
-  Box,
-  Center,
-  Code,
-  Flex,
-  Heading,
-  useColorModeValue,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Center, Code, Heading, useToast, VStack } from "@chakra-ui/react";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SongTable } from "../components/data/SongTable";
@@ -19,17 +10,12 @@ import {
   usePlaylistWriter,
 } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
-import {
-  identifyDescription,
-  identifyPlaylistBannerImage,
-  identifyTitle,
-} from "../utils/PlaylistHelper";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import React from "react";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { BGImgContainer, BGImg } from "../components/common/BGImgContainer";
-import { ErrorFallback } from "../ErrorFallback";
+import { useFormatPlaylist } from "../modules/playlist/useFormatPlaylist";
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
 );
@@ -48,17 +34,18 @@ export default function Playlist() {
   useEffect(() => {
     setEditMode(false);
   }, [playlistId]);
+  const formatPlaylist = useFormatPlaylist();
 
   const { banner, title, description } = useMemo(() => {
     return (
       (playlist && {
-        banner: identifyPlaylistBannerImage(playlist),
-        title: identifyTitle(playlist),
-        description: identifyDescription(playlist),
+        banner: formatPlaylist("bannerImage", playlist),
+        title: formatPlaylist("title", playlist),
+        description: formatPlaylist("description", playlist),
       }) ||
       {}
     );
-  }, [playlist]);
+  }, [formatPlaylist, playlist]);
 
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const setPlaylist = useStoreActions(
@@ -106,7 +93,6 @@ export default function Playlist() {
       setEditMode(false);
     }
   };
-  console.log(status.error);
 
   if (status.error && (status?.error as any)?.status >= 400) {
     return (
@@ -129,15 +115,15 @@ export default function Playlist() {
     );
 
   return (
-    <PageContainer key={"playlist_" + playlistId}>
+    <PageContainer>
       <BGImgContainer height="200px">
         <BGImg banner_url={banner || ""} height="200px"></BGImg>
       </BGImgContainer>
       <ContainerInlay mt="12">
         <PlaylistHeading
-          title={title || "..."}
-          description={description || "..."}
-          canEdit={isLoggedIn && playlist.owner == user?.id}
+          title={title || "Untitled Playlist"}
+          description={description || ""}
+          canEdit={isLoggedIn && playlist.owner === user?.id}
           editMode={false}
           setDescription={(text) => {
             writeNewPlaylist({ ...writablePlaylist, description: text });
@@ -150,6 +136,10 @@ export default function Playlist() {
               ? newSongIds?.length ?? playlist?.content?.length
               : playlist?.content?.length) || 0
           }
+          totalLengthSecs={playlist.content?.reduce(
+            (a, c) => a + c.end - c.start,
+            0
+          )}
         />
         <PlaylistButtonArray
           playlist={playlist}
@@ -179,9 +169,7 @@ export default function Playlist() {
               />
             </Suspense>
           ) : (
-            // <Suspense fallback={<div>Loading...</div>}>
-            <SongTable songs={playlist.content} virtualized />
-            // </Suspense>
+            <SongTable playlist={playlist} virtualized />
           ))}
       </ContainerInlay>
     </PageContainer>

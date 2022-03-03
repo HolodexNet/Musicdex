@@ -10,9 +10,8 @@ import {
 } from "@chakra-ui/react";
 import {
   createContext,
-  DOMElement,
   ReactNode,
-  RefObject,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -21,6 +20,7 @@ import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState } from "../../store";
 import { CommonContextMenu } from "../common/CommonContext";
 import { MotionBox } from "../common/MotionBox";
+import ServiceWorkerWrapper from "../common/ServiceWorkerWrapper";
 import { BottomNav } from "../nav/BottomNav";
 import { NavBar } from "../nav/NavBar";
 import { SidebarContent } from "../nav/Sidebar";
@@ -88,6 +88,17 @@ export default function Frame({ children }: { children?: ReactNode }) {
   const frameRef = useRef<any>(undefined);
 
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
+
+  const currentlyPlaying = useStoreState(
+    (state) => state.playback.currentlyPlaying
+  );
+
+  // Lazy load the player, wait for first song to be played
+  const [loadPlayer, setLoadPlayer] = useState(false);
+  useEffect(() => {
+    if (!loadPlayer && currentlyPlaying.song) setLoadPlayer(true);
+  }, [currentlyPlaying.song, currentlyPlaying.repeat, loadPlayer]);
+
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
   }
@@ -170,7 +181,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
                 opacity={0.6}
                 bgColor="bg.900"
               ></Box>
-              <YoutubePlayer onReady={onReady} />
+              {loadPlayer && <YoutubePlayer onReady={onReady} />}
             </MotionBox>
           </Flex>
         </Flex>
@@ -179,6 +190,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
         <AddToPlaylistModal />
       </Flex>
       <CommonContextMenu />
+      <ServiceWorkerWrapper />
     </Box>
   );
 }

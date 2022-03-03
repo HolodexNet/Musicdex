@@ -1,6 +1,7 @@
 import { Box, Text, Button } from "@chakra-ui/react";
 import axios from "axios";
 import { Suspense } from "react";
+import { useTranslation } from "react-i18next";
 import { FiYoutube } from "react-icons/fi";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
@@ -11,6 +12,7 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import useNamePicker from "../modules/common/useNamePicker";
+import { usePlaylistTitleDesc } from "../modules/playlist/useFormatPlaylist";
 import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
@@ -19,9 +21,8 @@ export default function Video() {
   // const history = useStoreState((store) => store.playback.history);
   let params = useParams();
   let videoId = params.id!;
-
   const { data: playlist, ...status } = usePlaylist(`:video[id=${videoId}]`);
-
+  const { title, description } = usePlaylistTitleDesc(playlist);
   const { data: video, ...videoStatus } = useQuery(
     ["video", videoId],
     async (q) => {
@@ -36,32 +37,27 @@ export default function Video() {
 
   const tn = useNamePicker();
 
-  // const {description, }
   const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
   const setPlaylist = useStoreActions(
     (actions) => actions.playback.setPlaylist
   );
 
-  // useEffect(() => console.log(playlist), [playlist])
-
   if (videoStatus.isLoading) return <QueryStatus queryStatus={status} />;
-
-  // if (!videoStatus.isSuccess) return <QueryStatus queryStatus={videoStatus} />;
 
   return (
     <PageContainer>
       <ContainerInlay>
         <PlaylistHeading
-          title={video.title}
-          description={
-            tn(video.channel.english_name, video.channel.name) +
-            ". Streamed on:" +
-            video.available_at
-          }
+          title={title || "Video"}
+          description={description || ""}
           canEdit={false}
           editMode={false}
           count={playlist?.content?.length || 0}
           max={0}
+          totalLengthSecs={playlist?.content?.reduce(
+            (a, c) => a + c.end - c.start,
+            0
+          )}
         />
         {playlist?.content && (
           <PlaylistButtonArray
@@ -95,7 +91,7 @@ export default function Video() {
           </PlaylistButtonArray>
         )}
         <Suspense fallback={<div>Loading...</div>}>
-          {playlist?.content && <SongTable songs={playlist.content} />}{" "}
+          {playlist?.content && <SongTable playlist={playlist} />}{" "}
         </Suspense>
         {!playlist && status.isError && (
           <Box>

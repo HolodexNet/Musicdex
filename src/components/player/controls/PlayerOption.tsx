@@ -55,10 +55,9 @@ export const PlayerOption = React.memo(
       <Flex align="center" {...rest}>
         <IconButton
           aria-label="Shuffle"
-          icon={ShuffleIcon(shuffleMode, fullPlayer ? 36 : 24)}
+          icon={ShuffleIcon(shuffleMode, fullPlayer ? 36 : 20)}
           variant="ghost"
           onClick={() => toggleShuffleMode()}
-          size="lg"
         />
         {fullPlayer && (
           <Button
@@ -71,10 +70,9 @@ export const PlayerOption = React.memo(
         )}
         <IconButton
           aria-label="Repeat Mode"
-          icon={RepeatIcon(repeatMode, fullPlayer ? 36 : 24)}
+          icon={RepeatIcon(repeatMode, fullPlayer ? 36 : 20)}
           variant="ghost"
           onClick={() => toggleRepeatMode()}
-          size="lg"
         />
         {!fullPlayer && (
           <>

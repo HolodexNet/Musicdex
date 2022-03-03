@@ -1,15 +1,14 @@
 import { Box, useColorModeValue, Text } from "@chakra-ui/react";
 import { Fragment, Suspense } from "react";
-import { XHRError } from "../components/common/XHRError";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { useClient } from "../modules/client";
+import { formatPlaylistID } from "../modules/playlist/useFormatPlaylist";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
-import { formatPlaylistID } from "../utils/SGPFunctions";
 
 export default function History() {
   // const history = useStoreState((store) => store.playback.history);
@@ -54,7 +53,7 @@ export default function History() {
           />
         )}
         <Suspense fallback={<div>Loading...</div>}>
-          {playlist?.content && <SongTable songs={playlist.content} />}
+          {playlist?.content && <SongTable playlist={playlist} virtualized />}
         </Suspense>
       </Fragment>
     );
@@ -62,9 +61,7 @@ export default function History() {
 
   return (
     <PageContainer>
-      <ContainerInlay mt="12">
-        {isLoggedIn ? <Content /> : <XHRError />}
-      </ContainerInlay>
+      <ContainerInlay mt="12">{<Content />}</ContainerInlay>
     </PageContainer>
   );
 }

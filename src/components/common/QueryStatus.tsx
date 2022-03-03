@@ -1,15 +1,14 @@
 import { VStack, Text, Spinner, StackProps } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { Fragment } from "react";
-import { useQueryErrorResetBoundary } from "react-query";
 import { UseQueryResult } from "react-query/types/react/types";
+import { ErrorFallback } from "../../ErrorFallback";
 
 interface QueryStatusProps extends StackProps {
   queryStatus: Partial<UseQueryResult>;
 }
 
 export function QueryStatus({ queryStatus, ...rest }: QueryStatusProps) {
-  // const { reset } = useQueryErrorResetBoundary();
   return (
     <VStack textAlign="center" {...rest}>
       {queryStatus.isLoading && (
@@ -20,15 +19,10 @@ export function QueryStatus({ queryStatus, ...rest }: QueryStatusProps) {
       )}
 
       {queryStatus.isError && (
-        <Fragment>
-          <Text fontSize="3xl" colorScheme="red">
-            Error occured
-          </Text>
-          <Text maxWidth="100%">
-            {JSON.stringify(queryStatus.error as AxiosError)}
-          </Text>
-          {/* <Button onClick={reset}>Retry</Button> */}
-        </Fragment>
+        <ErrorFallback
+          error={queryStatus.error as AxiosError}
+          resetErrorBoundary={() => window.location.reload()}
+        ></ErrorFallback>
       )}
     </VStack>
   );
