@@ -23,7 +23,6 @@ import {
 } from "react-icons/fi";
 import { useClient } from "../../modules/client";
 import {
-  usePlaylistWriter,
   useMyPlaylists,
   useStarredPlaylists,
 } from "../../modules/services/playlist.service";
@@ -33,18 +32,13 @@ import { useLocation } from "react-router-dom";
 import { useStoreState } from "../../store";
 import { AnimatePresence } from "framer-motion";
 
-import {
-  Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  Input,
-  Stack,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { Suspense, useRef } from "react";
+import { Flex, useColorModeValue } from "@chakra-ui/react";
+import { Suspense, useEffect } from "react";
 import { PlaylistList } from "../playlist/PlaylistList";
 import { LogoWithText } from "./LogoWithText";
+import PlaylistCreateForm, {
+  PlaylistCreateModal,
+} from "../playlist/PlaylistCreateForm";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -77,9 +71,8 @@ export function SidebarContent({
   const { data: starredList, isLoading: loadingStars } = useStarredPlaylists();
   const { pathname } = useLocation();
   const isDragging = useStoreState((s) => s.dnd.dragging);
-  const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
   const toast = useToast();
-
+  const { onOpen: openModal, ...modalProps } = useDisclosure();
   return (
     <Box
       display="flex"
@@ -94,16 +87,6 @@ export function SidebarContent({
       h="full"
       {...rest}
     >
-      <Modal isOpen={isOpen} onClose={closeModal} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Create New Playlist</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <CreateNewPlaylistForm />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
       <Flex
         h="20"
         alignItems="center"
@@ -125,6 +108,7 @@ export function SidebarContent({
       ))}
       <Divider mb={2} />
       <Flex flexDirection="column" overflowY="auto" flex="1">
+        <PlaylistCreateModal {...modalProps} />
         <NavItem
           key="playlist"
           icon={FiPlusCircle}
@@ -135,8 +119,7 @@ export function SidebarContent({
                 status: "warning",
                 description: "You need to be logged in to create playlists.",
               });
-
-            onOpen();
+            openModal();
           }}
           m="1"
           px="2"
@@ -161,95 +144,5 @@ export function SidebarContent({
         </Suspense>
       </Flex>
     </Box>
-  );
-}
-
-export default function CreateNewPlaylistForm(): JSX.Element {
-  const {
-    mutateAsync: writePlaylist,
-    isSuccess,
-    isError,
-  } = usePlaylistWriter();
-
-  const form = useRef<any>(undefined);
-  const toast = useToast();
-  const { user } = useClient();
-
-  return (
-    <Stack
-      w={"full"}
-      rounded={"xl"}
-      mb={6}
-      as="form"
-      ref={form}
-      onSubmit={(e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target as any);
-        const formProps: Record<string, string> = Object.fromEntries(
-          formData
-        ) as Record<string, string>;
-        if (
-          formProps.name.trim().length > 0 &&
-          formProps.description.trim().length > 0
-        ) {
-          const playlist = {
-            title: formProps.name,
-            description: formProps.description,
-            owner: user?.id,
-            type: "ugp",
-            content: [],
-          };
-          writePlaylist(playlist).then(
-            () => {
-              toast({
-                status: "success",
-                position: "top-right",
-                title: "Created",
-              });
-            },
-            () => {
-              toast({
-                status: "warning",
-                position: "top-right",
-                title: "Something went wrong",
-              });
-            }
-          );
-        } else {
-          toast({
-            variant: "solid",
-            status: "warning",
-            description: "You need to provide both name and description.",
-          });
-        }
-      }}
-    >
-      {/* <Heading lineHeight={1.1} fontSize={{ base: "2xl", md: "3xl" }}>
-          Create New Playlist
-        </Heading> */}
-      <FormControl id="name" isRequired>
-        <FormLabel>
-          Name (Can start a playlist with an emoji to set it as the icon)
-        </FormLabel>
-        <Input _placeholder={{ color: "gray.500" }} type="text" name="name" />
-      </FormControl>
-      <FormControl id="description" isRequired>
-        <FormLabel>Description</FormLabel>
-        <Input type="text" name="description" />
-      </FormControl>
-      <Stack spacing={6}>
-        <Button
-          bg={"green.400"}
-          color={"white"}
-          _hover={{
-            bg: "green.500",
-          }}
-          type="submit"
-        >
-          Create
-        </Button>
-      </Stack>
-    </Stack>
-    // </Flex>
   );
 }

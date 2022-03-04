@@ -16,6 +16,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useLocation } from "react-router-dom";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState } from "../../store";
 import { CommonContextMenu } from "../common/CommonContext";
@@ -102,6 +103,13 @@ export default function Frame({ children }: { children?: ReactNode }) {
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
   }
+  const location = useLocation();
+  useEffect(() => {
+    if (isOpen) {
+      onClose();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, onClose]);
 
   return (
     <Box
@@ -115,7 +123,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
         {/* Generic Display: always present */}
         <NavBar
           onOpen={onOpen}
-          zIndex={6}
+          // zIndex={6}
           bg={useColorModeValue("bg.100", "bg.900")}
         />
 
