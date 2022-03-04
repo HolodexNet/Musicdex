@@ -21,7 +21,15 @@ import {
 import React from "react";
 import { FiChevronDown, FiChevronUp, FiStar } from "react-icons/fi";
 import { FaRegStar, FaStar } from "react-icons/fa";
-import { LayoutGroup, motion, Reorder } from "framer-motion";
+import {
+  animate,
+  LayoutGroup,
+  motion,
+  MotionValue,
+  Reorder,
+  useDragControls,
+  useMotionValue,
+} from "framer-motion";
 import { MdDragHandle, MdDragIndicator } from "react-icons/md";
 import { Org } from "../../store/org";
 
@@ -92,47 +100,12 @@ export function OrgPickerPanel({
             .filter((x) =>
               search ? x.toLowerCase().includes(search.toLowerCase()) : true
             )
-            .map((org) => {
-              return (
-                <Reorder.Item
-                  // is="div"
-                  key={"orgselect" + org}
-                  value={org}
-                  as="div"
-                  style={{
-                    display: "flex",
-                    marginTop: "0.5rem",
-                  }}
-                >
-                  <IconButton
-                    icon={<FaStar />}
-                    aria-label="favorite"
-                    variant="ghost"
-                    colorScheme="yellow"
-                    onClick={() => {
-                      unfavOrg(org);
-                    }}
-                  ></IconButton>
-                  <Button
-                    colorScheme="grey"
-                    fontWeight="400"
-                    flex="1"
-                    variant="ghost"
-                    marginRight="0.5rem"
-                    onClick={() => {
-                      pickOrg && pickOrg(orgs?.find((x) => x.name === org));
-                    }}
-                  >
-                    {org}
-                  </Button>
-                  <MdDragHandle
-                    size="30px"
-                    width="30px"
-                    style={{ marginRight: "0px" }}
-                  ></MdDragHandle>
-                </Reorder.Item>
-              );
-            })}
+            .map((org) => (
+              <ReorderableOrgItem
+                key={"order_" + org}
+                {...{ org, unfavOrg, pickOrg, orgs }}
+              />
+            ))}
         </Reorder.Group>
         <Divider mt={2} />
         {nonfavs
@@ -174,4 +147,90 @@ export function OrgPickerPanel({
       </Box>
     </Box>
   );
+}
+function ReorderableOrgItem({
+  org,
+  unfavOrg,
+  pickOrg,
+  orgs,
+}: {
+  org: string;
+  unfavOrg: (name: string) => void;
+  pickOrg: ((org: Org | undefined) => void) | undefined;
+  orgs: Org[] | undefined;
+}): JSX.Element {
+  const controls = useDragControls();
+  const y = useMotionValue(0);
+  const boxShadow = useRaisedShadow(y);
+
+  return (
+    <Reorder.Item
+      value={org}
+      id={org}
+      as="div"
+      style={{
+        boxShadow,
+        y,
+        display: "flex",
+        marginTop: "0.5rem",
+      }}
+      dragListener={false}
+      dragControls={controls}
+    >
+      <IconButton
+        icon={<FaStar />}
+        aria-label="favorite"
+        variant="ghost"
+        colorScheme="yellow"
+        onClick={() => {
+          unfavOrg(org);
+        }}
+      ></IconButton>
+      <Button
+        colorScheme="grey"
+        fontWeight="400"
+        flex="1"
+        variant="ghost"
+        marginRight="0.5rem"
+        onClick={() => {
+          pickOrg && pickOrg(orgs?.find((x) => x.name === org));
+        }}
+      >
+        {org}
+      </Button>
+      <MdDragHandle
+        size="30px"
+        width="30px"
+        style={{ marginRight: "0px" }}
+        onPointerDown={(e) => controls.start(e)}
+        cursor="move"
+      ></MdDragHandle>
+    </Reorder.Item>
+  );
+}
+
+const inactiveShadow = "0px 0px 0px rgba(0,0,0,0.8)";
+
+export function useRaisedShadow(value: MotionValue<number>) {
+  const boxShadow = useMotionValue(inactiveShadow);
+
+  useEffect(() => {
+    let isActive = false;
+    value.onChange((latest) => {
+      const wasActive = isActive;
+      if (latest !== 0) {
+        isActive = true;
+        if (isActive !== wasActive) {
+          animate(boxShadow, "5px 5px 10px rgba(0,0,0,0.3)");
+        }
+      } else {
+        isActive = false;
+        if (isActive !== wasActive) {
+          animate(boxShadow, inactiveShadow);
+        }
+      }
+    });
+  }, [value, boxShadow]);
+
+  return boxShadow;
 }
