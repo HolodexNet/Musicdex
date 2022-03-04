@@ -123,7 +123,7 @@ export default function Playlist() {
         <PlaylistHeading
           title={title || "Untitled Playlist"}
           description={description || ""}
-          canEdit={isLoggedIn && playlist.owner === user?.id}
+          canEdit={isLoggedIn && playlist.owner === user?.id && editMode}
           editMode={false}
           setDescription={(text) => {
             writeNewPlaylist({ ...writablePlaylist, description: text });
