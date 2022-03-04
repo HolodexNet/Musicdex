@@ -105,7 +105,7 @@ export const VideoPlaylistCard = React.memo(
               bgColor="bgAlpha.800"
               overflowY="scroll"
             >
-              {playlist?.content ? (
+              {inView && playlist?.content ? (
                 <Suspense
                   fallback={<QueryStatus queryStatus={{ isLoading: true }} />}
                 >
