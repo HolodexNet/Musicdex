@@ -9,7 +9,6 @@ export const videoFormatter: PlaylistFormatter<
   },
   description: (p, { id }, video: any, { t, tn }) => {
     if (!t || !tn) return "";
-    console.log(video);
     return `Sang ${t("NO_TL.relativeDate", {
       date: new Date(video.available_at),
     })}

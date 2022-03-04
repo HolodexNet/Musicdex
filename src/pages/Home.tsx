@@ -20,39 +20,25 @@ import { useStoreActions, useStoreState } from "../store";
 
 export default function Home() {
   const org = useStoreState((store) => store.org.currentOrg);
-  const { data: trendingSongs, ...rest } = useTrendingSongs(
+  const { data: trendingSongs, ...trendingStatus } = useTrendingSongs(
     org.name !== "All Vtubers" ? { org: org.name } : {}
   );
 
   const isMobile = useBreakpointValue({ base: true, md: false });
   const queueSongs = useStoreActions((a) => a.playback.queueSongs);
 
-  const {
-    data: discovery,
-    isSuccess,
-    ...discoveryRest
-  } = useDiscoveryOrg(org.name);
+  const { data: discovery, ...discoveryStatus } = useDiscoveryOrg(org.name);
 
   return (
     <PageContainer>
       <ContainerInlay pt={0}>
-        {/* <HStack alignItems="flex-end">
-          <Spacer />
-          <Button variant="ghost" size="sm" colorScheme="n2">
-            All {org.name} Songs
-          </Button>
-          <Button variant="ghost" size="sm" colorScheme="n2">
-            Search {org.name} Songs
-          </Button>
-        </HStack> */}
-
         <HomeSection>
           <Heading size="lg" mb={3}>
             Recent Singing Streams
           </Heading>
 
           {isMobile ? (
-            isSuccess || discovery?.recentSingingStreams ? (
+            discoveryStatus.isSuccess || discovery?.recentSingingStreams ? (
               <CardCarousel height={230} width={160} scrollMultiplier={4}>
                 {discovery.recentSingingStreams
                   .filter((stream: any) => stream.playlist?.content?.length)
@@ -74,7 +60,7 @@ export default function Home() {
           )}
         </HomeSection>
 
-        {(discovery?.recommended?.playlists || discoveryRest.isLoading) && (
+        {(discovery?.recommended?.playlists || discoveryStatus.isLoading) && (
           <HomeSection>
             <Heading size="lg" mb={3}>
               {org.name} Playlists
@@ -89,7 +75,7 @@ export default function Home() {
           </HomeSection>
         )}
 
-        {(trendingSongs || rest.isLoading) && (
+        {(trendingSongs || trendingStatus.isLoading) && (
           <HomeSection>
             <HStack alignItems="flex-end" mb={3}>
               <Heading size="lg">Trending {org.name} Songs</Heading>
@@ -116,7 +102,7 @@ export default function Home() {
           </HomeSection>
         )}
 
-        {(discovery?.channels || discoveryRest.isLoading) && (
+        {(discovery?.channels || trendingStatus.isLoading) && (
           <HomeSection>
             <Heading size="lg" mb={3}>
               Discover {org.name}

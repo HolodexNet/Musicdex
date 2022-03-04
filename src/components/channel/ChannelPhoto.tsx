@@ -1,12 +1,4 @@
-import {
-  Link,
-  Image,
-  ImageProps,
-  Avatar,
-  AvatarProps,
-  useTheme,
-} from "@chakra-ui/react";
-import { channel } from "diagnostics_channel";
+import { Avatar, AvatarProps } from "@chakra-ui/react";
 import { getChannelPhoto } from "../../modules/channel/utils";
 import useNamePicker from "../../modules/common/useNamePicker";
 
