@@ -17,9 +17,9 @@ export const VolumeSlider = React.memo(
   ({ volume, onChange }: VolumeSliderProps) => {
     return (
       <Slider aria-label="slider-ex-4" value={volume} onChange={onChange}>
-        <SliderTrack bg="red.50">
+        <SliderTrack bg="gray.700">
           <SliderFilledTrack
-            background={`linear-gradient(to right, var(--chakra-colors-brand-400), var(--chakra-colors-n2-400))`}
+            background={`linear-gradient(to right, var(--chakra-colors-brand-300), var(--chakra-colors-n2-300) 90%)`}
           />
         </SliderTrack>
         <SliderThumb boxSize={5}>
