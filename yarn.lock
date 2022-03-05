@@ -2577,6 +2577,11 @@
   resolved "https://registry.npmjs.org/@types/retry/-/retry-0.12.1.tgz"
   integrity sha512-xoDlM2S4ortawSWORYqsdU+2rxdh4LRW9ytc3zmT37RIKQh6IHyKwwtKhKis9ah8ol07DCkZxPt8BBvPjC6v4g==
 
+"@types/runes@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@types/runes/-/runes-0.4.1.tgz#ec16e8d73dd1acfa09aca3b6a9180dfef45045ae"
+  integrity sha512-wb2qEPRr/BXKB1xx7S5OzbnZmqIGRPrw0SjBJYnLA+l5DEGmyw7veFXQ0Cko/gotDTB+yGpsZOAkLDWZTyJo6w==
+
 "@types/scheduler@*":
   version "0.16.2"
   resolved "https://registry.npmjs.org/@types/scheduler/-/scheduler-0.16.2.tgz"
@@ -8874,6 +8879,11 @@ run-parallel@^1.1.9:
   integrity sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==
   dependencies:
     queue-microtask "^1.2.2"
+
+runes@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/runes/-/runes-0.4.3.tgz#32f7738844bc767b65cc68171528e3373c7bb355"
+  integrity sha512-K6p9y4ZyL9wPzA+PMDloNQPfoDGTiFYDvdlXznyGKgD10BJpcAosvATKrExRKOrNLgD8E7Um7WGW0lxsnOuNLg==
 
 safari-14-idb-fix@^3.0.0:
   version "3.0.0"

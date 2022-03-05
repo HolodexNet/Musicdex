@@ -6,6 +6,7 @@ import { FiFolder } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useFormatPlaylist } from "../../modules/playlist/useFormatPlaylist";
 import { usePlaylistUpdater } from "../../modules/services/playlist.service";
+import runes from "runes";
 
 export const PlaylistList = ({
   playlistStubs,
@@ -24,8 +25,13 @@ export const PlaylistList = ({
       <AnimatePresence>
         {playlistStubs.map((x) => {
           const title = formatPlaylist("title", x) || "...";
-          const emoji = title.match(/^(?!\d)\p{Emoji}/gu); // Match a emoji that's not preceeded by a number
-          const rest = title.match(/(?!^(?!\d)\p{Emoji})(.*)$/gu); // a bit confusing. double negative lookahead. Match <.*> that's not preceeded by a Emoji, but the Emoji can't be a number.
+          const emoji = title.match(/^(?!\d)\p{Emoji}/gu)
+            ? runes(title).at(0)
+            : undefined;
+          // Pick the first emoji if the first character is an emoji.
+          const rest = emoji ? runes(title).slice(1).join("") : title;
+          // ignore the first emoji IF it is an emoji.
+
           return (
             <motion.div
               key={"sidebar-pld" + x.id}
@@ -89,7 +95,7 @@ export const PlaylistList = ({
                 >
                   {emoji ? (
                     <Text as="span" fontSize="16" mr="4" maxW="16px">
-                      {emoji?.[0] || ""}
+                      {emoji}
                     </Text>
                   ) : (
                     <Icon
@@ -102,7 +108,7 @@ export const PlaylistList = ({
                     />
                   )}
                   <Text noOfLines={1} vibe={vibe} as={VibeText}>
-                    {rest?.[0]}
+                    {rest}
                   </Text>
                 </Flex>
               </Link>
