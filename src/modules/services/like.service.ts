@@ -123,7 +123,7 @@ export function useSongLikeBulkCheck(songId: string) {
   const loader = useSongLikeCheck_Loader();
   const user = useStoreState((state) => state.auth.user);
   const result = useQuery(
-    [BULKLIKE_, user?.id ?? "na", songId],
+    [BULKLIKE_, songId, user?.id ?? "na"],
     () => {
       if (loader) return loader.load(songId);
       else throw new Error("not logged in");
