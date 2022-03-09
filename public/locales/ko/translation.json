@@ -6,11 +6,11 @@
     "shortDate": "{{date, short}}",
     "shortDateTime": "{{date, datetime}}"
   },
-  "add": "Add",
-  "close": "Close",
-  "edit": "Edit",
-  "load": "Load",
-  "remove": "Remove",
-  "save": "Save",
-  "set": "Set"
+  "add": "추가",
+  "close": "닫기",
+  "edit": "수정",
+  "load": "불러오기",
+  "remove": "삭제",
+  "save": "저장",
+  "set": "확인"
 }
