@@ -22,12 +22,11 @@ import { CardCarousel } from "../components/common/CardCarousel";
 import { MTHolodexIcon } from "../components/common/MTHolodex";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { VideoPlaylistCard } from "../components/common/VideoPlaylistCard";
-import { SongTable } from "../components/data/SongTable";
+import { SongTable, SongTableCol } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistCard } from "../components/playlist/PlaylistCard";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
-import { SongItem } from "../components/song/SongItem";
 import { useClipboardWithToast } from "../modules/common/clipboard";
 import useNamePicker from "../modules/common/useNamePicker";
 import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
@@ -75,7 +74,7 @@ export default function Channel() {
       <BGImgContainer height="60vh">
         <BGImg
           banner_url={`https://i.ytimg.com/vi/${discovery?.recentSingingStream?.video.id}/sddefault.jpg`}
-          height="66vh"
+          height="33vh"
           blur
         ></BGImg>
       </BGImgContainer>
@@ -214,71 +213,78 @@ function ChannelContent({
   name: any;
   channel: any;
 }) {
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
+  const hideCol = useBreakpointValue<SongTableCol[] | undefined>(
+    {
+      base: ["idx", "og_artist", "sang_on", "duration"],
+      sm: ["idx", "og_artist", "sang_on"],
+      md: ["idx", "og_artist"],
+      lg: [],
+      xl: [],
+    },
+    "xl"
+  );
   return (
     <>
-      <Flex flexWrap="wrap" flexDirection="row">
-        {discovery?.recentSingingStream &&
-          (!isMobile ? (
-            <Box flex="1.3 0 580px" minWidth="480px" mr={4}>
-              <Heading size="md" marginBottom={2} ml={2}>
-                Latest Stream:
-              </Heading>
-              <VideoPlaylistCard
-                video={discovery?.recentSingingStream?.video}
-                playlist={discovery?.recentSingingStream?.playlist}
-              />
-            </Box>
-          ) : (
-            discovery?.recentSingingStream?.playlist && (
-              <Box mb={4}>
-                <Heading size="md" marginBottom={2} ml={2}>
-                  Latest Stream:
-                </Heading>
-
-                <PlaylistCard
-                  playlist={discovery?.recentSingingStream?.playlist}
-                  key={"kpc" + discovery?.recentSingingStream?.playlist.id}
-                />
-              </Box>
-            )
-          ))}
+      <Flex flexWrap="wrap" flexDirection="column">
         {trending && (
           <Box flex="1 1 140px" minWidth="300px">
-            <Heading size="md" marginBottom={2} ml={2}>
-              Popular Songs:{" "}
+            <Heading size="md" my={4} ml={2}>
+              Popular
               <Button
                 variant="ghost"
                 size="sm"
                 py={0}
-                my={-2}
+                // my={-2}
                 colorScheme="n2"
+                float="right"
                 onClick={() => {
                   queueSongs({ songs: trending, immediatelyPlay: false });
                 }}
               >
-                Queue All ({trending.length})
+                Queue ({trending.length})
               </Button>
             </Heading>
-            <Box overflow="auto" height="300px">
-              {/* {trending?.map((x) => (
-                <SongItem song={x} key={"l-t-" + x.id}></SongItem>
-              ))} */}
-              <SongTable
-                songs={trending}
-                rowProps={{
-                  hideCol: ["idx", "og_artist", "duration", "menu", "sang_on"],
-                  flipNames: true,
-                  showArtwork: true,
-                }}
-              />
-            </Box>
+            <SongTable
+              songs={trending.slice(0, 10)}
+              rowProps={{
+                // hideCol: ["og_artist", "menu"],
+                flipNames: true,
+                showArtwork: true,
+              }}
+              limit={5}
+              appendRight={
+                <Button
+                  variant="ghost"
+                  size="md"
+                  colorScheme="n2"
+                  leftIcon={<FiList />}
+                  as={Link}
+                  to={"/channel/" + channel.id + "/songs"}
+                  float="right"
+                >
+                  See All Songs
+                </Button>
+              }
+            />
           </Box>
         )}
       </Flex>
-      <Heading size="md" mt={2} ml={2}>
-        Playlists with {name}
+      {discovery?.recentSingingStream?.playlist && (
+        <>
+          <Heading size="md" mt={4}>
+            Latest Streams
+          </Heading>
+          <CardCarousel height={250} width={160} scrollMultiplier={1}>
+            {/* TODO: Fetch more recent streams */}
+            <PlaylistCard
+              playlist={discovery?.recentSingingStream?.playlist}
+              key={"kpc" + discovery?.recentSingingStream?.playlist.id}
+            />
+          </CardCarousel>
+        </>
+      )}
+      <Heading size="md" mt={4}>
+        Featuring {name}
       </Heading>
       <CardCarousel height={250} width={160} scrollMultiplier={1}>
         {discovery &&
@@ -288,24 +294,7 @@ function ChannelContent({
             );
           })}
       </CardCarousel>
-      <ContainerInlay width="100%" pt={0}>
-        <Center>
-          <Button
-            variant="ghost"
-            size="lg"
-            my={4}
-            width="100%"
-            height="50px"
-            colorScheme="n2"
-            leftIcon={<FiList />}
-            as={Link}
-            to={"/channel/" + channel.id + "/songs"}
-          >
-            See All Songs
-          </Button>
-        </Center>
-      </ContainerInlay>
-      <Heading size="md" mt={2} ml={2}>
+      <Heading size="md" mt={4}>
         Discover more from {channel.org}
       </Heading>
       {discovery && (

@@ -27,7 +27,7 @@ interface SongTableProps {
   // reactive hooks:
   songDropdownMenuRenderer?: (cellInfo: any) => JSX.Element;
   virtualized?: boolean;
-
+  appendRight?: React.ReactNode;
   menuId?: string;
   rowProps?: RowProps;
   limit?: number;
@@ -53,6 +53,7 @@ export const SongTable = ({
   rowProps,
   playlist,
   limit,
+  appendRight,
   ...rest
 }: SongTableProps & BoxProps) => {
   const detailLevel = useBreakpointValue<SongTableCol[] | undefined>(
@@ -109,8 +110,8 @@ export const SongTable = ({
             key={`${data.menuId}${song.id}`}
           />
         ))}
-      {limit && songList.length > limit && (
-        <Center>
+      <Box my={1}>
+        {limit && songList.length > limit && (
           <Button
             onClick={() => setExpanded((prev) => !prev)}
             variant="ghost"
@@ -121,8 +122,9 @@ export const SongTable = ({
           >
             {expanded ? "Show less" : "Show more"}
           </Button>
-        </Center>
-      )}
+        )}
+        {appendRight}
+      </Box>
     </Box>
   );
 };

@@ -80,7 +80,7 @@ export default function ChannelSongs() {
             queueSongs({ songs: latest, immediatelyPlay: false });
           }}
         >
-          Queue All ({latest.length})
+          Queue ({latest.length})
         </Button>
       </Heading>
       {/* <Box maxHeight="100vh" minHeight="200px"> */}
