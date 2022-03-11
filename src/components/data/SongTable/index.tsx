@@ -3,7 +3,6 @@ import {
   BoxProps,
   Button,
   Center,
-  Icon,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import React, { useCallback, useContext, useMemo, useState } from "react";
@@ -13,7 +12,6 @@ import { memoize } from "lodash-es";
 import { DEFAULT_MENU_ID } from "../../common/CommonContext";
 import { FrameRef } from "../../layout/Frame";
 import { RowProps, SongRow } from "./SongRow";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 export type SongTableCol =
   | "idx"
@@ -115,17 +113,13 @@ export const SongTable = ({
         <Center>
           <Button
             onClick={() => setExpanded((prev) => !prev)}
-            variant="outline"
-            fontWeight={400}
-            width="98%"
+            variant="ghost"
+            fontWeight={600}
             colorScheme="gray"
             textColor="gray.400"
+            textTransform="uppercase"
           >
-            <Icon mr={2} as={expanded ? FaChevronUp : FaChevronDown}></Icon>
-            {expanded
-              ? "Collapse"
-              : `Show Full List (${songList.length} Items)`}
-            <Icon ml={2} as={expanded ? FaChevronUp : FaChevronDown}></Icon>
+            {expanded ? "Show less" : "Show more"}
           </Button>
         </Center>
       )}

@@ -69,7 +69,7 @@ export default function ChannelSongs() {
         >
           <FiArrowLeft />
         </Button>
-        All Songs ({offset} - {offset + latest.length} of {total}){" "}
+        All Songs ({offset + 1} - {offset + latest.length} of {total}){" "}
         <Button
           variant="ghost"
           size="sm"
@@ -85,7 +85,7 @@ export default function ChannelSongs() {
       </Heading>
       {/* <Box maxHeight="100vh" minHeight="200px"> */}
       <Suspense fallback={<div>Loading...</div>}>
-        <SongTable songs={latest}></SongTable>
+        <SongTable songs={latest} rowProps={{ indexShift: offset }}></SongTable>
       </Suspense>
       {/* </Box> */}
       <ButtonGroup colorScheme="brand" mt="3" spacing="5">

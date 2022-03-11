@@ -25,6 +25,7 @@ export interface RowProps {
   showArtwork?: boolean;
   flipNames?: boolean;
   hideCol?: SongTableCol[];
+  indexShift?: number;
 }
 
 export const SongRow = React.memo(
@@ -80,7 +81,7 @@ export const SongRow = React.memo(
           {!hideCol?.includes("idx") ? (
             <Box width="30px" margin="auto">
               <IdxGrid
-                id={index}
+                id={index + (rowProps?.indexShift || 0)}
                 songId={song.id}
                 active={hoveredRowIndex}
                 onPlayClick={() => {
