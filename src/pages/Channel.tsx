@@ -213,16 +213,6 @@ function ChannelContent({
   name: any;
   channel: any;
 }) {
-  const hideCol = useBreakpointValue<SongTableCol[] | undefined>(
-    {
-      base: ["idx", "og_artist", "sang_on", "duration"],
-      sm: ["idx", "og_artist", "sang_on"],
-      md: ["idx", "og_artist"],
-      lg: [],
-      xl: [],
-    },
-    "xl"
-  );
   return (
     <>
       <Flex flexWrap="wrap" flexDirection="column">

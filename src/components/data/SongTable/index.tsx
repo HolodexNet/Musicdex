@@ -1,14 +1,7 @@
-import {
-  Box,
-  BoxProps,
-  Button,
-  Center,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Box, BoxProps, Button, useBreakpointValue } from "@chakra-ui/react";
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import { FixedSizeList } from "react-window";
 import WindowScroller from "react-virtualized/dist/es/WindowScroller";
-import { memoize } from "lodash-es";
 import { DEFAULT_MENU_ID } from "../../common/CommonContext";
 import { FrameRef } from "../../layout/Frame";
 import { RowProps, SongRow } from "./SongRow";
@@ -32,20 +25,6 @@ interface SongTableProps {
   rowProps?: RowProps;
   limit?: number;
 }
-
-const memoized = memoize(
-  (
-    songList: Song[],
-    menuId?: any,
-    rowProps?: RowProps,
-    playlist?: PlaylistFull
-  ) => ({
-    songList,
-    menuId,
-    rowProps,
-    playlist,
-  })
-);
 export const SongTable = ({
   songs,
   menuId = DEFAULT_MENU_ID,
@@ -66,12 +45,22 @@ export const SongTable = ({
     },
     "xl"
   );
-  const props = useMemo(
-    () => ({ ...rowProps, hideCol: rowProps?.hideCol ?? detailLevel }),
-    [detailLevel, rowProps]
-  );
+
   const songList = playlist?.content || songs;
-  const data = memoized(songList!, menuId, props, playlist);
+  const data: {
+    songList: Song[];
+    menuId: any;
+    rowProps?: RowProps;
+    playlist?: PlaylistFull;
+  } = useMemo(
+    () => ({
+      songList: songList ?? [],
+      menuId,
+      playlist,
+      rowProps: { ...rowProps, hideCol: rowProps?.hideCol ?? detailLevel },
+    }),
+    [detailLevel, menuId, playlist, rowProps, songList]
+  );
   const frameRef = useContext(FrameRef);
   const list = React.useRef<any>(null);
   const [expanded, setExpanded] = useState(false);
