@@ -98,6 +98,7 @@ export default function ChannelSongs() {
               )
             )
           }
+          disabled={offset === 0}
         >
           <FiArrowLeft />
         </Button>
@@ -135,6 +136,7 @@ export default function ChannelSongs() {
               )
             )
           }
+          disabled={offset + PERPAGE > total}
         >
           <FiArrowRight />
         </Button>
