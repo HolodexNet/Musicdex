@@ -107,9 +107,7 @@ export const PlaylistList = ({
                       as={defaultIcon}
                     />
                   )}
-                  <Text noOfLines={1} vibe={vibe} as={VibeText}>
-                    {rest}
-                  </Text>
+                  <Text noOfLines={1}>{rest}</Text>
                 </Flex>
               </Link>
             </motion.div>
@@ -120,24 +118,24 @@ export const PlaylistList = ({
   );
 };
 
-const VibeText = styled.span<{ vibe: boolean }>`
-  animation: ${({ vibe }) => (vibe ? "vibe 0.3s linear infinite both" : "")};
+// const VibeText = styled.span<{ vibe: boolean }>`
+//   animation: ${({ vibe }) => (vibe ? "vibe 0.3s linear infinite both" : "")};
 
-  @keyframes vibe {
-    ${() => {
-      return [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-        .map((x) => {
-          const r1 = Math.random() * 1.6 - 0.8;
-          const r2 = Math.random() * 1.6 - 0.8;
-          const r = `translate(${r1.toFixed(1)}px, ${r2.toFixed(
-            1
-          )}px) rotate(${r1}deg);`;
-          return `${x}% { 
-          -webkit-transform: ${r}
-          transform: ${r}
-         }`;
-        })
-        .join("\n");
-    }}
-  }
-`;
+//   @keyframes vibe {
+//     ${() => {
+//       return [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+//         .map((x) => {
+//           const r1 = Math.random() * 1.6 - 0.8;
+//           const r2 = Math.random() * 1.6 - 0.8;
+//           const r = `translate(${r1.toFixed(1)}px, ${r2.toFixed(
+//             1
+//           )}px) rotate(${r1}deg);`;
+//           return `${x}% {
+//           -webkit-transform: ${r}
+//           transform: ${r}
+//          }`;
+//         })
+//         .join("\n");
+//     }}
+//   }
+// `;
