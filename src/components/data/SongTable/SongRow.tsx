@@ -114,7 +114,7 @@ export const SongRow = React.memo(
           {!hideCol?.includes("og_artist") ? (
             <Box
               flex="1 1 60px"
-              noOfLines={2}
+              noOfLines={1}
               px={2}
               margin="auto"
               opacity={0.8}

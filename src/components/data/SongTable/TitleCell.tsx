@@ -34,6 +34,7 @@ export const TitleGrid = ({
           e.stopPropagation();
         }}
         _hover={{ opacity: 0.9 }}
+        noOfLines={1}
       >
         {flipNames
           ? song.original_artist
