@@ -1,11 +1,11 @@
 import {
-  Box,
   Button,
   ButtonGroup,
   Editable,
   EditableInput,
   EditablePreview,
   Heading,
+  HStack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Suspense, useMemo, useState } from "react";
@@ -32,7 +32,7 @@ export default function ChannelSongs() {
   );
 
   const [offset, setOffset] = useState(0);
-  const { data, ...latestSongs } = useSongAPI({
+  const { data, ...songStatus } = useSongAPI({
     channel_id: channelId,
     paginated: true,
     limit: PERPAGE,
@@ -48,16 +48,16 @@ export default function ChannelSongs() {
 
   if (!channelStatus.isSuccess)
     return <QueryStatus queryStatus={channelStatus} />;
+  if (songStatus.isLoading) return <QueryStatus queryStatus={songStatus} />;
 
-  return latest ? (
+  return (
     <>
-      <Heading size="md" marginBottom={2}>
+      <HStack alignItems="center" py={1}>
         <Button
           variant="solid"
           width="22px"
           height="22px"
           size="30px"
-          mr={2}
           borderRadius="full"
           position="relative"
           as="a"
@@ -69,12 +69,13 @@ export default function ChannelSongs() {
         >
           <FiArrowLeft />
         </Button>
-        All Songs ({offset + 1} - {offset + latest.length} of {total}){" "}
+        <Heading size="md">
+          All Songs ({offset + 1} - {offset + latest.length} of {total}){" "}
+        </Heading>
         <Button
           variant="ghost"
           size="sm"
           py={0}
-          my={-2}
           colorScheme="n2"
           onClick={() => {
             queueSongs({ songs: latest, immediatelyPlay: false });
@@ -82,12 +83,10 @@ export default function ChannelSongs() {
         >
           Queue ({latest.length})
         </Button>
-      </Heading>
-      {/* <Box maxHeight="100vh" minHeight="200px"> */}
+      </HStack>
       <Suspense fallback={<div>Loading...</div>}>
         <SongTable songs={latest} rowProps={{ indexShift: offset }}></SongTable>
       </Suspense>
-      {/* </Box> */}
       <ButtonGroup colorScheme="brand" mt="3" spacing="5">
         <Button
           onClick={() =>
@@ -142,7 +141,5 @@ export default function ChannelSongs() {
         </Button>
       </ButtonGroup>
     </>
-  ) : (
-    <div>Loading...</div>
   );
 }

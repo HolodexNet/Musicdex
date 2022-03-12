@@ -1,8 +1,6 @@
 import {
   Box,
   Button,
-  Center,
-  Flex,
   Heading,
   HStack,
   IconButton,
@@ -21,8 +19,7 @@ import { BGImg, BGImgContainer } from "../components/common/BGImgContainer";
 import { CardCarousel } from "../components/common/CardCarousel";
 import { MTHolodexIcon } from "../components/common/MTHolodex";
 import { QueryStatus } from "../components/common/QueryStatus";
-import { VideoPlaylistCard } from "../components/common/VideoPlaylistCard";
-import { SongTable, SongTableCol } from "../components/data/SongTable";
+import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistCard } from "../components/playlist/PlaylistCard";
@@ -215,50 +212,47 @@ function ChannelContent({
 }) {
   return (
     <>
-      <Flex flexWrap="wrap" flexDirection="column">
-        {trending && (
-          <Box flex="1 1 140px" minWidth="300px">
-            <Heading size="md" my={4} ml={2}>
-              Popular
+      {trending && (
+        <Box flex="1 1 140px" minWidth="300px">
+          <Heading size="md" my={4} ml={2}>
+            Popular
+            <Button
+              variant="ghost"
+              size="sm"
+              py={0}
+              colorScheme="n2"
+              float="right"
+              onClick={() => {
+                queueSongs({ songs: trending, immediatelyPlay: false });
+              }}
+            >
+              Queue ({trending.length})
+            </Button>
+          </Heading>
+          <SongTable
+            songs={trending.slice(0, 10)}
+            rowProps={{
+              // hideCol: ["og_artist", "menu"],
+              flipNames: true,
+              showArtwork: true,
+            }}
+            limit={5}
+            appendRight={
               <Button
                 variant="ghost"
-                size="sm"
-                py={0}
-                // my={-2}
+                size="md"
                 colorScheme="n2"
+                leftIcon={<FiList />}
+                as={Link}
+                to={"/channel/" + channel.id + "/songs"}
                 float="right"
-                onClick={() => {
-                  queueSongs({ songs: trending, immediatelyPlay: false });
-                }}
               >
-                Queue ({trending.length})
+                See All Songs
               </Button>
-            </Heading>
-            <SongTable
-              songs={trending.slice(0, 10)}
-              rowProps={{
-                // hideCol: ["og_artist", "menu"],
-                flipNames: true,
-                showArtwork: true,
-              }}
-              limit={5}
-              appendRight={
-                <Button
-                  variant="ghost"
-                  size="md"
-                  colorScheme="n2"
-                  leftIcon={<FiList />}
-                  as={Link}
-                  to={"/channel/" + channel.id + "/songs"}
-                  float="right"
-                >
-                  See All Songs
-                </Button>
-              }
-            />
-          </Box>
-        )}
-      </Flex>
+            }
+          />
+        </Box>
+      )}
       {discovery?.recentSingingStream?.playlist && (
         <>
           <Heading size="md" mt={4}>
