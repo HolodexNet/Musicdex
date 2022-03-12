@@ -4,6 +4,7 @@ import React from "react";
 import { useMemo } from "react";
 import { IconType } from "react-icons";
 import { BiCalendar, BiMovie } from "react-icons/bi";
+import { FaUser } from "react-icons/fa";
 import {
   isSGPPlaylist,
   parsePlaylistDesc,
@@ -90,7 +91,7 @@ export const PlaylistArtwork = React.memo(
       <OverlayTextArt
         titleText={title || ""}
         imageUrl={thumbnail || channelImg || ""}
-        hideLogo={playlist.type === "ugp"}
+        showUserIcon={playlist.type === "ugp"}
         iconType={iconType}
       />
     );
@@ -100,12 +101,12 @@ export const PlaylistArtwork = React.memo(
 function OverlayTextArt({
   titleText,
   imageUrl,
-  hideLogo = false,
+  showUserIcon = false,
   iconType = undefined,
 }: {
   titleText: string;
   imageUrl: string;
-  hideLogo?: boolean;
+  showUserIcon: boolean;
   iconType?: IconType;
 }) {
   const bgColor =
@@ -142,7 +143,17 @@ function OverlayTextArt({
           {titleText}
         </Text>
       </Box>
-      {!hideLogo && (
+      {showUserIcon ? (
+        <Icon
+          as={FaUser}
+          w={6}
+          h={6}
+          position="absolute"
+          left="4px"
+          bottom="4px"
+          opacity={0.4}
+        ></Icon>
+      ) : (
         <LineLogo
           position="absolute"
           w={6}
