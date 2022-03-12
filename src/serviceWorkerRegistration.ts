@@ -25,6 +25,8 @@ type Config = {
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
 };
 
+const SW_UPDATE_INTERVAL = 15 * 60 * 1000;
+
 export function register(config?: Config) {
   if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
     // The URL constructor is available in all browsers that support SW.
@@ -92,6 +94,12 @@ function registerValidSW(swUrl: string, config?: Config) {
               // Execute callback
               if (config && config.onSuccess) {
                 config.onSuccess(registration);
+                // Start regular SW update check
+                registration &&
+                  setInterval(() => {
+                    console.log("[Service Worker] Checking for updates...");
+                    registration.update();
+                  }, SW_UPDATE_INTERVAL);
               }
             }
           }

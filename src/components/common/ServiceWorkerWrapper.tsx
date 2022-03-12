@@ -34,6 +34,7 @@ const ServiceWorkerWrapper = () => {
       py={3}
       m={2}
       rounded="lg"
+      zIndex={5}
     >
       <HStack>
         <Text>Update available, please reload the page</Text>
