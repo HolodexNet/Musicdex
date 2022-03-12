@@ -20,6 +20,7 @@ import { useLocation } from "react-router-dom";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState } from "../../store";
 import { CommonContextMenu } from "../common/CommonContext";
+import { GlobalLoadingStatus } from "../common/GlobalLoadingStatus";
 import { MotionBox } from "../common/MotionBox";
 import ServiceWorkerWrapper from "../common/ServiceWorkerWrapper";
 import { BottomNav } from "../nav/BottomNav";
@@ -130,7 +131,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
           // zIndex={6}
           bg={useColorModeValue("bg.100", "bg.900")}
         />
-
+        <GlobalLoadingStatus />
         {/* Mobile Display: (provide close method) */}
         <Drawer
           autoFocus={false}
