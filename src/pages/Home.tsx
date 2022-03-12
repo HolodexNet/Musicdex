@@ -39,14 +39,14 @@ export default function Home() {
 
           {isMobile ? (
             discoveryStatus.isSuccess || discovery?.recentSingingStreams ? (
-              <CardCarousel height={230} width={160} scrollMultiplier={4}>
+              <CardCarousel scrollAmount={4}>
                 {discovery.recentSingingStreams
                   .filter((stream: any) => stream.playlist?.content?.length)
                   .map((stream: any) => (
                     <PlaylistCard
                       playlist={stream.playlist}
-                      key={"kpc" + stream.playlist.id}
                       mx={2}
+                      key={"kpc" + stream.playlist.id}
                     />
                   ))}
               </CardCarousel>
@@ -65,10 +65,10 @@ export default function Home() {
             <Heading size="lg" mb={3}>
               {org.name} Playlists
             </Heading>
-            <CardCarousel height={230} width={160} scrollMultiplier={4}>
+            <CardCarousel scrollAmount={4}>
               {discovery?.recommended.playlists.map(
                 (p: Partial<PlaylistFull>) => (
-                  <PlaylistCard playlist={p} key={"rec" + p.id} mx={2} />
+                  <PlaylistCard playlist={p} mx={2} key={"rec" + p.id} />
                 )
               )}
             </CardCarousel>
@@ -94,9 +94,9 @@ export default function Home() {
                 Queue ({trendingSongs?.length})
               </Button>
             </HStack>
-            <CardCarousel height={180} width={128} scrollMultiplier={4}>
+            <CardCarousel scrollAmount={4}>
               {trendingSongs?.map((song) => (
-                <SongCard song={song} key={song.id} mx={2} />
+                <SongCard song={song} mx={2} key={song.id} />
               ))}
             </CardCarousel>
           </HomeSection>
@@ -107,9 +107,9 @@ export default function Home() {
             <Heading size="lg" mb={3}>
               Discover {org.name}
             </Heading>
-            <CardCarousel height={180} width={160} scrollMultiplier={4} mb={2}>
+            <CardCarousel scrollAmount={4} mb={2}>
               {discovery?.channels.map((c: Channel) => (
-                <ChannelCard channel={c} key={c.id} marginX={2} />
+                <ChannelCard channel={c} marginX={2} key={c.id} />
               ))}
             </CardCarousel>
           </HomeSection>

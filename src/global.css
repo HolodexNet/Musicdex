@@ -45,3 +45,10 @@
 .chakra-heading:not(a *):not(button *) {
   cursor: default;
 }
+
+.snap-no-margin .snapitem:first-of-type > * {
+  margin-left: 0;
+}
+.snap-no-margin .snapitem:last-of-type > * {
+  margin-right: 0;
+}
