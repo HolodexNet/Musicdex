@@ -1,95 +1,137 @@
-import { Flex, FlexProps, IconButton, IconButtonProps } from "@chakra-ui/react";
-import React, {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  Children,
-} from "react";
+import { Flex, FlexProps, IconButton } from "@chakra-ui/react";
+import styled from "@emotion/styled";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import {
-  isTouchDevice,
-  SnapItem,
-  SnapList,
-  useScroll,
-  useVisibleElements,
-} from "react-snaplist-carousel";
 
 interface CardCarouselProps extends FlexProps {
   children: ReactNode;
-  scrollAmount?: number;
+  height: number;
+  width: number;
+  scrollMultiplier: number;
 }
-
-const defaultScrollBtnProps: Partial<IconButtonProps> = {
-  boxShadow: "2xl",
-  opacity: 0.6,
-  _hover: { opacity: 1 },
-  position: "absolute",
-  top: "50%",
-  transform: "translateY(-50%)",
-};
 
 export function CardCarousel({
   children,
-  scrollAmount = 1,
+  height,
+  width,
+  scrollMultiplier = 1,
   ...rest
 }: CardCarouselProps) {
   const ref = useRef<any>(null);
   const [hideLeftBtn, setHideLeftBtn] = useState(true);
-  const [hideRightBtn, setHideRightBtn] = useState(true);
-  const maxLength = children ? React.Children.count(children) : -1;
-  const goToItem = useScroll({ ref });
-  const visible = useVisibleElements(
-    { debounce: 10, ref },
-    (elements) => elements
-  );
+  const [hideRightBtn, setHideRightBtn] = useState(false);
+  function scroll(direction: "left" | "right") {
+    if (ref?.current) {
+      const scrollAmount =
+        (direction === "left" ? -1 : 1) * scrollMultiplier * width;
 
-  const scroll = useCallback(
-    (direction: "left" | "right") => {
-      const next =
-        visible[visible.length - 1] +
-        scrollAmount * (direction === "left" ? -1 : 1);
-      goToItem(Math.max(0, Math.min(next, maxLength - 1)));
-    },
-    [goToItem, visible, scrollAmount, maxLength]
-  );
-
-  useEffect(() => {
-    if (maxLength > 0) {
-      setHideRightBtn(visible[visible.length - 1] >= maxLength - 1);
-      setHideLeftBtn(visible[0] === 0);
+      if (
+        direction === "left" &&
+        ref.current.scrollLeft + scrollAmount <= width / 2 - 1
+      ) {
+        ref.current.scrollTo({
+          left: 0,
+          behavior: "smooth",
+        });
+      } else {
+        ref.current.scrollBy({
+          left: scrollAmount,
+          behavior: "smooth",
+        });
+      }
     }
-  }, [maxLength, visible]);
+  }
 
+  // Watch for children cards to load in and check if it's scrollable
+  useEffect(() => {
+    if (ref?.current) {
+      // Reset scroll to 0
+      ref.current.scrollTo({
+        left: 0,
+      });
+
+      // check if should hide arrows, b/c content changed
+      const shouldHideBtn = ref.current.clientWidth === ref.current.scrollWidth;
+      const curLeft = ref.current.scrollLeft;
+      setHideRightBtn(shouldHideBtn);
+      setHideLeftBtn(curLeft === 0 || shouldHideBtn);
+    }
+  }, [children]);
+  function onScroll() {
+    const curLeft = ref.current.scrollLeft;
+    const maxScroll = ref.current.scrollWidth - ref.current.clientWidth;
+    if (curLeft <= width / 2 - 1) {
+      setHideLeftBtn(true);
+    } else if (curLeft >= maxScroll - width / 2 - 1) {
+      setHideRightBtn(true);
+    } else {
+      setHideLeftBtn(false);
+      setHideRightBtn(false);
+    }
+  }
   return (
-    <Flex position="relative">
-      <SnapList direction={"horizontal"} ref={ref} className="snap-no-margin">
-        {Children.map(children, (child) => {
-          return (
-            <SnapItem snapAlign="end" key={"snap" + (child as any)?.key}>
-              {child}
-            </SnapItem>
-          );
-        })}
-      </SnapList>
-      <IconButton
-        visibility={hideLeftBtn ? "hidden" : "visible"}
-        icon={<FaChevronLeft />}
-        aria-label="Left"
-        onClick={() => scroll("left")}
-        ml={["5px", null, null, null, null, "-20px"]}
-        {...defaultScrollBtnProps}
-      />
-      <IconButton
-        visibility={hideRightBtn ? "hidden" : "visible"}
-        icon={<FaChevronRight />}
-        aria-label="Right"
-        onClick={() => scroll("right")}
-        mr={["5px", null, null, null, null, "-20px"]}
-        right="0"
-        {...defaultScrollBtnProps}
-      />
+    <Flex {...rest}>
+      <Flex
+        position="relative"
+        height={`${height}px`}
+        minHeight={`${height}px`}
+        alignItems="center"
+        justifyContent="space-between"
+        flex="1"
+      >
+        <SliderContainer ref={ref} onScroll={onScroll}>
+          {children}
+        </SliderContainer>
+        <IconButton
+          visibility={hideLeftBtn ? "hidden" : "visible"}
+          icon={<FaChevronLeft />}
+          aria-label="Left"
+          onClick={() => scroll("left")}
+          boxShadow="2xl"
+          ml={["5px", null, null, null, null, "-20px"]}
+          opacity={0.6}
+          _hover={{ opacity: 1 }}
+        />
+        <IconButton
+          visibility={hideRightBtn ? "hidden" : "visible"}
+          icon={<FaChevronRight />}
+          aria-label="Right"
+          onClick={() => scroll("right")}
+          boxShadow="2xl"
+          mr={["5px", null, null, null, null, "-20px"]}
+          opacity={0.6}
+          _hover={{ opacity: 1 }}
+        />
+      </Flex>
     </Flex>
   );
 }
+
+const SliderContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  position: absolute;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  & > * {
+    scroll-snap-align: end;
+  }
+
+  & > *:first-of-type {
+    margin-left: 0px;
+    scroll-snap-align: start;
+  }
+
+  & > *:last-of-type {
+    margin-right: 0px;
+    scroll-snap-align: end;
+  }
+`;
