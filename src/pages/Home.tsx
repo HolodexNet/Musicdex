@@ -39,7 +39,7 @@ export default function Home() {
 
           {isMobile ? (
             <CardCarousel height={230} width={160} scrollMultiplier={4}>
-              {discovery.recentSingingStreams
+              {discovery?.recentSingingStreams
                 .filter((stream: any) => stream.playlist?.content?.length)
                 .map((stream: any) => (
                   <PlaylistCard
@@ -61,7 +61,7 @@ export default function Home() {
             {org.name} Playlists
           </Heading>
           <CardCarousel height={230} width={160} scrollMultiplier={4}>
-            {discovery?.recommended.playlists.map(
+            {discovery?.recommended?.playlists?.map(
               (p: Partial<PlaylistFull>) => (
                 <PlaylistCard playlist={p} key={"rec" + p.id} mx={2} />
               )
@@ -99,7 +99,7 @@ export default function Home() {
             Discover {org.name}
           </Heading>
           <CardCarousel height={180} width={160} scrollMultiplier={4} mb={2}>
-            {discovery?.channels.map((c: Channel) => (
+            {discovery?.channels?.map((c: Channel) => (
               <ChannelCard channel={c} key={c.id} marginX={2} />
             ))}
           </CardCarousel>
