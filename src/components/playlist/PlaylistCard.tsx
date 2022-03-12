@@ -5,6 +5,7 @@ import {
   FlexProps,
   Icon,
   useToast,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { FaPlay } from "react-icons/fa";
@@ -26,6 +27,15 @@ export const PlaylistCard = ({
   const bgColor = useColorModeValue("bg.100", "bg.800");
   const bgHover = useColorModeValue("bg.200", "bg.700");
   const [isHovering, setIsHovering] = useState(false);
+  // Fixes double tap to trigger (https://stackoverflow.com/questions/17710893/why-when-do-i-have-to-tap-twice-to-trigger-click-on-ios)
+  const hoverListeners = useBreakpointValue([
+    undefined,
+    undefined,
+    {
+      onMouseEnter: () => setIsHovering(true),
+      onMouseLeave: () => setIsHovering(false),
+    },
+  ]);
 
   const { AxiosInstance } = useClient();
   const queryClient = useQueryClient();
@@ -70,11 +80,10 @@ export const PlaylistCard = ({
       overflow="hidden"
       flexDirection="column"
       shadow="md"
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
       as={Link}
       to={`/playlists/${playlist.id}/`}
       ref={ref}
+      {...hoverListeners}
       {...rest}
     >
       {inView && (
