@@ -1,8 +1,5 @@
 import "setimmediate";
-import { Dictionary } from "lodash";
-import uniq from "lodash-es/uniq";
 import zipObject from "lodash-es/zipObject";
-import { useMemo } from "react";
 import Dataloader, { BatchLoadFn } from "dataloader";
 
 import {
@@ -11,8 +8,6 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-  useQueries,
-  QueryFunctionContext,
 } from "react-query";
 import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
@@ -41,9 +36,7 @@ export const useSongLikeUpdater = (
       onSuccess: (data, payload, ...rest) => {
         queryClient.cancelQueries(["likedSongList"]);
         queryClient.invalidateQueries(["likedSongList"]);
-        // queryClient.cancelQueries(["likedSongs"]);
-        // queryClient.invalidateQueries(["likedSongs"]);
-        queryClient.invalidateQueries([BULKLIKE_, payload.song_id]);
+        queryClient.invalidateQueries([LIKED_QUERY_KEY, payload.song_id]);
         if (callbacks.onSuccess) {
           callbacks.onSuccess(data, payload, ...rest);
         }
@@ -84,16 +77,7 @@ export const useLikedSongs = (
   return result;
 };
 
-// This might not trigger a hook update, since editing nested object :akisweat:
-export function mergeSongsWithLikeCheck(songs: Song[], likeStatus: boolean[]) {
-  if (songs.length !== likeStatus.length) {
-    console.warn("Like status and songs did not match");
-    return;
-  }
-  songs.forEach((x, index) => (x.liked = likeStatus[index]));
-}
-
-const BULKLIKE_ = "BLK:";
+export const LIKED_QUERY_KEY = "BLK:";
 let dataloader: Dataloader<string, boolean, unknown> | undefined = undefined;
 export function useSongLikeCheck_Loader():
   | Dataloader<string, boolean, unknown>
@@ -123,7 +107,7 @@ export function useSongLikeBulkCheck(songId: string) {
   const loader = useSongLikeCheck_Loader();
   const user = useStoreState((state) => state.auth.user);
   const result = useQuery(
-    [BULKLIKE_, songId, user?.id ?? "na"],
+    [LIKED_QUERY_KEY, songId, user?.id ?? "na"],
     () => {
       if (loader) return loader.load(songId);
       else throw new Error("not logged in");

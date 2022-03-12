@@ -7,6 +7,7 @@ import {
 } from "react-query";
 import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
+import { LIKED_QUERY_KEY } from "./like.service";
 
 export const usePlaylistWriter = (
   callbacks: UseMutationOptions<
@@ -60,23 +61,6 @@ export const usePlaylistUpdater = (
       onSuccess: (data, payload, ...rest) => {
         console.log("invalidating queries:", ["playlist", payload.playlistId]);
         queryClient.cancelQueries(["playlist", payload.playlistId]);
-        // apparently start-ui has some support for querying the cache and doing stuff to it?... seems interesting.
-        // TODO (optional): modify the query cache for playlist if the song is a full Song object already.
-        // it seems this code is part of the Optimistic Updating: https://react-query.tanstack.com/guides/optimistic-updates
-        // queryClient
-        //     .getQueryCache()
-        //     .findAll('playlist')
-        //     .forEach(({ queryKey }) => {
-        //         queryClient.setQueryData(queryKey, (cachedData: UserList) => {
-        //             if (!cachedData) return;
-        //             return {
-        //                 ...cachedData,
-        //                 content: (cachedData.content || []).map((user) =>
-        //                     user.id === data.id ? data : user
-        //                 ),
-        //             };
-        //         });
-        //     });
         queryClient.invalidateQueries(["playlist", payload.playlistId]);
         if (config.onSuccess) {
           config.onSuccess(data, payload, ...rest);
@@ -101,23 +85,6 @@ export const usePlaylistDeleter = (
       ...config,
       onSuccess: (data, payload, ...rest) => {
         queryClient.cancelQueries(["playlist", payload.playlistId]);
-        // apparently start-ui has some support for querying the cache and doing stuff to it?... seems interesting.
-        // TODO (optional): modify the query cache for playlist if the song is a full Song object already.
-        // it seems this code is part of the Optimistic Updating: https://react-query.tanstack.com/guides/optimistic-updates
-        // queryClient
-        //     .getQueryCache()
-        //     .findAll('playlist')
-        //     .forEach(({ queryKey }) => {
-        //         queryClient.setQueryData(queryKey, (cachedData: UserList) => {
-        //             if (!cachedData) return;
-        //             return {
-        //                 ...cachedData,
-        //                 content: (cachedData.content || []).map((user) =>
-        //                     user.id === data.id ? data : user
-        //                 ),
-        //             };
-        //         });
-        //     });
         queryClient.invalidateQueries(["playlist", payload.playlistId]);
         queryClient.invalidateQueries(["allPlaylists"]);
 
@@ -139,7 +106,6 @@ export const usePlaylist = (
     ["playlist", playlistId, uid],
     async (q): Promise<PlaylistFull> => {
       // fetch cached
-      console.log("fetching", q);
       const cached: PlaylistFull | undefined = queryClient.getQueryData([
         "playlist",
         playlistId,
@@ -180,7 +146,10 @@ export const usePlaylist = (
         // Check if content matches, and update cache
         if (likeStatus.length === playlist.content?.length) {
           playlist.content.forEach((song, index) => {
-            queryClient.setQueryData(["BLK:", song.id], likeStatus[index]);
+            queryClient.setQueryData(
+              [LIKED_QUERY_KEY, song.id, uid],
+              likeStatus[index]
+            );
           });
         }
         return playlist;
@@ -199,7 +168,10 @@ export const usePlaylist = (
 
       if (likeStatus.length === playlist.content?.length) {
         playlist.content.forEach((song, index) => {
-          queryClient.setQueryData(["BLK:", uid, song.id], likeStatus[index]);
+          queryClient.setQueryData(
+            [LIKED_QUERY_KEY, song.id, uid],
+            likeStatus[index]
+          );
         });
       }
 
