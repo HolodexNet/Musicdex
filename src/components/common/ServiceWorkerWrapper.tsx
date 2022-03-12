@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
 import * as serviceWorker from "../../serviceWorkerRegistration";
-import { useToast } from "@chakra-ui/react";
+import { Box, Text, CloseButton, HStack, Button } from "@chakra-ui/react";
 
 const ServiceWorkerWrapper = () => {
   const [showReload, setShowReload] = React.useState(false);
-  const [waitingWorker, setWaitingWorker] =
-    React.useState<ServiceWorker | null>(null);
+  const [dismissed, setDismissed] = React.useState(false);
+  // const [waitingWorker, setWaitingWorker] =
+  //   React.useState<ServiceWorker | null>(null);
 
   const onSWUpdate = (registration: ServiceWorkerRegistration) => {
     if (!registration) return;
     setShowReload(true);
     registration.waiting?.postMessage({ type: "SKIP_WAITING" });
-    setWaitingWorker(registration.waiting);
+    // setWaitingWorker(registration.waiting);
   };
-  const toast = useToast();
 
   useEffect(() => {
     serviceWorker.register({ onUpdate: onSWUpdate });
@@ -24,19 +24,32 @@ const ServiceWorkerWrapper = () => {
     window.location.reload();
   };
 
-  useEffect(() => {
-    if (showReload) {
-      toast({
-        title: "Update available, please refresh the page",
-        status: "info",
-        position: "top-left",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  }, [showReload, toast]);
-
-  return null;
+  return showReload && !dismissed ? (
+    <Box
+      position="absolute"
+      top="0"
+      bgColor="brand.400"
+      dropShadow={"dark-lg"}
+      px={4}
+      py={3}
+      m={2}
+      rounded="lg"
+    >
+      <HStack>
+        <Text>Update available, please reload the page</Text>
+        <Button
+          size="sm"
+          fontSize={"md"}
+          onClick={reloadPage}
+          color="white"
+          bgColor="n2.400"
+        >
+          Reload
+        </Button>
+        <CloseButton onClick={() => setDismissed(true)} />
+      </HStack>
+    </Box>
+  ) : null;
 };
 
 export default ServiceWorkerWrapper;
