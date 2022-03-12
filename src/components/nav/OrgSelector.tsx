@@ -8,13 +8,11 @@ import {
   Select,
   useDisclosure,
 } from "@chakra-ui/react";
-import axios from "axios";
-import { motion } from "framer-motion";
-import React, { useEffect, useMemo, useState } from "react";
-import { useQuery } from "react-query";
+import { useMemo } from "react";
 import { useServerOrgList } from "../../modules/services/statics.service";
 import { useStoreActions, useStoreState } from "../../store";
 import { Org } from "../../store/org";
+import { MotionBox } from "../common/MotionBox";
 import { OrgPickerPanel } from "../common/OrgManagement";
 
 export function OrgSelector() {
@@ -22,7 +20,7 @@ export function OrgSelector() {
   const setOrg = useStoreActions((state) => state.org.setOrg);
   const orglist = useStoreState((s) => s.org.orgsList);
 
-  const { data: orgs, isLoading } = useServerOrgList();
+  const { data: orgs } = useServerOrgList();
 
   const usableOrgs = useMemo(() => {
     return orglist
@@ -37,11 +35,10 @@ export function OrgSelector() {
   }, [org, orglist, orgs]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // CSS for .orgselector is in global.css
   return (
     <>
-      <motion.div
-        style={{ opacity: 0, position: "relative" }}
+      <MotionBox
+        opacity={0}
         animate={{
           scale: [0.9, 1],
           opacity: [0, 1],
@@ -49,20 +46,16 @@ export function OrgSelector() {
         }}
         exit={{ opacity: 0, marginTop: "0px", height: "0px" }}
         transition={{ duration: 0.4, type: "tween" }}
-        className="orgselector"
+        px={2}
+        mb={3}
       >
-        <select
-          placeholder="Select org"
+        <Select
           value={org.name}
           onChange={(e) => {
             const tgt = orgs?.find((x) => x.name === e.target.value);
             if (tgt) setOrg(tgt);
             else onOpen();
           }}
-          // mb={3}
-          // fontFamily="Assistant, sans-serif"
-          // width="89%"
-          // pl="11%"
         >
           {usableOrgs?.map((x) => {
             return (
@@ -71,8 +64,8 @@ export function OrgSelector() {
               </option>
             );
           })}
-        </select>
-      </motion.div>
+        </Select>
+      </MotionBox>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent
