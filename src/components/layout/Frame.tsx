@@ -82,7 +82,11 @@ export default function Frame({ children }: { children?: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const colorMode = useColorModeValue("applight", "appdark");
-  const showBottomNav = useBreakpointValue({ base: true, md: false });
+  const showBottomNav = useBreakpointValue({
+    base: true,
+    md: false,
+    default: false,
+  });
 
   const pos = useStoreState((state) => state.player.position);
   const props = useMemo(() => POSITIONS[pos], [pos]);
@@ -171,7 +175,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
                 ref={frameRef}
               >
                 {children}
-                <Footer></Footer>
+                {/* <Footer></Footer> */}
                 {/* <Box minH={pos === "hover-bottom" ? "250px" : "0px"}></Box> */}
               </Flex>
             </FrameRef.Provider>
