@@ -1,6 +1,6 @@
 import { Flex, FlexProps, IconButton } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { Children, ReactNode, useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface CardCarouselProps extends FlexProps {
@@ -41,7 +41,7 @@ export function CardCarousel({
       }
     }
   }
-
+  const maxLength = Children.count(children);
   // Watch for children cards to load in and check if it's scrollable
   useEffect(() => {
     if (ref?.current) {
@@ -49,14 +49,19 @@ export function CardCarousel({
       ref.current.scrollTo({
         left: 0,
       });
-
+      if (
+        ref.current.scrollWidth === 0 ||
+        ref.current.clientWidth === 0 ||
+        maxLength === 0
+      )
+        return;
       // check if should hide arrows, b/c content changed
       const shouldHideBtn = ref.current.clientWidth === ref.current.scrollWidth;
       const curLeft = ref.current.scrollLeft;
       setHideRightBtn(shouldHideBtn);
       setHideLeftBtn(curLeft === 0 || shouldHideBtn);
     }
-  }, [children]);
+  }, [children, maxLength]);
   function onScroll() {
     const curLeft = ref.current.scrollLeft;
     const maxScroll = ref.current.scrollWidth - ref.current.clientWidth;
