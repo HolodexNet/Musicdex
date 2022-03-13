@@ -3,12 +3,6 @@ import {
   CloseButton,
   Divider,
   BoxProps,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -33,12 +27,10 @@ import { useStoreState } from "../../store";
 import { AnimatePresence } from "framer-motion";
 
 import { Flex, useColorModeValue } from "@chakra-ui/react";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import { PlaylistList } from "../playlist/PlaylistList";
 import { LogoWithText } from "./LogoWithText";
-import PlaylistCreateForm, {
-  PlaylistCreateModal,
-} from "../playlist/PlaylistCreateForm";
+import { PlaylistCreateModal } from "../playlist/PlaylistCreateForm";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -69,6 +61,7 @@ export function SidebarContent({
   const { user } = useClient();
   const { data: playlistList, isLoading: loadingMine } = useMyPlaylists();
   const { data: starredList, isLoading: loadingStars } = useStarredPlaylists();
+  console.log(playlistList, starredList);
   const { pathname } = useLocation();
   const isDragging = useStoreState((s) => s.dnd.dragging);
   const toast = useToast();
