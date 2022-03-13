@@ -22,7 +22,7 @@ export const PlaylistList = ({
   const formatPlaylist = useFormatPlaylist();
   return (
     <div>
-      {/* <AnimatePresence>
+      <AnimatePresence>
         {playlistStubs.map((x) => {
           const title = formatPlaylist("title", x) || "...";
           const emoji = title.match(/^(?!\d)\p{Emoji}/gu)
@@ -113,7 +113,7 @@ export const PlaylistList = ({
             </motion.div>
           );
         })}
-      </AnimatePresence> */}
+      </AnimatePresence>
     </div>
   );
 };
