@@ -13,6 +13,13 @@ import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
 import { useStoreState } from "../../store";
 
+export const LIKE_QUERY_CONFIG = {
+  ...DEFAULT_FETCH_CONFIG,
+  refetchOnMount: false,
+  keepPreviousData: true,
+  staleTime: 1000 * 60 * 30, // 30 minute staleness.
+};
+
 export const useSongLikeUpdater = (
   callbacks: UseMutationOptions<
     any,
@@ -112,7 +119,7 @@ export function useSongLikeBulkCheck(songId: string) {
       if (loader) return loader.load(songId);
       else throw new Error("not logged in");
     },
-    { ...DEFAULT_FETCH_CONFIG }
+    LIKE_QUERY_CONFIG
   );
   return result;
 }

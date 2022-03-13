@@ -5,6 +5,7 @@ import { Link as NavLink } from "react-router-dom";
 import useNamePicker from "../../../modules/common/useNamePicker";
 import { DEFAULT_MENU_ID } from "../../common/CommonContext";
 import { SongArtwork } from "../../song/SongArtwork";
+import { SongLikeButton } from "../../song/SongLikeButton";
 
 interface SongInfoProps extends StackProps {
   song: Song;
@@ -39,6 +40,13 @@ export const SongInfo = React.memo(
             </Text>
           </Link>
         </Box>
+        <SongLikeButton
+          song={song}
+          visibility={
+            fullPlayer ? "visible" : ["hidden", null, null, "visible"]
+          }
+          fontSize={fullPlayer ? "xl" : "md"}
+        />
       </HStack>
     );
   }
