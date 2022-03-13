@@ -59,10 +59,8 @@ export function SidebarContent({
   ...rest
 }: SidebarProps) {
   const { user } = useClient();
-  // const { data: playlistList, isLoading: loadingMine } = useMyPlaylists();
-  // const { data: starredList, isLoading: loadingStars } = useStarredPlaylists();
-  const starredList: any = [];
-  const playlistList: any = [];
+  const { data: playlistList, isLoading: loadingMine } = useMyPlaylists();
+  const { data: starredList, isLoading: loadingStars } = useStarredPlaylists();
   // console.log(playlistList, starredList);
   const { pathname } = useLocation();
   const isDragging = useStoreState((s) => s.dnd.dragging);
