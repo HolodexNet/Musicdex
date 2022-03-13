@@ -51,6 +51,7 @@ export const PlaylistList = ({
                   m="1"
                   px="2"
                   py="1"
+                  h="32px"
                   borderRadius="lg"
                   role="group"
                   cursor="pointer"
@@ -100,13 +101,14 @@ export const PlaylistList = ({
                   }}
                 >
                   {emoji ? (
-                    <Text as="span" fontSize="16" mr="4" maxW="16px">
+                    <Text as="span" fontSize="15" mr="4" maxW="18px">
                       {emoji}
                     </Text>
                   ) : (
                     <Icon
                       mr="4"
-                      fontSize="16"
+                      fontSize="18"
+                      height="24px"
                       _groupHover={{
                         color: "white",
                       }}
