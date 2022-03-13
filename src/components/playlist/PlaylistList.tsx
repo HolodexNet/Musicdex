@@ -24,13 +24,19 @@ export const PlaylistList = ({
     <div>
       <AnimatePresence>
         {playlistStubs.map((x) => {
-          const title = formatPlaylist("title", x) || "...";
-          const emoji = title.match(/^(?!\d)\p{Emoji}/gu)
-            ? runes(title).at(0)
-            : undefined;
-          // Pick the first emoji if the first character is an emoji.
-          const rest = emoji ? runes(title).slice(1).join("") : title;
-          // ignore the first emoji IF it is an emoji.
+          let rest;
+          let emoji;
+          try {
+            const title = formatPlaylist("title", x) || "...";
+            emoji = title.match(/^(?!\d)\p{Emoji}/gu)
+              ? runes(title).at(0)
+              : undefined;
+            // Pick the first emoji if the first character is an emoji.
+            rest = emoji ? runes(title).slice(1).join("") : title;
+            // ignore the first emoji IF it is an emoji.
+          } catch (e) {
+            console.error(e);
+          }
 
           return (
             <motion.div
