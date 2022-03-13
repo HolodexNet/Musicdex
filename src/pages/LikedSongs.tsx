@@ -6,7 +6,7 @@ import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { useLikedSongs } from "../modules/services/like.service";
-import { useStoreActions } from "../store";
+import { useSongQueuer } from "../utils/SongQueuerHook";
 
 export default function LikedSongs() {
   // const history = useStoreState((store) => store.playback.history);
@@ -20,7 +20,7 @@ export default function LikedSongs() {
     () => page < (paginatedSongs?.page_count || 1),
     [page, paginatedSongs]
   );
-  const queueSongs = useStoreActions((s) => s.playback.queueSongs);
+  const queueSongs = useSongQueuer();
 
   return (
     <PageContainer>

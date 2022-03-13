@@ -16,22 +16,25 @@ function App(this: any) {
       FallbackComponent={ErrorFallback}
       onReset={() => {
         window.location.reload();
+        // reset the state of your app so the error doesn't happen again
       }}
     >
-      <Frame>
-        {/* TODO: ADD REAL LOADING PAGE */}
-        <Suspense fallback={<div>Loading...</div>}>
-          <ErrorBoundary
-            FallbackComponent={ErrorFallback}
-            onReset={() => {
-              window.location.reload();
-              // reset the state of your app so the error doesn't happen again
-            }}
-          >
-            <Routes />
-          </ErrorBoundary>
-        </Suspense>
-      </Frame>
+      <Suspense fallback={<div></div>}>
+        <Frame>
+          {/* TODO: ADD REAL LOADING PAGE */}
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary
+              FallbackComponent={ErrorFallback}
+              onReset={() => {
+                window.location.reload();
+                // reset the state of your app so the error doesn't happen again
+              }}
+            >
+              <Routes />
+            </ErrorBoundary>
+          </Suspense>
+        </Frame>
+      </Suspense>
     </ErrorBoundary>
   );
 }

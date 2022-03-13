@@ -17,6 +17,7 @@ import { SongCard } from "../components/song/SongCard";
 import { useDiscoveryOrg } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreActions, useStoreState } from "../store";
+import { useSongQueuer } from "../utils/SongQueuerHook";
 
 export default function Home() {
   const org = useStoreState((store) => store.org.currentOrg);
@@ -25,7 +26,7 @@ export default function Home() {
   );
 
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const queueSongs = useStoreActions((a) => a.playback.queueSongs);
+  const queueSongs = useSongQueuer();
 
   const { data: discovery, ...discoveryStatus } = useDiscoveryOrg(org.name);
 

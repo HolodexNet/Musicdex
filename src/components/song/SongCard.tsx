@@ -2,7 +2,7 @@ import { Flex, FlexProps, Icon, Text } from "@chakra-ui/react";
 import { useContextMenu } from "react-contexify";
 import { FaPlay } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useStoreActions } from "../../store";
+import { useSongQueuer } from "../../utils/SongQueuerHook";
 import { ChannelPhoto } from "../channel/ChannelPhoto";
 import { DEFAULT_MENU_ID } from "../common/CommonContext";
 import { MotionBox } from "../common/MotionBox";
@@ -14,7 +14,7 @@ interface SongCardProps extends FlexProps {
 }
 export const SongCard = ({ song, ...rest }: SongCardProps) => {
   const dragSongProps = useDraggableSong(song);
-  const queueSongs = useStoreActions((store) => store.playback.queueSongs);
+  const queueSongs = useSongQueuer();
   function playSong() {
     queueSongs({
       songs: [song],

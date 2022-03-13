@@ -76,6 +76,9 @@ i18n
     backend: {
       // reloadInterval: 5000,
     },
+    react: {
+      useSuspense: false,
+    },
     // react: {
     //   useSuspense: false,
     // },

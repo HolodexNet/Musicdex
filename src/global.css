@@ -45,3 +45,11 @@
 .chakra-heading:not(a *):not(button *) {
   cursor: default;
 }
+
+#chakra-toast-manager-top-right {
+  transform: translateY(58px);
+}
+
+#chakra-toast-manager-bottom-right {
+  transform: translateY(-76px);
+}

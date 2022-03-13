@@ -9,13 +9,14 @@ import { useClient } from "../modules/client";
 import { formatPlaylistID } from "../modules/playlist/useFormatPlaylist";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
+import { useSongQueuer } from "../utils/SongQueuerHook";
 
 export default function History() {
   // const history = useStoreState((store) => store.playback.history);
   const { isLoggedIn, user } = useClient();
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
   // const {description, }
-  const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
+  const queueSongs = useSongQueuer();
   const setPlaylist = useStoreActions(
     (actions) => actions.playback.setPlaylist
   );

@@ -25,6 +25,7 @@ import useNamePicker from "../modules/common/useNamePicker";
 import { useSong } from "../modules/services/songs.service";
 import { useStoreActions } from "../store";
 import { formatSeconds } from "../utils/SongHelper";
+import { useSongQueuer } from "../utils/SongQueuerHook";
 
 export default function Song() {
   let params = useParams();
@@ -42,7 +43,7 @@ export default function Song() {
     }) || 300;
   const { data: song, ...rest } = useSong(songId);
 
-  const queueSong = useStoreActions((actions) => actions.playback.queueSongs);
+  const queueSongs = useSongQueuer();
   const clip = useClipboardWithToast();
   const tn = useNamePicker();
 
@@ -104,7 +105,7 @@ export default function Song() {
               <HStack spacing={2} mt={4} flexWrap="wrap">
                 <Button
                   onClick={() => {
-                    queueSong({ songs: [song], immediatelyPlay: true });
+                    queueSongs({ songs: [song], immediatelyPlay: true });
                   }}
                   marginTop="auto"
                   bgColor="brand.100"

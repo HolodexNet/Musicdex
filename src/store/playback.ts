@@ -1,4 +1,5 @@
 import { action, Action, thunk, Thunk } from "easy-peasy";
+import { createStandaloneToast } from "@chakra-ui/react";
 
 interface SongPlayback {
   from: "queue" | "playlist" | "none";
@@ -314,17 +315,26 @@ const playbackModel: PlaybackModel = {
     }
   }),
 
-  queueSongs: thunk((actions, { songs, immediatelyPlay }, h) => {
-    if (songs.length === 0 || !songs[0]) return;
+  queueSongs: thunk(async (actions, { songs, immediatelyPlay }, h) => {
+    if (songs.length === 0 || !songs[0]) return 0;
     if (immediatelyPlay) {
       // songs should be singular.
+      if (songs && songs.length === 0) {
+        console.error(
+          "Tried to enqueue empty song array with immediatePlay : true. This doesn't make sense."
+        );
+        return { err: "Songs being queued should not be empty" };
+      }
       actions._forceInsertCurrentlyPlaying(songs[0]);
+      return 1;
     } else {
       actions._queueAdd(songs);
+
       if (!h.getState().currentlyPlaying.song) {
         // if nothing is playing, start playing something.
         actions._insertCurrentlyPlaying("queue");
       }
+      return songs.length;
     }
   }),
 

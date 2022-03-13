@@ -1,21 +1,21 @@
 import { Box, Center, Code, Heading, useToast, VStack } from "@chakra-ui/react";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { BGImg, BGImgContainer } from "../components/common/BGImgContainer";
+import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
+import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
+import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { useClient } from "../modules/client";
+import { useFormatPlaylist } from "../modules/playlist/useFormatPlaylist";
 import {
   usePlaylist,
   usePlaylistWriter,
 } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
-import { PlaylistButtonArray } from "../components/playlist/PlaylistButtonArray";
-import React from "react";
-import { QueryStatus } from "../components/common/QueryStatus";
-import { ContainerInlay } from "../components/layout/ContainerInlay";
-import { BGImgContainer, BGImg } from "../components/common/BGImgContainer";
-import { useFormatPlaylist } from "../modules/playlist/useFormatPlaylist";
+import { useSongQueuer } from "../utils/SongQueuerHook";
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
 );
@@ -47,7 +47,7 @@ export default function Playlist() {
     );
   }, [formatPlaylist, playlist]);
 
-  const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
+  const queueSongs = useSongQueuer();
   const setPlaylist = useStoreActions(
     (actions) => actions.playback.setPlaylist
   );

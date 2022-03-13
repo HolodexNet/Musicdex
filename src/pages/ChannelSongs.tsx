@@ -16,7 +16,7 @@ import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
 import { useSongAPI } from "../modules/services/songs.service";
-import { useStoreActions } from "../store";
+import { useSongQueuer } from "../utils/SongQueuerHook";
 const PERPAGE = 10;
 export default function ChannelSongs() {
   // const history = useStoreState((store) => store.playback.history);
@@ -43,7 +43,7 @@ export default function ChannelSongs() {
     () => (data as any) || { items: undefined, total: 0 },
     [data]
   );
-  const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
+  const queueSongs = useSongQueuer();
   const navigate = useNavigate();
 
   if (!channelStatus.isSuccess)

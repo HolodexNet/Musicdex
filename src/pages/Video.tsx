@@ -16,6 +16,7 @@ import { usePlaylistTitleDesc } from "../modules/playlist/useFormatPlaylist";
 import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
+import { useSongQueuer } from "../utils/SongQueuerHook";
 
 export default function Video() {
   // const history = useStoreState((store) => store.playback.history);
@@ -37,7 +38,7 @@ export default function Video() {
 
   const tn = useNamePicker();
 
-  const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
+  const queueSongs = useSongQueuer();
   const setPlaylist = useStoreActions(
     (actions) => actions.playback.setPlaylist
   );

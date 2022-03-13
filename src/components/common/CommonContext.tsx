@@ -13,6 +13,7 @@ import { FiChevronRight, FiCopy, FiFolderPlus, FiLink } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions } from "../../store";
+import { useSongQueuer } from "../../utils/SongQueuerHook";
 
 export const DEFAULT_MENU_ID = "r1";
 
@@ -24,7 +25,7 @@ export const CommonContextMenu = () => {
   const copyToClipboard = useClipboardWithToast();
 
   const navigate = useNavigate();
-  const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
+  const queueSongs = useSongQueuer();
   const [song, setSong] = useState<Song | undefined>(undefined);
 
   const openUrl = (

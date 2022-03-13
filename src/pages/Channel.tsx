@@ -30,6 +30,7 @@ import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
 import { useDiscoveryChannel } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreActions } from "../store";
+import { useSongQueuer } from "../utils/SongQueuerHook";
 import ChannelSongs from "./ChannelSongs";
 
 export default function Channel() {
@@ -53,7 +54,7 @@ export default function Channel() {
   });
 
   const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
-  const queueSongs = useStoreActions((actions) => actions.playback.queueSongs);
+  const queueSongs = useSongQueuer();
   const tn = useNamePicker();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
