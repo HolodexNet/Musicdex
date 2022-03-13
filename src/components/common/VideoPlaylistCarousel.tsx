@@ -1,4 +1,11 @@
-import { useInterval, useBoolean, HStack, Box } from "@chakra-ui/react";
+import {
+  useInterval,
+  useBoolean,
+  HStack,
+  Box,
+  AspectRatio,
+  Skeleton,
+} from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useRef, useState, useEffect, useMemo } from "react";
 import {
@@ -8,7 +15,6 @@ import {
   SnapItem,
 } from "react-snaplist-carousel";
 import { useStoreState } from "../../store";
-import { QueryStatus } from "./QueryStatus";
 import { VideoPlaylistCard } from "./VideoPlaylistCard";
 
 export function VideoPlaylistCarousel({
@@ -55,11 +61,19 @@ export function VideoPlaylistCarousel({
 
   const [hovering, { on, off }] = useBoolean(false);
 
+  // placeholder for CLS
   if (!videoPlaylists)
     return (
-      <Box height="200px">
-        <QueryStatus queryStatus={{ isLoading: true }}></QueryStatus>
-      </Box>
+      <AspectRatio
+        ratio={34 / 9}
+        maxH="auto"
+        overflow="hidden"
+        boxSizing="border-box"
+        mb="45px"
+        rounded="lg"
+      >
+        <Skeleton />
+      </AspectRatio>
     );
 
   return (
