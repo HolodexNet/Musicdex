@@ -22,7 +22,7 @@ export function GlobalLoadingStatus() {
     <Progress
       size="xs"
       width="100%"
-      top="calc(65px - 4px)"
+      top="calc(65px - 4px + env(safe-area-inset-top))"
       position="absolute"
       colorScheme="n2"
       bgColor="bgAlpha.600"
