@@ -1,4 +1,4 @@
-import { Box, Flex, FlexProps, Icon, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, FlexProps, Heading, Icon, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
 import { useMemo } from "react";
@@ -17,10 +17,16 @@ import { LineLogo } from "../icons/LineLogo";
 interface PlaylistArtworkProps extends FlexProps {
   playlist: Partial<PlaylistFull>;
   renderType?: "dropShadowText" | "auto";
+  size?: string;
 }
 
 export const PlaylistArtwork = React.memo(
-  ({ playlist, renderType = "auto", ...rest }: PlaylistArtworkProps) => {
+  ({
+    playlist,
+    renderType = "auto",
+    size = "148px",
+    ...rest
+  }: PlaylistArtworkProps) => {
     const formatPlaylist = useFormatPlaylist();
     const { title, description, type } = useMemo(() => {
       let type;
@@ -45,6 +51,10 @@ export const PlaylistArtwork = React.memo(
       return null;
     }, [playlist]);
 
+    const props = useMemo(
+      () => ({ width: size, height: size, flexBasis: size, ...rest }),
+      [size, rest]
+    );
     if (type === ":weekly") {
       return (
         <StackedTextArt
@@ -52,6 +62,7 @@ export const PlaylistArtwork = React.memo(
           titleText={description?.org || ""}
           imageUrl={thumbnail || ""}
           reverse={true}
+          {...props}
         />
       );
     }
@@ -63,6 +74,7 @@ export const PlaylistArtwork = React.memo(
             description?.channel.english_name || description?.channel.name
           }
           imageUrl={thumbnail || ""}
+          {...props}
         />
       );
     }
@@ -75,6 +87,7 @@ export const PlaylistArtwork = React.memo(
           typeText="Setlist"
           titleText={description?.title}
           imageUrl={image}
+          {...props}
         />
       );
     }
@@ -93,6 +106,7 @@ export const PlaylistArtwork = React.memo(
         imageUrl={thumbnail || channelImg || ""}
         showUserIcon={playlist.type === "ugp"}
         iconType={iconType}
+        {...props}
       />
     );
   }
@@ -103,12 +117,13 @@ function OverlayTextArt({
   imageUrl,
   showUserIcon = false,
   iconType = undefined,
+  ...rest
 }: {
   titleText: string;
   imageUrl: string;
   showUserIcon: boolean;
   iconType?: IconType;
-}) {
+} & FlexProps) {
   const bgColor =
     titleText.length % 2 === 0
       ? "var(--chakra-colors-n2-600)"
@@ -116,7 +131,7 @@ function OverlayTextArt({
 
   const adjFontSize = Math.max(
     14,
-    Math.min(Math.round(Math.pow(70 / titleText.length, 2) + 11), 20)
+    Math.round(-Math.pow(titleText.length / 15, 2) + 20)
   );
   return (
     <Flex
@@ -131,6 +146,7 @@ function OverlayTextArt({
       backgroundRepeat="no-repeat"
       bgSize="cover"
       overflow="hidden"
+      {...rest}
     >
       <BrandColorGradientText bgColor={bgColor} />
       <Box p={2} position="absolute" mt={3} width="100%">
@@ -185,19 +201,20 @@ function StackedTextArt({
   imageUrl,
   reverse = false,
   hideLogo = false,
+  ...rest
 }: {
   typeText: string;
   titleText: string;
   imageUrl: string;
   reverse?: boolean;
   hideLogo?: boolean;
-}) {
+} & FlexProps) {
   // Random between color based on last character of title
   const bgColor = titleText.length % 2 === 0 ? "brand.100" : "n2.100";
   // Do some fancy math to adjust font size so it can fit longer text
   const adjFontSize = Math.max(
     14,
-    Math.min(Math.round(Math.pow(40 / titleText.length, 2) + 11), 20)
+    Math.round(-Math.pow(titleText.length / 15, 2) + 18)
   );
   return (
     <Flex
@@ -206,6 +223,7 @@ function StackedTextArt({
       width="148px"
       height="148px"
       flexDirection={reverse ? "column-reverse" : "column"}
+      {...rest}
     >
       <Flex
         lineHeight={1.1}
@@ -220,22 +238,17 @@ function StackedTextArt({
         position="relative"
       >
         <Text
-          fontSize={12}
-          letterSpacing=".1rem"
+          fontSize={14}
+          fontWeight={600}
+          letterSpacing=".05rem"
           textTransform="uppercase"
           zIndex={1}
         >
           {typeText}
         </Text>
-        <Text
-          isTruncated={true}
-          letterSpacing="0px"
-          fontSize={adjFontSize}
-          my="auto"
-          zIndex={1}
-        >
+        <Heading isTruncated={true} fontSize={adjFontSize} my="auto" zIndex={1}>
           {titleText}
-        </Text>
+        </Heading>
         {!hideLogo && (
           <LineLogo
             position="absolute"
