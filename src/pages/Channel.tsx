@@ -247,6 +247,7 @@ function ChannelContent({
                 as={Link}
                 to={"/channel/" + channel.id + "/songs"}
                 float="right"
+                textTransform="uppercase"
               >
                 See All Songs
               </Button>
