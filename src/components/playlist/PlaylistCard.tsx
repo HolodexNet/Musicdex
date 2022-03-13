@@ -112,8 +112,8 @@ export const PlaylistCard = ({
                   : {}
               }
               transition={{
-                duration: 0.3,
-                ease: "easeInOut",
+                duration: 0.2,
+                ease: "easeOut",
               }}
               whileHover={{
                 scale: 1.1,

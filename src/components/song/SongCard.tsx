@@ -58,8 +58,8 @@ export const SongCard = ({ song, ...rest }: SongCardProps) => {
           }}
           opacity={0}
           transition={{
-            duration: 0.3,
-            ease: "anticipate",
+            duration: 0.2,
+            ease: "easeOut",
           }}
         >
           <MotionBox

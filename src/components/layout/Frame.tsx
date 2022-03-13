@@ -182,7 +182,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
             </FrameRef.Provider>
             <MotionBox
               {...props}
-              transition={{ duration: 0.3, type: "tween", ease: "easeInOut" }}
+              transition={{ duration: 0.4, type: "spring", ease: "easeInOut" }}
               layout
             >
               <Box
