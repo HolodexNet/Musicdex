@@ -1,14 +1,16 @@
-import { IconButton, useToast } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { IconButton, IconButtonProps, useToast } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FiLoader } from "react-icons/fi";
-import { useQueryClient } from "react-query";
 import {
   useSongLikeUpdater,
   useSongLikeBulkCheck,
 } from "../../modules/services/like.service";
 
-export function SongLikeButton({ song }: { song: Song }) {
+export function SongLikeButton({
+  song,
+  ...rest
+}: { song: Song } & Omit<IconButtonProps, "aria-label">) {
   const {
     mutate: updateLike,
     isSuccess,
@@ -23,7 +25,8 @@ export function SongLikeButton({ song }: { song: Song }) {
     toast({
       title: isSuccess ? "Changed like status" : "Failed to change like status",
       status: isSuccess ? "success" : "error",
-      duration: 1000,
+      duration: isSuccess ? 1500 : 5000,
+      position: "top-right",
       isClosable: true,
     });
   }, [isSuccess, isError, toast]);
@@ -39,7 +42,6 @@ export function SongLikeButton({ song }: { song: Song }) {
   // console.log(data);
   return (
     <IconButton
-      // size="sm"
       width="20px"
       // padding="4px"
       margin={-2}
@@ -52,13 +54,12 @@ export function SongLikeButton({ song }: { song: Song }) {
           <FaRegHeart />
         )
       }
-      aria-label="Like Song"
       onClick={toggleLike}
       colorScheme={"brand"}
       variant="ghost"
       opacity={data ? 1 : 0.3}
-      // mr={2}
-      // ml={-1}
+      aria-label="Like Song"
+      {...rest}
     ></IconButton>
   );
 }

@@ -94,8 +94,9 @@ export function AddToPlaylistModal(): JSX.Element {
                   () => {
                     toast({
                       status: "success",
-                      position: "top-right",
                       title: "Added",
+                      duration: 1500,
+                      position: "top-right",
                     });
                   },
                   () => {
@@ -103,6 +104,7 @@ export function AddToPlaylistModal(): JSX.Element {
                       status: "warning",
                       position: "top-right",
                       title: "Something went wrong",
+                      isClosable: true,
                     });
                   }
                 );

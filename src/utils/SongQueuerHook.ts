@@ -16,6 +16,7 @@ export function useSongQueuer() {
         status: "success",
         description: `Added ${ct} to Queue`,
         position: "bottom-right",
+        duration: 1500,
       });
     },
     [toast, queueSongs]

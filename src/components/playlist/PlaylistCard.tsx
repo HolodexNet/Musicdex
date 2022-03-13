@@ -63,6 +63,8 @@ export const PlaylistCard = ({
       toast({
         title: "Failed to get playlist",
         variant: "error",
+        duration: 1500,
+        position: "top-right",
       });
     }
   }

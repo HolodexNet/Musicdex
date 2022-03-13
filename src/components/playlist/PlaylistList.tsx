@@ -87,6 +87,7 @@ export const PlaylistList = ({
                             status: "success",
                             position: "top-right",
                             title: "Added",
+                            duration: 1500,
                           });
                         },
                         () => {
@@ -94,6 +95,7 @@ export const PlaylistList = ({
                             status: "warning",
                             position: "top-right",
                             title: "Something went wrong",
+                            isClosable: true,
                           });
                         }
                       );
