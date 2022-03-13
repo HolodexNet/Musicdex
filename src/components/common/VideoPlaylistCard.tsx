@@ -11,7 +11,6 @@ import {
 import React, { Suspense } from "react";
 import { FaPlay } from "react-icons/fa";
 import { FiExternalLink } from "react-icons/fi";
-import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
 import useNamePicker from "../../modules/common/useNamePicker";
 import { useStoreActions } from "../../store";
@@ -30,8 +29,6 @@ export const VideoPlaylistCard = React.memo(
       else window.open(`https://holodex.net/watch/${video.id}`, "_blank");
     }
     const tn = useNamePicker();
-
-    const { inView, ref } = useInView();
 
     return (
       <Box width="100%" height="100%">
@@ -71,7 +68,6 @@ export const VideoPlaylistCard = React.memo(
                   }}
                   onClick={openVideo}
                   cursor="pointer"
-                  ref={ref}
                 >
                   <MotionBox
                     whileHover={{ scale: 1.1 }}
@@ -89,13 +85,11 @@ export const VideoPlaylistCard = React.memo(
                   </MotionBox>
                 </MotionBox>
 
-                {inView && (
-                  <Image
-                    src={`https://i.ytimg.com/vi/${video.id}/sddefault.jpg`}
-                    borderRadius="md"
-                    loading="lazy"
-                  />
-                )}
+                <Image
+                  src={`https://i.ytimg.com/vi/${video.id}/sddefault.jpg`}
+                  borderRadius="md"
+                  loading="lazy"
+                />
               </div>
             </AspectRatio>
             <Box
@@ -105,7 +99,7 @@ export const VideoPlaylistCard = React.memo(
               bgColor="bgAlpha.800"
               overflowY="scroll"
             >
-              {inView && playlist?.content ? (
+              {playlist?.content ? (
                 <Suspense
                   fallback={<QueryStatus queryStatus={{ isLoading: true }} />}
                 >
