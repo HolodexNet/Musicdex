@@ -89,7 +89,6 @@ export const VideoPlaylistCard = React.memo(
                   src={`https://i.ytimg.com/vi/${video.id}/sddefault.jpg`}
                   borderRadius="md"
                   loading="lazy"
-                  crossorigin="anonymous"
                 />
               </div>
             </AspectRatio>

@@ -34,7 +34,6 @@ export function SongArtwork({
       height={size + "px"}
       loading="lazy"
       objectFit="cover"
-      crossorigin="anonymous"
       {...rest}
     />
   );
