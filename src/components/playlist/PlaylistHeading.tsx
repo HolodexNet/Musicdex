@@ -116,8 +116,9 @@ export function PlaylistHeading({
       </Heading>
       <Text
         color={colors}
-        fontWeight={300}
-        fontSize={{ base: "1xl", sm: "1.5xl", md: "2xl", lg: "2xl" }}
+        fontWeight={400}
+        opacity={0.6}
+        fontSize={{ base: "xl", md: "2xl" }}
         as={"div"}
       >
         {editDescription ? (

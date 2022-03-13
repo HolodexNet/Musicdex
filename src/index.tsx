@@ -20,12 +20,10 @@ import { store } from "./store";
 import { theme } from "./theme";
 import reportWebVitals from "./utils/reportWebVitals";
 import "./global.css";
-import "@fontsource/manrope/400.css";
-import "@fontsource/manrope/500.css";
-import "@fontsource/manrope/600.css";
 import "@fontsource/manrope/700.css";
 import "@fontsource/assistant/400.css";
 import "@fontsource/assistant/500.css";
+import "@fontsource/assistant/600.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
@@ -37,16 +35,10 @@ store.persist.resolveRehydration().then(() => {
     <React.StrictMode>
       <StoreProvider store={store}>
         <ChakraProvider theme={theme}>
-          {/* <ThemeEditorProvider>
-            <HyperThemeEditor pos="fixed" bottom={20} right={5} zIndex={12} />
-          </ThemeEditorProvider> */}
-
           <QueryClientProvider client={queryClient}>
-            {/* <Suspense fallback="..."> */}
             <Router>
               <App />
             </Router>
-            {/* </Suspense> */}
           </QueryClientProvider>
         </ChakraProvider>
       </StoreProvider>
