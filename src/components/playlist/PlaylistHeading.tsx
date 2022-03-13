@@ -74,9 +74,9 @@ export function PlaylistHeading({
 
   return (
     <Box as={"header"} mb="2" position="relative" {...props}>
-      <Heading
+      <Text
         lineHeight={1.1}
-        fontWeight={500}
+        fontWeight={600}
         fontSize={{ base: "2xl", sm: "3xl", md: "4xl", lg: "5xl" }}
       >
         {editTitle ? (
@@ -113,12 +113,11 @@ export function PlaylistHeading({
           variant="link"
           icon={<FiEdit3 />}
         ></IconButton>
-      </Heading>
+      </Text>
       <Text
         color={colors}
-        fontWeight={400}
         opacity={0.6}
-        fontSize={{ base: "xl", md: "2xl" }}
+        fontSize={{ base: "lg", md: "xl" }}
         as={"div"}
       >
         {editDescription ? (
