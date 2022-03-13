@@ -34,14 +34,17 @@ export function PlaylistMoreControlsMenu({
       () => {
         toast({
           status: "success",
-          title: "OK",
+          title: "Successfully saved playlist",
+          position: "top-right",
         });
       },
       (err) => {
         toast({
           status: "error",
-          title: "Failed",
+          title: "Failed to save playlist",
           description: err.toString(),
+          position: "top-right",
+          isClosable: true,
         });
       }
     );

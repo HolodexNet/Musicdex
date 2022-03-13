@@ -110,7 +110,9 @@ export function SidebarContent({
               return toast({
                 variant: "solid",
                 status: "warning",
+                position: "top-right",
                 description: "You need to be logged in to create playlists.",
+                isClosable: true,
               });
             openModal();
           }}

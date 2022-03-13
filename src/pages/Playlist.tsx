@@ -76,7 +76,13 @@ export default function Playlist() {
       writeNewPlaylist(newWritable).then(
         (_) => {
           //success:
-          toast({ variant: "subtle", status: "success", title: "Saved" });
+          toast({
+            variant: "subtle",
+            status: "success",
+            title: "Saved",
+            duration: 1500,
+            position: "top-right",
+          });
           setEditMode(false);
         },
         (err) => {
@@ -85,6 +91,8 @@ export default function Playlist() {
             status: "error",
             title: "Failed to Save",
             description: err,
+            position: "top-right",
+            isClosable: true,
           });
           setEditMode(false);
         }

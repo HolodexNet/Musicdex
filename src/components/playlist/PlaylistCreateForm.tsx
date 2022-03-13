@@ -53,6 +53,7 @@ export default function PlaylistCreateForm(): JSX.Element {
                 status: "success",
                 position: "top-right",
                 title: "Created",
+                duration: 1500,
               });
             },
             () => {
@@ -60,6 +61,7 @@ export default function PlaylistCreateForm(): JSX.Element {
                 status: "warning",
                 position: "top-right",
                 title: "Something went wrong",
+                isClosable: true,
               });
             }
           );
@@ -68,6 +70,8 @@ export default function PlaylistCreateForm(): JSX.Element {
             variant: "solid",
             status: "warning",
             description: "You need to provide both name and description.",
+            position: "top-right",
+            isClosable: true,
           });
         }
       }}

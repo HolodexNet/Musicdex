@@ -23,7 +23,8 @@ export function SongLikeButton({ song }: { song: Song }) {
     toast({
       title: isSuccess ? "Changed like status" : "Failed to change like status",
       status: isSuccess ? "success" : "error",
-      duration: 1000,
+      duration: isSuccess ? 1500 : 5000,
+      position: "top-right",
       isClosable: true,
     });
   }, [isSuccess, isError, toast]);

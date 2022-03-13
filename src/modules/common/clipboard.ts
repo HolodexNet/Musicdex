@@ -8,8 +8,8 @@ export const useClipboardWithToast = () => {
     toast({
       title: "Copied to clipboard",
       status: "success",
-      duration: 2000,
-      isClosable: true,
+      duration: 1500,
+      position: "top-right",
     });
   };
 };

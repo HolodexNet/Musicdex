@@ -228,7 +228,7 @@ export function Player({ player }: { player: any }) {
         position: "top-right",
         status: "warning",
         title: `The Song: ${currentSong?.name} is not playable. Skipping it.`,
-        duration: 10000,
+        isClosable: true,
       });
       next({ count: 1, userSkipped: false, hasError: true });
       setError(false);
