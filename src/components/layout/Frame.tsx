@@ -167,6 +167,8 @@ export default function Frame({ children }: { children?: ReactNode }) {
             flexGrow={1}
             flexShrink={1}
             zIndex={pos === "background" ? 0 : "auto"}
+            paddingLeft="env(safe-area-inset-left)"
+            paddingRight="env(safe-area-inset-right)"
           >
             <FrameRef.Provider value={frameRef}>
               <Flex

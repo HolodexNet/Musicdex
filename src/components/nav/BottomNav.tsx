@@ -25,7 +25,7 @@ export function BottomNav() {
       minHeight="56px"
       justify="space-evenly"
       bgColor="bg.900"
-      paddingBottom="env(safe-area-inset-bottom)"
+      paddingBottom="calc(env(safe-area-inset-bottom)*0.5)"
       boxSizing="content-box"
     >
       {LinkItems.map(({ name, icon, path }) => (

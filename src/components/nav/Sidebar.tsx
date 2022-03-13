@@ -72,6 +72,7 @@ export function SidebarContent({
       flexDirection="column"
       transition="3s ease"
       bg={useColorModeValue("bg.100", "bg.900")}
+      paddingTop="env(safe-area-inset-top)"
       borderRight="1px"
       borderRightColor={useColorModeValue("gray.200", "gray.700")}
       w={{ base: "full", lg: 60 }}
