@@ -7,7 +7,7 @@ import {
   useToast,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaPlay } from "react-icons/fa";
 import { useInView } from "react-intersection-observer";
 import { useQueryClient } from "react-query";
@@ -27,6 +27,7 @@ export const PlaylistCard = ({
   const bgColor = useColorModeValue("bg.100", "bg.800");
   const bgHover = useColorModeValue("bg.200", "bg.700");
   const [isHovering, setIsHovering] = useState(false);
+  const [inViewOnce, setInViewOnce] = useState(false);
   // Fixes double tap to trigger (https://stackoverflow.com/questions/17710893/why-when-do-i-have-to-tap-twice-to-trigger-click-on-ios)
   const hoverListeners = useBreakpointValue([
     undefined,
@@ -43,31 +44,42 @@ export const PlaylistCard = ({
   const toast = useToast();
   const { title, description } = usePlaylistTitleDesc(playlist);
   const { inView, ref } = useInView();
+
+  useEffect(() => {
+    setInViewOnce(true);
+  }, [inView]);
+
+  const handlePlayClick = useCallback(
+    async (e: any) => {
+      e.stopPropagation();
+      e.preventDefault();
+      try {
+        const cached: PlaylistFull | undefined = queryClient.getQueryData([
+          "playlist",
+          playlist.id,
+        ]);
+        let p = cached;
+        if (!cached) {
+          p = (
+            await AxiosInstance<PlaylistFull>(
+              `/musicdex/playlist/${playlist.id}`
+            )
+          ).data;
+        }
+        if (p) setPlaylist({ playlist: p });
+        else throw new Error("Fetch failed");
+      } catch (e) {
+        toast({
+          title: "Failed to get playlist",
+          variant: "error",
+          duration: 1500,
+          position: "top-right",
+        });
+      }
+    },
+    [AxiosInstance, playlist.id, queryClient, setPlaylist, toast]
+  );
   if (!playlist) return <div>Playlist doko...</div>;
-  async function handlePlayClick(e: any) {
-    e.stopPropagation();
-    e.preventDefault();
-    const cached: PlaylistFull | undefined = queryClient.getQueryData([
-      "playlist",
-      playlist.id,
-    ]);
-    let p = cached;
-    if (!cached) {
-      p = (
-        await AxiosInstance<PlaylistFull>(`/musicdex/playlist/${playlist.id}`)
-      ).data;
-    }
-    if (p) {
-      setPlaylist({ playlist: p });
-    } else {
-      toast({
-        title: "Failed to get playlist",
-        variant: "error",
-        duration: 1500,
-        position: "top-right",
-      });
-    }
-  }
   return (
     <Flex
       minWidth="168px"
@@ -90,7 +102,7 @@ export const PlaylistCard = ({
     >
       <>
         <Flex flexDirection="column" position="relative" cursor="pointer">
-          {inView && (
+          {(inViewOnce || inView) && (
             <PlaylistArtwork
               playlist={playlist}
               rounded="lg"
