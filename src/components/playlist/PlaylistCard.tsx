@@ -46,8 +46,10 @@ export const PlaylistCard = ({
   const { inView, ref } = useInView();
 
   useEffect(() => {
-    setInViewOnce(true);
-  }, [inView]);
+    if (inView && !inViewOnce) {
+      setInViewOnce(true);
+    }
+  }, [inView, inViewOnce]);
 
   const handlePlayClick = useCallback(
     async (e: any) => {
