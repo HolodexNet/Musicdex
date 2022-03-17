@@ -59,7 +59,14 @@ const GoogleButton: FunctionComponent<GoogleButtonParams> = ({
           <script src={googleUrl} async defer />
         </Helmet>
       </HelmetProvider>
-      <Box ref={divRef} {...rest} />
+      <Box
+        ref={divRef}
+        height={"32px"}
+        bgColor="white"
+        rounded="lg"
+        overflow="hidden"
+        {...rest}
+      />
     </>
   );
 };

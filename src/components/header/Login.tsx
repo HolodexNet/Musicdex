@@ -5,6 +5,7 @@ import {
   Text,
   Heading,
   Divider,
+  Box,
 } from "@chakra-ui/react";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { useClientLogin } from "../../modules/client";
@@ -37,21 +38,17 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
             </Text>
           </>
         )}
-        <Stack maxW={400} w={"full"}>
+        <Box maxW={400} w={"full"}>
           {DiscordOAuth && (
             <DiscordOAuth w={"full"}>
               <Button
                 w={"full"}
                 h={30}
-                py={2}
-                rounded="md"
                 colorScheme={"purple"}
                 leftIcon={<FaDiscord />}
                 as="div"
               >
-                <Center>
-                  <Text>Login with Discord</Text>
-                </Center>
+                <Text mx="auto">Login with Discord</Text>
               </Button>
             </DiscordOAuth>
           )}
@@ -60,7 +57,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
           {GoogleAuthFn && (
             <GoogleButton
               onCredentialResponse={GoogleAuthFn}
-              py={2}
+              my={4}
             ></GoogleButton>
           )}
 
@@ -69,18 +66,15 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
             <Button
               w={"full"}
               h={30}
-              rounded="md"
               colorScheme={"twitter"}
               leftIcon={<FaTwitter />}
               onClick={TwitterAuth}
               as="div"
             >
-              <Center>
-                <Text>Login with Twitter</Text>
-              </Center>
+              <Text mx="auto">Login with Twitter</Text>
             </Button>
           )}
-        </Stack>
+        </Box>
       </Stack>
     </Center>
   );
