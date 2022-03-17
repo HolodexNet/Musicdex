@@ -46,7 +46,7 @@ export default function Footer() {
           <Text>
             © 2020 Holodex.{" "}
             <small style={{ color: "#445" }}>
-              Musicdex (beta) build {gi.commit.date}:{gi.commit.shortHash}
+              Musicdex (beta) build {gi.commit.shortHash}
             </small>
           </Text>
           <Stack direction={"row"} spacing={6}>
