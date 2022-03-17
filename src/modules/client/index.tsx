@@ -1,4 +1,10 @@
-import { ButtonProps, chakra, ChakraProps, useToast } from "@chakra-ui/react";
+import {
+  ButtonProps,
+  chakra,
+  ChakraProps,
+  toast,
+  useToast,
+} from "@chakra-ui/react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { ReactNode, useCallback, useEffect } from "react";
 import OAuth2Login from "react-simple-oauth2-login";
@@ -155,7 +161,6 @@ export function useClientLogin() {
             scope="identify"
             onSuccess={onDiscordSuccess}
             onFailure={onFailure}
-            isCrossOrigin
             {...props}
           >
             {children}
