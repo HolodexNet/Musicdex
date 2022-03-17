@@ -13,6 +13,9 @@ import {
 import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { SiKofi } from "react-icons/si";
 import { ContainerInlay } from "./ContainerInlay";
+import GitInfo from "react-git-info/macro";
+
+const gi = GitInfo();
 
 const SocialButton = ({ icon, ...rest }: any) => {
   return (
@@ -43,7 +46,7 @@ export default function Footer() {
           <Text>
             © 2020 Holodex.{" "}
             <small style={{ color: "#445" }}>
-              Musicdex (beta) build {process.env.REACT_APP_GIT_SHA}
+              Musicdex (beta) build {gi.commit.date}:{gi.commit.shortHash}
             </small>
           </Text>
           <Stack direction={"row"} spacing={6}>
