@@ -1,12 +1,17 @@
-import { ButtonProps, chakra, ChakraProps } from "@chakra-ui/react";
+import {
+  ButtonProps,
+  chakra,
+  ChakraProps,
+  toast,
+  useToast,
+} from "@chakra-ui/react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { ReactNode, useCallback, useEffect } from "react";
 import OAuth2Login from "react-simple-oauth2-login";
 import { useStoreActions, useStoreState } from "../../store";
-import { useGoogleLogin } from "react-google-login";
 import open from "oauth-open";
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "react-query";
+import { GoogleCredentialResponse } from "../../components/header/GoogleButton";
 
 export interface OAuth2SuccessResponse {
   token_type: "Bearer";
@@ -98,25 +103,21 @@ export function useClientLogin() {
   const currentToken = useStoreState((state) => state.auth.token);
   const user = useStoreState((state) => state.auth.user);
   const navigate = useNavigate();
+  const toast = useToast();
 
   function onFailure(err: any) {
     console.log("Error", err);
+    toast({
+      position: "top-right",
+      title: "Error while logging in",
+      status: "error",
+    });
   }
 
-  const { signIn, loaded } = useGoogleLogin({
-    clientId:
-      "275540829388-87s7f9v2ht3ih51ah0tjkqng8pd8bqo2.apps.googleusercontent.com",
-    scope: "https://www.googleapis.com/auth/userinfo.email",
-    prompt: "select_account",
-    redirectUri: "http://localhost:3000",
-    responseType: "code",
-    uxMode: "redirect",
-
-    fetchBasicProfile: false,
-    async onSuccess(res) {
-      if (!res.code) return;
+  async function onGoogleSuccess({ credential }: GoogleCredentialResponse) {
+    try {
       const token = await getToken({
-        authToken: res.code,
+        authToken: credential,
         service: "google",
         jwt: currentToken || undefined,
       });
@@ -124,21 +125,25 @@ export function useClientLogin() {
       setToken(jwt);
       setUser(user);
       navigate("/settings");
-      // console.log(res);
-    },
-    onFailure: onFailure,
-  });
+    } catch (e) {
+      onFailure(e);
+    }
+  }
 
   async function onDiscordSuccess(res: OAuth2SuccessResponse) {
-    const token = await getToken({
-      authToken: res.access_token,
-      service: "discord",
-      jwt: currentToken || undefined,
-    });
-    const { jwt, user } = token;
-    setToken(jwt);
-    setUser(user);
-    navigate("/settings");
+    try {
+      const token = await getToken({
+        authToken: res.access_token,
+        service: "discord",
+        jwt: currentToken || undefined,
+      });
+      const { jwt, user } = token;
+      setToken(jwt);
+      setUser(user);
+      navigate("/settings");
+    } catch (e) {
+      onFailure(e);
+    }
   }
 
   return {
@@ -181,7 +186,7 @@ export function useClientLogin() {
             }
           );
         },
-    GoogleAuthFn: user?.google_id ? undefined : signIn,
+    GoogleAuthFn: user?.google_id ? undefined : onGoogleSuccess,
   };
 }
 
@@ -207,6 +212,7 @@ export async function getToken({
     headers,
     body: JSON.stringify(body),
   });
+  if (!res.ok) throw Error("Failed to acquire token");
   return res.json();
 }
 

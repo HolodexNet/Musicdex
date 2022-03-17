@@ -6,8 +6,9 @@ import {
   Heading,
   Divider,
 } from "@chakra-ui/react";
-import { FaDiscord, FaGoogle, FaTwitter } from "react-icons/fa";
+import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { useClientLogin } from "../../modules/client";
+import GoogleButton from "./GoogleButton";
 
 export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
   const { DiscordOAuth, GoogleAuthFn, TwitterAuth } = useClientLogin();
@@ -16,7 +17,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
       <Stack spacing={4} align={"center"} maxW={"md"} w={"full"}>
         {isNew ? (
           <>
-            <Heading>Login/Sign up to Musicdex</Heading>
+            <Heading size="lg">Login/Sign up to Musicdex</Heading>
             <Divider width={12} py={2} />
             <Text>
               If you have not previously logged into <b>Holodex</b> or{" "}
@@ -54,16 +55,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
 
         {/* Google */}
         {GoogleAuthFn && (
-          <Button
-            w={"full"}
-            colorScheme={"red"}
-            leftIcon={<FaGoogle />}
-            onClick={GoogleAuthFn}
-          >
-            <Center>
-              <Text>Login with Google (try clicking twice)</Text>
-            </Center>
-          </Button>
+          <GoogleButton onCredentialResponse={GoogleAuthFn}></GoogleButton>
         )}
 
         {/* LinkedIn */}
@@ -71,12 +63,11 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
           <Button
             w={"full"}
             colorScheme={"twitter"}
-            disabled
             leftIcon={<FaTwitter />}
             onClick={TwitterAuth}
           >
             <Center>
-              <Text>Login with Twitter (broken until beta)</Text>
+              <Text>Login with Twitter</Text>
             </Center>
           </Button>
         )}
