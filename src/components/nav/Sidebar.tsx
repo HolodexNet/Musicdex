@@ -91,12 +91,12 @@ export function SidebarContent({
         <LogoWithText />
         <CloseButton onClick={onClose} />
       </Flex>
-      <NavItem icon={FiHome} key={"Home"} mb={4} path="/">
+      <NavItem icon={FiHome} key={"Home"} mb={1} path="/">
         Home
       </NavItem>
       <AnimatePresence>{pathname === "/" && <OrgSelector />}</AnimatePresence>
       {linkItems.map((link) => (
-        <NavItem {...link} key={link.name} mb={4}>
+        <NavItem {...link} key={link.name} mb={1}>
           {link.name}
         </NavItem>
       ))}

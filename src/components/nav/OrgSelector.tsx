@@ -42,12 +42,12 @@ export function OrgSelector() {
         animate={{
           scale: [0.9, 1],
           opacity: [0, 1],
-          marginTop: ["-30px", "-5px"],
+          marginTop: ["-30px", "0px"],
         }}
-        exit={{ opacity: 0, marginTop: "0px", height: "0px" }}
+        exit={{ opacity: 0, height: "0px" }}
         transition={{ duration: 0.4, type: "tween" }}
         px={2}
-        mb={3}
+        mb={1}
       >
         <Select
           value={org.name}
