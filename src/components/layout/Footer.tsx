@@ -42,9 +42,8 @@ export default function Footer() {
         >
           <Text>
             © 2020 Holodex.{" "}
-            <small>
-              Musicdex is still under development, bugs and wipes may occur
-              during Alpha.
+            <small style={{ color: "#445" }}>
+              Musicdex (beta) build {process.env.REACT_APP_GIT_SHA}
             </small>
           </Text>
           <Stack direction={"row"} spacing={6}>

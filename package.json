@@ -11,8 +11,8 @@
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js' & source-map-explorer --gzip 'build/static/js/*.js'",
-    "build": "react-scripts build",
-    "dev": "react-scripts start",
+    "build": "REACT_APP_GIT_SHA=`git rev-parse --short HEAD` react-scripts build",
+    "dev": "REACT_APP_GIT_SHA=dev react-scripts start",
     "dev:local-api": "cross-env API_TARGET=local react-scripts start",
     "eject": "react-scripts eject",
     "prepare": "husky install",
