@@ -72,7 +72,7 @@ const POSITIONS: { [key: string]: ChakraProps } = {
     zIndex: 15,
   },
   hidden: {
-    visibility: "hidden",
+    display: "none",
     zIndex: -4,
     position: "absolute",
   },
