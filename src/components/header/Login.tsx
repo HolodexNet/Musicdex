@@ -37,40 +37,50 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
             </Text>
           </>
         )}
+        <Stack maxW={400} w={"full"}>
+          {DiscordOAuth && (
+            <DiscordOAuth w={"full"}>
+              <Button
+                w={"full"}
+                h={30}
+                py={2}
+                rounded="md"
+                colorScheme={"purple"}
+                leftIcon={<FaDiscord />}
+                as="div"
+              >
+                <Center>
+                  <Text>Login with Discord</Text>
+                </Center>
+              </Button>
+            </DiscordOAuth>
+          )}
 
-        {DiscordOAuth && (
-          <DiscordOAuth w={"full"}>
+          {/* Google */}
+          {GoogleAuthFn && (
+            <GoogleButton
+              onCredentialResponse={GoogleAuthFn}
+              py={2}
+            ></GoogleButton>
+          )}
+
+          {/* LinkedIn */}
+          {TwitterAuth && (
             <Button
               w={"full"}
-              colorScheme={"purple"}
-              leftIcon={<FaDiscord />}
+              h={30}
+              rounded="md"
+              colorScheme={"twitter"}
+              leftIcon={<FaTwitter />}
+              onClick={TwitterAuth}
               as="div"
             >
               <Center>
-                <Text>Login with Discord</Text>
+                <Text>Login with Twitter</Text>
               </Center>
             </Button>
-          </DiscordOAuth>
-        )}
-
-        {/* Google */}
-        {GoogleAuthFn && (
-          <GoogleButton onCredentialResponse={GoogleAuthFn}></GoogleButton>
-        )}
-
-        {/* LinkedIn */}
-        {TwitterAuth && (
-          <Button
-            w={"full"}
-            colorScheme={"twitter"}
-            leftIcon={<FaTwitter />}
-            onClick={TwitterAuth}
-          >
-            <Center>
-              <Text>Login with Twitter</Text>
-            </Center>
-          </Button>
-        )}
+          )}
+        </Stack>
       </Stack>
     </Center>
   );

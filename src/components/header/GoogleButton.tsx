@@ -1,7 +1,6 @@
-import { Box, Button, Center, Text } from "@chakra-ui/react";
+import { Box, BoxProps } from "@chakra-ui/react";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { Helmet, HelmetProvider, HelmetTags } from "react-helmet-async";
-import { FaGoogle } from "react-icons/fa";
 
 const googleUrl = "https://accounts.google.com/gsi/client";
 const CLIENT_ID =
@@ -10,12 +9,13 @@ export interface GoogleCredentialResponse {
   credential: string;
 }
 
-interface GoogleButtonParams {
+interface GoogleButtonParams extends BoxProps {
   onCredentialResponse: (response: GoogleCredentialResponse) => void;
 }
 
 const GoogleButton: FunctionComponent<GoogleButtonParams> = ({
   onCredentialResponse,
+  ...rest
 }) => {
   const [scriptLoaded, setScriptLoaded] = useState(
     typeof window !== "undefined" &&
@@ -45,23 +45,12 @@ const GoogleButton: FunctionComponent<GoogleButtonParams> = ({
       });
       (window as any).google.accounts.id.renderButton(divRef.current, {
         theme: "outline",
-        size: "large",
+        size: "medium",
         width: divRef.current.clientWidth,
       });
       // (window as any).google.accounts.id.prompt();
     }
   }, [scriptLoaded, divRef, onCredentialResponse]);
-
-  const triggerGoogleLogin = () => {
-    if (divRef.current) {
-      const button = divRef.current.querySelector(
-        "div[role=button]"
-      ) as HTMLDivElement;
-      if (button) {
-        button.click();
-      }
-    }
-  };
 
   return (
     <>
@@ -70,18 +59,7 @@ const GoogleButton: FunctionComponent<GoogleButtonParams> = ({
           <script src={googleUrl} async defer />
         </Helmet>
       </HelmetProvider>
-      {/* Hidden google button, and use our proxy click through our button instead */}
-      <Box ref={divRef} display="none" />
-      <Button
-        w={"full"}
-        colorScheme={"red"}
-        leftIcon={<FaGoogle />}
-        onClick={triggerGoogleLogin}
-      >
-        <Center>
-          <Text>Login with Google</Text>
-        </Center>
-      </Button>
+      <Box ref={divRef} {...rest} />
     </>
   );
 };
