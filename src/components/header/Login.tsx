@@ -40,17 +40,16 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
         )}
         <Box maxW={400} w={"full"}>
           {DiscordOAuth && (
-            <DiscordOAuth w={"full"}>
-              <Button
-                w={"full"}
-                h={30}
-                colorScheme={"purple"}
-                leftIcon={<FaDiscord />}
-                as="div"
-              >
-                <Text mx="auto">Login with Discord</Text>
-              </Button>
-            </DiscordOAuth>
+            <Button
+              w={"full"}
+              h={30}
+              colorScheme={"purple"}
+              leftIcon={<FaDiscord />}
+              onClick={DiscordOAuth}
+              as="div"
+            >
+              <Text mx="auto">Login with Discord</Text>
+            </Button>
           )}
 
           {/* Google */}

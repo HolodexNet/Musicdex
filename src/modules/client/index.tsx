@@ -1,13 +1,6 @@
-import {
-  ButtonProps,
-  chakra,
-  ChakraProps,
-  toast,
-  useToast,
-} from "@chakra-ui/react";
+import { chakra, useToast } from "@chakra-ui/react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { ReactNode, useCallback, useEffect } from "react";
-import OAuth2Login from "react-simple-oauth2-login";
+import { useCallback, useEffect } from "react";
 import { useStoreActions, useStoreState } from "../../store";
 import open from "oauth-open";
 import { useNavigate } from "react-router-dom";
@@ -95,8 +88,6 @@ export function useClient() {
   };
 }
 
-const StyledOAuth2 = chakra(OAuth2Login);
-
 export function useClientLogin() {
   const setUser = useStoreActions((actions) => actions.auth.setUser);
   const setToken = useStoreActions((actions) => actions.auth.setToken);
@@ -130,10 +121,14 @@ export function useClientLogin() {
     }
   }
 
-  async function onDiscordSuccess(res: OAuth2SuccessResponse) {
+  async function onDiscordSuccess(
+    err: any,
+    { access_token }: { access_token: string }
+  ) {
+    if (err) return onFailure(err);
     try {
       const token = await getToken({
-        authToken: res.access_token,
+        authToken: access_token,
         service: "discord",
         jwt: currentToken || undefined,
       });
@@ -146,46 +141,33 @@ export function useClientLogin() {
     }
   }
 
+  async function onTwitterSuccess(err: any, out: { jwt: string }) {
+    if (err) return onFailure(err);
+    const twitterTempJWT = out.jwt;
+    const token = await getToken({
+      authToken: twitterTempJWT,
+      service: "twitter",
+      jwt: currentToken || undefined,
+    });
+    const { jwt, user } = token;
+    setToken(jwt);
+    setUser(user);
+    navigate("/settings");
+  }
+
   return {
     DiscordOAuth: user?.discord_id
       ? undefined
-      : ({
-          children,
-          ...props
-        }: { children: ReactNode } & ChakraProps & ButtonProps) => (
-          <StyledOAuth2
-            authorizationUrl="https://discord.com/api/oauth2/authorize"
-            responseType="token"
-            clientId="793619250115379262"
-            redirectUri={`${window.location.protocol}//${window.location.host}/discord`}
-            scope="identify"
-            onSuccess={onDiscordSuccess}
-            onFailure={onFailure}
-            {...props}
-          >
-            {children}
-          </StyledOAuth2>
-        ),
+      : () =>
+          open(
+            `https://discord.com/api/oauth2/authorize?client_id=793619250115379262&redirect_uri=${encodeURIComponent(
+              `${window.location.protocol}//${window.location.host}/discord`
+            )}&response_type=token&scope=identify`,
+            onDiscordSuccess
+          ),
     TwitterAuth: user?.twitter_id
       ? undefined
-      : () => {
-          open(
-            `/api/v2/user/login/twitter`,
-            async (err: any, out: { jwt: string }) => {
-              if (err) return onFailure(err);
-              const twitterTempJWT = out.jwt;
-              const token = await getToken({
-                authToken: twitterTempJWT,
-                service: "twitter",
-                jwt: currentToken || undefined,
-              });
-              const { jwt, user } = token;
-              setToken(jwt);
-              setUser(user);
-              navigate("/settings");
-            }
-          );
-        },
+      : () => open(`/api/v2/user/login/twitter`, onTwitterSuccess),
     GoogleAuthFn: user?.google_id ? undefined : onGoogleSuccess,
   };
 }
