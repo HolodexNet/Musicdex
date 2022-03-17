@@ -27,7 +27,7 @@ const ServiceWorkerWrapper = () => {
   return showReload && !dismissed ? (
     <Box
       position="absolute"
-      top="0"
+      top="env(safe-area-inset-top)"
       bgColor="brand.400"
       dropShadow={"dark-lg"}
       px={4}

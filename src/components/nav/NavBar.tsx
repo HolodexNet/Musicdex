@@ -107,10 +107,7 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
                 borderColor={borderColor}
               >
                 <MenuItem as={Link} to="/settings">
-                  Profile
-                </MenuItem>
-                <MenuItem as={Link} to="/settings">
-                  Settings
+                  Profile / Settings
                 </MenuItem>
                 {/* <MenuItem>Billing</MenuItem> */}
                 <MenuDivider />
