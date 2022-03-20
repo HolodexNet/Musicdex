@@ -1,4 +1,4 @@
-import { Button, HStack } from "@chakra-ui/react";
+import { Button, HStack, StackProps } from "@chakra-ui/react";
 import React, { ReactNode, useMemo } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { FiPlay, FiShare2 } from "react-icons/fi";
@@ -22,6 +22,7 @@ export function PlaylistButtonArray({
   canEdit,
   playlist,
   children = undefined,
+  ...rest
 }: {
   onPlayClick: ClickEventHandler;
   onAddQueueClick: ClickEventHandler;
@@ -32,7 +33,7 @@ export function PlaylistButtonArray({
   canStar?: boolean;
   playlist: PlaylistFull;
   children?: ReactNode;
-}): JSX.Element {
+} & StackProps): JSX.Element {
   // useColorModeValue('bg.400')
   const clip = useClipboardWithToast();
 
@@ -50,7 +51,7 @@ export function PlaylistButtonArray({
   let { mutateAsync: updateStar } = usePlaylistStarUpdater();
 
   return (
-    <HStack spacing={4} flexShrink={1} flexWrap="wrap" my={2}>
+    <HStack spacing={4} flexShrink={1} flexWrap="wrap" {...rest}>
       <Button
         aria-label="play"
         leftIcon={<FiPlay />}

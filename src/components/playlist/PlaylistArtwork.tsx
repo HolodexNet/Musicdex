@@ -46,8 +46,9 @@ export const PlaylistArtwork = React.memo(
       [formatPlaylist, playlist]
     );
     const thumbnail = useMemo(() => {
-      const videoIds: string[] = (playlist as any).videoids;
-      if (videoIds?.length) return getVideoThumbnails(videoIds[0]).medium;
+      const videoId: string =
+        (playlist as any).videoids?.[0] || playlist.content?.[0].video_id;
+      if (videoId) return getVideoThumbnails(videoId).medium;
       return null;
     }, [playlist]);
 

@@ -1,5 +1,11 @@
 import { Box, Center, Code, Heading, useToast, VStack } from "@chakra-ui/react";
-import React, { Suspense, useEffect, useMemo, useState } from "react";
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useParams } from "react-router-dom";
 import { BGImg, BGImgContainer } from "../components/common/BGImgContainer";
 import { QueryStatus } from "../components/common/QueryStatus";
@@ -63,44 +69,47 @@ export default function Playlist() {
   }, [playlist]);
 
   // Editing:
-  const [newSongIds, setNewSongIds] = useState<string[] | null>(null);
+  const [newSongIds, setNewSongIds] = useState<string[] | undefined>();
 
   const toast = useToast();
 
-  const finishSongEditing = async () => {
-    if (newSongIds !== null) {
-      const newWritable: Partial<WriteablePlaylist> = {
-        ...playlist,
-        content: newSongIds,
-      };
-      writeNewPlaylist(newWritable).then(
-        (_) => {
-          //success:
-          toast({
-            variant: "subtle",
-            status: "success",
-            title: "Saved",
-            duration: 1500,
-            position: "top-right",
-          });
-          setEditMode(false);
-        },
-        (err) => {
-          toast({
-            variant: "solid",
-            status: "error",
-            title: "Failed to Save",
-            description: err,
-            position: "top-right",
-            isClosable: true,
-          });
-          setEditMode(false);
-        }
-      );
-    } else {
-      setEditMode(false);
-    }
-  };
+  const finishSongEditing = useCallback(
+    async (songIds?: string[]) => {
+      if (songIds !== null) {
+        const newWritable: Partial<WriteablePlaylist> = {
+          ...playlist,
+          content: songIds,
+        };
+        writeNewPlaylist(newWritable).then(
+          (_) => {
+            //success:
+            toast({
+              variant: "subtle",
+              status: "success",
+              title: "Saved",
+              duration: 1500,
+              position: "top-right",
+            });
+            setEditMode(false);
+          },
+          (err) => {
+            toast({
+              variant: "solid",
+              status: "error",
+              title: "Failed to Save",
+              description: err,
+              position: "top-right",
+              isClosable: true,
+            });
+            setEditMode(false);
+          }
+        );
+      } else {
+        setEditMode(false);
+      }
+    },
+    [playlist, toast, writeNewPlaylist]
+  );
 
   if (status.error && (status?.error as any)?.status >= 400) {
     return (
@@ -150,6 +159,7 @@ export default function Playlist() {
           )}
         />
         <PlaylistButtonArray
+          mb={2}
           playlist={playlist}
           canEdit={isLoggedIn && playlist.owner === user?.id}
           editMode={editMode}
@@ -166,8 +176,9 @@ export default function Playlist() {
           onEditClick={() => {
             setEditMode(true);
           }}
-          onFinishEditClick={finishSongEditing}
+          onFinishEditClick={() => finishSongEditing(newSongIds)}
         />
+
         {playlist.content &&
           (editMode ? (
             <Suspense fallback={<div>Loading...</div>}>
