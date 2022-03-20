@@ -257,27 +257,23 @@ function ChannelContent({
       )}
       {discovery?.recentSingingStream?.playlist && (
         <>
-          <Heading size="md" mt={4}>
+          <Heading size="md" mt={4} mb={2}>
             Latest Streams
           </Heading>
-          <CardCarousel
-            height={250}
-            width={160}
-            scrollMultiplier={1}
-            marginX={["2px", null, 1, 2]}
-          >
+          <CardCarousel height={230} width={160} scrollMultiplier={1}>
             {/* TODO: Fetch more recent streams */}
             <PlaylistCard
               playlist={discovery?.recentSingingStream?.playlist}
               key={"kpc" + discovery?.recentSingingStream?.playlist.id}
+              marginX={["2px", null, 1, 2]}
             />
           </CardCarousel>
         </>
       )}
-      <Heading size="md" mt={4}>
+      <Heading size="md" mt={4} mb={2}>
         Featuring {name}
       </Heading>
-      <CardCarousel height={250} width={160} scrollMultiplier={1}>
+      <CardCarousel height={230} width={160} scrollMultiplier={1}>
         {discovery &&
           discovery.recommended.playlists.map((x: any) => {
             return (
@@ -289,11 +285,11 @@ function ChannelContent({
             );
           })}
       </CardCarousel>
-      <Heading size="md" mt={4}>
+      <Heading size="md" mt={4} mb={2}>
         Discover more from {channel.org}
       </Heading>
       {discovery && (
-        <CardCarousel height={210} width={160} scrollMultiplier={2}>
+        <CardCarousel height={180} width={160} scrollMultiplier={2}>
           {discovery.channels.map((c: Channel) => (
             <ChannelCard channel={c} key={c.id} marginX={["2px", null, 1, 2]} />
           ))}
