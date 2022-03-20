@@ -260,7 +260,12 @@ function ChannelContent({
           <Heading size="md" mt={4}>
             Latest Streams
           </Heading>
-          <CardCarousel height={250} width={160} scrollMultiplier={1}>
+          <CardCarousel
+            height={250}
+            width={160}
+            scrollMultiplier={1}
+            marginX={["2px", null, 1, 2]}
+          >
             {/* TODO: Fetch more recent streams */}
             <PlaylistCard
               playlist={discovery?.recentSingingStream?.playlist}
@@ -276,7 +281,11 @@ function ChannelContent({
         {discovery &&
           discovery.recommended.playlists.map((x: any) => {
             return (
-              <PlaylistCard playlist={x} marginX={2} key={x.id}></PlaylistCard>
+              <PlaylistCard
+                playlist={x}
+                marginX={["2px", null, 1, 2]}
+                key={x.id}
+              ></PlaylistCard>
             );
           })}
       </CardCarousel>
@@ -286,7 +295,7 @@ function ChannelContent({
       {discovery && (
         <CardCarousel height={210} width={160} scrollMultiplier={2}>
           {discovery.channels.map((c: Channel) => (
-            <ChannelCard channel={c} key={c.id} marginX={2} />
+            <ChannelCard channel={c} key={c.id} marginX={["2px", null, 1, 2]} />
           ))}
         </CardCarousel>
       )}

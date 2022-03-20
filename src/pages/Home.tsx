@@ -46,7 +46,7 @@ export default function Home() {
                   <PlaylistCard
                     playlist={stream.playlist}
                     key={"kpc" + stream.playlist.id}
-                    mx={2}
+                    mx={["2px", null, 1, 2]}
                   />
                 ))}
             </CardCarousel>
@@ -64,7 +64,11 @@ export default function Home() {
           <CardCarousel height={230} width={160} scrollMultiplier={4}>
             {discovery?.recommended?.playlists?.map(
               (p: Partial<PlaylistFull>) => (
-                <PlaylistCard playlist={p} key={"rec" + p.id} mx={2} />
+                <PlaylistCard
+                  playlist={p}
+                  key={"rec" + p.id}
+                  mx={["2px", null, 1, 2]}
+                />
               )
             )}
           </CardCarousel>
@@ -90,7 +94,7 @@ export default function Home() {
           </HStack>
           <CardCarousel height={180} width={128} scrollMultiplier={4}>
             {trendingSongs?.map((song) => (
-              <SongCard song={song} key={song.id} mx={2} />
+              <SongCard song={song} key={song.id} mx={["2px", null, 1, 2]} />
             ))}
           </CardCarousel>
         </HomeSection>
@@ -101,7 +105,11 @@ export default function Home() {
           </Heading>
           <CardCarousel height={180} width={160} scrollMultiplier={4} mb={2}>
             {discovery?.channels?.map((c: Channel) => (
-              <ChannelCard channel={c} key={c.id} marginX={2} />
+              <ChannelCard
+                channel={c}
+                key={c.id}
+                marginX={["2px", null, 1, 2]}
+              />
             ))}
           </CardCarousel>
         </HomeSection>
