@@ -51,6 +51,7 @@ export default function History() {
                   immediatelyPlay: false,
                 });
             }}
+            mb={2}
           />
         )}
         <Suspense fallback={<div>Loading...</div>}>
