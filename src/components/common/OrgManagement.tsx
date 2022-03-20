@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useStoreActions, useStoreState } from "../../store";
 import { useServerOrgList } from "../../modules/services/statics.service";
 import {
@@ -9,28 +8,21 @@ import {
   CloseButton,
   Divider,
   Flex,
-  HStack,
-  Icon,
   IconButton,
   Input,
   InputGroup,
   InputRightElement,
-  SimpleGrid,
-  VStack,
 } from "@chakra-ui/react";
 import React from "react";
-import { FiChevronDown, FiChevronUp, FiStar } from "react-icons/fi";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import {
   animate,
-  LayoutGroup,
-  motion,
   MotionValue,
   Reorder,
   useDragControls,
   useMotionValue,
 } from "framer-motion";
-import { MdDragHandle, MdDragIndicator } from "react-icons/md";
+import { MdDragHandle } from "react-icons/md";
 import { Org } from "../../store/org";
 
 export default function OrgManager() {

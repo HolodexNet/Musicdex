@@ -1,7 +1,7 @@
 import { FaPlay } from "react-icons/fa";
 import { useStoreState } from "../../../store";
 import { MotionBox } from "../../common/MotionBox";
-import { NowPlayingIcon } from "../../common/NowPlayingIcon";
+import { NowPlayingIcon } from "../../icons/NowPlayingIcon";
 import { Text } from "@chakra-ui/react";
 
 export const IdxGrid = ({

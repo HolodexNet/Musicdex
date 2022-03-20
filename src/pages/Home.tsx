@@ -9,7 +9,7 @@ import {
 import styled from "@emotion/styled";
 import { ChannelCard } from "../components/channel/ChannelCard";
 import { CardCarousel } from "../components/common/CardCarousel";
-import { VideoPlaylistCarousel } from "../components/common/VideoPlaylistCarousel";
+import { VideoPlaylistCarousel } from "../components/playlist/VideoPlaylistCarousel";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistCard } from "../components/playlist/PlaylistCard";

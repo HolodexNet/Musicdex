@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Frame from "./components/layout/Frame";
 import Routes from "./routes";
 import { ErrorBoundary } from "react-error-boundary";
-import { ErrorFallback } from "./ErrorFallback";
+import { ErrorFallback } from "./components/common/ErrorFallback";
 import usePageTracking from "./modules/common/usePageTracking";
 import { useCookieTokenFallback } from "./modules/client";
 function App(this: any) {

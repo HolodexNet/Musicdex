@@ -2,7 +2,7 @@ import { VStack, Text, Spinner, StackProps } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { Fragment } from "react";
 import { UseQueryResult } from "react-query/types/react/types";
-import { ErrorFallback } from "../../ErrorFallback";
+import { ErrorFallback } from "./ErrorFallback";
 
 interface QueryStatusProps extends StackProps {
   queryStatus: Partial<UseQueryResult>;

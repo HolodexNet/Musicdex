@@ -15,8 +15,8 @@ import { Link } from "react-router-dom";
 import useNamePicker from "../../modules/common/useNamePicker";
 import { useStoreActions } from "../../store";
 import { SongTable } from "../data/SongTable";
-import { MotionBox } from "./MotionBox";
-import { QueryStatus } from "./QueryStatus";
+import { MotionBox } from "../common/MotionBox";
+import { QueryStatus } from "../common/QueryStatus";
 
 export const VideoPlaylistCard = React.memo(
   ({ video, playlist }: { video: any; playlist?: PlaylistFull }) => {

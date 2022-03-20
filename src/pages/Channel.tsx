@@ -17,7 +17,7 @@ import { ChannelCard } from "../components/channel/ChannelCard";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { BGImg, BGImgContainer } from "../components/common/BGImgContainer";
 import { CardCarousel } from "../components/common/CardCarousel";
-import { MTHolodexIcon } from "../components/common/MTHolodex";
+import { MTHolodexIcon } from "../components/icons/MTHolodex";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
