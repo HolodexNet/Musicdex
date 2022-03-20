@@ -1,4 +1,12 @@
-import { Box, Flex, FlexProps, Heading, Icon, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  FlexProps,
+  Heading,
+  Icon,
+  Text,
+  Image,
+} from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
 import { useMemo } from "react";
@@ -141,14 +149,18 @@ function OverlayTextArt({
       minWidth="148px"
       width="100%"
       flexDirection={"column"}
-      bgImage={imageUrl}
       flexGrow={1}
-      backgroundPosition="center"
-      backgroundRepeat="no-repeat"
-      bgSize="cover"
       overflow="hidden"
       {...rest}
     >
+      <Image
+        src={imageUrl}
+        objectFit="cover"
+        loading="lazy"
+        top="0"
+        height="100%"
+        position="absolute"
+      />
       <BrandColorGradientText bgColor={bgColor} />
       <Box p={2} position="absolute" mt={3} width="100%">
         <Text
@@ -224,6 +236,7 @@ function StackedTextArt({
       width="148px"
       height="148px"
       flexDirection={reverse ? "column-reverse" : "column"}
+      overflow="hidden"
       {...rest}
     >
       <Flex
@@ -235,7 +248,6 @@ function StackedTextArt({
         flexDir="column"
         color="gray.800"
         fontWeight={600}
-        overflow="hidden"
         position="relative"
       >
         <Text
@@ -261,13 +273,15 @@ function StackedTextArt({
           />
         )}
       </Flex>
-      <Flex
-        bgImage={imageUrl}
-        flexGrow={1}
-        backgroundPosition="center"
-        backgroundRepeat="no-repeat"
-        bgSize="120% auto"
-      ></Flex>
+
+      <Flex flexGrow={1}>
+        <Image
+          src={imageUrl}
+          height="100%"
+          objectFit="cover"
+          loading="lazy"
+        ></Image>
+      </Flex>
     </Flex>
   );
 }

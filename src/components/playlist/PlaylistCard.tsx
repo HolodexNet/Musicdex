@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { FaPlay } from "react-icons/fa";
-import { useInView } from "react-intersection-observer";
 import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import { useClient } from "../../modules/client";
@@ -27,7 +26,6 @@ export const PlaylistCard = ({
   const bgColor = useColorModeValue("bg.100", "bg.800");
   const bgHover = useColorModeValue("bg.200", "bg.700");
   const [isHovering, setIsHovering] = useState(false);
-  const [inViewOnce, setInViewOnce] = useState(false);
   // Fixes double tap to trigger (https://stackoverflow.com/questions/17710893/why-when-do-i-have-to-tap-twice-to-trigger-click-on-ios)
   const hoverListeners = useBreakpointValue([
     undefined,
@@ -43,13 +41,6 @@ export const PlaylistCard = ({
   const setPlaylist = useStoreActions((action) => action.playback.setPlaylist);
   const toast = useToast();
   const { title, description } = usePlaylistTitleDesc(playlist);
-  const { inView, ref } = useInView();
-
-  useEffect(() => {
-    if (inView && !inViewOnce) {
-      setInViewOnce(true);
-    }
-  }, [inView, inViewOnce]);
 
   const handlePlayClick = useCallback(
     async (e: any) => {
@@ -98,19 +89,12 @@ export const PlaylistCard = ({
       shadow="md"
       as={Link}
       to={`/playlists/${playlist.id}/`}
-      ref={ref}
       {...hoverListeners}
       {...rest}
     >
       <>
         <Flex flexDirection="column" position="relative" cursor="pointer">
-          {(inViewOnce || inView) && (
-            <PlaylistArtwork
-              playlist={playlist}
-              rounded="lg"
-              overflow="hidden"
-            />
-          )}
+          <PlaylistArtwork playlist={playlist} rounded="lg" overflow="hidden" />
           <MotionBox
             width="40px"
             height="40px"
