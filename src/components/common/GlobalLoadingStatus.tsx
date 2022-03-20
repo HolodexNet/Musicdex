@@ -28,6 +28,7 @@ export function GlobalLoadingStatus() {
       bgColor="bgAlpha.600"
       isIndeterminate
       opacity={0.6}
+      zIndex={5}
       transition="opacity 0.1s ease-out"
     />
   );
