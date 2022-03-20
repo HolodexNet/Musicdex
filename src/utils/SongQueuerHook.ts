@@ -11,6 +11,9 @@ export function useSongQueuer() {
   const cb = useCallback(
     async (toQueue: { songs: Song[]; immediatelyPlay: boolean }) => {
       const ct = await queueSongs(toQueue);
+
+      // immediate play doens't need feedback
+      if (toQueue.immediatelyPlay) return;
       toast({
         variant: "subtle",
         status: "success",
