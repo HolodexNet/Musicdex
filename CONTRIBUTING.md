@@ -23,6 +23,21 @@ yarn start
 yarn build
 ```
 
+## i18n support for new features with text
+
+1. Check file for anything similar that can be reused
+2. If not, format a string following [i18next docs](https://react.i18next.com/)
+
+```
+{ t("My new feature") }
+```
+
+3. Run i18n command to add new string to translation files before comitting
+
+```
+npm run i18n
+```
+
 ## Links
 
 - [API wishlist from the frontend side · Issue #1 · HolodexNet/Musicdex](https://github.com/HolodexNet/Musicdex/issues/1)

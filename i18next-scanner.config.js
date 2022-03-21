@@ -1,3 +1,4 @@
+const fs = require("fs");
 module.exports = {
   input: ["build/tmp/**/*.{js,jsx}"],
   output: "./public/locales",
@@ -22,10 +23,10 @@ module.exports = {
     ns: ["translation"],
     defaultLng: "en",
     defaultNs: "translation",
-    defaultValue: "__STRING_NOT_TRANSLATED__",
+    // defaultValue: "__STRING_NOT_TRANSLATED__",
     resource: {
-      loadPath: "i18n/{{lng}}/{{ns}}.json",
-      savePath: "i18n/{{lng}}/{{ns}}.json",
+      loadPath: "{{lng}}/{{ns}}.json",
+      savePath: "{{lng}}/{{ns}}.json",
       jsonIndent: 2,
       lineEnding: "\n",
     },
@@ -35,5 +36,25 @@ module.exports = {
       prefix: "{{",
       suffix: "}}",
     },
+  },
+  transform: function customTransform(file, enc, done) {
+    const parser = this.parser;
+    const content = fs.readFileSync(file.path, enc);
+    const dateDefaults = {
+      "NO_TL.absoluteDate": "{{date, absolute}}",
+      "NO_TL.longDate": "{{date, long}}",
+      "NO_TL.relativeDate": "{{date, ago}}",
+      "NO_TL.shortDate": "{{date, short}}",
+      "NO_TL.shortDateTime": "{{date, datetime}}",
+    };
+    parser.parseFuncFromString(content, function (key, options) {
+      if (dateDefaults[key]) {
+        options.defaultValue = dateDefaults[key];
+      } else {
+        options.defaultValue = key; // use key as the value
+      }
+      parser.set(key, options);
+    });
+    done();
   },
 };
