@@ -23,7 +23,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
             <Heading size="lg">{t("Login/Sign up to Musicdex")}</Heading>
             <Divider width={12} py={2} />
             <Text>
-              <Trans t={t} key="loginIntro">
+              <Trans t={t} i18nKey="loginIntro">
                 If you have not previously logged into <b>Holodex</b> or{" "}
                 <b>Musicdex</b> with the social account, a new account will be
                 created automatically. <br />
@@ -40,7 +40,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
             </Heading>
             <Text>
               {t(
-                " No particular reason, maybe you find it easier to login using one or another method on a different device."
+                "No particular reason, maybe you find it easier to login using one or another method on a different device."
               )}
             </Text>
           </>

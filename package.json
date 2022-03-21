@@ -16,7 +16,8 @@
     "dev:local-api": "cross-env API_TARGET=local react-scripts start",
     "eject": "react-scripts eject",
     "prepare": "husky install",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "i18n": "rimraf -r build/tmp && tsc --noEmit false --target es2020 --outDir build/tmp && i18next-scanner"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.7.4",
@@ -100,9 +101,11 @@
     "eslint-config-prettier": "^8.3.0",
     "http-proxy-middleware": "^2.0.1",
     "husky": "^7.0.4",
+    "i18next-scanner": "^3.1.0",
     "prettier": "^2.5.1",
     "pretty-quick": "^3.1.3",
     "react-git-info": "^2.0.1",
+    "rimraf": "^3.0.2",
     "source-map-explorer": "^2.5.2",
     "web-vitals": "^2.1.3"
   },
