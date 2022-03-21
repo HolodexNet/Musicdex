@@ -17,13 +17,15 @@ export const BGImgContainer = styled.div<{ height: string }>`
   );
   mask-size: 150% 132%;
   mask-position: left bottom;
+  overflow: hidden;
 `;
 export const BGImg = styled.div<{
   banner_url: string;
   height: string;
   blur?: boolean;
 }>`
-  width: 110%;
+  width: 105%;
+  width: calc(100% + 16px);
   position: absolute;
   pointer-events: none;
   z-index: 0;
