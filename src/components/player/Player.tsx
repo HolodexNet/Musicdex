@@ -63,8 +63,12 @@ export function Player({ player }: { player: any }) {
 
   // Jot down the song that the page loaded on, and keep this paused
   useEffect(() => {
-    if (currentSong?.id)
+    if (currentSong?.id) {
       setFirstLoadPauseId(`${currentSong?.id || ""}${repeat || ""}`);
+    } else {
+      setOverridePos("hidden");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Player State Event
