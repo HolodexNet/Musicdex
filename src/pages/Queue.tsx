@@ -3,11 +3,11 @@ import { IconButton, Text } from "@chakra-ui/react";
 import React, { Suspense, useMemo } from "react";
 import { FiTrash } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { DEFAULT_MENU_ID } from "../components/song/SongContextMenu";
 import {
-  QueueContextMenu,
+  DEFAULT_MENU_ID,
   QUEUE_MENU_ID,
-} from "../components/common/QueueContext";
+  SongContextMenu,
+} from "../components/song/SongContextMenu";
 import { SongTable, useResponseSongRow } from "../components/data/SongTable";
 import { SongRow } from "../components/data/SongTable/SongRow";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
@@ -54,8 +54,8 @@ export const Queue = React.memo(() => {
 
   return (
     <PageContainer>
+      <SongContextMenu menuId={QUEUE_MENU_ID} />
       <div className="bgOver"></div>
-      <QueueContextMenu />
       <ContainerInlay>
         <Heading size="lg">Now Playing</Heading>
         {currentlyPlaying.song ? (
