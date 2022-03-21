@@ -114,7 +114,7 @@ export const SongTable = ({
             textColor="gray.400"
             textTransform="uppercase"
           >
-            {expanded ? "Show less" : "Show more"}
+            {expanded ? t("Show less") : t("Show more")}
           </Button>
         )}
         {appendRight}
