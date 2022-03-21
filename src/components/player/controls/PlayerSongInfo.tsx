@@ -1,5 +1,12 @@
-import { Box, HStack, StackProps, Text, Link } from "@chakra-ui/react";
-import React from "react";
+import {
+  Box,
+  HStack,
+  StackProps,
+  Text,
+  Link,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import React, { useCallback } from "react";
 import { useContextMenu } from "react-contexify";
 import { Link as NavLink } from "react-router-dom";
 import useNamePicker from "../../../modules/common/useNamePicker";
@@ -15,10 +22,24 @@ export const SongInfo = React.memo(
   ({ song, fullPlayer = false, ...rest }: SongInfoProps) => {
     const { show } = useContextMenu({ id: DEFAULT_MENU_ID });
     const tn = useNamePicker();
+    const isMobile = useBreakpointValue({ base: true, md: false });
+    const mobileArtClick: React.MouseEventHandler = useCallback(
+      (e) => {
+        if (isMobile) return;
+        else show(e, { props: song });
+      },
+      [isMobile]
+    );
 
     return (
       <HStack onContextMenu={(e) => show(e, { props: song })} {...rest}>
-        <SongArtwork song={song} size={fullPlayer ? 70 : 50} resizeHint={70} />
+        <SongArtwork
+          song={song}
+          size={fullPlayer ? 70 : 50}
+          resizeHint={70}
+          onClick={mobileArtClick}
+          _hover={!isMobile ? { transform: "translateY(-1px)" } : {}}
+        />
 
         <Box>
           <Link as={NavLink} to={`/song/${song.id}`}>

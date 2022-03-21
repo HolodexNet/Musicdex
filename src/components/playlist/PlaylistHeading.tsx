@@ -37,7 +37,7 @@ export function PlaylistHeading({
   max = 500,
   ...props
 }: PlaylistHeadingProps & BoxProps) {
-  const colors = useColorModeValue("gray.700", "gray.300");
+  const descColor = useColorModeValue("gray.800", "gray.200");
 
   const [editTitle, setEditTitle] = useState(() => canEdit && editMode);
   const [editDescription, setEditDescription] = useState(
@@ -115,7 +115,7 @@ export function PlaylistHeading({
         ></IconButton>
       </Text>
       <Text
-        color={colors}
+        color={descColor}
         opacity={0.6}
         fontSize={{ base: "lg", md: "xl" }}
         as={"div"}

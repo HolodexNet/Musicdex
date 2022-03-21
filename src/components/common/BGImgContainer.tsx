@@ -23,12 +23,12 @@ export const BGImg = styled.div<{
   height: string;
   blur?: boolean;
 }>`
-  width: 100%;
+  width: 110%;
   position: absolute;
   pointer-events: none;
   z-index: 0;
-  left: 0px;
-  top: 0px;
+  left: -8px;
+  top: -8px;
   height: ${({ height }) => height};
   background: url(${({ banner_url }) => banner_url});
   background-position: center;

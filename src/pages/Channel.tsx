@@ -90,7 +90,7 @@ export default function Channel() {
             size={isMobile ? "xl" : "2xl"}
             borderRadius={4}
             mr={isMobile ? 2 : 6}
-            shadow="lg"
+            shadow="xl"
           ></ChannelPhoto>
           <PlaylistHeading
             title={name}
@@ -216,8 +216,8 @@ function ChannelContent({
   return (
     <>
       {trending && (
-        <Box flex="1 1 140px" minWidth="300px">
-          <Heading size="md" my={4} ml={2}>
+        <>
+          <Heading size="md" mt={4} mb={2}>
             {t("Popular")}
             <Button
               variant="ghost"
@@ -232,30 +232,32 @@ function ChannelContent({
               {t("Queue ({{amount}})", { amount: trending.length })}
             </Button>
           </Heading>
-          <SongTable
-            songs={trending.slice(0, 10)}
-            rowProps={{
-              // hideCol: ["og_artist", "menu"],
-              flipNames: true,
-              showArtwork: true,
-            }}
-            limit={5}
-            appendRight={
-              <Button
-                variant="ghost"
-                size="md"
-                colorScheme="n2"
-                leftIcon={<FiList />}
-                as={Link}
-                to={"/channel/" + channel.id + "/songs"}
-                float="right"
-                textTransform="uppercase"
-              >
-                {t("See All Songs")}
-              </Button>
-            }
-          />
-        </Box>
+          <Box flex="1 1 140px" minWidth="300px">
+            <SongTable
+              songs={trending.slice(0, 10)}
+              rowProps={{
+                // hideCol: ["og_artist", "menu"],
+                flipNames: true,
+                showArtwork: true,
+              }}
+              limit={5}
+              appendRight={
+                <Button
+                  variant="ghost"
+                  size="md"
+                  colorScheme="n2"
+                  leftIcon={<FiList />}
+                  as={Link}
+                  to={"/channel/" + channel.id + "/songs"}
+                  float="right"
+                  textTransform="uppercase"
+                >
+                  {t("See All Songs")}
+                </Button>
+              }
+            />
+          </Box>
+        </>
       )}
       {discovery?.recentSingingStream?.playlist && (
         <>
