@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Suspense, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,7 +20,7 @@ import { useSongAPI } from "../modules/services/songs.service";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 const PERPAGE = 10;
 export default function ChannelSongs() {
-  // const history = useStoreState((store) => store.playback.history);
+  const { t } = useTranslation();
   let params = useParams();
   let channelId = params.id!;
 
@@ -70,7 +71,11 @@ export default function ChannelSongs() {
           <FiArrowLeft />
         </Button>
         <Heading size="md">
-          All Songs ({offset + 1} - {offset + latest.length} of {total}){" "}
+          {t("All Songs ({{ from }} - {{ to }} of {{ total }})", {
+            from: offset + 1,
+            to: offset + latest.length,
+            total,
+          })}
         </Heading>
         <Button
           variant="ghost"
@@ -81,7 +86,7 @@ export default function ChannelSongs() {
             queueSongs({ songs: latest, immediatelyPlay: false });
           }}
         >
-          Queue ({latest.length})
+          {t("Queue ({{amount}})", { amount: latest.length })}
         </Button>
       </HStack>
       <Suspense fallback={<div>Loading...</div>}>

@@ -4,10 +4,8 @@ import {
   CloseButton,
   Heading,
   HStack,
-  Spacer,
   Text,
   useBreakpointValue,
-  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { Suspense, useEffect, useMemo, useState } from "react";
@@ -24,11 +22,11 @@ import {
   useSongSearch,
 } from "../modules/services/search.service";
 import { FiFilter } from "react-icons/fi";
-import { motion } from "framer-motion";
 import {
   AdvancedSearchProps,
   AdvancedSearchFiltersForm,
 } from "../components/nav/AdvancedSearchComponent";
+import { useTranslation } from "react-i18next";
 
 export interface SearchableSong extends Song {
   channel_org?: string;
@@ -36,6 +34,7 @@ export interface SearchableSong extends Song {
 }
 
 export default function Search() {
+  const { t } = useTranslation();
   const [search] = useSearchParams();
   const navigate = useNavigate();
   const qObj: Partial<SearchParams<SearchableSong>> = Object.fromEntries(
@@ -79,7 +78,9 @@ export default function Search() {
       <QueryStatus queryStatus={rest} />
       <Suspense fallback={<div></div>}>
         <HStack align="end">
-          <Heading size="lg">Search: "{qObj.q || ""}"</Heading>
+          <Heading size="lg">
+            {t("Search")}: "{qObj.q || ""}"
+          </Heading>
         </HStack>
         <Suspense fallback={<div>Loading...</div>}>
           {songs && <SongTable songs={songs} />}
@@ -94,12 +95,14 @@ export default function Search() {
                 doSearch({ page: searchResult?.page - 1 })
               }
             >
-              Prev
+              {t("Prev")}
             </Button>
             <Text>
-              {(searchResult?.page || 0) * 10 - 9} ~{" "}
-              {(searchResult?.page || 0) * 10 - 10 + (songs?.length || 0)} out
-              of {searchResult?.found}
+              {t("({{ from }} - {{ to }} of {{ total }})", {
+                from: (searchResult?.page || 0) * 10 - 9,
+                to: (searchResult?.page || 0) * 10 - 10 + (songs?.length || 0),
+                total: searchResult?.found || 0,
+              })}
             </Text>
 
             <Button
@@ -112,7 +115,7 @@ export default function Search() {
                 doSearch({ page: searchResult?.page + 1 })
               }
             >
-              Next
+              {t("Next")}
             </Button>
           </HStack>
         )}
@@ -122,6 +125,7 @@ export default function Search() {
 }
 
 function AdvancedSearchFilters({ ...props }: AdvancedSearchProps) {
+  const { t } = useTranslation();
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const [search] = useSearchParams();
 
@@ -170,7 +174,7 @@ function AdvancedSearchFilters({ ...props }: AdvancedSearchProps) {
         </Box>
       ) : (
         <Button w="120px" onClick={onOpen} leftIcon={<FiFilter />}>
-          Filter
+          {t("Filter")}
         </Button>
       )}
     </Box>

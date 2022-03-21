@@ -18,8 +18,10 @@ import { useDiscoveryOrg } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreActions, useStoreState } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
+  const { t } = useTranslation();
   const org = useStoreState((store) => store.org.currentOrg);
   const { data: trendingSongs, ...trendingStatus } = useTrendingSongs(
     org.name !== "All Vtubers" ? { org: org.name } : {}
@@ -35,7 +37,7 @@ export default function Home() {
       <ContainerInlay pt={0}>
         <HomeSection>
           <Heading size="lg" mb={3}>
-            Recent Singing Streams
+            {t("Recent Singing Streams")}
           </Heading>
 
           {isMobile ? (
@@ -59,7 +61,7 @@ export default function Home() {
 
         <HomeSection>
           <Heading size="lg" mb={3}>
-            {org.name} Playlists
+            {t("{{org}} Playlists", { org: org.name })}
           </Heading>
           <CardCarousel height={230} width={160} scrollMultiplier={4}>
             {discovery?.recommended?.playlists?.map(
@@ -76,7 +78,9 @@ export default function Home() {
 
         <HomeSection>
           <HStack alignItems="flex-end" mb={3}>
-            <Heading size="lg">Trending {org.name} Songs</Heading>
+            <Heading size="lg">
+              {t("Trending {{org}} Songs", { org: org.name })}
+            </Heading>
             <Spacer />
             <Button
               variant="ghost"
@@ -89,7 +93,7 @@ export default function Home() {
                 })
               }
             >
-              Queue ({trendingSongs?.length})
+              {t("Queue ({{amount}})", { amount: trendingSongs?.length })}
             </Button>
           </HStack>
           <CardCarousel height={180} width={128} scrollMultiplier={4}>
@@ -101,7 +105,7 @@ export default function Home() {
 
         <HomeSection>
           <Heading size="lg" mb={3}>
-            Discover {org.name}
+            {t("Discover {{org}}", { org: org.name })}
           </Heading>
           <CardCarousel height={180} width={160} scrollMultiplier={4} mb={2}>
             {discovery?.channels?.map((c: Channel) => (

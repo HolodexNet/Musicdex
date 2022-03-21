@@ -1,5 +1,6 @@
 import { Button, HStack } from "@chakra-ui/react";
 import { Suspense, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
@@ -9,7 +10,7 @@ import { useLikedSongs } from "../modules/services/like.service";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 
 export default function LikedSongs() {
-  // const history = useStoreState((store) => store.playback.history);
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const {
     data: paginatedSongs,
@@ -27,7 +28,7 @@ export default function LikedSongs() {
       <ContainerInlay mt={12}>
         {/* <Stack spacing={4} my={4}> */}
         <PlaylistHeading
-          title={"Liked Songs"}
+          title={t("Liked Songs")}
           description={""}
           canEdit={false}
           count={0}
@@ -63,6 +64,7 @@ export default function LikedSongs() {
                     isDisabled={page === 1}
                     onClick={() => setPage((prev) => Math.min(1, prev - 1))}
                   >
+                    {/* Change to chevron? no tl needed */}
                     Prev
                   </Button>
                   <Button

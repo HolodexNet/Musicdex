@@ -19,7 +19,7 @@ import { useStoreActions } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 
 export default function Video() {
-  // const history = useStoreState((store) => store.playback.history);
+  const { t } = useTranslation();
   let params = useParams();
   let videoId = params.id!;
   const { data: playlist, ...status } = usePlaylist(`:video[id=${videoId}]`);
@@ -91,12 +91,12 @@ export default function Video() {
             </Button>
           </PlaylistButtonArray>
         )}
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>{t("Loading...")}</div>}>
           {playlist?.content && <SongTable playlist={playlist} />}{" "}
         </Suspense>
         {!playlist && status.isError && (
           <Box>
-            <Text>Stream is not yet tagged with any songs.</Text>
+            <Text>{t("Stream is not yet tagged with any songs.")}</Text>
             <Button
               variant="link"
               colorScheme={"n2"}
@@ -104,7 +104,7 @@ export default function Video() {
               href={`https://holodex.net/edit/video/${video.id}/music`}
               target="_blank"
             >
-              Help us tag it on Holodex
+              {t("Help us tag it on Holodex")}
             </Button>
           </Box>
         )}

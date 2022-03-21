@@ -32,6 +32,7 @@ import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreActions } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 import ChannelSongs from "./ChannelSongs";
+import { useTranslation } from "react-i18next";
 
 export default function Channel() {
   // const history = useStoreState((store) => store.playback.history);
@@ -211,12 +212,13 @@ function ChannelContent({
   name: any;
   channel: any;
 }) {
+  const { t } = useTranslation();
   return (
     <>
       {trending && (
         <Box flex="1 1 140px" minWidth="300px">
           <Heading size="md" my={4} ml={2}>
-            Popular
+            {t("Popular")}
             <Button
               variant="ghost"
               size="sm"
@@ -227,7 +229,7 @@ function ChannelContent({
                 queueSongs({ songs: trending, immediatelyPlay: false });
               }}
             >
-              Queue ({trending.length})
+              {t("Queue ({{amount}})", { amount: trending.length })}
             </Button>
           </Heading>
           <SongTable
@@ -249,7 +251,7 @@ function ChannelContent({
                 float="right"
                 textTransform="uppercase"
               >
-                See All Songs
+                {t("See All Songs")}
               </Button>
             }
           />
@@ -258,7 +260,7 @@ function ChannelContent({
       {discovery?.recentSingingStream?.playlist && (
         <>
           <Heading size="md" mt={4} mb={2}>
-            Latest Streams
+            {t("Latest Streams")}
           </Heading>
           <CardCarousel height={230} width={160} scrollMultiplier={1}>
             {/* TODO: Fetch more recent streams */}
@@ -271,7 +273,7 @@ function ChannelContent({
         </>
       )}
       <Heading size="md" mt={4} mb={2}>
-        Featuring {name}
+        {t("Featuring {{name}}", { name })}
       </Heading>
       <CardCarousel height={230} width={160} scrollMultiplier={1}>
         {discovery &&
@@ -286,7 +288,7 @@ function ChannelContent({
           })}
       </CardCarousel>
       <Heading size="md" mt={4} mb={2}>
-        Discover more from {channel.org}
+        {t("Discover more from {{org}}", { org: channel.org })}
       </Heading>
       {discovery && (
         <CardCarousel height={180} width={160} scrollMultiplier={2}>

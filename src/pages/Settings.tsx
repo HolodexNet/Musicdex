@@ -25,18 +25,19 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { useStoreActions, useStoreState } from "../store";
 
 export default function Settings() {
+  const { t } = useTranslation();
   return (
     <PageContainer>
       <ContainerInlay>
         <Heading size="lg" py={5}>
-          Settings
+          {t("Settings")}
         </Heading>
         <Accordion allowMultiple defaultIndex={[0, 1]} mb={12}>
           <AccordionItem>
             <AccordionButton>
               <AccordionIcon />
               <Heading size="md" flex="1" textAlign="left">
-                User Preference
+                {t("User Preference")}
               </Heading>
             </AccordionButton>
             <Divider />
@@ -50,7 +51,7 @@ export default function Settings() {
               <AccordionIcon />
 
               <Heading size="md" flex="1" textAlign="left">
-                Language Preferences (yeah i know it's not working)
+                {t("Language Preferences")}
               </Heading>
             </AccordionButton>
             <Divider />
@@ -64,14 +65,14 @@ export default function Settings() {
               <AccordionIcon />
 
               <Heading size="md" flex="1" textAlign="left">
-                Organization Ordering
+                {t("Organization Ordering")}
               </Heading>
             </AccordionButton>
             <Divider />
 
             <AccordionPanel pb={4}>
               <Text fontWeight="bold">
-                Drag and Drop to reorder list of orgs in the org dropdown
+                {t("Drag and Drop to reorder list of orgs in the org dropdown")}
               </Text>
               <OrgManager />
             </AccordionPanel>
@@ -108,7 +109,7 @@ function LanguagePrefs() {
     <SimpleGrid minChildWidth="300px" spacing="40px">
       <Box>
         <Heading size="md" my={3}>
-          Interface Language:
+          {t("Interface Language")}:
         </Heading>
         <LanguageSelector
           options={displayLangPrefs}
@@ -118,7 +119,7 @@ function LanguagePrefs() {
       </Box>
       <Box>
         <Heading size="md" my={3}>
-          Channel Name:
+          {t("Channel Name")}:
         </Heading>
         <LanguageSelector
           options={channelNamePrefs}

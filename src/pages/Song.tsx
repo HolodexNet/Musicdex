@@ -114,7 +114,7 @@ export default function Song() {
                   flexBasis={["100%", "auto"]}
                   rightIcon={<FaPlay style={{ scale: "1" }} />}
                 >
-                  Play
+                  {t("Play")}
                 </Button>
                 <Button
                   variant="ghost"

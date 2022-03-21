@@ -16,8 +16,10 @@ import { FiStar } from "react-icons/fi";
 import { FaBookmark } from "react-icons/fa";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { PlaylistCreateModal } from "../components/playlist/PlaylistCreateForm";
+import { useTranslation } from "react-i18next";
 
 export default function Library() {
+  const { t } = useTranslation();
   const { data: playlistList, ...status } = useMyPlaylists();
   const { data: starredList } = useStarredPlaylists();
   const { onOpen, ...modalProps } = useDisclosure();
@@ -26,25 +28,25 @@ export default function Library() {
       <ContainerInlay mt={12}>
         <Heading mx={2} mb={6}>
           <Icon as={FaBookmark} marginBottom={-1} marginRight={2} />
-          Library
+          {t("Library")}
         </Heading>
         <PlaylistCreateModal {...modalProps} />
         <Button onClick={onOpen} maxW="200px">
-          Create Playlist
+          {t("Create Playlist")}
         </Button>
         {status.isLoading ? (
           <QueryStatus queryStatus={status} />
         ) : (
           <>
             <Heading mx={2} my={4} size="md">
-              My Playlists
+              {t("My Playlists")}
             </Heading>
             <Divider />
             {playlistList && (
               <PlaylistList playlistStubs={playlistList as any} />
             )}
             <Heading mx={2} my={4} size="md">
-              Starred Playlists
+              {t("Starred Playlists")}
             </Heading>
             <Divider />
             {starredList && (

@@ -14,8 +14,10 @@ import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { useFormatPlaylist } from "../modules/playlist/useFormatPlaylist";
 import { useStoreActions, useStoreState } from "../store";
+import { useTranslation } from "react-i18next";
 
 export const Queue = React.memo(() => {
+  const { t } = useTranslation();
   const playlistQueue = useStoreState((state) => state.playback.playlistQueue);
   const playedPlaylistQueue = useStoreState(
     (state) => state.playback.playedPlaylistQueue
@@ -57,7 +59,7 @@ export const Queue = React.memo(() => {
       <SongContextMenu menuId={QUEUE_MENU_ID} />
       <div className="bgOver"></div>
       <ContainerInlay>
-        <Heading size="lg">Now Playing</Heading>
+        <Heading size="lg">{t("Now Playing")}</Heading>
         {currentlyPlaying.song ? (
           <SongRow
             index={0}
@@ -73,7 +75,7 @@ export const Queue = React.memo(() => {
           />
         ) : (
           <Text fontSize="lg" opacity={0.66}>
-            Nothing to play...
+            {t("Nothing to play...")}
           </Text>
         )}
 
@@ -82,7 +84,7 @@ export const Queue = React.memo(() => {
             <Flex mt={4} alignItems="center">
               <Text fontSize="lg">
                 <Text opacity={0.66} as={"span"}>
-                  Queue:
+                  {t("Queue")}
                 </Text>
               </Text>
               <Spacer />
@@ -112,7 +114,7 @@ export const Queue = React.memo(() => {
             <Flex mt={4} alignItems="center">
               <Text fontSize="lg">
                 <Text opacity={0.66} as={"span"}>
-                  Playlist:{" "}
+                  {t("Playlist")}:
                 </Text>
                 <Text
                   fontWeight={600}

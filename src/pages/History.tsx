@@ -1,5 +1,6 @@
 import { Box, useColorModeValue, Text } from "@chakra-ui/react";
 import { Fragment, Suspense } from "react";
+import { useTranslation } from "react-i18next";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
@@ -12,10 +13,9 @@ import { useStoreActions } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 
 export default function History() {
+  const { t } = useTranslation();
   // const history = useStoreState((store) => store.playback.history);
-  const { isLoggedIn, user } = useClient();
-  const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
-  // const {description, }
+  const { user } = useClient();
   const queueSongs = useSongQueuer();
   const setPlaylist = useStoreActions(
     (actions) => actions.playback.setPlaylist
@@ -30,8 +30,8 @@ export default function History() {
     return (
       <Fragment>
         <PlaylistHeading
-          title={playlist?.title || "Recently Played"}
-          description={playlist?.description || "Your recently played songs"}
+          title={t("Recently Played")}
+          description={t("Your recently played songs")}
           canEdit={false}
           editMode={false}
           count={playlist?.content?.length || 0}

@@ -6,6 +6,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { BGImg, BGImgContainer } from "../components/common/BGImgContainer";
 import { QueryStatus } from "../components/common/QueryStatus";
@@ -27,6 +28,7 @@ const SongEditableTable = React.lazy(
 );
 
 export default function Playlist() {
+  const { t } = useTranslation();
   let params = useParams();
   let playlistId = params.playlistId!;
   let { user, isLoggedIn } = useClient();
@@ -86,7 +88,7 @@ export default function Playlist() {
             toast({
               variant: "subtle",
               status: "success",
-              title: "Saved",
+              title: t("Saved"),
               duration: 1500,
               position: "top-right",
             });
@@ -96,7 +98,7 @@ export default function Playlist() {
             toast({
               variant: "solid",
               status: "error",
-              title: "Failed to Save",
+              title: t("Failed to Save"),
               description: err,
               position: "top-right",
               isClosable: true,
@@ -108,7 +110,7 @@ export default function Playlist() {
         setEditMode(false);
       }
     },
-    [playlist, toast, writeNewPlaylist]
+    [playlist, toast, writeNewPlaylist, t]
   );
 
   if (status.error && (status?.error as any)?.status >= 400) {
@@ -117,7 +119,9 @@ export default function Playlist() {
         <Center role="alert" my={10}>
           <VStack spacing={4}>
             <Heading>
-              You do not have access to this playlist (or it doesn't exist)
+              {t(
+                "You do not have access to this playlist (or it doesn't exist)"
+              )}
             </Heading>
             <Code>{(status?.error as Error)?.toString()}</Code>
           </VStack>
@@ -138,7 +142,7 @@ export default function Playlist() {
       </BGImgContainer>
       <ContainerInlay mt="12">
         <PlaylistHeading
-          title={title || "Untitled Playlist"}
+          title={title || t("Untitled Playlist")}
           description={description || ""}
           canEdit={isLoggedIn && playlist.owner === user?.id && editMode}
           editMode={false}
