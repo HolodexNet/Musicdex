@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import * as serviceWorker from "../../serviceWorkerRegistration";
 import { Box, Text, CloseButton, HStack, Button } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 const ServiceWorkerWrapper = () => {
+  const { t } = useTranslation();
   const [showReload, setShowReload] = React.useState(false);
   const [dismissed, setDismissed] = React.useState(false);
   // const [waitingWorker, setWaitingWorker] =
@@ -37,7 +39,7 @@ const ServiceWorkerWrapper = () => {
       zIndex={5}
     >
       <HStack>
-        <Text>Update available, please reload the page</Text>
+        <Text>{t("Update available, please reload the page")}</Text>
         <Button
           size="sm"
           fontSize={"md"}
@@ -45,7 +47,7 @@ const ServiceWorkerWrapper = () => {
           color="white"
           bgColor="n2.400"
         >
-          Reload
+          {t("Reload")}
         </Button>
         <CloseButton onClick={() => setDismissed(true)} />
       </HStack>

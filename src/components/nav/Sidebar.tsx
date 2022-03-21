@@ -27,10 +27,11 @@ import { useStoreState } from "../../store";
 import { AnimatePresence } from "framer-motion";
 
 import { Flex, useColorModeValue } from "@chakra-ui/react";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import { PlaylistList } from "../playlist/PlaylistList";
 import { LogoWithText } from "./LogoWithText";
 import { PlaylistCreateModal } from "../playlist/PlaylistCreateForm";
+import { useTranslation } from "react-i18next";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -44,24 +45,24 @@ export interface LinkItemProps {
   disabled?: boolean;
 }
 
-const LinkItems: Array<LinkItemProps> = [
-  // { name: "Home", icon: FiHome, path: "/" },
-  { name: "Recently Played", icon: FiClock, path: "/history" },
-  { name: "Liked Songs", icon: FiHeart, path: "/liked" },
-  // { name: "My Playlists", icon: FiServer, path: "/playlists" },
-  { name: "Settings", icon: FiSettings, path: "/settings" },
-];
-
 export function SidebarContent({
-  linkItems = LinkItems,
   closeOnNav = false,
   onClose,
   ...rest
 }: SidebarProps) {
+  const { t } = useTranslation();
+  const pages = useMemo(
+    () => [
+      { name: t("Recently Played"), icon: FiClock, path: "/history" },
+      { name: t("Liked Songs"), icon: FiHeart, path: "/liked" },
+      // { name: "My Playlists", icon: FiServer, path: "/playlists" },
+      { name: t("Settings"), icon: FiSettings, path: "/settings" },
+    ],
+    [t]
+  );
   const { user } = useClient();
   const { data: playlistList, isLoading: loadingMine } = useMyPlaylists();
   const { data: starredList, isLoading: loadingStars } = useStarredPlaylists();
-  // console.log(playlistList, starredList);
   const { pathname } = useLocation();
   const isDragging = useStoreState((s) => s.dnd.dragging);
   const toast = useToast();
@@ -92,12 +93,12 @@ export function SidebarContent({
         <CloseButton onClick={onClose} />
       </Flex>
       <NavItem icon={FiHome} key={"Home"} mb={1} path="/">
-        Home
+        {t("Home") as string}
       </NavItem>
       <AnimatePresence>{pathname === "/" && <OrgSelector />}</AnimatePresence>
-      {linkItems.map((link) => (
-        <NavItem {...link} key={link.name} mb={1}>
-          {link.name}
+      {pages.map((page) => (
+        <NavItem {...page} key={page.name} mb={1}>
+          {page.name}
         </NavItem>
       ))}
       <Divider mb={2} />
@@ -112,7 +113,7 @@ export function SidebarContent({
                 variant: "solid",
                 status: "warning",
                 position: "top-right",
-                description: "You need to be logged in to create playlists.",
+                description: t("You need to be logged in to create playlists."),
                 isClosable: true,
               });
             openModal();
@@ -121,7 +122,7 @@ export function SidebarContent({
           px="2"
           py="1"
         >
-          Create New Playlist
+          {t("Create New Playlist") as string}
         </NavItem>
         <Suspense fallback={"..."}>
           {playlistList && (

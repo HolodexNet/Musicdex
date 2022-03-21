@@ -7,34 +7,41 @@ import {
   Divider,
   Box,
 } from "@chakra-ui/react";
+import { Trans, useTranslation } from "react-i18next";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { useClientLogin } from "../../modules/client";
 import GoogleButton from "./GoogleButton";
 
 export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
+  const { t } = useTranslation();
   const { DiscordOAuth, GoogleAuthFn, TwitterAuth } = useClientLogin();
   return (
     <Center p={8}>
       <Stack spacing={4} align={"center"} maxW={"md"} w={"full"}>
         {isNew ? (
           <>
-            <Heading size="lg">Login/Sign up to Musicdex</Heading>
+            <Heading size="lg">{t("Login/Sign up to Musicdex")}</Heading>
             <Divider width={12} py={2} />
             <Text>
-              If you have not previously logged into <b>Holodex</b> or{" "}
-              <b>Musicdex</b> with the social account, a new account will be
-              created automatically. <br />
-              <br />
-              You will be able to connect other social accounts after logging
-              in.
+              <Trans t={t} key="loginIntro">
+                If you have not previously logged into <b>Holodex</b> or{" "}
+                <b>Musicdex</b> with the social account, a new account will be
+                created automatically. <br />
+                <br />
+                You will be able to connect other social accounts after logging
+                in.
+              </Trans>
             </Text>
           </>
         ) : (
           <>
-            <Heading size="md">Connect more accounts to Musicdex</Heading>
+            <Heading size="md">
+              {t("Connect more accounts to Musicdex")}
+            </Heading>
             <Text>
-              No particular reason, maybe you find it easier to login using one
-              or another method on a different device.
+              {t(
+                " No particular reason, maybe you find it easier to login using one or another method on a different device."
+              )}
             </Text>
           </>
         )}
@@ -48,7 +55,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
               onClick={DiscordOAuth}
               as="div"
             >
-              <Text mx="auto">Login with Discord</Text>
+              <Text mx="auto">{t("Login with Discord")}</Text>
             </Button>
           )}
 
@@ -70,7 +77,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
               onClick={TwitterAuth}
               as="div"
             >
-              <Text mx="auto">Login with Twitter</Text>
+              <Text mx="auto">{t("Login with Twitter")}</Text>
             </Button>
           )}
         </Box>

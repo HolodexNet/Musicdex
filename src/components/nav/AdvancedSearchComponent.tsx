@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
 import { FiFilter, FiSearch } from "react-icons/fi";
 import {
@@ -47,6 +48,7 @@ export function AdvancedSearchFiltersForm({
   facets,
   fullreset = () => {},
 }: AdvancedSearchProps) {
+  const { t } = useTranslation();
   const [search] = useSearchParams();
   const navigate = useNavigate();
   const qObj: Partial<SearchParams<SearchableSong>> = useMemo(
@@ -197,18 +199,19 @@ export function AdvancedSearchFiltersForm({
           <Tag size="md" variant="subtle" colorScheme="cyan">
             <TagLeftIcon boxSize="12px" as={FiSearch} />
             <TagLabel noOfLines={2} whiteSpace="normal">
-              Search by Everything (Name, Original Artist, Channel,
-              Organization)
+              {t(
+                "Search by Everything (Name, Original Artist, Channel,Organization)"
+              )}
             </TagLabel>
           </Tag>
         </FormLabel>
         <Input
           id="q"
-          placeholder="Song Query"
+          placeholder={t("Song Query")}
           defaultValue={qObj.q}
           {...register("q", {
             required: "Required",
-            minLength: { value: 1, message: "Minimum length should be 1" },
+            minLength: { value: 1, message: t("Minimum length should be 1") },
           })}
         />
         <FormErrorMessage>{errors.q && errors.q.message}</FormErrorMessage>
@@ -218,7 +221,7 @@ export function AdvancedSearchFiltersForm({
           <FormLabel htmlFor="original_artist">
             <Tag size="md" variant="subtle" colorScheme="cyan">
               <TagLeftIcon boxSize="12px" as={FiFilter} />
-              <TagLabel>Filter by Original Artist</TagLabel>
+              <TagLabel>{t("Filter by Original Artist")}</TagLabel>
             </Tag>
           </FormLabel>
           <Input
@@ -233,20 +236,21 @@ export function AdvancedSearchFiltersForm({
           <FormLabel htmlFor="org">
             <Tag size="md" variant="subtle" colorScheme="cyan">
               <TagLeftIcon boxSize="12px" as={FiFilter} />
-              <TagLabel>Filter by status</TagLabel>
+              <TagLabel>{t("Filter by status")}</TagLabel>
             </Tag>
           </FormLabel>
 
           <RadioGroup defaultValue={String(is_mv)}>
             <Stack direction="row">
               <Radio value="0" id="ismv" {...register("is_mv")}>
-                All Song Types
+                {t("All Song Types")}
               </Radio>
               <Radio value="1" id="ismv" {...register("is_mv")}>
-                <Icon as={BiMovie}></Icon> MV Only ({is_mv_facets["true"]})
+                <Icon as={BiMovie}></Icon> {t("MV Only")} (
+                {is_mv_facets["true"]})
               </Radio>
               <Radio value="2" id="ismv" {...register("is_mv")}>
-                Non MV Only (Karaokes, etc) ({is_mv_facets["false"]})
+                {t("Non MV Only (Karaokes, etc)")} ({is_mv_facets["false"]})
               </Radio>
             </Stack>
           </RadioGroup>
@@ -256,7 +260,7 @@ export function AdvancedSearchFiltersForm({
         <FormLabel htmlFor="org">
           <Tag size="md" variant="subtle" colorScheme="cyan">
             <TagLeftIcon boxSize="12px" as={FiFilter} />
-            <TagLabel>Filter by Organization</TagLabel>
+            <TagLabel>{t("Filter by Organization")}</TagLabel>
           </Tag>
         </FormLabel>
         <SimpleGrid spacing={2} direction="row" minChildWidth="220px">
@@ -297,7 +301,7 @@ export function AdvancedSearchFiltersForm({
         <FormLabel htmlFor="org">
           <Tag size="md" variant="subtle" colorScheme="cyan">
             <TagLeftIcon boxSize="12px" as={FiFilter} />
-            <TagLabel>Filter by Sub Organization</TagLabel>
+            <TagLabel>{t("Filter by Sub Organization")}</TagLabel>
           </Tag>
         </FormLabel>
         <SimpleGrid spacing={2} direction="row" minChildWidth="220px">
@@ -336,7 +340,7 @@ export function AdvancedSearchFiltersForm({
       </FormControl>
       <ButtonGroup mt={4} spacing={4}>
         <Button colorScheme="teal" isLoading={isSubmitting} type="submit">
-          Search
+          {t("Search")}
         </Button>
         <Button
           variant="outline"
@@ -352,7 +356,7 @@ export function AdvancedSearchFiltersForm({
             incr((x) => x + 1000);
           }}
         >
-          Reset
+          {t("Reset")}
         </Button>
       </ButtonGroup>
     </form>

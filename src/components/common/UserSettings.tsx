@@ -7,11 +7,13 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { useClient } from "../../modules/client";
 import { LoginButtons } from "../header/Login";
 
 export function UserSettings() {
+  const { t } = useTranslation();
   const { isLoggedIn, AxiosInstance, refreshUser } = useClient();
 
   const ref = useRef<any>();
@@ -36,7 +38,7 @@ export function UserSettings() {
       {isLoggedIn && (
         <Stack spacing={4} align={"center"} maxW={"md"} w={"full"} py={8}>
           <FormControl id="userName" isRequired>
-            <FormLabel>Change Username</FormLabel>
+            <FormLabel>{t("Change Username")}</FormLabel>
             <Input
               placeholder="UserName"
               _placeholder={{ color: "gray.500" }}
@@ -57,10 +59,9 @@ export function UserSettings() {
                 if (newname && newname.trim().length > 0) {
                   changeName(newname);
                 }
-                console.log(newname);
               }}
             >
-              Submit
+              {t("Change")}
             </Button>
           </Stack>
         </Stack>

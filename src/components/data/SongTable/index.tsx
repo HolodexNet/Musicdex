@@ -5,6 +5,7 @@ import WindowScroller from "react-virtualized/dist/es/WindowScroller";
 import { DEFAULT_MENU_ID } from "../../song/SongContextMenu";
 import { FrameRef } from "../../layout/Frame";
 import { RowProps, SongRow } from "./SongRow";
+import { useTranslation } from "react-i18next";
 
 export type SongTableCol =
   | "idx"
@@ -48,6 +49,7 @@ export const SongTable = ({
   appendRight,
   ...rest
 }: SongTableProps & BoxProps) => {
+  const { t } = useTranslation();
   const detailLevel = useResponseSongRow();
   const songList = playlist?.content || songs;
   const data: {
@@ -70,7 +72,7 @@ export const SongTable = ({
   const onScroll = useCallback(({ scrollTop }) => {
     list.current?.scrollTo(scrollTop);
   }, []);
-  if (!songList) return <>No Songs</>;
+  if (!songList) return <>{t("No Songs")}</>;
 
   return virtualized ? (
     <WindowScroller onScroll={onScroll} scrollElement={frameRef.current}>

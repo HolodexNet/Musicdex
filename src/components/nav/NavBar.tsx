@@ -14,8 +14,8 @@ import {
   MenuItem,
   MenuDivider,
   Text,
-  Icon,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useClient } from "../../modules/client";
@@ -26,6 +26,7 @@ interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
 export function NavBar({ onOpen, ...rest }: MobileProps) {
+  const { t } = useTranslation();
   const { isLoggedIn, logout, user } = useClient();
 
   // const bgColor = useColorModeValue("white", "gray.900");
@@ -59,13 +60,6 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
       <Searchbox w={{ base: "100%", md: "40%" }} paddingX={4} />
 
       <HStack spacing={{ base: "0", lg: "6" }}>
-        {/* You can put more icons in here tbh */}
-        {/* <IconButton
-            size="lg"
-            variant="ghost"
-            aria-label="open menu"
-            icon={<FiBell />}
-          /> */}
         <Flex alignItems={"center"}>
           {isLoggedIn && user ? (
             <Menu>
@@ -102,22 +96,18 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
                   </Box>
                 </HStack>
               </MenuButton>
-              <MenuList
-                //bg={bgColor}
-                borderColor={borderColor}
-              >
+              <MenuList borderColor={borderColor}>
                 <MenuItem as={Link} to="/settings">
-                  Profile / Settings
+                  {t("Profile / Settings")}
                 </MenuItem>
-                {/* <MenuItem>Billing</MenuItem> */}
                 <MenuDivider />
-                <MenuItem onClick={logout}>Sign out</MenuItem>
+                <MenuItem onClick={logout}>{t("Sign out")}</MenuItem>
               </MenuList>
             </Menu>
           ) : (
             <Link to="/login">
               <Button size="md" colorScheme="n2">
-                Login
+                {t("Login")}
               </Button>
             </Link>
           )}
