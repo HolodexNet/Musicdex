@@ -3,12 +3,12 @@ import { IconButton, Text } from "@chakra-ui/react";
 import React, { Suspense, useMemo } from "react";
 import { FiTrash } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { DEFAULT_MENU_ID } from "../components/common/CommonContext";
+import { DEFAULT_MENU_ID } from "../components/song/SongContextMenu";
 import {
   QueueContextMenu,
   QUEUE_MENU_ID,
 } from "../components/common/QueueContext";
-import { SongTable } from "../components/data/SongTable";
+import { SongTable, useResponseSongRow } from "../components/data/SongTable";
 import { SongRow } from "../components/data/SongTable/SongRow";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
@@ -50,6 +50,7 @@ export const Queue = React.memo(() => {
     }),
     [currentPlaylist, formatPlaylist]
   );
+  const responsiveNowPlaying = useResponseSongRow();
 
   return (
     <PageContainer>
@@ -66,6 +67,7 @@ export const Queue = React.memo(() => {
               menuId: DEFAULT_MENU_ID,
               rowProps: {
                 showArtwork: true,
+                hideCol: responsiveNowPlaying,
               },
             }}
           />

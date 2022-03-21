@@ -3,7 +3,7 @@ import React from "react";
 import { useContextMenu } from "react-contexify";
 import { Link as NavLink } from "react-router-dom";
 import useNamePicker from "../../../modules/common/useNamePicker";
-import { DEFAULT_MENU_ID } from "../../common/CommonContext";
+import { DEFAULT_MENU_ID } from "../../song/SongContextMenu";
 import { SongArtwork } from "../../song/SongArtwork";
 import { SongLikeButton } from "../../song/SongLikeButton";
 

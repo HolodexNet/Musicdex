@@ -4,7 +4,7 @@ import { FaPlay } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSongQueuer } from "../../utils/SongQueuerHook";
 import { ChannelPhoto } from "../channel/ChannelPhoto";
-import { DEFAULT_MENU_ID } from "../common/CommonContext";
+import { DEFAULT_MENU_ID } from "./SongContextMenu";
 import { MotionBox } from "../common/MotionBox";
 import { useDraggableSong } from "../data/DraggableSong";
 import { SongArtwork } from "./SongArtwork";

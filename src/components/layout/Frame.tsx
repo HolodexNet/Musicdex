@@ -19,7 +19,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useStoreState } from "../../store";
-import { CommonContextMenu } from "../common/CommonContext";
+import { SongContextMenu } from "../song/SongContextMenu";
 import { GlobalLoadingStatus } from "../common/GlobalLoadingStatus";
 import { MotionBox } from "../common/MotionBox";
 import ServiceWorkerWrapper from "../common/ServiceWorkerWrapper";
@@ -204,7 +204,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
         {showBottomNav && <BottomNav />}
         <AddToPlaylistModal />
       </Flex>
-      <CommonContextMenu />
+      <SongContextMenu />
       <ServiceWorkerWrapper />
     </Box>
   );

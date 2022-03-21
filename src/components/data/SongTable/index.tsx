@@ -2,7 +2,7 @@ import { Box, BoxProps, Button, useBreakpointValue } from "@chakra-ui/react";
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import { FixedSizeList } from "react-window";
 import WindowScroller from "react-virtualized/dist/es/WindowScroller";
-import { DEFAULT_MENU_ID } from "../../common/CommonContext";
+import { DEFAULT_MENU_ID } from "../../song/SongContextMenu";
 import { FrameRef } from "../../layout/Frame";
 import { RowProps, SongRow } from "./SongRow";
 
@@ -25,6 +25,19 @@ interface SongTableProps {
   rowProps?: RowProps;
   limit?: number;
 }
+
+export const useResponseSongRow = () => {
+  return useBreakpointValue<SongTableCol[] | undefined>(
+    {
+      base: ["idx", "og_artist", "sang_on", "duration"],
+      sm: ["idx", "og_artist", "sang_on"],
+      md: ["idx", "og_artist"],
+      lg: [],
+      xl: [],
+    },
+    "xl"
+  );
+};
 export const SongTable = ({
   songs,
   menuId = DEFAULT_MENU_ID,
@@ -35,17 +48,7 @@ export const SongTable = ({
   appendRight,
   ...rest
 }: SongTableProps & BoxProps) => {
-  const detailLevel = useBreakpointValue<SongTableCol[] | undefined>(
-    {
-      base: ["idx", "og_artist", "sang_on", "duration"],
-      sm: ["idx", "og_artist", "sang_on"],
-      md: ["idx", "og_artist"],
-      lg: [],
-      xl: [],
-    },
-    "xl"
-  );
-
+  const detailLevel = useResponseSongRow();
   const songList = playlist?.content || songs;
   const data: {
     songList: Song[];

@@ -9,18 +9,20 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+  const { t } = useTranslation();
   const errorHeader = useMemo(() => {
     switch (true) {
       case error.message.includes("status code 401"):
-        return "Unauthorized";
+        return t("Unauthorized");
       case !!error.message.match(/status code 5\d\d/i):
-        return "Server error";
+        return t("Server error");
       default:
-        return "Something went wrong";
+        return t("Something went wrong");
     }
-  }, [error.message]);
+  }, [error.message, t]);
   return (
     <Center role="alert" my={10}>
       <VStack spacing={4}>
@@ -34,22 +36,23 @@ export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
         ></Code>
         <HStack>
           <Button onClick={resetErrorBoundary} colorScheme="green">
-            Step 1: Refresh Page
+            {t("Step 1: Refresh Page")}
           </Button>
           <Button onClick={resetErrorBoundary} colorScheme="yellow">
-            Step 2: Reset Cache & Logout
+            {t("Step 2: Reset Cache & Logout")}
           </Button>
         </HStack>
         <Text pt={6}>
-          If the above buttons doesn't fix it, send us a screenshot on Discord
-          or Twitter and let us know how you ran into the problem.
+          {t(
+            "If the above buttons doesn't fix it, send us a screenshot on Discord or Twitter and let us know how you ran into the problem."
+          )}
         </Text>
         <HStack>
           <Button onClick={resetErrorBoundary} colorScheme="twitter">
-            Twitter
+            {t("Twitter")}
           </Button>
           <Button onClick={resetErrorBoundary} colorScheme="purple">
-            Discord
+            {t("Discord")}
           </Button>
         </HStack>
       </VStack>

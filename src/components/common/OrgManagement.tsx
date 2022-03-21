@@ -24,6 +24,7 @@ import {
 } from "framer-motion";
 import { MdDragHandle } from "react-icons/md";
 import { Org } from "../../store/org";
+import { useTranslation } from "react-i18next";
 
 export default function OrgManager() {
   return (

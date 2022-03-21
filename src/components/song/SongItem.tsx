@@ -2,7 +2,7 @@ import { Flex, FlexProps, Text, useColorModeValue } from "@chakra-ui/react";
 import { useContextMenu } from "react-contexify";
 import { Link } from "react-router-dom";
 import { ChannelPhoto } from "../channel/ChannelPhoto";
-import { DEFAULT_MENU_ID } from "../common/CommonContext";
+import { DEFAULT_MENU_ID } from "./SongContextMenu";
 import { useDraggableSong } from "../data/DraggableSong";
 import { SongArtwork } from "./SongArtwork";
 
