@@ -17,6 +17,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FiMove } from "react-icons/fi";
 import { RiDragDropLine } from "react-icons/ri";
 import useNamePicker from "../../modules/common/useNamePicker";
@@ -27,6 +28,7 @@ import {
 import { useStoreActions, useStoreState } from "../../store";
 
 export function AddToPlaylistModal(): JSX.Element {
+  const { t } = useTranslation();
   const song = useStoreState((state) => state.addPlaylist.songToAdd);
   const showDialog = useStoreState((state) => state.addPlaylist.dialogShow);
   const close = useStoreActions(
@@ -64,7 +66,7 @@ export function AddToPlaylistModal(): JSX.Element {
           )}
           <Divider mx={-4} mt={1} mb={2} />
           {isLoading ? (
-            "Loading"
+            t("Loading...")
           ) : (
             <RadioGroup onChange={setPlaylist} value={selectedPlaylistId}>
               <Stack>
@@ -79,9 +81,10 @@ export function AddToPlaylistModal(): JSX.Element {
         </ModalBody>
         <ModalFooter>
           <Text color="whiteAlpha.500">
-            <RiDragDropLine style={{ display: "inline" }}></RiDragDropLine> Tip:
-            you can also drag songs from tables into playlists to quickly add to
-            playlist.
+            <RiDragDropLine style={{ display: "inline" }}></RiDragDropLine>
+            {t(
+              "Tip: you can also drag songs from tables into playlists to quickly add to playlist."
+            )}
           </Text>
           <Button
             onClick={async () => {
@@ -94,7 +97,7 @@ export function AddToPlaylistModal(): JSX.Element {
                   () => {
                     toast({
                       status: "success",
-                      title: "Added",
+                      title: t("Added"),
                       duration: 1500,
                       position: "top-right",
                     });
@@ -103,7 +106,7 @@ export function AddToPlaylistModal(): JSX.Element {
                     toast({
                       status: "warning",
                       position: "top-right",
-                      title: "Something went wrong",
+                      title: t("Something went wrong"),
                       isClosable: true,
                     });
                   }
@@ -111,7 +114,7 @@ export function AddToPlaylistModal(): JSX.Element {
               close();
             }}
           >
-            Save
+            {t("Save")}
           </Button>
         </ModalFooter>
       </ModalContent>

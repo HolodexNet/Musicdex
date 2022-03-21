@@ -8,6 +8,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FaPlay } from "react-icons/fa";
 import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
@@ -23,6 +24,7 @@ export const PlaylistCard = ({
 }: {
   playlist: Partial<PlaylistFull>;
 } & FlexProps) => {
+  const { t } = useTranslation();
   const bgColor = useColorModeValue("bg.100", "bg.800");
   const bgHover = useColorModeValue("bg.200", "bg.700");
   const [isHovering, setIsHovering] = useState(false);
@@ -63,14 +65,14 @@ export const PlaylistCard = ({
         else throw new Error("Fetch failed");
       } catch (e) {
         toast({
-          title: "Failed to get playlist",
+          title: t("Failed to get playlist"),
           variant: "error",
           duration: 1500,
           position: "top-right",
         });
       }
     },
-    [AxiosInstance, playlist.id, queryClient, setPlaylist, toast]
+    [AxiosInstance, playlist.id, queryClient, setPlaylist, t, toast]
   );
   if (!playlist) return <div>Playlist doko...</div>;
   return (

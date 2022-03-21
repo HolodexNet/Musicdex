@@ -13,10 +13,12 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useClient } from "../../modules/client";
 import { usePlaylistWriter } from "../../modules/services/playlist.service";
 
 export default function PlaylistCreateForm(): JSX.Element {
+  const { t } = useTranslation();
   const { mutateAsync: writePlaylist } = usePlaylistWriter();
 
   const form = useRef<any>(undefined);
@@ -52,7 +54,7 @@ export default function PlaylistCreateForm(): JSX.Element {
               toast({
                 status: "success",
                 position: "top-right",
-                title: "Created",
+                title: t("Created"),
                 duration: 1500,
               });
             },
@@ -60,7 +62,7 @@ export default function PlaylistCreateForm(): JSX.Element {
               toast({
                 status: "warning",
                 position: "top-right",
-                title: "Something went wrong",
+                title: t("Something went wrong"),
                 isClosable: true,
               });
             }
@@ -69,7 +71,7 @@ export default function PlaylistCreateForm(): JSX.Element {
           toast({
             variant: "solid",
             status: "warning",
-            description: "You need to provide both name and description.",
+            description: t("You need to provide both name and description"),
             position: "top-right",
             isClosable: true,
           });
@@ -78,12 +80,12 @@ export default function PlaylistCreateForm(): JSX.Element {
     >
       <FormControl id="name" isRequired>
         <FormLabel>
-          Name (Can start a playlist with an emoji to set it as the icon)
+          {t("Name (Can start with an emoji to set it as the icon)")}
         </FormLabel>
         <Input _placeholder={{ color: "gray.500" }} type="text" name="name" />
       </FormControl>
       <FormControl id="description" isRequired>
-        <FormLabel>Description</FormLabel>
+        <FormLabel>{t("Description")}</FormLabel>
         <Input type="text" name="description" />
       </FormControl>
       <Stack spacing={6}>
@@ -95,7 +97,7 @@ export default function PlaylistCreateForm(): JSX.Element {
           }}
           type="submit"
         >
-          Create
+          {t("Create")}
         </Button>
       </Stack>
     </Stack>

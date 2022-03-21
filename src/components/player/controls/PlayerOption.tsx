@@ -1,5 +1,6 @@
 import { Button, Flex, FlexProps, IconButton } from "@chakra-ui/react";
 import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 import { RiPlayList2Fill } from "react-icons/ri";
 import { useLocation, useNavigate } from "react-router";
@@ -27,6 +28,7 @@ interface PlayerOptionProps extends FlexProps {
 
 export const PlayerOption = React.memo(
   ({ fullPlayer = false, ...rest }: PlayerOptionProps) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -65,7 +67,7 @@ export const PlayerOption = React.memo(
             marginX={4}
             onClick={() => toggleQueue()}
           >
-            Upcoming
+            {t("Upcoming")}
           </Button>
         )}
         <IconButton

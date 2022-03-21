@@ -10,6 +10,7 @@ import {
   MenuProps,
   useToast,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import { FiMoreHorizontal } from "react-icons/fi";
 import {
   usePlaylistDeleter,
@@ -21,6 +22,7 @@ export function PlaylistMoreControlsMenu({
   canEdit,
   ...rest
 }: Omit<MenuProps, "children"> & { playlist: PlaylistFull; canEdit: boolean }) {
+  const { t } = useTranslation();
   const { mutateAsync: write, isLoading } = usePlaylistWriter();
   const { mutateAsync: del } = usePlaylistDeleter();
 
@@ -34,14 +36,14 @@ export function PlaylistMoreControlsMenu({
       () => {
         toast({
           status: "success",
-          title: "Successfully saved playlist",
+          title: t("Successfully saved playlist"),
           position: "top-right",
         });
       },
       (err) => {
         toast({
           status: "error",
-          title: "Failed to save playlist",
+          title: t("Failed to save playlist"),
           description: err.toString(),
           position: "top-right",
           isClosable: true,
@@ -52,7 +54,7 @@ export function PlaylistMoreControlsMenu({
 
   const deletePlaylist = () => {
     // eslint-disable-next-line no-restricted-globals
-    const x = confirm("Really delete this playlist?");
+    const x = confirm(t("Really delete this playlist?"));
     if (x) del({ playlistId: playlist.id });
   };
   if (!canEdit) return <></>;
@@ -70,7 +72,7 @@ export function PlaylistMoreControlsMenu({
       <MenuList>
         <MenuOptionGroup
           defaultValue={playlist.listed ? "1" : "0"}
-          title="Playlist Visibility State"
+          title={t("Playlist Visibility State")}
           type="radio"
         >
           <MenuItemOption
@@ -79,7 +81,7 @@ export function PlaylistMoreControlsMenu({
               changeListed(true);
             }}
           >
-            Public Playlist
+            {t("Public Playlist")}
           </MenuItemOption>
           <MenuItemOption
             value={"0"}
@@ -87,7 +89,7 @@ export function PlaylistMoreControlsMenu({
               changeListed(false);
             }}
           >
-            Private Playlist
+            {t("Private Playlist")}
           </MenuItemOption>
         </MenuOptionGroup>
         <MenuDivider />
@@ -95,7 +97,7 @@ export function PlaylistMoreControlsMenu({
           _hover={{ backgroundColor: "red.700" }}
           onClick={deletePlaylist}
         >
-          Delete Playlist
+          {t("Delete Playlist")}
         </MenuItem>
       </MenuList>
     </Menu>

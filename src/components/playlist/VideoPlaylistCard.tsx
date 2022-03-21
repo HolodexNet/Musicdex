@@ -17,9 +17,11 @@ import { useStoreActions } from "../../store";
 import { SongTable } from "../data/SongTable";
 import { MotionBox } from "../common/MotionBox";
 import { QueryStatus } from "../common/QueryStatus";
+import { useTranslation } from "react-i18next";
 
 export const VideoPlaylistCard = React.memo(
   ({ video, playlist }: { video: any; playlist?: PlaylistFull }) => {
+    const { t } = useTranslation();
     const setPlaylist = useStoreActions(
       (actions) => actions.playback.setPlaylist
     );
@@ -115,7 +117,9 @@ export const VideoPlaylistCard = React.memo(
                 <Center height="100%">
                   {new Date(video.available_at) < new Date() ? (
                     <Box>
-                      <Text>Stream is not yet tagged with any songs.</Text>
+                      <Text>
+                        {t("Stream is not yet tagged with any songs.")}
+                      </Text>
                       <Button
                         variant="link"
                         colorScheme={"n2"}
@@ -123,17 +127,17 @@ export const VideoPlaylistCard = React.memo(
                         href={`https://holodex.net/edit/video/${video.id}/music`}
                         target="_blank"
                       >
-                        Help us tag it on Holodex
+                        {t("Help us tag it on Holodex")}
                       </Button>
                     </Box>
                   ) : (
                     <Box>
                       <Text>Going Live (distance)</Text>
                       <Button variant="link" colorScheme={"n2"}>
-                        Watch on Holodex
-                      </Button>{" "}
+                        {t("Watch on Holodex")}
+                      </Button>
                       <Button variant="link" colorScheme={"n2"}>
-                        (Youtube)
+                        {t("(Youtube)")}
                       </Button>
                     </Box>
                   )}

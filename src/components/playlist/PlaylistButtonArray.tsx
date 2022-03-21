@@ -1,5 +1,6 @@
 import { Button, HStack, StackProps } from "@chakra-ui/react";
 import React, { ReactNode, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { FiPlay, FiShare2 } from "react-icons/fi";
 import { useClient } from "../../modules/client";
@@ -34,7 +35,7 @@ export function PlaylistButtonArray({
   playlist: PlaylistFull;
   children?: ReactNode;
 } & StackProps): JSX.Element {
-  // useColorModeValue('bg.400')
+  const { t } = useTranslation();
   const clip = useClipboardWithToast();
 
   let { user, isLoggedIn } = useClient();
@@ -59,7 +60,7 @@ export function PlaylistButtonArray({
         colorScheme="n2"
         onClick={onPlayClick}
       >
-        Play
+        {t("Play")}
       </Button>
       <Button
         variant="ghost"
@@ -68,7 +69,7 @@ export function PlaylistButtonArray({
         colorScheme="n2"
         onClick={onAddQueueClick}
       >
-        Add to Queue
+        {t("Add to Queue")}
       </Button>
       <Button
         display={!editMode && canEdit ? "block" : "none"}
@@ -80,7 +81,7 @@ export function PlaylistButtonArray({
           onEditClick && onEditClick(e);
         }}
       >
-        Edit
+        {t("Edit")}
       </Button>
       <Button
         display={editMode && canEdit ? "block" : "none"}
@@ -92,7 +93,7 @@ export function PlaylistButtonArray({
           onFinishEditClick && onFinishEditClick(e);
         }}
       >
-        Save Changes
+        {t("Save Changes")}
       </Button>
       {isLoggedIn && user && user.id !== playlist.owner && canStar && (
         <Button

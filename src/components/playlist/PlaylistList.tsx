@@ -1,5 +1,4 @@
 import { Flex, Icon, Text, useToast } from "@chakra-ui/react";
-import styled from "@emotion/styled";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconType } from "react-icons";
 import { FiFolder } from "react-icons/fi";
@@ -7,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useFormatPlaylist } from "../../modules/playlist/useFormatPlaylist";
 import { usePlaylistUpdater } from "../../modules/services/playlist.service";
 import runes from "runes";
+import { useTranslation } from "react-i18next";
 
 export const PlaylistList = ({
   playlistStubs,
@@ -17,6 +17,7 @@ export const PlaylistList = ({
   vibe?: boolean;
   defaultIcon?: IconType;
 }) => {
+  const { t } = useTranslation();
   const { mutateAsync } = usePlaylistUpdater();
   const toast = useToast();
   const formatPlaylist = useFormatPlaylist();
@@ -86,7 +87,7 @@ export const PlaylistList = ({
                           toast({
                             status: "success",
                             position: "top-right",
-                            title: "Added",
+                            title: t("Added"),
                             duration: 1500,
                           });
                         },
@@ -94,7 +95,7 @@ export const PlaylistList = ({
                           toast({
                             status: "warning",
                             position: "top-right",
-                            title: "Something went wrong",
+                            title: t("Something went wrong"),
                             isClosable: true,
                           });
                         }
