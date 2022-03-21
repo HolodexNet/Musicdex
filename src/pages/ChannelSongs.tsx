@@ -71,7 +71,8 @@ export default function ChannelSongs() {
           <FiArrowLeft />
         </Button>
         <Heading size="md">
-          {t("All Songs ({{ from }} - {{ to }} of {{ total }})", {
+          {t("All Songs")}{" "}
+          {t("({{ from }} - {{ to }} of {{ total }})", {
             from: offset + 1,
             to: offset + latest.length,
             total,
