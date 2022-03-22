@@ -118,7 +118,7 @@ export const VideoPlaylistCard = React.memo(
                   {new Date(video.available_at) < new Date() ? (
                     <Box>
                       <Text>
-                        {t("Stream is not yet tagged with any songs.")}
+                        {t("This stream has not been tagged with songs")}
                       </Text>
                       <Button
                         variant="link"
@@ -137,7 +137,7 @@ export const VideoPlaylistCard = React.memo(
                         {t("Watch on Holodex")}
                       </Button>
                       <Button variant="link" colorScheme={"n2"}>
-                        {t("(Youtube)")}
+                        {t("(YouTube)")}
                       </Button>
                     </Box>
                   )}

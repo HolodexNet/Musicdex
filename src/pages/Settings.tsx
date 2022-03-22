@@ -37,7 +37,7 @@ export default function Settings() {
             <AccordionButton>
               <AccordionIcon />
               <Heading size="md" flex="1" textAlign="left">
-                {t("User Preference")}
+                {t("User Preferences")}
               </Heading>
             </AccordionButton>
             <Divider />

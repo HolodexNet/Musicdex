@@ -1,9 +1,10 @@
-const fs = require("fs");
+var fs = require("fs");
+
 module.exports = {
   input: ["build/tmp/**/*.{js,jsx}"],
-  output: "./public/locales",
   options: {
     debug: true,
+    removeUnusedKeys: true,
     func: {
       list: ["t", "i18n.t"],
       extensions: [".js", ".jsx"],
@@ -11,7 +12,6 @@ module.exports = {
     trans: {
       component: "Trans",
       i18nKey: "i18nKey",
-      //   defaultsKey: "defaults",
       extensions: [".js", ".jsx"],
       acorn: {
         ecmaVersion: 2020,
@@ -37,12 +37,11 @@ module.exports = {
     ns: ["translation"],
     defaultLng: "en",
     defaultNs: "translation",
-    // defaultValue: "__STRING_NOT_TRANSLATED__",
     resource: {
-      loadPath: "{{lng}}/{{ns}}.json",
-      savePath: "{{lng}}/{{ns}}.json",
+      loadPath: "./public/locales/{{lng}}/{{ns}}.json",
+      savePath: "./public/locales/{{lng}}/{{ns}}.json",
       jsonIndent: 2,
-      lineEnding: "\n",
+      // lineEnding: "\n",
     },
     nsSeparator: false, // namespace separator
     keySeparator: false, // key separator

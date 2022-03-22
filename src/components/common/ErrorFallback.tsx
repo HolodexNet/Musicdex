@@ -44,7 +44,7 @@ export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
         </HStack>
         <Text pt={6}>
           {t(
-            "If the above buttons doesn't fix it, send us a screenshot on Discord or Twitter and let us know how you ran into the problem."
+            "If the steps above don't fix this issue, please send us a screenshot on Discord or Twitter and let us know how you ran into it."
           )}
         </Text>
         <HStack>

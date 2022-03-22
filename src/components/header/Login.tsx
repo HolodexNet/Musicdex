@@ -20,13 +20,14 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
       <Stack spacing={4} align={"center"} maxW={"md"} w={"full"}>
         {isNew ? (
           <>
-            <Heading size="lg">{t("Login/Sign up to Musicdex")}</Heading>
+            <Heading size="lg">{t("Sign in to Musicdex")}</Heading>
             <Divider width={12} py={2} />
             <Text>
-              <Trans t={t} i18nKey="loginIntro">
-                If you have not previously logged into <b>Holodex</b> or{" "}
-                <b>Musicdex</b> with the social account, a new account will be
-                created automatically. <br />
+              <Trans i18nKey="loginIntro">
+                If you have not previously logged into <strong>Holodex</strong>
+                or
+                <strong>Musicdex</strong> with the social account, a new account
+                will be created automatically. <br />
                 <br />
                 You will be able to connect other social accounts after logging
                 in.
@@ -38,11 +39,6 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
             <Heading size="md">
               {t("Connect more accounts to Musicdex")}
             </Heading>
-            <Text>
-              {t(
-                "No particular reason, maybe you find it easier to login using one or another method on a different device."
-              )}
-            </Text>
           </>
         )}
         <Box maxW={400} w={"full"}>
@@ -55,7 +51,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
               onClick={DiscordOAuth}
               as="div"
             >
-              <Text mx="auto">{t("Login with Discord")}</Text>
+              <Text mx="auto">{t("Sign in with Discord")}</Text>
             </Button>
           )}
 
@@ -77,7 +73,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
               onClick={TwitterAuth}
               as="div"
             >
-              <Text mx="auto">{t("Login with Twitter")}</Text>
+              <Text mx="auto">{t("Sign in with Twitter")}</Text>
             </Button>
           )}
         </Box>

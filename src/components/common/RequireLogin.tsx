@@ -15,11 +15,7 @@ export function RequireLogin({ children }: { children: ReactNode }) {
     <PageContainer>
       <ContainerInlay>
         <Center flexDirection="column">
-          <Text fontSize="xl">
-            {t(
-              "Unfortunately it looks like you need to login to use this feature."
-            )}
-          </Text>
+          <Text fontSize="xl">{t("Please log in to use this feature.")}</Text>
           <LoginButtons />
         </Center>
       </ContainerInlay>
