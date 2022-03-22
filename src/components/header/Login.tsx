@@ -50,6 +50,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
               leftIcon={<FaDiscord />}
               onClick={DiscordOAuth}
               as="div"
+              cursor="pointer"
             >
               <Text mx="auto">{t("Sign in with Discord")}</Text>
             </Button>
@@ -72,6 +73,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
               leftIcon={<FaTwitter />}
               onClick={TwitterAuth}
               as="div"
+              cursor="pointer"
             >
               <Text mx="auto">{t("Sign in with Twitter")}</Text>
             </Button>
