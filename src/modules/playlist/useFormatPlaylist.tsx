@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useTranslation } from "react-i18next";
+import { TFunction, useTranslation } from "react-i18next";
 import useNamePicker from "../common/useNamePicker";
 import { formatters } from "./formatters";
 
@@ -67,8 +67,8 @@ type FormatFunctions =
 
 // Translation and name picker function
 interface FormatContext {
-  t?: any;
-  tn?: any;
+  t?: TFunction<"translation", undefined>;
+  tn?: (en: any, jp: any) => any;
 }
 
 export type PlaylistFnMap<Param, Desc> = {

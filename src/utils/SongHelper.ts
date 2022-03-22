@@ -1,5 +1,4 @@
-import { intervalToDuration, format } from "date-fns";
-import { formatInTimeZone } from "date-fns-tz";
+import { intervalToDuration } from "date-fns";
 
 export function formatSeconds(secs: number) {
   const { hours, minutes, seconds } = intervalToDuration({

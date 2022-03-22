@@ -65,7 +65,7 @@ export const PlaylistCard = ({
         else throw new Error("Fetch failed");
       } catch (e) {
         toast({
-          title: t("Failed to get playlist"),
+          title: t("Failed to load playlist"),
           variant: "error",
           duration: 1500,
           position: "top-right",

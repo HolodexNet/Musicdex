@@ -17,12 +17,12 @@ export function useSongQueuer() {
       toast({
         variant: "subtle",
         status: "success",
-        description: `Added ${ct} to Queue`,
+        description: t("Added {{amount}} to Queue", { amount: ct }),
         position: "bottom-right",
         duration: 1500,
       });
     },
-    [toast, queueSongs]
+    [toast, queueSongs, t]
   );
 
   return cb;

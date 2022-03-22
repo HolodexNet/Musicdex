@@ -23,15 +23,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
             <Heading size="lg">{t("Sign in to Musicdex")}</Heading>
             <Divider width={12} py={2} />
             <Text>
-              <Trans i18nKey="loginIntro">
-                If you have not previously logged into <strong>Holodex</strong>
-                or
-                <strong>Musicdex</strong> with the social account, a new account
-                will be created automatically. <br />
-                <br />
-                You will be able to connect other social accounts after logging
-                in.
-              </Trans>
+              <Trans i18nKey="loginIntro"></Trans>
             </Text>
           </>
         ) : (
@@ -50,6 +42,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
               leftIcon={<FaDiscord />}
               onClick={DiscordOAuth}
               as="div"
+              cursor="pointer"
             >
               <Text mx="auto">{t("Sign in with Discord")}</Text>
             </Button>
@@ -72,6 +65,7 @@ export function LoginButtons({ isNew = true }: { isNew?: boolean }) {
               leftIcon={<FaTwitter />}
               onClick={TwitterAuth}
               as="div"
+              cursor="pointer"
             >
               <Text mx="auto">{t("Sign in with Twitter")}</Text>
             </Button>

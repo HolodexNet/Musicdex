@@ -115,7 +115,7 @@ export function PlaylistButtonArray({
         variant="ghost"
         aria-label="share link"
         size="md"
-        title="Copy share link"
+        title={t("Copy link")}
         onClick={() => clip(window.location.toString(), false)}
         colorScheme="n2"
       >

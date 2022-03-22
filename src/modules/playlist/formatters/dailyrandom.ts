@@ -5,10 +5,14 @@ export const dailyRandomFormatter: PlaylistFormatter<
   { channel: Channel } | undefined
 > = {
   bannerImage: (playlist, { ch }, data) => {
-    return `/api/statics/channelImg/${ch || data?.channel?.id}/banner/3.jpeg`;
+    return `https://holodex.net/api/statics/channelImg/${
+      ch || data?.channel?.id
+    }/banner/3.jpeg`;
   },
   channelImage: (playlist, { ch }, data) => {
-    return `/api/statics/channelImg/${ch || data?.channel.id}.png`;
+    return `https://holodex.net/api/statics/channelImg/${
+      ch || data?.channel.id
+    }.png`;
   },
   title: (playlist, { ch }, data, { tn }) => {
     if (!data) return;
