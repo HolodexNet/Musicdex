@@ -93,6 +93,14 @@ export default function Frame({ children }: { children?: ReactNode }) {
   const props = useMemo(() => POSITIONS[pos], [pos]);
   const frameRef = useRef<any>(undefined);
 
+  // START: Scroll Set to 0 every navigation
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    frameRef.current?.scrollTo(0, 0);
+  }, [pathname]);
+  // END navigation scrolling behavior.
+
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
 
   const currentlyPlaying = useStoreState(
