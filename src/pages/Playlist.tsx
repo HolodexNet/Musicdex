@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { BGImg, BGImgContainer } from "../components/common/BGImgContainer";
+import { BGImg, BGImgContainer } from "../components/layout/BGImgContainer";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";

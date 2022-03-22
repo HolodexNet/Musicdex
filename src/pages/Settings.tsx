@@ -1,25 +1,22 @@
 import {
-  Accordion,
-  AccordionItem,
-  AccordionButton,
   Box,
-  AccordionIcon,
-  AccordionPanel,
   Heading,
-  HStack,
   useRadio,
   useRadioGroup,
   UseRadioProps,
-  Divider,
   SimpleGrid,
-  Text,
   Button,
   Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import OrgManager from "../components/common/OrgManagement";
-import { UserSettings } from "../components/common/UserSettings";
+import OrgManager from "../components/settings/OrgManagement";
+import { UserSettings } from "../components/settings/UserSettings";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { useStoreActions, useStoreState } from "../store";
@@ -32,7 +29,7 @@ export default function Settings() {
         <Heading size="lg" py={5}>
           {t("Settings")}
         </Heading>
-        <Accordion allowMultiple defaultIndex={[0, 1]} mb={12}>
+        {/* <Accordion allowMultiple defaultIndex={[0, 1]} mb={12}>
           <AccordionItem>
             <AccordionButton>
               <AccordionIcon />
@@ -77,7 +74,26 @@ export default function Settings() {
               <OrgManager />
             </AccordionPanel>
           </AccordionItem>
-        </Accordion>
+        </Accordion> */}
+        <Tabs isLazy>
+          <TabList>
+            <Tab>{t("User Preferences")}</Tab>
+            <Tab>{t("Language Preferences")}</Tab>
+            <Tab>{t("Organization Ordering")}</Tab>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <UserSettings />
+            </TabPanel>
+            <TabPanel>
+              <LanguagePrefs />
+            </TabPanel>
+            <TabPanel>
+              <OrgManager />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </ContainerInlay>
     </PageContainer>
   );

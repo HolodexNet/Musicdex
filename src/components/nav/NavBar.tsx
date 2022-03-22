@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useClient } from "../../modules/client";
-import { Searchbox } from "../header/Searchbox";
+import { Searchbox } from "./Searchbox";
 import { LogoWithText } from "./LogoWithText";
 
 interface MobileProps extends FlexProps {

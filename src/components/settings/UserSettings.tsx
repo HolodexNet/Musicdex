@@ -5,12 +5,15 @@ import {
   Button,
   Input,
   Box,
+  Divider,
+  Heading,
+  Text,
 } from "@chakra-ui/react";
 import { useRef } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { useClient } from "../../modules/client";
-import { LoginButtons } from "../header/Login";
+import { LoginButtons } from "../login/LoginButtons";
 
 export function UserSettings() {
   const { t } = useTranslation();
@@ -67,7 +70,24 @@ export function UserSettings() {
         </Stack>
       )}
       <Box flex={1}>
-        <LoginButtons isNew={!isLoggedIn}></LoginButtons>
+        <Stack spacing={4} align={"center"} maxW={"md"} w={"full"}>
+          {!isLoggedIn ? (
+            <>
+              <Heading size="lg">{t("Sign in to Musicdex")}</Heading>
+              <Divider width={12} py={2} />
+              <Text>
+                <Trans i18nKey="loginIntro"></Trans>
+              </Text>
+            </>
+          ) : (
+            <>
+              <Heading size="md">
+                {t("Connect more accounts to Musicdex")}
+              </Heading>
+            </>
+          )}
+          <LoginButtons />
+        </Stack>
       </Box>
     </Stack>
   );

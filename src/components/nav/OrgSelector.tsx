@@ -13,7 +13,7 @@ import { useServerOrgList } from "../../modules/services/statics.service";
 import { useStoreActions, useStoreState } from "../../store";
 import { Org } from "../../store/org";
 import { MotionBox } from "../common/MotionBox";
-import { OrgPickerPanel } from "../common/OrgManagement";
+import { OrgPickerPanel } from "../settings/OrgManagement";
 
 export function OrgSelector() {
   const org = useStoreState((state) => state.org.currentOrg);

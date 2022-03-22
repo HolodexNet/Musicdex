@@ -109,7 +109,7 @@ export const VideoPlaylistCard = React.memo(
                     playlist={playlist}
                     rowProps={{
                       hideCol: ["og_artist", "duration", "sang_on", "menu"],
-                      flipNames: true,
+                      // flipNames: true,
                     }}
                   />
                 </Suspense>

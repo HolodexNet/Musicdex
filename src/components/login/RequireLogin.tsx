@@ -2,7 +2,7 @@ import { Center, Text } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useClient } from "../../modules/client";
-import { LoginButtons } from "../header/Login";
+import { LoginButtons } from "./LoginButtons";
 import { ContainerInlay } from "../layout/ContainerInlay";
 import { PageContainer } from "../layout/PageContainer";
 

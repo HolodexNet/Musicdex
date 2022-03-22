@@ -8,7 +8,7 @@ import Song from "./pages/Song";
 import Home from "./pages/Home";
 import { Queue } from "./pages/Queue";
 import Library from "./pages/Library";
-import { RequireLogin } from "./components/common/RequireLogin";
+import { RequireLogin } from "./components/login/RequireLogin";
 
 const Channel = React.lazy(() => import("./pages/Channel"));
 // const History = React.lazy(() => import("./pages/History"));

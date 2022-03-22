@@ -15,7 +15,7 @@ import { useQuery } from "react-query";
 import { Link, Route, Routes, useParams } from "react-router-dom";
 import { ChannelCard } from "../components/channel/ChannelCard";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
-import { BGImg, BGImgContainer } from "../components/common/BGImgContainer";
+import { BGImg, BGImgContainer } from "../components/layout/BGImgContainer";
 import { CardCarousel } from "../components/common/CardCarousel";
 import { MTHolodexIcon } from "../components/icons/MTHolodex";
 import { QueryStatus } from "../components/common/QueryStatus";

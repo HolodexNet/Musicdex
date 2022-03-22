@@ -4,7 +4,7 @@ import { useCallback, useEffect } from "react";
 import { useStoreActions, useStoreState } from "../../store";
 import open from "oauth-open";
 import { useNavigate } from "react-router-dom";
-import { GoogleCredentialResponse } from "../../components/header/GoogleButton";
+import { GoogleCredentialResponse } from "../../components/login/GoogleButton";
 
 export interface OAuth2SuccessResponse {
   token_type: "Bearer";
