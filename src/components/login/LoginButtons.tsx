@@ -1,13 +1,5 @@
-import {
-  Center,
-  Stack,
-  Button,
-  Text,
-  Heading,
-  Divider,
-  Box,
-} from "@chakra-ui/react";
-import { Trans, useTranslation } from "react-i18next";
+import { Button, Text, Box } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { useClientLogin } from "../../modules/client";
 import GoogleButton from "./GoogleButton";
@@ -15,6 +7,9 @@ import GoogleButton from "./GoogleButton";
 export function LoginButtons() {
   const { t } = useTranslation();
   const { DiscordOAuth, GoogleAuthFn, TwitterAuth } = useClientLogin();
+  if (!(DiscordOAuth && GoogleAuthFn && TwitterAuth)) {
+    return <Text>All social accounts are connected</Text>;
+  }
   return (
     <Box maxW={400} w={"full"}>
       {DiscordOAuth && (

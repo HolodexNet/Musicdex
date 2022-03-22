@@ -1,19 +1,17 @@
 import {
-  Stack,
-  FormControl,
-  FormLabel,
   Button,
   Input,
-  Box,
   Divider,
   Heading,
-  Text,
+  Flex,
+  Center,
 } from "@chakra-ui/react";
 import { useRef } from "react";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { useClient } from "../../modules/client";
 import { LoginButtons } from "../login/LoginButtons";
+import { LoginPanel } from "../login/LoginPanel";
 
 export function UserSettings() {
   const { t } = useTranslation();
@@ -35,28 +33,36 @@ export function UserSettings() {
       },
     }
   );
-
+  if (!isLoggedIn) {
+    return (
+      <Center>
+        <LoginPanel />
+      </Center>
+    );
+  }
   return (
-    <Stack w="full" direction="row" alignItems="stretch">
-      {isLoggedIn && (
-        <Stack spacing={4} align={"center"} maxW={"md"} w={"full"} py={8}>
-          <FormControl id="userName" isRequired>
-            <FormLabel>{t("Change Username")}</FormLabel>
-            <Input
-              placeholder="UserName"
-              _placeholder={{ color: "gray.500" }}
-              type="text"
-              ref={ref}
-            />
-          </FormControl>
-          <Stack spacing={6} direction={["column", "row"]}>
+    <>
+      <Flex flexWrap="wrap" my={6} minH={100} justifyContent={"center"}>
+        <Flex flexBasis={200} flexGrow={1} mb={2}>
+          <Heading size={"md"}>{t("Change Username")}</Heading>
+        </Flex>
+        <Flex
+          flexBasis={400}
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Input
+            placeholder="Username"
+            _placeholder={{ color: "gray.500" }}
+            type="text"
+            ref={ref}
+          />
+          <Center>
             <Button
               bg={"blue.400"}
-              color={"white"}
-              w="full"
-              _hover={{
-                bg: "blue.500",
-              }}
+              maxW={200}
+              mt={2}
               onClick={() => {
                 const newname = ref.current.value;
                 if (newname && newname.trim().length > 0) {
@@ -66,29 +72,21 @@ export function UserSettings() {
             >
               {t("Change")}
             </Button>
-          </Stack>
-        </Stack>
-      )}
-      <Box flex={1}>
-        <Stack spacing={4} align={"center"} maxW={"md"} w={"full"}>
-          {!isLoggedIn ? (
-            <>
-              <Heading size="lg">{t("Sign in to Musicdex")}</Heading>
-              <Divider width={12} py={2} />
-              <Text>
-                <Trans i18nKey="loginIntro"></Trans>
-              </Text>
-            </>
-          ) : (
-            <>
-              <Heading size="md">
-                {t("Connect more accounts to Musicdex")}
-              </Heading>
-            </>
-          )}
+          </Center>
+        </Flex>
+      </Flex>
+      <Divider />
+      <Flex flexWrap="wrap" my={6} justifyContent={"center"} minH={100}>
+        <Flex flexBasis={200} flexGrow={1} mb={2}>
+          <Heading size={"md"}>
+            {t("Connect more accounts to Musicdex")}
+          </Heading>
+        </Flex>
+        <Flex flexBasis={400} justifyContent="center" alignItems="center">
           <LoginButtons />
-        </Stack>
-      </Box>
-    </Stack>
+        </Flex>
+      </Flex>
+      <Divider />
+    </>
   );
 }

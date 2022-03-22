@@ -2,9 +2,9 @@ import { Center, Text } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useClient } from "../../modules/client";
-import { LoginButtons } from "./LoginButtons";
 import { ContainerInlay } from "../layout/ContainerInlay";
 import { PageContainer } from "../layout/PageContainer";
+import { LoginPanel } from "./LoginPanel";
 
 export function RequireLogin({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
@@ -16,7 +16,7 @@ export function RequireLogin({ children }: { children: ReactNode }) {
       <ContainerInlay>
         <Center flexDirection="column">
           <Text fontSize="xl">{t("Please log in to use this feature.")}</Text>
-          <LoginButtons />
+          <LoginPanel />
         </Center>
       </ContainerInlay>
     </PageContainer>
