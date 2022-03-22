@@ -36,7 +36,6 @@ import { useTranslation } from "react-i18next";
 interface SidebarProps extends BoxProps {
   onClose: () => void;
   closeOnNav?: boolean;
-  linkItems?: LinkItemProps[];
 }
 export interface LinkItemProps {
   name: string;
@@ -51,11 +50,10 @@ export function SidebarContent({
   ...rest
 }: SidebarProps) {
   const { t } = useTranslation();
-  const pages = useMemo(
+  const pages: LinkItemProps[] = useMemo(
     () => [
       { name: t("Recently Played"), icon: FiClock, path: "/history" },
       { name: t("Liked Songs"), icon: FiHeart, path: "/liked" },
-      // { name: "My Playlists", icon: FiServer, path: "/playlists" },
       { name: t("Settings"), icon: FiSettings, path: "/settings" },
     ],
     [t]

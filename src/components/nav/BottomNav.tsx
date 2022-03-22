@@ -1,25 +1,24 @@
 import { Flex, Icon, Stack, Text } from "@chakra-ui/react";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
 import { FiClock, FiHeart, FiHome } from "react-icons/fi";
 import { RiPlayListFill } from "react-icons/ri";
 import { Link, useLocation } from "react-router-dom";
-export interface LinkItemProps {
-  name: string;
-  icon: IconType;
-  path: string;
-  disabled?: boolean;
-}
+import { LinkItemProps } from "./Sidebar";
 
-const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", icon: FiHome, path: "/" },
-  { name: "Recently Played", icon: FiClock, path: "/history" },
-  { name: "Liked Songs", icon: FiHeart, path: "/liked" },
-  { name: "Library", icon: RiPlayListFill, path: "/library" },
-  //   { name: "My Playlists", icon: FiServer, path: "/playlists" },
-  //   { name: "Settings", icon: FiSettings, path: "/settings" },
-];
 export function BottomNav() {
+  const { t } = useTranslation();
   const { pathname } = useLocation();
+  const pages: LinkItemProps[] = useMemo(
+    () => [
+      { name: t("Home"), icon: FiHome, path: "/" },
+      { name: t("Recently Played"), icon: FiClock, path: "/history" },
+      { name: t("Liked Songs"), icon: FiHeart, path: "/liked" },
+      { name: t("Library"), icon: RiPlayListFill, path: "/library" },
+    ],
+    [t]
+  );
   return (
     <Flex
       minHeight="56px"
@@ -28,7 +27,7 @@ export function BottomNav() {
       paddingBottom="calc(env(safe-area-inset-bottom)*0.5)"
       boxSizing="content-box"
     >
-      {LinkItems.map(({ name, icon, path }) => (
+      {pages.map(({ name, icon, path }) => (
         <Stack
           flex={1}
           justifyContent="center"

@@ -13,10 +13,10 @@ import {
   useStarredPlaylists,
 } from "../modules/services/playlist.service";
 import { FiStar } from "react-icons/fi";
-import { FaBookmark } from "react-icons/fa";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { PlaylistCreateModal } from "../components/playlist/PlaylistCreateForm";
 import { useTranslation } from "react-i18next";
+import { RiPlayListFill } from "react-icons/ri";
 
 export default function Library() {
   const { t } = useTranslation();
@@ -27,7 +27,7 @@ export default function Library() {
     <PageContainer>
       <ContainerInlay mt={12}>
         <Heading mx={2} mb={6}>
-          <Icon as={FaBookmark} marginBottom={-1} marginRight={2} />
+          <Icon as={RiPlayListFill} marginBottom={-1} marginRight={2} />
           {t("Library")}
         </Heading>
         <PlaylistCreateModal {...modalProps} />
