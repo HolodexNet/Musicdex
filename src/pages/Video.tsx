@@ -82,7 +82,7 @@ export default function Video() {
               aria-label="open-on-youtube"
               size="md"
               colorScheme="gray"
-              title="Open on Youtube"
+              title={t("Open in YouTube")}
               onClick={() => {
                 window.open("https://youtu.be/" + video.id);
               }}

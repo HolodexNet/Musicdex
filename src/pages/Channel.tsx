@@ -137,6 +137,7 @@ function ChannelSocialButtons({
   isMobile: boolean | undefined;
   channel: any;
 }) {
+  const { t } = useTranslation();
   const copy = useClipboardWithToast();
 
   const style = {
@@ -162,13 +163,13 @@ function ChannelSocialButtons({
           copy(window.location.toString());
         }}
         aria-label="Copy URL"
-        title="Copy Share URL"
+        title={t("Copy link")}
       />
       <IconButton
         {...style}
         icon={<MTHolodexIcon width="18px" back="#eee" />}
         aria-label="Holodex"
-        title="Open In Holodex"
+        title={t("Open in Holodex")}
         as="a"
         href={"https://holodex.net/channel/" + channel.id}
         target="_blank"
@@ -177,8 +178,8 @@ function ChannelSocialButtons({
         {...style}
         icon={<FiYoutube />}
         color="red.100"
-        aria-label="Youtube"
-        title="Youtube"
+        aria-label="YouTube"
+        title="YouTube"
         as="a"
         href={"https://youtube.com/channel/" + channel.id}
         target="_blank"

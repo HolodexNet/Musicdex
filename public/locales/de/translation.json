@@ -115,5 +115,9 @@
   "This stream has not been tagged with songs": "This stream has not been tagged with songs",
   "(YouTube)": "(YouTube)",
   "User Preferences": "User Preferences",
-  "Failed to load playlist": "Failed to load playlist"
+  "Failed to load playlist": "Failed to load playlist",
+  "Copy link": "Copy link",
+  "Open in Holodex": "Open in Holodex",
+  "Open in YouTube": "Open in YouTube",
+  "Added {{amount}} to Queue": "Added {{amount}} to Queue"
 }

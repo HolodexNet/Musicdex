@@ -7,7 +7,7 @@ export function PageContainer({ children }: { children?: ReactNode }) {
     <Container
       maxW={{ lg: "7xl" }}
       alignContent="stretch"
-      p={{ base: 1, md: 2, xl: 4 }}
+      px={{ base: 1, md: 2, xl: 4 }}
       flex={1}
       display="flex"
       flexDirection="column"

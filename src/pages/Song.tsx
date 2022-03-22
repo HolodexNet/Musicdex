@@ -122,7 +122,7 @@ export default function Song() {
                   size="md"
                   onClick={() => clip(window.location.toString(), false)}
                   colorScheme="n2"
-                  title="Copy Song Link"
+                  title={t("Copy link")}
                 >
                   <FiShare2 />
                 </Button>
@@ -137,7 +137,7 @@ export default function Song() {
                     )
                   }
                   colorScheme="n2"
-                  title="Open Youtube"
+                  title={t("Open in YouTube")}
                 >
                   <FiYoutube />
                 </Button>

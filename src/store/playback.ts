@@ -1,5 +1,4 @@
 import { action, Action, thunk, Thunk } from "easy-peasy";
-import { createStandaloneToast } from "@chakra-ui/react";
 
 interface SongPlayback {
   from: "queue" | "playlist" | "none";
