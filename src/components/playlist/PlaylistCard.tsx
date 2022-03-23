@@ -13,7 +13,10 @@ import { FaPlay } from "react-icons/fa";
 import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import { useClient } from "../../modules/client";
-import { usePlaylistTitleDesc } from "../../modules/playlist/useFormatPlaylist";
+import {
+  useFormatPlaylist,
+  usePlaylistTitleDesc,
+} from "../../modules/playlist/useFormatPlaylist";
 import { useStoreActions } from "../../store";
 import { MotionBox } from "../common/MotionBox";
 import { PlaylistArtwork } from "./PlaylistArtwork";
@@ -43,6 +46,7 @@ export const PlaylistCard = ({
   const setPlaylist = useStoreActions((action) => action.playback.setPlaylist);
   const toast = useToast();
   const { title, description } = usePlaylistTitleDesc(playlist);
+  const formatPlaylist = useFormatPlaylist();
 
   const handlePlayClick = useCallback(
     async (e: any) => {
@@ -90,7 +94,7 @@ export const PlaylistCard = ({
       flexDirection="column"
       shadow="md"
       as={Link}
-      to={`/playlists/${playlist.id}/`}
+      to={formatPlaylist("link", playlist)}
       {...hoverListeners}
       {...rest}
     >
