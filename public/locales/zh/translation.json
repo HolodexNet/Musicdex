@@ -120,5 +120,21 @@
   "Open in Holodex": "於 Holodex 開啟",
   "Open in YouTube": "於 YouTube 開啟",
   "Added {{amount}} to Queue": "將{{amount}}首歌加入到待播清單中",
-  "See All": "See All"
+  "See All": "See All",
+  "English": "English",
+  "Original Name on YouTube (Japanese, etc)": "Original Name on YouTube (Japanese, etc)",
+  "{{org}} Channels": "{{org}} Channels",
+  "This Week in": "This Week in",
+  "Daily Mix": "Daily Mix",
+  "Set List": "Set List",
+  "Daily Mix: {{name}}": "Daily Mix: {{name}}",
+  "Your daily dose of {{name}}": "Your daily dose of {{name}}",
+  "Catch up on {{org}}": "Catch up on {{org}}",
+  "Latest tagged songs in {{org}}": "Latest tagged songs in {{org}}",
+  "Best of {{org}}": "Best of {{org}}",
+  "Recent {{org}} covers & originals": "Recent {{org}} covers & originals",
+  "Relive the top hits from {{org}}": "Relive the top hits from {{org}}",
+  "Sang by {{name}} on {{date}}": "Sang by {{name}} on {{date}}",
+  "{{org}} Weekly Mix": "{{org}} Weekly Mix",
+  "Explore this week in {{org}}": "Explore this week in {{org}}"
 }
