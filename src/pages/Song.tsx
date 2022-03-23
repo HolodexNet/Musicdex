@@ -47,11 +47,13 @@ export default function Song() {
   const queueSongs = useSongQueuer();
   const clip = useClipboardWithToast();
   const tn = useNamePicker();
-
+  const channelName = song && tn(song.channel.english_name, song.channel.name);
   return (
     <PageContainer>
       <Helmet>
-        <title>{song?.name || "Unknown Song"} - Musicdex</title>
+        <title>
+          {song ? `${song.name} - ${channelName}` : "Unknown Song"} - Musicdex
+        </title>
       </Helmet>
       <ContainerInlay>
         <QueryStatus queryStatus={rest} />
@@ -89,7 +91,7 @@ export default function Song() {
                     lineHeight="48px"
                     ml={2}
                   >
-                    {tn(song.channel.english_name, song.channel.name)}
+                    {channelName}
                   </Text>
                 </Link>
               </HStack>
