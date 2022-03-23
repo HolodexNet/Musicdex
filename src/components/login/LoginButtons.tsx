@@ -7,7 +7,7 @@ import GoogleButton from "./GoogleButton";
 export function LoginButtons() {
   const { t } = useTranslation();
   const { DiscordOAuth, GoogleAuthFn, TwitterAuth } = useClientLogin();
-  if (!(DiscordOAuth && GoogleAuthFn && TwitterAuth)) {
+  if (!DiscordOAuth && GoogleAuthFn && !TwitterAuth) {
     return <Text>All social accounts are connected</Text>;
   }
   return (
