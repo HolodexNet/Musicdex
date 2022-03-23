@@ -25,6 +25,16 @@ type Config = {
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
 };
 
+//@ts-ignore
+window._load = window.load;
+//@ts-ignore
+window.load = function () {
+  //@ts-ignore
+  window.loaded = true;
+  //@ts-ignore
+  window._load();
+};
+
 const SW_UPDATE_INTERVAL = 15 * 60 * 1000;
 
 export function register(config?: Config) {
@@ -38,15 +48,12 @@ export function register(config?: Config) {
       return;
     }
 
-    window.addEventListener("load", () => {
+    const setupServiceWorker = () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
         checkValidServiceWorker(swUrl, config);
-
-        // Add some additional logging to localhost, pointing developers to the
-        // service worker/PWA documentation.
         navigator.serviceWorker.ready.then(() => {
           console.log(
             "This web app is being served cache-first by a service " +
@@ -57,7 +64,11 @@ export function register(config?: Config) {
         // Is not localhost. Just register service worker
         registerValidSW(swUrl, config);
       }
-    });
+    };
+
+    //@ts-ignore
+    if (window.loaded) setupServiceWorker();
+    else window.addEventListener("load", setupServiceWorker);
   }
 }
 
