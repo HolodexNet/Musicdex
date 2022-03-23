@@ -110,8 +110,8 @@ export function OrgPickerPanel({
             return (
               <Flex
                 width="100%"
+                pr="30px"
                 // is="div"
-                mt={2}
                 // style={{ minWidth: "300px", maxWidth: "400px" }}
                 key={"orgselect" + org.name}
                 // value={org}
@@ -167,6 +167,7 @@ function ReorderableOrgItem({
         y,
         display: "flex",
         marginTop: "0.5rem",
+        alignItems: "center",
       }}
       dragListener={false}
       dragControls={controls}
