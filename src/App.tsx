@@ -5,6 +5,8 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "./components/common/ErrorFallback";
 import usePageTracking from "./modules/common/usePageTracking";
 import { useCookieTokenFallback } from "./modules/client";
+import { unregister } from "./serviceWorkerRegistration";
+import { LoadingFullScreen } from "./components/common/GlobalLoadingStatus";
 function App(this: any) {
   // Page tracker suggested via https://stackoverflow.com/a/63249329
   usePageTracking();
@@ -19,29 +21,19 @@ function App(this: any) {
         // reset the state of your app so the error doesn't happen again
       }}
     >
-      <Suspense fallback={<div></div>}>
+      <Suspense fallback={<LoadingFullScreen />}>
         <Frame>
           {/* TODO: ADD REAL LOADING PAGE */}
-          <Suspense fallback={<div>Loading...</div>}>
-            <ErrorBoundary
-              FallbackComponent={ErrorFallback}
-              onReset={() => {
-                if ("serviceWorker" in navigator) {
-                  navigator.serviceWorker
-                    .getRegistrations()
-                    .then(function (registrations) {
-                      for (let registration of registrations) {
-                        registration.unregister();
-                      }
-                    });
-                }
-                window.location.reload();
-                // reset the state of your app so the error doesn't happen again
-              }}
-            >
-              <Routes />
-            </ErrorBoundary>
-          </Suspense>
+          <ErrorBoundary
+            FallbackComponent={ErrorFallback}
+            onReset={() => {
+              unregister();
+              window.location.reload();
+              // reset the state of your app so the error doesn't happen again
+            }}
+          >
+            <Routes />
+          </ErrorBoundary>
         </Frame>
       </Suspense>
     </ErrorBoundary>

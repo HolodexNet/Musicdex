@@ -80,7 +80,7 @@ i18n
       // reloadInterval: 5000,
     },
     react: {
-      useSuspense: false,
+      useSuspense: true,
     },
     // react: {
     //   useSuspense: false,

@@ -18,7 +18,7 @@ import App from "./App";
 import "./modules/common/i18n";
 import { store } from "./store";
 import { theme } from "./theme";
-import reportWebVitals from "./utils/reportWebVitals";
+// import reportWebVitals from "./utils/reportWebVitals";
 import "./global.css";
 import "@fontsource/manrope/700.css";
 import "@fontsource/assistant/400.css";
@@ -55,4 +55,4 @@ serviceWorkerRegistration.register();
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// reportWebVitals();

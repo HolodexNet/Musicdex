@@ -11,6 +11,7 @@ import {
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useClient } from "../../modules/client";
+import { unregister } from "../../serviceWorkerRegistration";
 
 export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   const { t } = useTranslation();
@@ -35,13 +36,7 @@ export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
     });
     // clear localStorage
     window.localStorage.clear();
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function (registrations) {
-        for (let registration of registrations) {
-          registration.unregister();
-        }
-      });
-    }
+    unregister();
     window.location.replace("/");
   };
   return (
@@ -65,10 +60,18 @@ export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
         </HStack>
         <Text pt={6}>{t("ErrorPart2LetUsKnow")}</Text>
         <HStack>
-          <a href="https://twitter.com/holodex" target="_blank">
+          <a
+            href="https://twitter.com/holodex"
+            target="_blank"
+            rel="noreferrer"
+          >
             <Button colorScheme="twitter">{t("Twitter")}</Button>
           </a>
-          <a href="https://discord.gg/A24AbzgvRJ" target="_blank">
+          <a
+            href="https://discord.gg/A24AbzgvRJ"
+            target="_blank"
+            rel="noreferrer"
+          >
             <Button colorScheme="purple">{t("Discord")}</Button>
           </a>
         </HStack>
