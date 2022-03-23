@@ -10,6 +10,7 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { useChannelListForOrg } from "../modules/services/channels.service";
 import { useStoreState } from "../store";
 import { Link as NavLink } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 export default function Channels() {
   //   let params = useParams();
@@ -49,6 +50,9 @@ export default function Channels() {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{t("{{org}} Channels", { org: org.name })} - Musicdex</title>
+      </Helmet>
       <ContainerInlay>
         <Heading size="lg" mb={3} id="top-header">
           <Link as={NavLink} to={"/"}>
@@ -64,7 +68,6 @@ export default function Channels() {
           {channelsGrouped &&
             groups &&
             groups.map((g) => {
-              console.log(g);
               return (
                 <Box key={"g-" + g}>
                   <Heading size="md" my={3} key={"he-" + g}>

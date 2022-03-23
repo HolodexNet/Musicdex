@@ -33,6 +33,7 @@ import { useStoreActions } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 import ChannelSongs from "./ChannelSongs";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
 
 export default function Channel() {
   // const history = useStoreState((store) => store.playback.history);
@@ -70,6 +71,9 @@ export default function Channel() {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{name} - Musicdex</title>
+      </Helmet>
       <BGImgContainer height="60vh">
         <BGImg
           banner_url={`https://i.ytimg.com/vi/${discovery?.recentSingingStream?.video.id}/sddefault.jpg`}

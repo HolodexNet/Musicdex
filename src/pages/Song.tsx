@@ -7,6 +7,7 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
 import { FaPlay } from "react-icons/fa";
@@ -49,6 +50,9 @@ export default function Song() {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{song?.name || "Unknown Song"} - Musicdex</title>
+      </Helmet>
       <ContainerInlay>
         <QueryStatus queryStatus={rest} />
         {song && (

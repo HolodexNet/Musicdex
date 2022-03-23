@@ -42,7 +42,7 @@ const routes: RouteObject[] = [
   {
     path: "/liked",
     element: (
-      <RequireLogin>
+      <RequireLogin title={"Liked Songs"}>
         <LikedSongs />
       </RequireLogin>
     ),
@@ -50,7 +50,7 @@ const routes: RouteObject[] = [
   {
     path: "/history",
     element: (
-      <RequireLogin>
+      <RequireLogin title={"Recently Played"}>
         <History />
       </RequireLogin>
     ),
@@ -82,7 +82,7 @@ const routes: RouteObject[] = [
   {
     path: "/library",
     element: (
-      <RequireLogin>
+      <RequireLogin title={"Libary"}>
         <Library />
       </RequireLogin>
     ),

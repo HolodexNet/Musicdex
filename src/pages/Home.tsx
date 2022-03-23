@@ -20,6 +20,7 @@ import { useStoreActions, useStoreState } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -35,6 +36,9 @@ export default function Home() {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{t("Home")} - Musicdex</title>
+      </Helmet>
       <ContainerInlay pt={0}>
         <HomeSection>
           <Heading size="lg" mb={3}>

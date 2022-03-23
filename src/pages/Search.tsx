@@ -27,6 +27,7 @@ import {
   AdvancedSearchFiltersForm,
 } from "../components/nav/AdvancedSearchComponent";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
 
 export interface SearchableSong extends Song {
   channel_org?: string;
@@ -72,6 +73,9 @@ export default function Search() {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{t("Search")} - Musicdex</title>
+      </Helmet>
       <AdvancedSearchFilters
         facets={searchResult?.facet_counts}
       ></AdvancedSearchFilters>

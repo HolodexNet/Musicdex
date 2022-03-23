@@ -15,6 +15,7 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { useFormatPlaylist } from "../modules/playlist/useFormatPlaylist";
 import { useStoreActions, useStoreState } from "../store";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
 
 export const Queue = React.memo(() => {
   const { t } = useTranslation();
@@ -56,6 +57,9 @@ export const Queue = React.memo(() => {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{t("Queue")} - Musicdex</title>
+      </Helmet>
       <SongContextMenu menuId={QUEUE_MENU_ID} />
       <div className="bgOver"></div>
       <ContainerInlay>

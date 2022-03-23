@@ -54,11 +54,9 @@ const GoogleButton: FunctionComponent<GoogleButtonParams> = ({
 
   return (
     <>
-      <HelmetProvider>
-        <Helmet onChangeClientState={handleChangeClientState}>
-          <script src={googleUrl} async defer />
-        </Helmet>
-      </HelmetProvider>
+      <Helmet onChangeClientState={handleChangeClientState}>
+        <script src={googleUrl} async defer />
+      </Helmet>
       <Box
         ref={divRef}
         height={"32px"}

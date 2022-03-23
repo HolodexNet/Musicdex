@@ -1,5 +1,6 @@
 import { Box, useColorModeValue, Text } from "@chakra-ui/react";
 import { Fragment, Suspense } from "react";
+import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
@@ -63,6 +64,9 @@ export default function History() {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>My Recently Played - Musicdex</title>
+      </Helmet>
       <ContainerInlay mt="12">{<Content />}</ContainerInlay>
     </PageContainer>
   );

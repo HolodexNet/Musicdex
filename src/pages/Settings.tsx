@@ -16,11 +16,15 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { LanguageSettings } from "../components/settings/LanguageSettings";
 import { FaRegBuilding, FaRegUser } from "react-icons/fa";
 import { IoLanguage } from "react-icons/io5";
+import { Helmet } from "react-helmet-async";
 
 export default function Settings() {
   const { t } = useTranslation();
   return (
     <PageContainer>
+      <Helmet>
+        <title>{t("Settings")} - Musicdex</title>
+      </Helmet>
       <ContainerInlay>
         <Heading size="lg" py={5}>
           {t("Settings")}

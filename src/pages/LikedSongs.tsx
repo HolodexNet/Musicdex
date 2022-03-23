@@ -1,5 +1,6 @@
 import { Button, HStack } from "@chakra-ui/react";
 import { Suspense, useMemo, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
@@ -25,6 +26,9 @@ export default function LikedSongs() {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{t("Liked Songs")} - Musicdex</title>
+      </Helmet>
       <ContainerInlay mt={12}>
         {/* <Stack spacing={4} my={4}> */}
         <PlaylistHeading

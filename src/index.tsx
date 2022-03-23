@@ -26,6 +26,7 @@ import "@fontsource/assistant/500.css";
 import "@fontsource/assistant/600.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import { HelmetProvider } from "react-helmet-async";
 
 console.log(`${process.env.REACT_APP_NAME} ${process.env.REACT_APP_VERSION}`);
 (window as any)["App_Version"] = process.env.REACT_APP_VERSION;
@@ -36,9 +37,11 @@ store.persist.resolveRehydration().then(() => {
       <StoreProvider store={store}>
         <ChakraProvider theme={theme}>
           <QueryClientProvider client={queryClient}>
-            <Router>
-              <App />
-            </Router>
+            <HelmetProvider>
+              <Router>
+                <App />
+              </Router>
+            </HelmetProvider>
           </QueryClientProvider>
         </ChakraProvider>
       </StoreProvider>

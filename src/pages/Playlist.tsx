@@ -23,6 +23,7 @@ import {
 } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
+import { Helmet } from "react-helmet-async";
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
 );
@@ -137,6 +138,9 @@ export default function Playlist() {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{title || t("Untitled Playlist")} - Musicdex</title>
+      </Helmet>
       <BGImgContainer height="200px">
         <BGImg banner_url={banner || ""} height="200px"></BGImg>
       </BGImgContainer>

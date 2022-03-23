@@ -17,6 +17,7 @@ import { QueryStatus } from "../components/common/QueryStatus";
 import { PlaylistCreateModal } from "../components/playlist/PlaylistCreateForm";
 import { useTranslation } from "react-i18next";
 import { RiPlayListFill } from "react-icons/ri";
+import { Helmet } from "react-helmet-async";
 
 export default function Library() {
   const { t } = useTranslation();
@@ -25,6 +26,9 @@ export default function Library() {
   const { onOpen, ...modalProps } = useDisclosure();
   return (
     <PageContainer>
+      <Helmet>
+        <title>{t("Library")} - Musicdex</title>
+      </Helmet>
       <ContainerInlay mt={12}>
         <Heading mx={2} mb={6}>
           <Icon as={RiPlayListFill} marginBottom={-1} marginRight={2} />
