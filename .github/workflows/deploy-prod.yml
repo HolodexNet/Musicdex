@@ -1,0 +1,26 @@
+name: Deploy to Musicdex (Production)
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script_stop: true
+          script: |
+            cd /opt/prod_musicdex || { echo "No directory found"; exit 1; } 
+            git pull origin master
+            yarn
+            yarn run build
+            rm -r /var/www/html/music.holodex.net/*
+            cp -r build/* /var/www/html/music.holodex.net/
