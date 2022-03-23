@@ -4,6 +4,7 @@ import { useStoreActions, useStoreState } from "../../store";
 import { SettingsSection } from "./SettingsSection";
 
 export function LanguageSettings() {
+  const { t, i18n } = useTranslation();
   const displayLangPrefs = [
     { value: "en", display: "English", credit: "@Holodex" },
     { value: "en-GB", display: "English (British)", credit: "@Holodex" },
@@ -29,14 +30,13 @@ export function LanguageSettings() {
   ];
 
   const channelNamePrefs = [
-    { value: "english_name", display: "English" },
-    { value: "name", display: "Original Name on YouTube (Japanese, etc)" },
+    { value: "english_name", display: t("English") },
+    { value: "name", display: t("Original Name on YouTube (Japanese, etc)") },
   ];
 
   const useEN = useStoreState((s) => s.settings.useEN);
   const changeUseEN = useStoreActions((s) => s.settings.setUseEN);
 
-  const { t, i18n } = useTranslation();
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
   };

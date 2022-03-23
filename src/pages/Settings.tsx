@@ -6,6 +6,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import OrgManager from "../components/settings/OrgManagement";
@@ -48,6 +49,9 @@ export default function Settings() {
               <LanguageSettings />
             </TabPanel>
             <TabPanel px={0}>
+              <Text my={2} fontStyle="italic">
+                {t("Drag and Drop to reorder list of orgs in the org dropdown")}
+              </Text>
               <OrgManager />
             </TabPanel>
           </TabPanels>
