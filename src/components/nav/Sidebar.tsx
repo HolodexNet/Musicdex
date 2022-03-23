@@ -93,7 +93,9 @@ export function SidebarContent({
       <NavItem icon={FiHome} key={"Home"} mb={1} path="/">
         {t("Home") as string}
       </NavItem>
-      <AnimatePresence>{pathname === "/" && <OrgSelector />}</AnimatePresence>
+      <AnimatePresence>
+        {(pathname === "/" || pathname === "/channels") && <OrgSelector />}
+      </AnimatePresence>
       {pages.map((page) => (
         <NavItem {...page} key={page.name} mb={1}>
           {page.name}

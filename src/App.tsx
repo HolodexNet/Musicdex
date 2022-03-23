@@ -26,6 +26,15 @@ function App(this: any) {
             <ErrorBoundary
               FallbackComponent={ErrorFallback}
               onReset={() => {
+                if ("serviceWorker" in navigator) {
+                  navigator.serviceWorker
+                    .getRegistrations()
+                    .then(function (registrations) {
+                      for (let registration of registrations) {
+                        registration.unregister();
+                      }
+                    });
+                }
                 window.location.reload();
                 // reset the state of your app so the error doesn't happen again
               }}

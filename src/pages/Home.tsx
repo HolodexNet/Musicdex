@@ -19,6 +19,7 @@ import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreActions, useStoreState } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -104,6 +105,11 @@ export default function Home() {
         </HomeSection>
 
         <HomeSection>
+          <Link to="/channels">
+            <Button float="right" variant="outline" colorScheme="n2">
+              {t("See All")}
+            </Button>
+          </Link>
           <Heading size="lg" mb={3}>
             {t("Discover {{org}}", { org: org.name })}
           </Heading>

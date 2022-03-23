@@ -68,6 +68,13 @@ export const SongCard = ({ song, ...rest }: SongCardProps) => {
             whileTap={{ scale: 0.9 }}
             transition={{ duration: 0.3 }}
             onClick={() => playSong()}
+            onMouseDown={(e: MouseEvent) => {
+              if (e.button === 1) {
+                //middle mouse:
+                window.open(`/song/${song.id}`, "_blank");
+                e.preventDefault();
+              }
+            }}
             cursor="pointer"
             display="flex"
             justifyContent="center"
