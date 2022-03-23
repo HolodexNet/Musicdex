@@ -106,7 +106,7 @@
   "Drag and Drop to reorder list of orgs in the org dropdown": "원하는 소속 항목을 끌어서 소속 드롭다운에 표시되는 순서를 변경할 수 있습니다",
   "Interface Language": "인터페이스 언어",
   "Channel Name": "채널명",
-  "If the steps above don't fix this issue, please send us a screenshot on Discord or Twitter and let us know how you ran into it.": "해결되지 않았다면 우리가 해결할 수 있도록 Discord나 Twitter에 스크린샷을 찍어서 재현 방법과 함께 보내주세요.",
+  "ErrorPart2LetUsKnow": "If the steps above don't fix this issue, please send us a screenshot on Discord or Twitter and let us know how you ran into it.",
   "Please log in to use this feature.": "이 기능을 사용하려면 로그인이 필요합니다.",
   "Sign in to Musicdex": "Musicdex에 로그인하기",
   "Sign in with Discord": "Discord 계정으로 로그인",
@@ -119,5 +119,6 @@
   "Copy link": "링크 복사",
   "Open in Holodex": "Holodex에서 열기",
   "Open in YouTube": "YouTube에서 열기",
-  "Added {{amount}} to Queue": "대기열에 곡 {{amount}}개 추가됨"
+  "Added {{amount}} to Queue": "대기열에 곡 {{amount}}개 추가됨",
+  "See All": "See All"
 }
