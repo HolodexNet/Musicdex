@@ -24,7 +24,6 @@ import {
 } from "framer-motion";
 import { MdDragHandle } from "react-icons/md";
 import { Org } from "../../store/org";
-import { useTranslation } from "react-i18next";
 
 export default function OrgManager() {
   return (
@@ -69,16 +68,18 @@ export function OrgPickerPanel({
           value={search}
           onChange={handleChange}
         />
-        <InputRightElement width="4.5rem">
-          <CloseButton onClick={() => setSearch("")}></CloseButton>
-        </InputRightElement>
+        {search && (
+          <InputRightElement width="4.5rem">
+            <CloseButton onClick={() => setSearch("")}></CloseButton>
+          </InputRightElement>
+        )}
       </InputGroup>
       <Box
-        maxH="70vh"
-        overflowY="auto"
-        overflowX="hidden"
-        minWidth="200px"
-        maxWidth="450px"
+        // maxH="70vh"
+        // overflowY="auto"
+        // overflowX="hidden"
+        // minWidth="200px"
+        // maxWidth="450px"
         pr="2"
       >
         {/* <VStack> */}
@@ -87,7 +88,7 @@ export function OrgPickerPanel({
           values={orglist}
           onReorder={setOrglist}
           as="div"
-          style={{ minWidth: "300px", maxWidth: "400px", width: "100%" }}
+          // style={{ minWidth: "300px", maxWidth: "400px", width: "100%" }}
         >
           {orglist
             .filter((x) =>
@@ -111,7 +112,7 @@ export function OrgPickerPanel({
                 width="100%"
                 // is="div"
                 mt={2}
-                style={{ minWidth: "300px", maxWidth: "400px" }}
+                // style={{ minWidth: "300px", maxWidth: "400px" }}
                 key={"orgselect" + org.name}
                 // value={org}
               >

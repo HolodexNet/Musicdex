@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useClient } from "../../modules/client";
 import { ContainerInlay } from "../layout/ContainerInlay";
 import { PageContainer } from "../layout/PageContainer";
-import { LoginPanel } from "./LoginPanel";
+import { LoginButtons } from "./LoginButtons";
 
 export function RequireLogin({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
@@ -15,8 +15,10 @@ export function RequireLogin({ children }: { children: ReactNode }) {
     <PageContainer>
       <ContainerInlay>
         <Center flexDirection="column">
-          <Text fontSize="xl">{t("Please log in to use this feature.")}</Text>
-          <LoginPanel />
+          <Text fontSize="xl" mb={8}>
+            {t("Please log in to use this feature.")}
+          </Text>
+          <LoginButtons />
         </Center>
       </ContainerInlay>
     </PageContainer>

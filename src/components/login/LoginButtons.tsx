@@ -1,4 +1,4 @@
-import { Button, Text, Box } from "@chakra-ui/react";
+import { Button, Text, Box, Flex } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { useClientLogin } from "../../modules/client";
@@ -11,7 +11,7 @@ export function LoginButtons() {
     return <Text>All social accounts are connected</Text>;
   }
   return (
-    <Box maxW={400} w={"full"}>
+    <Flex width="100%" maxWidth={400} flexDirection="column">
       {DiscordOAuth && (
         <Button
           w={"full"}
@@ -45,6 +45,6 @@ export function LoginButtons() {
           <Text mx="auto">{t("Sign in with Twitter")}</Text>
         </Button>
       )}
-    </Box>
+    </Flex>
   );
 }

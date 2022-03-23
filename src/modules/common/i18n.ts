@@ -8,7 +8,7 @@ import {
   formatRelative,
   isDate,
 } from "date-fns";
-import { enUS, ja, zhTW, enGB } from "date-fns/locale"; // import all locales we need
+import { enUS, ja, zhTW, enGB, de, ko, hu } from "date-fns/locale"; // import all locales we need
 import I18NextHttpBackend from "i18next-http-backend";
 
 const locales: { [key: string]: Locale } = {
@@ -16,6 +16,9 @@ const locales: { [key: string]: Locale } = {
   "en-GB": enGB,
   ja,
   zh: zhTW,
+  de,
+  ko,
+  hu,
 }; // used to look up the required locale
 
 const SYSTEM_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -26,10 +29,10 @@ i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     // resources,
-    debug: true,
+    debug: process.env.NODE_ENV === "development",
     fallbackLng: "en",
     saveMissing: true,
-    supportedLngs: ["en", "ja", "zh"],
+    supportedLngs: ["en", "ja", "zh", "ko", "de", "hu"],
     interpolation: {
       escapeValue: false,
       format: (value, format, lng, options) => {
@@ -84,8 +87,8 @@ i18n
     // },
   });
 
-i18n.on("missingKey", (lngs, namespace, key, res) => {
-  console.error(
-    `Missing i18N Key / TL: lng=${lngs}, namespace=${namespace}, key=${key}, res=${res};`
-  );
-});
+// i18n.on("missingKey", (lngs, namespace, key, res) => {
+//   console.error(
+//     `Missing i18N Key / TL: lng=${lngs}, namespace=${namespace}, key=${key}, res=${res};`
+//   );
+// });

@@ -69,8 +69,11 @@ export function OrgSelector() {
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent
-          minWidth="300px"
+          minWidth="400px"
           maxWidth="100vw"
+          maxH="70vh"
+          overflowY="auto"
+          overflowX="hidden"
           width="auto"
           backgroundColor="gray.900"
         >
