@@ -11,11 +11,11 @@ export const weeklyFormatter: PlaylistFormatter<
       return undefined;
     }
   },
-  title: (playlist, { org }, _) => {
-    return `${org} Weekly Mix`;
+  title: (playlist, { org }, data, { t }) => {
+    return t(`{{org}} Weekly Mix`, { org });
   },
-  description: (playlist, { org }, data, { tn }) => {
-    return `Explore this week in ${org}`;
+  description: (playlist, { org }, data, { t }) => {
+    return t(`Explore this week in {{org}}`, { org });
   },
   // link: (p, { id }, d: any) => {}
 };

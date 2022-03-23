@@ -10,9 +10,11 @@ import {
 import styled from "@emotion/styled";
 import React from "react";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
 import { BiCalendar, BiMovie } from "react-icons/bi";
 import { FaUser } from "react-icons/fa";
+import useNamePicker from "../../modules/common/useNamePicker";
 import {
   isSGPPlaylist,
   parsePlaylistDesc,
@@ -35,6 +37,8 @@ export const PlaylistArtwork = React.memo(
     size = "148px",
     ...rest
   }: PlaylistArtworkProps) => {
+    const { t } = useTranslation();
+    const tn = useNamePicker();
     const formatPlaylist = useFormatPlaylist();
     const { title, description, type } = useMemo(() => {
       let type;
@@ -67,7 +71,7 @@ export const PlaylistArtwork = React.memo(
     if (type === ":weekly") {
       return (
         <StackedTextArt
-          typeText="This Week in"
+          typeText={t("This Week in")}
           titleText={description?.org || ""}
           imageUrl={thumbnail || ""}
           reverse={true}
@@ -78,10 +82,11 @@ export const PlaylistArtwork = React.memo(
     if (type === ":dailyrandom") {
       return (
         <StackedTextArt
-          typeText="Daily Mix"
-          titleText={
-            description?.channel.english_name || description?.channel.name
-          }
+          typeText={t("Daily Mix")}
+          titleText={tn(
+            description?.channel.english_name,
+            description?.channel.name
+          )}
           imageUrl={thumbnail || ""}
           {...props}
         />
@@ -93,7 +98,7 @@ export const PlaylistArtwork = React.memo(
         (description.id && getVideoThumbnails(description.id).medium) || "";
       return (
         <StackedTextArt
-          typeText="Setlist"
+          typeText={t("Set List")}
           titleText={description?.title}
           imageUrl={image}
           {...props}

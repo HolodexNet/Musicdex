@@ -67,8 +67,8 @@ type FormatFunctions =
 
 // Translation and name picker function
 interface FormatContext {
-  t?: TFunction<"translation", undefined>;
-  tn?: (en: any, jp: any) => any;
+  t: TFunction<"translation", undefined>;
+  tn: (en: any, jp: any) => any;
 }
 
 export type PlaylistFnMap<Param, Desc> = {

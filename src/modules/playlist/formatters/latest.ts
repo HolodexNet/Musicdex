@@ -11,10 +11,10 @@ export const latestFormatter: PlaylistFormatter<
       return undefined;
     }
   },
-  title: (playlist, { org }, _) => {
-    return `Catchup on ${org}`;
+  title: (playlist, { org }, data, { t }) => {
+    return t("Catch up on {{org}}", { org });
   },
-  description: (playlist, { org }, data, { tn }) => {
-    return `Latest tagged songs in ${org}`;
+  description: (playlist, { org }, data, { t }) => {
+    return t("Latest tagged songs in {{org}}", { org });
   },
 };

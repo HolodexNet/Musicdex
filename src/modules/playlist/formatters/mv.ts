@@ -11,20 +11,20 @@ export const mvFormatter: PlaylistFormatter<
       return undefined;
     }
   },
-  title: (playlist, { org, sort }, _) => {
+  title: (playlist, { org, sort }, _, { t }) => {
     switch (sort) {
       case "random":
-        return `Best of ${org}`;
+        return t("Best of {{org}}", { org });
       case "latest":
-        return `Recent ${org} covers & originals`;
+        return t("Recent {{org}} covers & originals", { org });
     }
   },
-  description: (playlist, { org, sort }, data, { tn }) => {
+  description: (playlist, { org, sort }, data, { t }) => {
     switch (sort) {
       case "random":
-        return `Relive the top hits from ${org}`;
+        return t(`Relive the top hits from {{org}}`, { org });
       case "latest":
-        return `Recent ${org} covers & originals`;
+        return t(`Recent {{org}} covers & originals`, { org });
     }
   },
 };

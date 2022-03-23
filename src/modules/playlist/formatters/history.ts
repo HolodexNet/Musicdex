@@ -6,6 +6,6 @@ export const historyFormatter: PlaylistFormatter<
 > = {
   bannerImage: () => undefined,
   channelImage: () => undefined,
-  title: () => "Recently Played",
-  description: () => "Your recently played songs",
+  title: (_, __, ___, { t }) => t("Recently Played"),
+  description: (_, __, ___, { t }) => t("Your recently played songs"),
 };
