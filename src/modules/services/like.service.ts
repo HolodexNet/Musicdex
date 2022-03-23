@@ -117,7 +117,7 @@ export function useSongLikeBulkCheck(songId: string) {
     [LIKED_QUERY_KEY, songId, user?.id ?? "na"],
     () => {
       if (loader) return loader.load(songId);
-      else throw new Error("not logged in");
+      else return false;
     },
     LIKE_QUERY_CONFIG
   );

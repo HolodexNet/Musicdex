@@ -111,13 +111,8 @@ export const usePlaylist = (
         playlistId,
       ]);
 
-      let playlistReq = AxiosInstance<PlaylistFull>(
-        `/musicdex/playlist/${playlistId}`
-      );
-      const likeStatusReq = AxiosInstance<boolean[]>(
-        `/musicdex/playlist/${playlistId}/likeCheck`
-      );
-
+      const playlistUrl = `/musicdex/playlist/${playlistId}`;
+      const likeStatusUrl = `/musicdex/playlist/${playlistId}/likeCheck`;
       // Cached flow
       if (cached) {
         const cacheCheckReq = AxiosInstance<PlaylistFull>(
@@ -140,7 +135,7 @@ export const usePlaylist = (
         // Parallel request
         const [{ data: playlist }, { data: likeStatus }] = await Promise.all([
           cacheCheckReq,
-          likeStatusReq,
+          AxiosInstance<boolean[]>(likeStatusUrl),
         ]);
 
         // Check if content matches, and update cache
@@ -158,12 +153,13 @@ export const usePlaylist = (
       // Uncached request flow
 
       // Not logged in, just request
-      if (!isLoggedIn) return (await playlistReq).data;
+      if (!isLoggedIn)
+        return (await AxiosInstance<PlaylistFull>(playlistUrl)).data;
 
       // Parallel request for like status and playlist
       const [{ data: playlist }, { data: likeStatus }] = await Promise.all([
-        playlistReq,
-        likeStatusReq,
+        AxiosInstance<PlaylistFull>(playlistUrl),
+        AxiosInstance<boolean[]>(likeStatusUrl),
       ]);
 
       if (likeStatus.length === playlist.content?.length) {
