@@ -34,6 +34,7 @@ export function LoadingFullScreen() {
       top={0}
       justifyContent="center"
       alignItems="center"
+      animation="fade-in 0.2s"
     >
       <Spinner size="xl" />
       {/* <Text fontSize="3xl">Loading...</Text> */}

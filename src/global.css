@@ -53,3 +53,12 @@
 #chakra-toast-manager-bottom-right {
   transform: translateY(-76px);
 }
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
