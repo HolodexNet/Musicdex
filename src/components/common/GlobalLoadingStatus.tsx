@@ -1,5 +1,6 @@
 import { Flex, Progress, Spinner, Text } from "@chakra-ui/react";
 import { useIsFetching } from "react-query";
+import { GradientLogo } from "../icons/GradientLogo";
 export function GlobalLoadingStatus() {
   // How many queries are fetching?
   const isFetching = useIsFetching();
@@ -26,18 +27,17 @@ export function LoadingFullScreen() {
     <Flex
       width="100%"
       height="100%"
-      maxW="100vw"
-      maxH="100vh"
       position="fixed"
       bgColor="bg.800"
       zIndex={99}
       top={0}
+      left={0}
       justifyContent="center"
       alignItems="center"
       animation="fade-in 0.2s"
     >
-      <Spinner size="xl" />
-      {/* <Text fontSize="3xl">Loading...</Text> */}
+      <Spinner size="xl" color="n2.100"></Spinner>
+      <GradientLogo position="fixed" />
     </Flex>
   );
 }
