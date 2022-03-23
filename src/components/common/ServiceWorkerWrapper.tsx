@@ -7,14 +7,14 @@ const ServiceWorkerWrapper = () => {
   const { t } = useTranslation();
   const [showReload, setShowReload] = React.useState(false);
   const [dismissed, setDismissed] = React.useState(false);
-  // const [waitingWorker, setWaitingWorker] =
-  //   React.useState<ServiceWorker | null>(null);
+  const [waitingWorker, setWaitingWorker] =
+    React.useState<ServiceWorker | null>(null);
 
   const onSWUpdate = (registration: ServiceWorkerRegistration) => {
     if (!registration) return;
     setShowReload(true);
-    registration.waiting?.postMessage({ type: "SKIP_WAITING" });
-    // setWaitingWorker(registration.waiting);
+
+    setWaitingWorker(registration.waiting);
   };
 
   useEffect(() => {
@@ -24,6 +24,7 @@ const ServiceWorkerWrapper = () => {
   const reloadPage = () => {
     setShowReload(false);
     window.location.reload();
+    waitingWorker?.postMessage({ type: "SKIP_WAITING" });
   };
 
   return showReload && !dismissed ? (
