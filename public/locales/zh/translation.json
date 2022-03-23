@@ -124,7 +124,7 @@
   "English": "英文",
   "Original Name on YouTube (Japanese, etc)": "顯示原始 YouTube 頻道名稱",
   "{{org}} Channels": "{{org}} 相關頻道",
-  "This Week in": "This Week in",
+  "This Week in": "本週新曲",
   "Daily Mix": "Daily Mix",
   "Set List": "預置歌單",
   "Daily Mix: {{name}}": "Daily Mix: {{name}}",
@@ -134,7 +134,7 @@
   "Best of {{org}}": "{{org}} 熱門曲目",
   "Recent {{org}} covers & originals": "{{org}} 近期原創與翻唱",
   "Relive the top hits from {{org}}": "再次聆聽 {{org}} 的最棒歌曲",
-  "Sang by {{name}} on {{date}}": "由{{name}}於{{date}}演唱",
+  "Sang by {{name}} on {{date}}": "由 {{name}} 於{{date}}演唱",
   "{{org}} Weekly Mix": "{{org}} 每週推薦",
-  "Explore this week in {{org}}": "探索 {{org}} 本週新曲"
+  "Explore this week in {{org}}": "來聽聽 {{org}} 本週有什麼新歌曲"
 }
