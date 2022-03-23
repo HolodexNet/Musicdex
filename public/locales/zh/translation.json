@@ -132,9 +132,9 @@
   "Catch up on {{org}}": "Catch up on {{org}}",
   "Latest tagged songs in {{org}}": "Latest tagged songs in {{org}}",
   "Best of {{org}}": "Best of {{org}}",
-  "Recent {{org}} covers & originals": "Recent {{org}} covers & originals",
+  "Recent {{org}} covers & originals": "{{org}} 近期原創與翻唱",
   "Relive the top hits from {{org}}": "Relive the top hits from {{org}}",
-  "Sang by {{name}} on {{date}}": "Sang by {{name}} on {{date}}",
+  "Sang by {{name}} on {{date}}": "由{{name}}於{{date}}演唱",
   "{{org}} Weekly Mix": "{{org}} Weekly Mix",
   "Explore this week in {{org}}": "Explore this week in {{org}}"
 }
