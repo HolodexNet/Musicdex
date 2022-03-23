@@ -254,6 +254,7 @@ function StackedTextArt({
         color="gray.800"
         fontWeight={600}
         position="relative"
+        overflow="hidden"
       >
         <Text
           fontSize={14}
