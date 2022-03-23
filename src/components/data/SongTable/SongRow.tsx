@@ -6,7 +6,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { CSSObject } from "@emotion/react";
-import React from "react";
+import React, { useCallback } from "react";
 import { useMemo, useState } from "react";
 import { useContextMenu } from "react-contexify";
 import { FiMoreHorizontal } from "react-icons/fi";
@@ -59,10 +59,23 @@ export const SongRow = React.memo(
     );
     const [hoveredRowIndex, setHoveredRowIndex] = useState(false);
     const hideCol = rowProps?.hideCol;
-    const clickFn = (e: React.MouseEvent) =>
-      rowProps?.songClicked
-        ? rowProps.songClicked(e, song)
-        : queueSongs({ songs: [song], immediatelyPlay: true });
+    const clickFn = useCallback(
+      (e: React.MouseEvent) => {
+        if (rowProps?.songClicked) {
+          rowProps.songClicked(e, song);
+          return;
+        }
+        if (data.playlist && !rowProps?.songClicked) {
+          setPlaylist({
+            playlist: data.playlist,
+            startPos: data.playlist.content?.findIndex((s) => s.id === song.id),
+          });
+        } else {
+          queueSongs({ songs: [song], immediatelyPlay: true });
+        }
+      },
+      [data.playlist, queueSongs, rowProps, setPlaylist, song]
+    );
     return (
       <div style={style}>
         <Flex
@@ -84,18 +97,7 @@ export const SongRow = React.memo(
                 id={index + (rowProps?.indexShift || 0)}
                 songId={song.id}
                 active={hoveredRowIndex}
-                onPlayClick={() => {
-                  if (data.playlist) {
-                    setPlaylist({
-                      playlist: data.playlist,
-                      startPos: data.playlist.content?.findIndex(
-                        (s) => s.id === song.id
-                      ),
-                    });
-                  } else {
-                    queueSongs({ songs: [song], immediatelyPlay: true });
-                  }
-                }}
+                onPlayClick={clickFn}
               />
             </Box>
           ) : undefined}
