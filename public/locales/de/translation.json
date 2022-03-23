@@ -106,7 +106,7 @@
   "Drag and Drop to reorder list of orgs in the org dropdown": "Ordne die Organisationen per Drag-and-Drop an, um deren Reihenfolge im Organisationen-Dropdown-Menü zu ändern",
   "Interface Language": "Sprache der Benutzeroberfläche",
   "Channel Name": "Kanalname",
-  "If the steps above don't fix this issue, please send us a screenshot on Discord or Twitter and let us know how you ran into it.": "If the steps above don't fix this issue, please send us a screenshot on Discord or Twitter and let us know how you ran into it.",
+  "ErrorPart2LetUsKnow": "If the steps above don't fix this issue, please send us a screenshot on Discord or Twitter and let us know how you ran into it.",
   "Please log in to use this feature.": "Please log in to use this feature.",
   "Sign in to Musicdex": "Sign in to Musicdex",
   "Sign in with Discord": "Sign in with Discord",
@@ -119,5 +119,6 @@
   "Copy link": "Copy link",
   "Open in Holodex": "Open in Holodex",
   "Open in YouTube": "Open in YouTube",
-  "Added {{amount}} to Queue": "Added {{amount}} to Queue"
+  "Added {{amount}} to Queue": "Added {{amount}} to Queue",
+  "See All": "See All"
 }
