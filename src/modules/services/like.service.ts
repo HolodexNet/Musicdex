@@ -12,6 +12,7 @@ import {
 import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
 import { useStoreState } from "../../store";
+import { useEffect } from "react";
 
 export const LIKE_QUERY_CONFIG = {
   ...DEFAULT_FETCH_CONFIG,
@@ -90,8 +91,11 @@ export function useSongLikeCheck_Loader():
   | Dataloader<string, boolean, unknown>
   | undefined {
   const { AxiosInstance, isLoggedIn } = useClient();
-
-  if (!dataloader && isLoggedIn) {
+  useEffect(() => {
+    if (!isLoggedIn) {
+      dataloader = undefined;
+      return;
+    }
     const fetchDataPromise: BatchLoadFn<string, boolean> = async (
       ids: readonly string[]
     ) => {
@@ -105,7 +109,7 @@ export function useSongLikeCheck_Loader():
     dataloader = new Dataloader<string, boolean>(fetchDataPromise, {
       cache: false, // <-- IMPORTANT, dataloader doesn't have the same cache management as react-query
     });
-  }
+  }, [AxiosInstance, isLoggedIn]);
 
   return dataloader;
 }

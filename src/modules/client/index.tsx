@@ -1,4 +1,4 @@
-import { chakra, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useCallback, useEffect } from "react";
 import { useStoreActions, useStoreState } from "../../store";
@@ -40,6 +40,7 @@ export function useClient() {
 
   const setUser = useStoreActions((actions) => actions.auth.setUser);
   const setToken = useStoreActions((actions) => actions.auth.setToken);
+  const toast = useToast();
 
   const AxiosInstance = useCallback(
     function <T>(
@@ -59,23 +60,28 @@ export function useClient() {
     [token]
   );
 
-  const refreshUser = useCallback(async () => {
-    if (token) {
-      const resp = await AxiosInstance("/user/check");
-      if (resp.status === 200 && resp.data) setUser(resp.data as User);
-      else {
-        logout();
-        throw new Error("Strange bug occured with user checking...");
-      }
-      return "OK";
-    }
-    return null;
-  }, []);
-
-  function logout() {
+  const logout = useCallback(() => {
     setToken(null);
     setUser(null);
-  }
+  }, [setToken, setUser]);
+
+  const refreshUser = useCallback(async () => {
+    if (!token) return;
+    try {
+      const resp = await AxiosInstance("/user/check");
+      if (resp.status === 200 && resp.data) setUser(resp.data as User);
+      else throw new Error("Strange bug occured with user checking...");
+    } catch (e) {
+      logout();
+      toast({
+        position: "top-right",
+        title: "Error while logging in",
+        status: "error",
+      });
+    }
+    return "OK";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [logout, setUser, toast]);
 
   return {
     isLoggedIn,
@@ -91,7 +97,6 @@ export function useClient() {
 export function useClientLogin() {
   const setUser = useStoreActions((actions) => actions.auth.setUser);
   const setToken = useStoreActions((actions) => actions.auth.setToken);
-  const currentToken = useStoreState((state) => state.auth.token);
   const user = useStoreState((state) => state.auth.user);
   const navigate = useNavigate();
   const toast = useToast();
@@ -103,6 +108,8 @@ export function useClientLogin() {
       title: "Error while logging in",
       status: "error",
     });
+    setUser(null);
+    setToken(null);
   }
 
   async function onGoogleSuccess({ credential }: GoogleCredentialResponse) {
@@ -110,7 +117,7 @@ export function useClientLogin() {
       const token = await getToken({
         authToken: credential,
         service: "google",
-        jwt: currentToken || undefined,
+        // jwt: currentToken || undefined,
       });
       const { jwt, user } = token;
       setToken(jwt);
@@ -130,7 +137,7 @@ export function useClientLogin() {
       const token = await getToken({
         authToken: access_token,
         service: "discord",
-        jwt: currentToken || undefined,
+        // jwt: currentToken || undefined,
       });
       const { jwt, user } = token;
       setToken(jwt);
@@ -147,7 +154,7 @@ export function useClientLogin() {
     const token = await getToken({
       authToken: twitterTempJWT,
       service: "twitter",
-      jwt: currentToken || undefined,
+      // jwt: currentToken || undefined,
     });
     const { jwt, user } = token;
     setToken(jwt);
@@ -199,17 +206,36 @@ export async function getToken({
 }
 
 export function useCookieTokenFallback() {
-  const setToken = useStoreActions((actions) => actions.auth.setToken);
   const token = useStoreState((state) => state.auth.token);
   const user = useStoreState((state) => state.auth.user);
-  const { refreshUser } = useClient();
+  const setLastCookieToken = useStoreActions(
+    (actions) => actions.auth.setLastCookieToken
+  );
+  const lastCookieToken = useStoreState((state) => state.auth.lastCookieToken);
+  const setUser = useStoreActions((actions) => actions.auth.setUser);
+  const setToken = useStoreActions((actions) => actions.auth.setToken);
+  const navigate = useNavigate();
   useEffect(() => {
     const match = document.cookie.match(/HOLODEX_JWT=([^;]+)/);
-    if ((!token || !user) && match?.[1]) {
+    if ((!token || !user) && match?.[1] && match?.[1] !== lastCookieToken) {
+      const token = match?.[1];
       console.log("Falling back on token found in cookie");
-      setToken(match[1]);
-      refreshUser();
+      // Only allow this token to be attempted once
+      setLastCookieToken(token);
+      // immediately validate token
+      (async () => {
+        const resp = await axios("/user/check", {
+          baseURL: BASE_URL,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (resp.status === 200 && resp.data) {
+          setUser(resp.data as User);
+          setToken(token);
+        }
+      })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshUser, setToken]);
+  }, []);
 }

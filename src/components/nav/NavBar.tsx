@@ -55,9 +55,9 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
         aria-label="open menu"
         icon={<FiMenu />}
       />
-      <LogoWithText display={{ base: "none", md: "flex" }} />
+      <LogoWithText display={{ base: "none", lg: "flex" }} />
 
-      <Searchbox w={{ base: "100%", md: "40%" }} paddingX={4} />
+      <Searchbox w={{ base: "100%", lg: "40%" }} paddingX={4} />
 
       <HStack spacing={{ base: "0", lg: "6" }}>
         <Flex alignItems={"center"}>
