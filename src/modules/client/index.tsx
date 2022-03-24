@@ -214,7 +214,7 @@ export function useCookieTokenFallback() {
   const lastCookieToken = useStoreState((state) => state.auth.lastCookieToken);
   const setUser = useStoreActions((actions) => actions.auth.setUser);
   const setToken = useStoreActions((actions) => actions.auth.setToken);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const match = document.cookie.match(/HOLODEX_JWT=([^;]+)/);
     if ((!token || !user) && match?.[1] && match?.[1] !== lastCookieToken) {
@@ -233,6 +233,7 @@ export function useCookieTokenFallback() {
         if (resp.status === 200 && resp.data) {
           setUser(resp.data as User);
           setToken(token);
+          navigate(0);
         }
       })();
     }
