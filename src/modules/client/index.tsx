@@ -233,7 +233,6 @@ export function useCookieTokenFallback() {
         if (resp.status === 200 && resp.data) {
           setUser(resp.data as User);
           setToken(token);
-          navigate(0);
         }
       })();
     }
