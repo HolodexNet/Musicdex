@@ -32,7 +32,7 @@ i18n
     debug: process.env.NODE_ENV === "development",
     fallbackLng: "en",
     saveMissing: true,
-    supportedLngs: ["en", "ja", "zh", "ko", "de", "hu"],
+    supportedLngs: ["en", "ja", "zh", "ko", "de", "hu", "id"],
     interpolation: {
       escapeValue: false,
       format: (value, format, lng, options) => {
