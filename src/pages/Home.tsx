@@ -118,7 +118,7 @@ export default function Home() {
             {t("Discover {{org}}", { org: org.name })}
           </Heading>
           <CardCarousel height={180} width={160} scrollMultiplier={4} mb={2}>
-            {discovery?.channels?.map((c: Channel) => (
+            {discovery?.channels?.slice(0, 10).map((c: Channel) => (
               <ChannelCard
                 channel={c}
                 key={c.id}

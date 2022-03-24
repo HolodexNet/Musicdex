@@ -45,7 +45,7 @@ export default function LikedSongs() {
             <HStack spacing={4} flexShrink={1} flexWrap="wrap" my={2}>
               <Button
                 variant="solid"
-                aria-label="add to queue"
+                aria-label={t("Add to Queue")}
                 size="md"
                 colorScheme="n2"
                 onClick={() =>
@@ -55,7 +55,9 @@ export default function LikedSongs() {
                   })
                 }
               >
-                Add to Queue ({paginatedSongs?.content.length})
+                {t("Queue ({{amount}})", {
+                  amount: paginatedSongs?.content.length || 0,
+                })}
               </Button>
             </HStack>
             {paginatedSongs?.content?.length && (
@@ -69,13 +71,13 @@ export default function LikedSongs() {
                     onClick={() => setPage((prev) => Math.min(1, prev - 1))}
                   >
                     {/* Change to chevron? no tl needed */}
-                    Prev
+                    {t("Prev")}
                   </Button>
                   <Button
                     isDisabled={!hasMore}
                     onClick={() => setPage((prev) => prev + 1)}
                   >
-                    Next
+                    {t("Next")}
                   </Button>
                 </HStack>
               </>
