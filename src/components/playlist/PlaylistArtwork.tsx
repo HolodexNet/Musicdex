@@ -255,6 +255,7 @@ function StackedTextArt({
         fontWeight={600}
         position="relative"
         overflow="hidden"
+        boxShadow="dark-lg"
       >
         <Text
           fontSize={14}
@@ -284,6 +285,7 @@ function StackedTextArt({
         <Image
           src={imageUrl}
           height="100%"
+          maxW="100%"
           objectFit="cover"
           loading="lazy"
         ></Image>
