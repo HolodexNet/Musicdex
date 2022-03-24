@@ -20,25 +20,21 @@ const isLocalhost = Boolean(
     )
 );
 
-type Config = {
-  onSuccess?: (registration: ServiceWorkerRegistration) => void;
-  onUpdate?: (registration: ServiceWorkerRegistration) => void;
-};
-
-//@ts-ignore
-window._load = window.load;
-//@ts-ignore
-window.load = function () {
-  //@ts-ignore
-  window.loaded = true;
-  //@ts-ignore
-  window._load();
-};
+declare global {
+  interface Window {
+    // a hook that will trigger UI events.
+    onSWUpdate?: (registration: ServiceWorkerRegistration) => void;
+    // only populated IF the registration has a waiting update.
+    registrationWithUpdate?: ServiceWorkerRegistration;
+  }
+}
 
 const SW_UPDATE_INTERVAL = 15 * 60 * 1000;
 
-export function register(config?: Config) {
-  if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
+export function register() {
+  if (
+    /*process.env.NODE_ENV === "production" &&*/ "serviceWorker" in navigator
+  ) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
     if (publicUrl.origin !== window.location.origin) {
@@ -53,7 +49,7 @@ export function register(config?: Config) {
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
-        checkValidServiceWorker(swUrl, config);
+        checkAndRegisterValidServiceWorker(swUrl);
         navigator.serviceWorker.ready.then(() => {
           console.log(
             "This web app is being served cache-first by a service " +
@@ -62,67 +58,22 @@ export function register(config?: Config) {
         });
       } else {
         // Is not localhost. Just register service worker
-        registerValidSW(swUrl, config);
+        registerValidSW(swUrl);
       }
     };
 
-    //@ts-ignore
-    if (window.loaded) setupServiceWorker();
-    else window.addEventListener("load", setupServiceWorker);
+    window.addEventListener("load", setupServiceWorker);
   }
 }
 
-function registerValidSW(swUrl: string, config?: Config) {
-  navigator.serviceWorker
-    .register(swUrl)
-    .then((registration) => {
-      registration.onupdatefound = () => {
-        const installingWorker = registration.installing;
-        if (installingWorker == null) {
-          return;
-        }
-        installingWorker.onstatechange = () => {
-          if (installingWorker.state === "installed") {
-            if (navigator.serviceWorker.controller) {
-              // At this point, the updated precached content has been fetched,
-              // but the previous service worker will still serve the older
-              // content until all client tabs are closed.
-              console.log(
-                "New content is available and will be used when all " +
-                  "tabs for this page are closed. See https://cra.link/PWA."
-              );
-
-              // Execute callback
-              if (config && config.onUpdate) {
-                config.onUpdate(registration);
-              }
-            } else {
-              // At this point, everything has been precached.
-              // It's the perfect time to display a
-              // "Content is cached for offline use." message.
-              console.log("Content is cached for offline use.");
-
-              // Execute callback
-              if (config && config.onSuccess) {
-                config.onSuccess(registration);
-                // Start regular SW update check
-                registration &&
-                  setInterval(() => {
-                    console.log("[Service Worker] Checking for updates...");
-                    registration.update();
-                  }, SW_UPDATE_INTERVAL);
-              }
-            }
-          }
-        };
-      };
-    })
-    .catch((error) => {
-      console.error("Error during service worker registration:", error);
-    });
+export function addUpdateHook(hookFn: NonNullable<typeof window.onSWUpdate>) {
+  // put the hook on
+  window.onSWUpdate = hookFn;
+  // and execute the hook if there's already a updateable registration!
+  if (window.registrationWithUpdate) hookFn(window.registrationWithUpdate);
 }
 
-function checkValidServiceWorker(swUrl: string, config?: Config) {
+function checkAndRegisterValidServiceWorker(swUrl: string) {
   // Check if the service worker can be found. If it can't reload the page.
   fetch(swUrl, {
     headers: { "Service-Worker": "script" },
@@ -142,7 +93,8 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
         });
       } else {
         // Service worker found. Proceed as normal.
-        registerValidSW(swUrl, config);
+        console.log("Registered localhost service worker [OK]");
+        registerValidSW(swUrl);
       }
     })
     .catch(() => {
@@ -150,6 +102,52 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
         "No internet connection found. App is running in offline mode."
       );
     });
+}
+
+async function registerValidSW(swUrl: string) {
+  // register the service worker from the file specified
+  const registration = await navigator.serviceWorker.register(swUrl);
+
+  // ensure the case when the updatefound event was missed is also handled
+  // by re-invoking the prompt when there's a waiting Service Worker
+  if (registration.waiting) {
+    window.registrationWithUpdate = registration;
+    if (window.onSWUpdate) window.onSWUpdate(registration);
+  }
+
+  // detect Service Worker update available and wait for it to become installed
+  registration.addEventListener("updatefound", () => {
+    if (registration.installing) {
+      // wait until the new Service worker is actually installed (ready to take over)
+      registration.installing.addEventListener("statechange", () => {
+        if (registration.waiting) {
+          // if there's an existing controller (previous Service Worker), show the prompt
+          if (navigator.serviceWorker.controller) {
+            window.registrationWithUpdate = registration;
+            if (window.onSWUpdate) window.onSWUpdate(registration);
+          } else {
+            // otherwise it's the first install, nothing to do
+            console.log("Service Worker initialized for the first time");
+          }
+        }
+      });
+    }
+  });
+
+  registration &&
+    setInterval(() => {
+      registration.update();
+    }, SW_UPDATE_INTERVAL);
+
+  let refreshing = false;
+
+  // detect controller change and refresh the page
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!refreshing) {
+      window.location.reload();
+      refreshing = true;
+    }
+  });
 }
 
 export function unregister() {
