@@ -1,4 +1,4 @@
-import { HStack, Heading, ResponsiveValue, StackProps } from "@chakra-ui/react";
+import { HStack, Heading, StackProps } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { GradientLogo } from "../icons/GradientLogo";
 
@@ -14,6 +14,7 @@ export function LogoWithText(props: StackProps) {
       <Heading display="flex" fontSize="2xl">
         Musicdex
       </Heading>
+      <sup>Beta</sup>
     </HStack>
   );
 }
