@@ -13,18 +13,17 @@ const ServiceWorkerWrapper = () => {
   const onSWUpdate = (registration: ServiceWorkerRegistration) => {
     if (!registration) return;
     setShowReload(true);
-
     setWaitingWorker(registration.waiting);
   };
 
   useEffect(() => {
-    serviceWorker.register({ onUpdate: onSWUpdate });
+    serviceWorker.addUpdateHook(onSWUpdate);
   }, []);
 
   const reloadPage = () => {
     setShowReload(false);
-    window.location.reload();
     waitingWorker?.postMessage({ type: "SKIP_WAITING" });
+    window.location.reload();
   };
 
   return showReload && !dismissed ? (
