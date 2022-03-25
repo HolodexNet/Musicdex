@@ -129,13 +129,13 @@
   "Set List": "Setliste",
   "Daily Mix: {{name}}": "Tagesmix: {{name}}",
   "Your daily dose of {{name}}": "Deine tägliche {{name}}-Dosis",
-  "Catch up on {{org}}": "Catch up on {{org}}",
+  "Catch up on {{org}}": "Was du von {{org}} verpasst hast",
   "Latest tagged songs in {{org}}": "Neue getaggte {{org}}-Lieder",
   "Best of {{org}}": "Das Beste von {{org}}",
-  "Recent {{org}} covers & originals": "Recent {{org}} covers & originals",
-  "Latest released covers & originals from {{org}}": "Latest released covers & originals from {{org}}",
-  "Relive the top hits from {{org}}": "Relive the top hits from {{org}}",
-  "Sang by {{name}} on {{date}}": "Sang by {{name}} on {{date}}",
+  "Recent {{org}} covers & originals": "Neue {{org}} Covers & Lieder",
+  "Latest released covers & originals from {{org}}": "Die neuesten Covers & Lieder von {{org}}",
+  "Relive the top hits from {{org}}": "Erlebe die besten Momente von {{org}}",
+  "Sang by {{name}} on {{date}}": "Gesungen von {{name}} am {{date}}",
   "{{org}} Weekly Mix": "{{org}} Wochenmix",
   "Explore this week in {{org}}": "Entdecke diese Woche mit {{org}}"
 }
