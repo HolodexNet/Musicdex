@@ -91,6 +91,7 @@ export function useClient() {
     refreshUser,
     logout,
     uid: user?.id ?? "na",
+    token,
   };
 }
 

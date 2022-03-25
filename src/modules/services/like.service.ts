@@ -87,15 +87,18 @@ export const useLikedSongs = (
 
 export const LIKED_QUERY_KEY = "BLK:";
 let dataloader: Dataloader<string, boolean, unknown> | undefined = undefined;
+let dataLoaderToken: string | null = null;
 export function useSongLikeCheck_Loader():
   | Dataloader<string, boolean, unknown>
   | undefined {
-  const { AxiosInstance, isLoggedIn } = useClient();
-  useEffect(() => {
-    if (!isLoggedIn) {
-      dataloader = undefined;
-      return;
-    }
+  const { AxiosInstance, isLoggedIn, token } = useClient();
+  if (!isLoggedIn) {
+    dataloader = undefined;
+    dataLoaderToken = null;
+    return;
+  }
+
+  if (token !== dataLoaderToken || !dataloader) {
     const fetchDataPromise: BatchLoadFn<string, boolean> = async (
       ids: readonly string[]
     ) => {
@@ -106,11 +109,15 @@ export function useSongLikeCheck_Loader():
       const obj = zipObject(out, resp.data);
       return ids.map((x) => obj[x]);
     };
+
     dataloader = new Dataloader<string, boolean>(fetchDataPromise, {
       batchScheduleFn: (callback) => setTimeout(callback, 100),
       cache: false, // <-- IMPORTANT, dataloader doesn't have the same cache management as react-query
     });
-  }, [AxiosInstance, isLoggedIn]);
+
+    // Bind to this token, incase it gets refreshed or logged out
+    dataLoaderToken = token;
+  }
 
   return dataloader;
 }
