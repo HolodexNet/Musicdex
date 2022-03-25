@@ -24,7 +24,7 @@ export const mvFormatter: PlaylistFormatter<
       case "random":
         return t(`Relive the top hits from {{org}}`, { org });
       case "latest":
-        return t(`Recent {{org}} covers & originals`, { org });
+        return t("Latest released covers & originals from {{org}}", { org });
     }
   },
 };
