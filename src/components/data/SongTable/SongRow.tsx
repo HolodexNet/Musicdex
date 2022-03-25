@@ -21,7 +21,7 @@ import { SangOnGrid } from "./SangOnCell";
 import { TitleGrid } from "./TitleCell";
 
 export interface RowProps {
-  songClicked?: (e: React.MouseEvent, s: Song) => void;
+  songClicked?: (e: React.MouseEvent, s: Song, idx: number) => void;
   showArtwork?: boolean;
   flipNames?: boolean;
   hideCol?: SongTableCol[];
@@ -62,7 +62,7 @@ export const SongRow = React.memo(
     const clickFn = useCallback(
       (e: React.MouseEvent) => {
         if (rowProps?.songClicked) {
-          rowProps.songClicked(e, song);
+          rowProps.songClicked(e, song, index);
           return;
         }
         if (data.playlist && !rowProps?.songClicked) {
@@ -74,7 +74,7 @@ export const SongRow = React.memo(
           queueSongs({ songs: [song], immediatelyPlay: true });
         }
       },
-      [data.playlist, queueSongs, rowProps, setPlaylist, song]
+      [data.playlist, index, queueSongs, rowProps, setPlaylist, song]
     );
     return (
       <div style={style}>

@@ -105,8 +105,8 @@ export const Queue = React.memo(() => {
                 songs={queue}
                 menuId={QUEUE_MENU_ID}
                 rowProps={{
-                  songClicked: (e, s) =>
-                    next({ count: (s as any).idx - 1, userSkipped: true }),
+                  songClicked: (e, song, idx) =>
+                    next({ count: idx + 1, userSkipped: true }),
                 }}
                 limit={10}
               />
@@ -143,8 +143,8 @@ export const Queue = React.memo(() => {
               <SongTable
                 songs={playlistTotalQueue}
                 rowProps={{
-                  songClicked: (e, s) =>
-                    next({ count: (s as any).idx - 1, userSkipped: true }),
+                  songClicked: (e, song, idx) =>
+                    next({ count: idx + 1, userSkipped: true }),
                   indexShift: queue.length,
                 }}
                 limit={10}
