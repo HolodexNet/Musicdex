@@ -107,6 +107,7 @@ export function useSongLikeCheck_Loader():
       return ids.map((x) => obj[x]);
     };
     dataloader = new Dataloader<string, boolean>(fetchDataPromise, {
+      batchScheduleFn: (callback) => setTimeout(callback, 100),
       cache: false, // <-- IMPORTANT, dataloader doesn't have the same cache management as react-query
     });
   }, [AxiosInstance, isLoggedIn]);
