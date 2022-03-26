@@ -135,7 +135,7 @@
   "Recent {{org}} covers & originals": "{{org}} 近期原創與翻唱",
   "Latest released covers & originals from {{org}}": "{{org}} 新進原創與翻唱歌曲",
   "Relive the top hits from {{org}}": "來聽聽 {{org}} 最熱門的歌曲吧！",
-  "Sang by {{name}} on {{date}}": "Performed by {{name}} on {{date}}",
+  "Sang by {{name}} on {{date}}": "{{name}} 於{{date}}演唱",
   "{{org}} Weekly Mix": "{{org}} 每週推薦",
   "Explore this week in {{org}}": "來聽聽 {{org}} 本週有什麼新歌曲",
   "... Other Orgs": "其他團體",
