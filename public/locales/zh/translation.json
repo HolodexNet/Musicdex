@@ -138,5 +138,6 @@
   "Sang by {{name}} on {{date}}": "Performed by {{name}} on {{date}}",
   "{{org}} Weekly Mix": "{{org}} 每週推薦",
   "Explore this week in {{org}}": "來聽聽 {{org}} 本週有什麼新歌曲",
-  "... Other Orgs": "... Other Orgs"
+  "... Other Orgs": "... Other Orgs",
+  "Playlist is private and cannot be shared.": "This playlist is currently private and cannot be shared."
 }

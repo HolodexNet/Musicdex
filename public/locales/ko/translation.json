@@ -138,5 +138,6 @@
   "Sang by {{name}} on {{date}}": "Performed by {{name}} on {{date}}",
   "{{org}} Weekly Mix": "{{org}} 위클리 추천곡",
   "Explore this week in {{org}}": "이번 주의 {{org}} 노래를 확인해보세요",
-  "... Other Orgs": "... Other Orgs"
+  "... Other Orgs": "... Other Orgs",
+  "Playlist is private and cannot be shared.": "This playlist is currently private and cannot be shared."
 }
