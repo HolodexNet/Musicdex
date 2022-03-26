@@ -9,6 +9,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useServerOrgList } from "../../modules/services/statics.service";
 import { useStoreActions, useStoreState } from "../../store";
 import { Org } from "../../store/org";
@@ -22,17 +23,18 @@ export function OrgSelector() {
 
   const { data: orgs } = useServerOrgList();
 
+  const { t } = useTranslation();
   const usableOrgs = useMemo(() => {
     return orglist
       ? [
           ...(orglist
             .map((x) => Array.isArray(orgs) && orgs?.find((o) => o.name === x))
             .filter((x) => !!x) as Org[]),
-          { name: "... Other Orgs" },
+          { name: t("... Other Orgs") },
           ...(orglist.includes(org.name) ? [] : [org]),
         ]
-      : [{ name: "... Other Orgs" }, ...[org]];
-  }, [org, orglist, orgs]);
+      : [{ name: t("... Other Orgs") }, ...[org]];
+  }, [org, orglist, orgs, t]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
