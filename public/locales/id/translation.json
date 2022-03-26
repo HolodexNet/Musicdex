@@ -111,8 +111,8 @@
   "Sign in to Musicdex": "Masuk ke Musicdex",
   "Sign in with Discord": "Masuk dengan Discord",
   "Sign in with Twitter": "Masuk dengan Twitter",
-  "loginIntro": "Jika kamu sebelumnya belum pernah masuk ke <1>Holodex</1> atau <3>Musicdex</3> dengan akun sosmed, maka akun baru akan dibuat secara otomatis. <5></5><6></6>Kamu dapat mengkaitkan akun sosmed yang lain setelah berhasil masuk.",
-  "This stream has not been tagged with songs": "Stream ini belum ditandai dengan lagu",
+  "loginIntro": "If you have not previously logged into <1>Holodex</1> or <3>Musicdex</3> with a social account, a new account will be created automatically. <5></5><6></6>You will be able to connect other social accounts after logging in.",
+  "This stream has not been tagged with songs": "This stream has not been tagged with any songs yet.",
   "(YouTube)": "(YouTube)",
   "User Preferences": "Preferensi Pengguna",
   "Failed to load playlist": "Gagal memuat playlist",
@@ -135,7 +135,8 @@
   "Recent {{org}} covers & originals": "Cover & Original terkini dari {{org}}",
   "Latest released covers & originals from {{org}}": "Original & Cover rilisan terkini dari {{org}}",
   "Relive the top hits from {{org}}": "Ragam lagu-lagu top dari {{org}}",
-  "Sang by {{name}} on {{date}}": "Dinyanyikan oleh {{name}} pada {{date}}",
+  "Sang by {{name}} on {{date}}": "Performed by {{name}} on {{date}}",
   "{{org}} Weekly Mix": "{{org}} Ragam Mingguan",
-  "Explore this week in {{org}}": "Jelajah mingguan dari {{org}}"
+  "Explore this week in {{org}}": "Jelajah mingguan dari {{org}}",
+  "... Other Orgs": "... Other Orgs"
 }
