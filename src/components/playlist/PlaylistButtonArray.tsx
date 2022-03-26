@@ -49,7 +49,14 @@ export function PlaylistButtonArray({
     );
   }, [isLoggedIn, playlist.id, playlists]);
 
-  let { mutateAsync: updateStar } = usePlaylistStarUpdater();
+  const canShare = useMemo(
+    () => playlist.listed || playlist.owner == 1,
+    [playlist]
+  );
+
+  const showShare = useMemo(() => playlist.type !== ":history", [playlist]);
+
+  const { mutateAsync: updateStar } = usePlaylistStarUpdater();
 
   return (
     <HStack spacing={4} flexShrink={1} flexWrap="wrap" {...rest}>
@@ -111,16 +118,23 @@ export function PlaylistButtonArray({
           {faved ? <FaStar /> : <FaRegStar />}
         </Button>
       )}
-      <Button
-        variant="ghost"
-        aria-label="share link"
-        size="md"
-        title={t("Copy link")}
-        onClick={() => clip(window.location.toString(), false)}
-        colorScheme="n2"
-      >
-        <FiShare2 />
-      </Button>
+      {showShare && (
+        <Button
+          variant="ghost"
+          aria-label="share link"
+          size="md"
+          title={
+            canShare
+              ? t("Copy link")
+              : t("Playlist is private and cannot be shared.")
+          }
+          onClick={() => clip(window.location.toString(), false)}
+          colorScheme={canShare ? "n2" : "n2"}
+          disabled={!canShare}
+        >
+          <FiShare2 />
+        </Button>
+      )}
       <PlaylistMoreControlsMenu
         playlist={playlist}
         canEdit={canEdit}
