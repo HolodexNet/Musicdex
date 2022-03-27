@@ -29,7 +29,7 @@ export function SongLikeButton({
       ? t("Added to liked songs")
       : t("Removed from liked songs");
     toast({
-      title: isSuccess ? title : t("An error occured"),
+      title: isSuccess ? title : t("An error has occurred"),
       status: isSuccess ? "success" : "error",
       duration: isSuccess ? 1500 : 5000,
       position: "top-right",
