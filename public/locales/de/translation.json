@@ -139,5 +139,8 @@
   "{{org}} Weekly Mix": "{{org}} Wochenmix",
   "Explore this week in {{org}}": "Entdecke diese Woche mit {{org}}",
   "... Other Orgs": "... andere Orgs",
-  "Playlist is private and cannot be shared.": "Diese Playlist ist derzeit privat und kann nicht geteilt werden."
+  "Playlist is private and cannot be shared.": "Diese Playlist ist derzeit privat und kann nicht geteilt werden.",
+  "Added to liked songs": "Added to liked songs",
+  "Removed from liked songs": "Removed from liked songs",
+  "An error occured": "An error occured"
 }
