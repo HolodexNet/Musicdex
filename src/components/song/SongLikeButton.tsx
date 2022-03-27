@@ -1,5 +1,6 @@
 import { IconButton, IconButtonProps, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FiLoader } from "react-icons/fi";
 import {
@@ -11,6 +12,7 @@ export function SongLikeButton({
   song,
   ...rest
 }: { song: Song } & Omit<IconButtonProps, "aria-label">) {
+  const { t } = useTranslation();
   const {
     mutate: updateLike,
     isSuccess,
@@ -19,18 +21,22 @@ export function SongLikeButton({
   } = useSongLikeUpdater();
 
   const toast = useToast();
+  const { data, isLoading: isLoadingStatus } = useSongLikeBulkCheck(song.id);
 
   useEffect(() => {
     if (!isSuccess && !isError) return;
+    const title = !data
+      ? t("Added to liked songs")
+      : t("Removed from liked songs");
     toast({
-      title: isSuccess ? "Changed like status" : "Failed to change like status",
+      title: isSuccess ? title : t("Error occured"),
       status: isSuccess ? "success" : "error",
       duration: isSuccess ? 1500 : 5000,
       position: "top-right",
       isClosable: true,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, isError, toast]);
-  const { data, isLoading: isLoadingStatus } = useSongLikeBulkCheck(song.id);
 
   function toggleLike() {
     updateLike({

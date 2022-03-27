@@ -139,5 +139,8 @@
   "{{org}} Weekly Mix": "{{org}} Weekly Mix",
   "Explore this week in {{org}}": "Explore this week in {{org}}",
   "... Other Orgs": "... Other Orgs",
-  "Playlist is private and cannot be shared.": "This playlist is currently private and cannot be shared."
+  "Playlist is private and cannot be shared.": "This playlist is currently private and cannot be shared.",
+  "Added to liked songs": "Added to liked songs",
+  "Removed from liked songs": "Removed from liked songs",
+  "Error occured": "Error occured"
 }
