@@ -86,7 +86,7 @@ export const Queue = React.memo(() => {
         {queue.length > 0 && (
           <React.Fragment>
             <Flex mt={4} alignItems="center">
-              <Text fontSize="lg">
+              <Text fontSize={["md", "lg"]}>
                 <Text opacity={0.66} as={"span"}>
                   {t("Queue")}
                 </Text>
@@ -116,7 +116,7 @@ export const Queue = React.memo(() => {
         {currentPlaylist && (
           <React.Fragment>
             <Flex mt={4} alignItems="center">
-              <Text fontSize="lg">
+              <Text fontSize={["md", "lg"]} noOfLines={1}>
                 <Text opacity={0.66} as={"span"}>
                   {t("Playlist")}:
                 </Text>
@@ -125,7 +125,6 @@ export const Queue = React.memo(() => {
                   as={Link}
                   to={urlLinkToPlaylist || "#"}
                   _hover={{ textDecoration: "underline" }}
-                  isTruncated
                 >
                   {currentTitle}
                 </Text>
