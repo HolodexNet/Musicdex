@@ -111,8 +111,8 @@
   "Sign in to Musicdex": "Bei Musicdex anmelden",
   "Sign in with Discord": "Mit Discord anmelden",
   "Sign in with Twitter": "Mit Twitter anmelden",
-  "loginIntro": "If you have not previously logged into <1>Holodex</1> or <3>Musicdex</3> with a social account, a new account will be created automatically. <5></5><6></6>You will be able to connect other social accounts after logging in.",
-  "This stream has not been tagged with songs": "This stream has not been tagged with any songs yet.",
+  "loginIntro": "Wenn du dich mit diesem sozialen Konto bisher nicht bei <1>Holodex</1> oder <3>Musicdex</3> angemeldet hast, wird automatisch ein neues Konto erstellt. <5></5><6></6>Du hast nach dem Anmelden die Möglichkeit, andere Konten zu verbinden.",
+  "This stream has not been tagged with songs": "Dieser Stream wurde noch nicht mit Liedern getaggt.",
   "(YouTube)": "(YouTube)",
   "User Preferences": "Benutzereinstellungen",
   "Failed to load playlist": "Fehler beim Laden der Playlist",
@@ -135,9 +135,9 @@
   "Recent {{org}} covers & originals": "Neue {{org}} Covers & Lieder",
   "Latest released covers & originals from {{org}}": "Die neuesten Covers & Lieder von {{org}}",
   "Relive the top hits from {{org}}": "Erlebe die besten Momente von {{org}}",
-  "Sang by {{name}} on {{date}}": "Performed by {{name}} on {{date}}",
+  "Sang by {{name}} on {{date}}": "Gesungen von {{name}} am {{date}}",
   "{{org}} Weekly Mix": "{{org}} Wochenmix",
   "Explore this week in {{org}}": "Entdecke diese Woche mit {{org}}",
-  "... Other Orgs": "... Other Orgs",
-  "Playlist is private and cannot be shared.": "This playlist is currently private and cannot be shared."
+  "... Other Orgs": "... andere Orgs",
+  "Playlist is private and cannot be shared.": "Diese Playlist ist derzeit privat und kann nicht geteilt werden."
 }
