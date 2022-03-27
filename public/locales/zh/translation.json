@@ -139,5 +139,8 @@
   "{{org}} Weekly Mix": "{{org}} 每週推薦",
   "Explore this week in {{org}}": "來聽聽 {{org}} 本週有什麼新歌曲",
   "... Other Orgs": "其他團體",
-  "Playlist is private and cannot be shared.": "本列表已被設為無法分享的私人播放清單"
+  "Playlist is private and cannot be shared.": "本列表已被設為無法分享的私人播放清單",
+  "Added to liked songs": "加入我的最愛",
+  "Removed from liked songs": "從我的最愛移除",
+  "An error occured": "發生錯誤"
 }
