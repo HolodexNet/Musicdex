@@ -139,5 +139,8 @@
   "{{org}} Weekly Mix": "{{org}} ウィークリーミックス",
   "Explore this week in {{org}}": "今週の {{org}} をチェック",
   "... Other Orgs": "…… その他のグループ",
-  "Playlist is private and cannot be shared.": "このプレイリストは現在非公開でシェアできません。"
+  "Playlist is private and cannot be shared.": "このプレイリストは現在非公開でシェアできません。",
+  "Added to liked songs": "Added to liked songs",
+  "Removed from liked songs": "Removed from liked songs",
+  "An error occured": "An error occured"
 }
