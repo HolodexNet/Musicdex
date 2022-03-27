@@ -1,47 +1,56 @@
 import { extendTheme, withDefaultColorScheme } from "@chakra-ui/react";
-import { Color, ConsistentShading } from "consistent-shading";
-import convert from "color-convert";
 
-const IdealBaseColor = new Color("hex", ["#46465A"]);
-
-const IdealShades = [
-  new Color("hex", ["#C3C3DD"]), //50
-  new Color("hex", ["#B0B0BB"]), //100
-  new Color("hex", ["#8181A3"]), //200
-  new Color("hex", ["#676785"]),
-  new Color("hex", ["#5c5c77"]),
-  new Color("hex", ["#46465A"]), //500
-  new Color("hex", ["#30303d"]),
-  new Color("hex", ["#25252f"]), //700
-  new Color("hex", ["#17171e"]),
-  new Color("hex", ["#121212"]), //900
-];
-const Generator = new ConsistentShading(IdealBaseColor, IdealShades);
-
-const SATURATION_MAP = [0.32, 0.16, 0.08, 0.04, 0, 0, 0.04, 0.08, 0.46, 0.7];
-const AR = [5, 10, 20, 30, 40, 50, 60, 70, 80, 90];
-function makeColor(color: Color, alpha?: string) {
-  const x = Object.fromEntries(
-    Generator.generate(color, "hex").map((x, i) => {
-      const hsl = convert["hex"]["hsl"].raw("#" + x.value);
-      hsl[1] = hsl[1] * (1 - SATURATION_MAP[i]);
-      const hex = convert["hsl"]["hex"].raw(hsl);
-      // console.log(hex);
-      return [AR[i] * 10, "#" + hex + (alpha || "")];
-    })
-  );
-  // console.log(x);
-  return x;
-}
-
+// Check scripts/generateTheme.js to get these values
 const localColors = {
-  brand: makeColor(new Color("hex", ["#276986"])),
-  n2: makeColor(new Color("hex", ["#D31371"])),
-  bg: makeColor(new Color("hex", ["#46464c"])),
-  bgAlpha: makeColor(new Color("hex", ["#46464cB3"]), "B3"),
+  brand: {
+    "50": "#BDE6F3",
+    "100": "#A4D5F1",
+    "200": "#71A8C4",
+    "300": "#528CA9",
+    "400": "#44819F",
+    "500": "#276986",
+    "600": "#02506A",
+    "700": "#04425B",
+    "800": "#122F3C",
+    "900": "#19272F",
+  },
+  n2: {
+    "50": "#F3C1EC",
+    "100": "#F7A7DD",
+    "200": "#F973B1",
+    "300": "#FB5096",
+    "400": "#F13D89",
+    "500": "#D31371",
+    "600": "#B00458",
+    "700": "#9D074C",
+    "800": "#6E2141",
+    "900": "#582F3F",
+  },
+  bg: {
+    "50": "#C4C4C9",
+    "100": "#B0B0B5",
+    "200": "#828289",
+    "300": "#68686E",
+    "400": "#5D5D63",
+    "500": "#46464C",
+    "600": "#2F3035",
+    "700": "#24242A",
+    "800": "#17171A",
+    "900": "#121214",
+  },
+  bgAlpha: {
+    "50": "#C4C4C9B3",
+    "100": "#B0B0B5B3",
+    "200": "#828289B3",
+    "300": "#68686EB3",
+    "400": "#5D5D63B3",
+    "500": "#46464CB3",
+    "600": "#2F3035B3",
+    "700": "#24242AB3",
+    "800": "#17171AB3",
+    "900": "#121214B3",
+  },
 };
-
-// console.log(localColors);
 
 export const theme = extendTheme(
   {
