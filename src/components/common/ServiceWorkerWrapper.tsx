@@ -22,8 +22,14 @@ const ServiceWorkerWrapper = () => {
 
   const reloadPage = () => {
     setShowReload(false);
-    waitingWorker?.postMessage({ type: "SKIP_WAITING" });
-    window.location.reload();
+    if (waitingWorker) {
+      waitingWorker?.postMessage({ type: "SKIP_WAITING" });
+      waitingWorker?.addEventListener("statechange", (e: any) => {
+        if (e.target.state === "activated") {
+          window.location.reload();
+        }
+      });
+    }
   };
 
   return showReload && !dismissed ? (
