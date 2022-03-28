@@ -140,7 +140,7 @@
   "Explore this week in {{org}}": "今週の {{org}} をチェック",
   "... Other Orgs": "…… その他のグループ",
   "Playlist is private and cannot be shared.": "このプレイリストは現在非公開でシェアできません。",
-  "Added to liked songs": "Added to liked songs",
-  "Removed from liked songs": "Removed from liked songs",
-  "An error has occurred": "An error has occurred"
+  "Added to liked songs": "お気に入りに追加しました",
+  "Removed from liked songs": "お気に入りから削除しました",
+  "An error has occurred": "エラーが発生しました"
 }
