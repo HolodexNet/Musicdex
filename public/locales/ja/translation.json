@@ -33,8 +33,8 @@
   "Profile / Settings": "プロフィールと設定",
   "Sign out": "ログアウト",
   "Login": "ログイン",
-  "Recently Played": "最近再生した楽曲",
-  "Liked Songs": "お気に入りの楽曲",
+  "Recently Played": "再生履歴",
+  "Liked Songs": "お気に入り",
   "Settings": "設定",
   "Home": "ホーム",
   "You need to be logged in to create playlists.": "プレイリストを保存するためにはログインが必要です。",
@@ -140,7 +140,7 @@
   "Explore this week in {{org}}": "今週の {{org}} をチェック",
   "... Other Orgs": "…… その他のグループ",
   "Playlist is private and cannot be shared.": "このプレイリストは現在非公開でシェアできません。",
-  "Added to liked songs": "Added to liked songs",
-  "Removed from liked songs": "Removed from liked songs",
-  "An error has occurred": "An error has occurred"
+  "Added to liked songs": "お気に入りに追加しました",
+  "Removed from liked songs": "お気に入りから削除しました",
+  "An error has occurred": "エラーが発生しました"
 }
