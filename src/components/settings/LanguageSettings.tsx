@@ -9,7 +9,11 @@ export function LanguageSettings() {
   const displayLangPrefs = [
     { value: "en", display: "English", credit: "@Holodex" },
     { value: "en-GB", display: "English (British)", credit: "@Holodex" },
-    { value: "ja", display: "日本語", credit: "Saginomiya#2353" },
+    {
+      value: "ja",
+      display: "日本語",
+      credit: "Saginomiya#2353, ぴーまん#2976",
+    },
     { value: "zh", display: "繁體中文", credit: "angel84326#7887" },
     { value: "ko", display: "한국어", credit: "AlexKoala#0253" },
     // { value: "es", display: "Español Latino", credit: "Aldo#3682" },
