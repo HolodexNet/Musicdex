@@ -269,7 +269,7 @@ function ChannelContent({
           <Heading size="md" mt={4} mb={2}>
             {t("Latest Streams")}
           </Heading>
-          <CardCarousel height={230} width={160} scrollMultiplier={1}>
+          <CardCarousel height={210} width={160} scrollMultiplier={1}>
             {/* TODO: Fetch more recent streams */}
             <PlaylistCard
               playlist={discovery?.recentSingingStream?.playlist}
@@ -282,7 +282,7 @@ function ChannelContent({
       <Heading size="md" mt={4} mb={2}>
         {t("Featuring {{name}}", { name })}
       </Heading>
-      <CardCarousel height={230} width={160} scrollMultiplier={1}>
+      <CardCarousel height={210} width={160} scrollMultiplier={1}>
         {discovery &&
           discovery.recommended.playlists.map((x: any) => {
             return (

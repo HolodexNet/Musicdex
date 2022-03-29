@@ -46,7 +46,7 @@ export default function Home() {
           </Heading>
 
           {isMobile ? (
-            <CardCarousel height={230} width={160} scrollMultiplier={4}>
+            <CardCarousel height={210} width={160} scrollMultiplier={4}>
               {discovery?.recentSingingStreams
                 .filter((stream: any) => stream.playlist?.content?.length)
                 .map((stream: any) => (
@@ -68,7 +68,7 @@ export default function Home() {
           <Heading size="lg" mb={3}>
             {t("{{org}} Playlists", { org: org.name })}
           </Heading>
-          <CardCarousel height={230} width={160} scrollMultiplier={4}>
+          <CardCarousel height={210} width={160} scrollMultiplier={4}>
             {discovery?.recommended?.playlists?.map(
               (p: Partial<PlaylistFull>) => (
                 <PlaylistCard
