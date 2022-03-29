@@ -82,7 +82,7 @@
   "All Songs": "全ての楽曲",
   "({{ from }} - {{ to }} of {{ total }})": "({{ from }} 曲目 - {{ to }} 曲目 / 全 {{ total }} 曲)",
   "Your recently played songs": "最近再生した曲",
-  "Recent Singing Streams": "最近の歌枠配信",
+  "Recent Singing Streams": "最近の歌配信",
   "{{org}} Playlists": "{{org}} のプレイリスト",
   "Trending {{org}} Songs": "{{org}} の人気曲",
   "Discover {{org}}": "{{org}} を探す",
