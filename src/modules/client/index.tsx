@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useCallback, useEffect } from "react";
 import { useStoreActions, useStoreState } from "../../store";
 import open from "oauth-open";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { GoogleCredentialResponse } from "../../components/login/GoogleButton";
 
 export interface OAuth2SuccessResponse {
@@ -102,6 +102,18 @@ export function useClientLogin() {
   const navigate = useNavigate();
   const toast = useToast();
 
+  const location = useLocation();
+  useEffect(() => {
+    if (location.pathname === "/login") {
+      const params = new URL(window.location.href).searchParams;
+      const service = params.get("service");
+      const jwt = params.get("jwt");
+      if (service === "twitter" && jwt) {
+        onTwitterSuccess(null, { jwt });
+      }
+    }
+  }, [location, onTwitterSuccess]);
+
   function onFailure(err: any) {
     console.log("Error", err);
     toast({
@@ -175,7 +187,23 @@ export function useClientLogin() {
           ),
     TwitterAuth: user?.twitter_id
       ? undefined
-      : () => open(`/api/v2/user/login/twitter`, onTwitterSuccess),
+      : () => {
+          let locationX = "https://music-staging.holodex.net";
+
+          switch (window.location.host) {
+            case "music-staging.holodex.net":
+              locationX = "https://staging.holodex.net";
+              break;
+            case "music.holodex.net":
+              locationX = "https://holodex.net";
+              break;
+            default:
+              locationX = "http://localhost:2434";
+              break;
+          }
+          window.location.href =
+            locationX + `/api/v2/user/login/twitter/musicdex`;
+        },
     GoogleAuthFn: user?.google_id ? undefined : onGoogleSuccess,
   };
 }
