@@ -128,7 +128,7 @@
   "Daily Mix": "Napi Mix",
   "Set List": "Szett lista",
   "Daily Mix: {{name}}": "Napi Mix: {{name}}",
-  "Your daily dose of {{name}}": "A napi {name}} adagod",
+  "Your daily dose of {{name}}": "A napi adag {{name}}",
   "Catch up on {{org}}": "Zárkozz fel: {{org}}",
   "Latest tagged songs in {{org}}": "Legutóbbi bejelölt dalok {{org}}",
   "Best of {{org}}": "Legjobb {{org}}",
