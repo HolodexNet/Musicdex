@@ -76,7 +76,7 @@ export default function Channel() {
       </Helmet>
       <BGImgContainer height="60vh">
         <BGImg
-          banner_url={`https://i.ytimg.com/vi/${discovery?.recentSingingStream?.video.id}/sddefault.jpg`}
+          banner_url={`https://i.ytimg.com/vi/${discovery?.recentSingingStreams?.[0].video.id}/sddefault.jpg`}
           height="33vh"
           blur
         ></BGImg>
