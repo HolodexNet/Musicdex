@@ -83,7 +83,7 @@ export const PlaylistCard = ({
     <Flex
       minWidth="168px"
       width="168px"
-      height="230px"
+      height="210px"
       p={2}
       alignItems="center"
       bgColor={bgColor}
@@ -137,11 +137,11 @@ export const PlaylistCard = ({
           </MotionBox>
         </Flex>
         <Flex direction="column" mt={1} width="100%">
-          <Text fontSize="1rem" fontWeight="500" isTruncated={true}>
+          {/* <Text fontSize="1rem" fontWeight="500" isTruncated={true}>
             {title}
-          </Text>
+          </Text> */}
           <Text fontSize="0.9rem" opacity={0.7} noOfLines={2}>
-            {description}
+            {description || title}
           </Text>
         </Flex>
       </>

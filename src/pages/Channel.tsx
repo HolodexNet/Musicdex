@@ -264,41 +264,47 @@ function ChannelContent({
           </Box>
         </>
       )}
-      {discovery?.recentSingingStream?.playlist && (
+      {discovery?.recentSingingStreams?.length > 0 && (
         <>
           <Heading size="md" mt={4} mb={2}>
             {t("Latest Streams")}
           </Heading>
-          <CardCarousel height={230} width={160} scrollMultiplier={1}>
-            {/* TODO: Fetch more recent streams */}
-            <PlaylistCard
-              playlist={discovery?.recentSingingStream?.playlist}
-              key={"kpc" + discovery?.recentSingingStream?.playlist.id}
-              marginX={["2px", null, 1, 2]}
-            />
+          <CardCarousel height={230} width={160} scrollMultiplier={4}>
+            {discovery?.recentSingingStreams
+              .filter((stream: any) => stream.playlist?.content?.length)
+              .map((stream: any) => (
+                <PlaylistCard
+                  playlist={stream.playlist}
+                  key={"kpc" + stream.playlist.id}
+                  mx={["2px", null, 1, 2]}
+                />
+              ))}
+          </CardCarousel>
+        </>
+      )}
+      {discovery?.recommended?.playlists?.length > 0 && (
+        <>
+          <Heading size="md" mt={4} mb={2}>
+            {t("Featuring {{name}}", { name })}
+          </Heading>
+          <CardCarousel height={230} width={160} scrollMultiplier={4}>
+            {discovery.recommended.playlists.map((x: any) => {
+              return (
+                <PlaylistCard
+                  playlist={x}
+                  marginX={["2px", null, 1, 2]}
+                  key={x.id}
+                ></PlaylistCard>
+              );
+            })}
           </CardCarousel>
         </>
       )}
       <Heading size="md" mt={4} mb={2}>
-        {t("Featuring {{name}}", { name })}
-      </Heading>
-      <CardCarousel height={230} width={160} scrollMultiplier={1}>
-        {discovery &&
-          discovery.recommended.playlists.map((x: any) => {
-            return (
-              <PlaylistCard
-                playlist={x}
-                marginX={["2px", null, 1, 2]}
-                key={x.id}
-              ></PlaylistCard>
-            );
-          })}
-      </CardCarousel>
-      <Heading size="md" mt={4} mb={2}>
         {t("Discover more from {{org}}", { org: channel.org })}
       </Heading>
       {discovery && (
-        <CardCarousel height={180} width={160} scrollMultiplier={2}>
+        <CardCarousel height={180} width={160} scrollMultiplier={4}>
           {discovery.channels.map((c: Channel) => (
             <ChannelCard channel={c} key={c.id} marginX={["2px", null, 1, 2]} />
           ))}

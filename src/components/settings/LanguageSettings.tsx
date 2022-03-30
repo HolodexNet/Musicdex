@@ -1,5 +1,6 @@
-import { Stack, Select, RadioGroup, Radio } from "@chakra-ui/react";
+import { Stack, Select, RadioGroup, Radio, Box, Icon } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import { FaHeart } from "react-icons/fa";
 import { useStoreActions, useStoreState } from "../../store";
 import { SettingsSection } from "./SettingsSection";
 
@@ -8,7 +9,11 @@ export function LanguageSettings() {
   const displayLangPrefs = [
     { value: "en", display: "English", credit: "@Holodex" },
     { value: "en-GB", display: "English (British)", credit: "@Holodex" },
-    // { value: "ja", display: "日本語", credit: "Yourein#3960,Saginomiya#2353" },
+    {
+      value: "ja",
+      display: "日本語",
+      credit: "Saginomiya#2353, ぴーまん#2976",
+    },
     { value: "zh", display: "繁體中文", credit: "angel84326#7887" },
     { value: "ko", display: "한국어", credit: "AlexKoala#0253" },
     // { value: "es", display: "Español Latino", credit: "Aldo#3682" },
@@ -54,6 +59,16 @@ export function LanguageSettings() {
             </option>
           ))}
         </Select>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="end"
+          ml="auto"
+          opacity={0.66}
+        >
+          <Icon as={FaHeart} mr={1}></Icon>
+          {displayLangPrefs.find((opt) => opt.value === i18n.language)?.credit}
+        </Box>
       </SettingsSection>
       <SettingsSection title={t("Channel Name")}>
         <RadioGroup

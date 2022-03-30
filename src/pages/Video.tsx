@@ -76,6 +76,7 @@ export default function Video() {
                   immediatelyPlay: false,
                 });
             }}
+            mb={2}
           >
             <Button
               variant="ghost"

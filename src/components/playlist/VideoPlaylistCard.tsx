@@ -33,15 +33,24 @@ export const VideoPlaylistCard = React.memo(
     const tn = useNamePicker();
 
     return (
-      <Box width="100%" height="100%">
+      <Box
+        width="100%"
+        height="100%"
+        borderRadius="lg"
+        borderColor="bg.500"
+        borderWidth="1px"
+        borderStyle="solid"
+        overflow="hidden"
+        shadow="lg"
+        bgColor="bg.800"
+        pb={2}
+      >
         <AspectRatio
           ratio={34 / 9}
           maxH="auto"
-          borderRadius="lg"
-          borderColor="brand.100"
-          borderWidth="2px"
-          borderStyle="solid"
-          overflow="hidden"
+          borderColor="bg.300"
+          borderBottomWidth="1px"
+          borderBottomStyle="solid"
           boxSizing="border-box"
         >
           <Flex>
@@ -147,7 +156,8 @@ export const VideoPlaylistCard = React.memo(
           </Flex>
         </AspectRatio>
         <Text
-          mt={1}
+          px={2}
+          mt={2}
           as={Link}
           display="block"
           to={`/video/${video.id}`}
@@ -156,6 +166,7 @@ export const VideoPlaylistCard = React.memo(
           {video.title}
         </Text>
         <Text
+          px={2}
           opacity={0.75}
           fontSize="sm"
           display="block"

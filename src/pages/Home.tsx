@@ -39,14 +39,14 @@ export default function Home() {
       <Helmet>
         <title>{t("Home")} - Musicdex</title>
       </Helmet>
-      <ContainerInlay pt={0}>
+      <ContainerInlay pt={3}>
         <HomeSection>
           <Heading size="lg" mb={3}>
             {t("Recent Singing Streams")}
           </Heading>
 
           {isMobile ? (
-            <CardCarousel height={230} width={160} scrollMultiplier={4}>
+            <CardCarousel height={210} width={160} scrollMultiplier={4}>
               {discovery?.recentSingingStreams
                 .filter((stream: any) => stream.playlist?.content?.length)
                 .map((stream: any) => (
@@ -68,7 +68,7 @@ export default function Home() {
           <Heading size="lg" mb={3}>
             {t("{{org}} Playlists", { org: org.name })}
           </Heading>
-          <CardCarousel height={230} width={160} scrollMultiplier={4}>
+          <CardCarousel height={210} width={160} scrollMultiplier={4}>
             {discovery?.recommended?.playlists?.map(
               (p: Partial<PlaylistFull>) => (
                 <PlaylistCard
@@ -133,6 +133,5 @@ export default function Home() {
 }
 
 const HomeSection = styled.div`
-  padding: 0.5rem 0px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 `;
