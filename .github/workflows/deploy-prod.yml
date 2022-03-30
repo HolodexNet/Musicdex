@@ -24,3 +24,11 @@ jobs:
             yarn run build
             rm -r /var/www/html/music.holodex.net/*
             cp -r build/* /var/www/html/music.holodex.net/
+      - name: Purge Cloudflare Cache
+        uses: indiesdev/curl@v1
+        with:
+          url: "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache"
+          method: "POST"
+          headers: '{ "X-Auth-Key": "${{ secrets.CF_CACHE_PURGE }}", "X-Auth-Email": "${{ secrets.CLOUDFLARE_AUTH_EMAIL }}", "Content-Type": "application/json" }'
+          body: '{"files":["https://holodex.net/index.html", "https://holodex.net/sw.js"]}'
+          timeout: 10000
