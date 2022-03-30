@@ -37,20 +37,21 @@ export const VideoPlaylistCard = React.memo(
         width="100%"
         height="100%"
         borderRadius="lg"
-        borderColor="bg.500"
-        borderWidth="1px"
-        borderStyle="solid"
         overflow="hidden"
         shadow="lg"
         bgColor="bg.800"
-        pb={2}
+        _hover={{ backgroundColor: "bg.700" }}
+        transition="0.3s"
+        p={2}
       >
         <AspectRatio
           ratio={34 / 9}
           maxH="auto"
-          borderColor="bg.300"
+          borderColor="bg.4 00"
           borderBottomWidth="1px"
           borderBottomStyle="solid"
+          borderRadius="md"
+          overflow="hidden"
           boxSizing="border-box"
         >
           <Flex>
@@ -156,7 +157,6 @@ export const VideoPlaylistCard = React.memo(
           </Flex>
         </AspectRatio>
         <Text
-          px={2}
           mt={2}
           as={Link}
           display="block"
@@ -166,7 +166,6 @@ export const VideoPlaylistCard = React.memo(
           {video.title}
         </Text>
         <Text
-          px={2}
           opacity={0.75}
           fontSize="sm"
           display="block"
