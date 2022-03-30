@@ -1,8 +1,16 @@
-import { Box, Button, Heading, Link, Wrap, WrapItem } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  HStack,
+  IconButton,
+  Link,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
 import { groupBy } from "lodash-es";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { FiArrowLeft, FiHome } from "react-icons/fi";
+import { FiArrowLeft } from "react-icons/fi";
 import { ChannelCard } from "../components/channel/ChannelCard";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
@@ -54,15 +62,19 @@ export default function Channels() {
         <title>{t("{{org}} Channels", { org: org.name })} - Musicdex</title>
       </Helmet>
       <ContainerInlay>
-        <Heading size="lg" mb={3} id="top-header">
+        <HStack mb={3}>
           <Link as={NavLink} to={"/"}>
-            <Button aria-label="Home" variant="ghost" size="sm" p={0} mr={2}>
-              <FiArrowLeft />
-            </Button>
+            <IconButton
+              as={FiArrowLeft}
+              aria-label="Home"
+              variant="ghost"
+              size="sm"
+            />
           </Link>
-          {t("{{org}} Channels", { org: org.name })}
-        </Heading>
-
+          <Heading size="lg">
+            {t("{{org}} Channels", { org: org.name })}
+          </Heading>
+        </HStack>
         <Box>
           <QueryStatus queryStatus={rest} />
           {channelsGrouped &&

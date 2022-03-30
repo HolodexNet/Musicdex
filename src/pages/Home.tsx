@@ -22,6 +22,18 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
+const HomeHeading = function ({ children }: { children: React.ReactNode }) {
+  return (
+    <Heading
+      size="lg"
+      fontSize={["1.25rem", null, "1.5rem", null, "1.875rem"]}
+      mb={3}
+    >
+      {children}
+    </Heading>
+  );
+};
+
 export default function Home() {
   const { t } = useTranslation();
   const org = useStoreState((store) => store.org.currentOrg);
@@ -41,9 +53,7 @@ export default function Home() {
       </Helmet>
       <ContainerInlay pt={3}>
         <HomeSection>
-          <Heading size="lg" mb={3}>
-            {t("Recent Singing Streams")}
-          </Heading>
+          <HomeHeading>{t("Recent Singing Streams")}</HomeHeading>
 
           {isMobile ? (
             <CardCarousel height={210} width={160} scrollMultiplier={4}>
@@ -65,9 +75,7 @@ export default function Home() {
         </HomeSection>
 
         <HomeSection>
-          <Heading size="lg" mb={3}>
-            {t("{{org}} Playlists", { org: org.name })}
-          </Heading>
+          <HomeHeading>{t("{{org}} Playlists", { org: org.name })}</HomeHeading>
           <CardCarousel height={210} width={160} scrollMultiplier={4}>
             {discovery?.recommended?.playlists?.map(
               (p: Partial<PlaylistFull>) => (
@@ -83,9 +91,9 @@ export default function Home() {
 
         <HomeSection>
           <HStack alignItems="flex-end" mb={3}>
-            <Heading size="lg">
+            <HomeHeading>
               {t("Trending {{org}} Songs", { org: org.name })}
-            </Heading>
+            </HomeHeading>
             <Spacer />
             <Button
               variant="ghost"
@@ -110,13 +118,11 @@ export default function Home() {
 
         <HomeSection>
           <Link to="/channels">
-            <Button float="right" variant="outline" colorScheme="n2">
+            <Button float="right" variant="outline" colorScheme="n2" size="sm">
               {t("See All")}
             </Button>
           </Link>
-          <Heading size="lg" mb={3}>
-            {t("Discover {{org}}", { org: org.name })}
-          </Heading>
+          <HomeHeading>{t("Discover {{org}}", { org: org.name })}</HomeHeading>
           <CardCarousel height={180} width={160} scrollMultiplier={4} mb={2}>
             {discovery?.channels?.slice(0, 10).map((c: Channel) => (
               <ChannelCard
