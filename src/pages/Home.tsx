@@ -39,7 +39,7 @@ export default function Home() {
       <Helmet>
         <title>{t("Home")} - Musicdex</title>
       </Helmet>
-      <ContainerInlay pt={0}>
+      <ContainerInlay pt={3}>
         <HomeSection>
           <Heading size="lg" mb={3}>
             {t("Recent Singing Streams")}
@@ -133,6 +133,5 @@ export default function Home() {
 }
 
 const HomeSection = styled.div`
-  padding: 0.5rem 0px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 `;

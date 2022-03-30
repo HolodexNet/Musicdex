@@ -106,6 +106,7 @@ export function VideoPlaylistCarousel({
               snapAlign="center"
               height="100%"
               width="100%"
+              margin={{ left: "1rem", right: "1rem" }}
             >
               <VideoPlaylistCard video={x?.video} playlist={x?.playlist} />
             </SnapItem>
