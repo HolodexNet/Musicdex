@@ -187,7 +187,23 @@ export function useClientLogin() {
           ),
     TwitterAuth: user?.twitter_id
       ? undefined
-      : () => (window.location.href = `/api/v2/user/login/twitter/musicdex`),
+      : () => {
+          let locationX = "https://music-staging.holodex.net";
+
+          switch (window.location.host) {
+            case "music-staging.holodex.net":
+              locationX = "https://staging.holodex.net";
+              break;
+            case "music.holodex.net":
+              locationX = "https://holodex.net";
+              break;
+            default:
+              locationX = "http://localhost:2434";
+              break;
+          }
+          window.location.href =
+            locationX + `/api/v2/user/login/twitter/musicdex`;
+        },
     GoogleAuthFn: user?.google_id ? undefined : onGoogleSuccess,
   };
 }
