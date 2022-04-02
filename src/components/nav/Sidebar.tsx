@@ -76,7 +76,6 @@ export function SidebarContent({
       borderRightColor={useColorModeValue("gray.200", "gray.700")}
       w={{ base: "full", lg: 60 }}
       flexShrink={0}
-      // pos="fixed"
       h="full"
       {...rest}
     >
@@ -118,9 +117,9 @@ export function SidebarContent({
               });
             openModal();
           }}
-          m="1"
+          mx="2"
           px="2"
-          py="1"
+          py="2"
         >
           {t("Create New Playlist") as string}
         </NavItem>

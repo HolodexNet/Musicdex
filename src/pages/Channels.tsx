@@ -34,7 +34,7 @@ export default function Channels() {
 
   useEffect(() => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
-  }, [status, isFetchingNextPage]);
+  }, [status, isFetchingNextPage, fetchNextPage, hasNextPage]);
   // continuously fetch until drained.
 
   const { t, i18n } = useTranslation();

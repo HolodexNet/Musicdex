@@ -1,12 +1,13 @@
 import { Flex, Icon, Text, useToast } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { DragEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
 import { FiFolder } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import runes from "runes";
 import { useFormatPlaylist } from "../../modules/playlist/useFormatPlaylist";
 import { usePlaylistUpdater } from "../../modules/services/playlist.service";
-import runes from "runes";
-import { useTranslation } from "react-i18next";
 
 export const PlaylistList = ({
   playlistStubs,
@@ -33,7 +34,7 @@ export const PlaylistList = ({
               // Pick the first emoji if the first character is an emoji.
               emoji = runes(title).at(0);
               // ignore the first emoji IF it is an emoji.
-              rest = emoji ? runes(title).slice(1).join("") : title;
+              rest = emoji ? runes(title).slice(1).join("").trim() : title;
             }
           } catch (e) {
             console.error(e);
@@ -41,7 +42,7 @@ export const PlaylistList = ({
 
           return (
             <motion.div
-              key={"sidebar-pld" + x.id}
+              key={x.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -49,10 +50,9 @@ export const PlaylistList = ({
               <Link to={"/playlists/" + x.id}>
                 <Flex
                   align="center"
-                  m="1"
+                  mx="2"
                   px="2"
-                  py="1"
-                  h="32px"
+                  py="2"
                   borderRadius="lg"
                   role="group"
                   cursor="pointer"
@@ -72,7 +72,7 @@ export const PlaylistList = ({
                   onDragLeave={(e) => {
                     (e.target as any).style.boxShadow = "";
                   }}
-                  onDrop={(e) => {
+                  onDrop={(e: DragEvent<HTMLDivElement>) => {
                     const s = e.dataTransfer.getData("song");
                     (e.target as any).style.boxShadow = "";
                     if (s) {
@@ -104,13 +104,14 @@ export const PlaylistList = ({
                   }}
                 >
                   {emoji ? (
-                    <Text as="span" fontSize="15" mr="4" maxW="18px">
+                    <Text as="span" fontSize="15" mr="4" maxW="1rem">
                       {emoji}
                     </Text>
                   ) : (
                     <Icon
                       mr="4"
                       fontSize="18"
+                      width="1rem"
                       height="24px"
                       _groupHover={{
                         color: "white",
