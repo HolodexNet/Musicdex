@@ -1,12 +1,12 @@
 import { Flex, Icon, Text, useToast } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
 import { FiFolder } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import runes from "runes";
 import { useFormatPlaylist } from "../../modules/playlist/useFormatPlaylist";
 import { usePlaylistUpdater } from "../../modules/services/playlist.service";
-import runes from "runes";
-import { useTranslation } from "react-i18next";
 
 export const PlaylistList = ({
   playlistStubs,
@@ -33,7 +33,7 @@ export const PlaylistList = ({
               // Pick the first emoji if the first character is an emoji.
               emoji = runes(title).at(0);
               // ignore the first emoji IF it is an emoji.
-              rest = emoji ? runes(title).slice(1).join("") : title;
+              rest = emoji ? runes(title).slice(1).join("").trim() : title;
             }
           } catch (e) {
             console.error(e);
