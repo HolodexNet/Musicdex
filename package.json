@@ -16,7 +16,7 @@
     "dev:local-api": "cross-env API_TARGET=local react-scripts start",
     "eject": "react-scripts eject",
     "prepare": "husky install",
-    "test": "react-scripts test",
+    "test": "react-scripts test --passWithNoTests",
     "i18n": "rimraf -r build/tmp && tsc --jsx preserve --noEmit false --target es2020 --outDir build/tmp && i18next-scanner"
   },
   "dependencies": {
