@@ -104,9 +104,9 @@ export const PlaylistList = ({
                   }}
                 >
                   {emoji ? (
-                    <Text as="span" fontSize="15" mr="4" maxW="18px">
+                    <Flex mr="4" maxW="18px">
                       {emoji}
-                    </Text>
+                    </Flex>
                   ) : (
                     <Icon
                       mr="4"
