@@ -13,8 +13,8 @@
 ## Dev
 
 ```bash
-yarn install
-yarn start
+yarn install --frozen-lockfile
+yarn dev
 ```
 
 ## Build
