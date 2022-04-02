@@ -164,6 +164,7 @@ function OverlayTextArt({
         loading="lazy"
         top="0"
         height="100%"
+        width="100%"
         position="absolute"
       />
       <BrandColorGradientText bgColor={bgColor} />
@@ -286,6 +287,7 @@ function StackedTextArt({
           src={imageUrl}
           height="100%"
           maxW="100%"
+          width="100%"
           objectFit="cover"
           loading="lazy"
         ></Image>
