@@ -22,7 +22,7 @@ export default function History() {
   );
 
   function Content() {
-    const { data: playlist, ...status } = usePlaylist(
+    const { data: playlist } = usePlaylist(
       formatPlaylistID(":history", {
         user_id: user?.id,
       })
