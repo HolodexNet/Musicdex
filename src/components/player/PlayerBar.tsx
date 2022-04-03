@@ -8,19 +8,19 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import { AnimatePresence, LayoutGroup } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
+import { useStoreActions } from "../../store";
 import { formatSeconds } from "../../utils/SongHelper";
-import { SongInfo } from "./controls/PlayerSongInfo";
+import { MotionBox } from "../common/MotionBox";
 import { PlaybackControl } from "./controls/PlaybackControl";
 import { PlayerOption } from "./controls/PlayerOption";
-import { VolumeSlider } from "./controls/VolumeSlider";
+import { SongInfo } from "./controls/PlayerSongInfo";
 import { TimeSlider } from "./controls/TimeSlider";
-import { useEffect, useState } from "react";
-import { MotionBox } from "../common/MotionBox";
-import { AnimatePresence, LayoutGroup } from "framer-motion";
-import { useStoreActions } from "../../store";
-import { FaChevronDown } from "react-icons/fa";
-import React from "react";
-import { useLocation } from "react-router-dom";
+import { VolumeSlider } from "./controls/VolumeSlider";
+
 interface PlayerBarProps {
   progress: number;
   onProgressChange: (e: number) => void;
@@ -112,7 +112,7 @@ export const PlayerBar = React.memo(
                   layout
                   transition={springTransition}
                   layoutId="songInfo"
-                  // JANKY BUG FIX for framer... randomly shifts top and applies transform
+                  // JUNKY BUG FIX for framer... randomly shifts top and applies transform
                   // These two initial/animate does nothing but hints at framer to not apply transforms
                   initial={{ opacity: 0, y: "0px" }}
                   animate={{ opacity: 1, y: 0 }}
@@ -233,7 +233,7 @@ export const PlayerBar = React.memo(
                     togglePlay={togglePlay}
                     fullPlayer={true}
                     justifyContent="space-around"
-                    flexGrow="1"
+                    flexGrow={1}
                   />
                 </MotionBox>
                 <Box

@@ -20,7 +20,7 @@ jobs:
           script: |
             cd /opt/prod_musicdex || { echo "No directory found"; exit 1; } 
             git pull origin master
-            yarn
+            yarn --frozen-lockfile
             yarn run build
             rm -r /var/www/html/music.holodex.net/*
             cp -r build/* /var/www/html/music.holodex.net/

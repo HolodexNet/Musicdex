@@ -103,27 +103,20 @@ export function useClientLogin() {
   const toast = useToast();
 
   const location = useLocation();
-  useEffect(() => {
-    if (location.pathname === "/login") {
-      const params = new URL(window.location.href).searchParams;
-      const service = params.get("service");
-      const jwt = params.get("jwt");
-      if (service === "twitter" && jwt) {
-        onTwitterSuccess(null, { jwt });
-      }
-    }
-  }, [location, onTwitterSuccess]);
 
-  function onFailure(err: any) {
-    console.log("Error", err);
-    toast({
-      position: "top-right",
-      title: "Error while logging in",
-      status: "error",
-    });
-    setUser(null);
-    setToken(null);
-  }
+  const onFailure = useCallback(
+    (err: any) => {
+      console.log("Error", err);
+      toast({
+        position: "top-right",
+        title: "Error while logging in",
+        status: "error",
+      });
+      setUser(null);
+      setToken(null);
+    },
+    [setToken, setUser, toast]
+  );
 
   async function onGoogleSuccess({ credential }: GoogleCredentialResponse) {
     try {
@@ -161,19 +154,37 @@ export function useClientLogin() {
     }
   }
 
-  async function onTwitterSuccess(err: any, out: { jwt: string }) {
-    if (err) return onFailure(err);
-    const twitterTempJWT = out.jwt;
-    const token = await getToken({
-      authToken: twitterTempJWT,
-      service: "twitter",
-      // jwt: currentToken || undefined,
-    });
-    const { jwt, user } = token;
-    setToken(jwt);
-    setUser(user);
-    navigate("/settings");
-  }
+  const onTwitterSuccess = useCallback(
+    async (err: any, out: { jwt: string }) => {
+      if (err) return onFailure(err);
+      try {
+        const twitterTempJWT = out.jwt;
+        const token = await getToken({
+          authToken: twitterTempJWT,
+          service: "twitter",
+        });
+        const { jwt, user } = token;
+        setToken(jwt);
+        setUser(user);
+        navigate("/settings");
+      } catch (e) {
+        onFailure(e);
+      }
+    },
+    [navigate, onFailure, setToken, setUser]
+  );
+
+  // User got bounced from twitter login callbar, parse token and try logging in
+  useEffect(() => {
+    if (location.pathname === "/login") {
+      const params = new URL(window.location.href).searchParams;
+      const service = params.get("service");
+      const jwt = params.get("jwt");
+      if (service === "twitter" && jwt) {
+        onTwitterSuccess(null, { jwt });
+      }
+    }
+  }, [location, onTwitterSuccess]);
 
   return {
     DiscordOAuth: user?.discord_id
@@ -243,7 +254,7 @@ export function useCookieTokenFallback() {
   const lastCookieToken = useStoreState((state) => state.auth.lastCookieToken);
   const setUser = useStoreActions((actions) => actions.auth.setUser);
   const setToken = useStoreActions((actions) => actions.auth.setToken);
-  const navigate = useNavigate();
+
   useEffect(() => {
     const match = document.cookie.match(/HOLODEX_JWT=([^;]+)/);
     if ((!token || !user) && match?.[1] && match?.[1] !== lastCookieToken) {

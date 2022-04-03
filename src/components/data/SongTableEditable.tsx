@@ -13,7 +13,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -38,6 +38,7 @@ interface SongEditableTableProps {
 
 const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
   const { t } = useTranslation();
+  const tn = useNamePicker();
   const [newSongIds, setNewSongIds] = useState(() => songs.map((x) => x.id));
   const s: IndexedSong[] = useMemo(() => {
     return newSongIds.map((id, idx) => {
@@ -47,7 +48,24 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
       };
     });
   }, [newSongIds, songs]);
-  const tn = useNamePicker();
+
+  const moveOrDeleteItem = useCallback(
+    (idx: number, toIdx: number | undefined) => {
+      // console.log(newSongIds);
+      // console.log(idx, toIdx);
+
+      const arrayAroundDragged = [
+        ...newSongIds.slice(0, idx),
+        ...newSongIds.slice(idx + 1),
+      ];
+      if (toIdx !== undefined)
+        arrayAroundDragged.splice(toIdx, 0, newSongIds[idx]);
+      setNewSongIds(arrayAroundDragged);
+      songsEdited(arrayAroundDragged);
+      // console.log(arrayAroundDragged);
+    },
+    [newSongIds, songsEdited]
+  );
 
   const columns: Column<IndexedSong>[] = useMemo<Column<IndexedSong>[]>(
     () => [
@@ -118,7 +136,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
         },
       },
     ],
-    [t, newSongIds, tn]
+    [tn, moveOrDeleteItem]
   );
 
   const {
@@ -149,21 +167,6 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
 
   const HOVER_ROW_STYLE: CSSObject = {
     backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
-  };
-
-  const moveOrDeleteItem = (idx: number, toIdx: number | undefined) => {
-    // console.log(newSongIds);
-    // console.log(idx, toIdx);
-
-    const arrayAroundDragged = [
-      ...newSongIds.slice(0, idx),
-      ...newSongIds.slice(idx + 1),
-    ];
-    if (toIdx !== undefined)
-      arrayAroundDragged.splice(toIdx, 0, newSongIds[idx]);
-    setNewSongIds(arrayAroundDragged);
-    songsEdited(arrayAroundDragged);
-    // console.log(arrayAroundDragged);
   };
 
   const onDragEnd = (result: DropResult) => {

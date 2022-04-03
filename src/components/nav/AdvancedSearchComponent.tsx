@@ -14,7 +14,6 @@ import {
   Tag,
   TagLabel,
   TagLeftIcon,
-  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -36,6 +35,7 @@ export interface AdvancedSearchProps {
   facets?: SearchResponseFacetCountSchema<SearchableSong>[];
   fullreset?: () => void;
 }
+
 const FILTER_BY_EXTRACT_ORIGINAL_ARTIST_REGEX =
   /original_artist:(?<original_artist>.*?)(?:&&|$)/;
 const FILTER_BY_EXTRACT_IS_MV_REGEX = /is_mv:=(?<is_mv>.*?)(?:&&|$)/;
@@ -44,6 +44,7 @@ const FILTER_BY_EXTRACT_CHANNEL_ORG_REGEX =
 const FILTER_BY_EXTRACT_CHANNEL_SUBORG_REGEX =
   /channel_suborg:=\[?(?<suborgs>.*?)\]?(?:&&|$)/;
 // const FILTER_BY_EXTRACT_CHANNEL_SUBORG_REGEX=/channel_suborg:=\[?(?<suborgs>.*?)\]?(?:&&|$)/
+
 export function AdvancedSearchFiltersForm({
   facets,
   fullreset = () => {},
@@ -188,7 +189,7 @@ export function AdvancedSearchFiltersForm({
     ];
   }, [suborgs, suborgsFacets]);
 
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  // const isMobile = useBreakpointValue({ base: true, md: false });
 
   // console.log(errors);
 
@@ -263,7 +264,7 @@ export function AdvancedSearchFiltersForm({
             <TagLabel>{t("Filter by Organization")}</TagLabel>
           </Tag>
         </FormLabel>
-        <SimpleGrid spacing={2} direction="row" minChildWidth="220px">
+        <SimpleGrid spacing={2} minChildWidth="220px">
           <Controller
             control={control}
             name="orgs"
@@ -304,7 +305,7 @@ export function AdvancedSearchFiltersForm({
             <TagLabel>{t("Filter by Sub Organization")}</TagLabel>
           </Tag>
         </FormLabel>
-        <SimpleGrid spacing={2} direction="row" minChildWidth="220px">
+        <SimpleGrid spacing={2} minChildWidth="220px">
           <Controller
             control={control}
             name="suborgs"
