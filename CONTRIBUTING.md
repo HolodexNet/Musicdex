@@ -13,6 +13,7 @@
 ## Dev
 
 ```bash
+cp .env.placeholder .env
 yarn install --frozen-lockfile
 yarn dev
 ```
