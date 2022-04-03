@@ -55,6 +55,8 @@ export function Player({ player }: { player: any }) {
             videoId: video_id,
             startSeconds: time,
           });
+          // NOTE: Bad YouTube cookies let the player ignores startSeconds so here is explicit `seekTo`
+          player.seekTo(time);
         }
       }
     },
