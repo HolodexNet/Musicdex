@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
 
@@ -53,20 +53,22 @@ export function usePlayer(player?: YouTubePlayer) {
     if (player) {
       player.addEventListener("onError", errorHandler);
     }
-    return () => player?.removeEventListener("onError", errorHandler);
+    return () => {
+      player?.removeEventListener("onError", errorHandler);
+    };
   }, [errorHandler, player]);
 
   useEffect(() => {
     let timer: NodeJS.Timer | null = null;
     if (player) {
-      timer = setInterval(() => {
+      timer = setInterval(async () => {
         if (player) {
-          setCurrentTime(player.getCurrentTime());
-          setDuration(player.getDuration());
-          setCurrentVideo(getID(player.getVideoUrl()));
-          setState(player.getPlayerState());
-          setVolume(player.getVolume());
-          setMuted(player.isMuted());
+          setCurrentTime(await player.getCurrentTime());
+          setDuration(await player.getDuration());
+          setCurrentVideo(getID(await player.getVideoUrl()));
+          setState(await player.getPlayerState());
+          setVolume(await player.getVolume());
+          setMuted(await player.isMuted());
         }
       }, 333);
     }

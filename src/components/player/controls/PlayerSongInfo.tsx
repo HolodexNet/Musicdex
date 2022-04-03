@@ -28,7 +28,7 @@ export const SongInfo = React.memo(
         if (isMobile) return;
         else show(e, { props: song });
       },
-      [isMobile]
+      [isMobile, show, song]
     );
 
     return (

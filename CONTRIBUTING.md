@@ -13,8 +13,9 @@
 ## Dev
 
 ```bash
-yarn install
-yarn start
+cp .env.placeholder .env
+yarn install --frozen-lockfile
+yarn dev
 ```
 
 ## Build

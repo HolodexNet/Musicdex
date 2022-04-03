@@ -50,7 +50,7 @@ export function PlaylistButtonArray({
   }, [isLoggedIn, playlist.id, playlists]);
 
   const canShare = useMemo(
-    () => playlist.listed || playlist.owner == 1,
+    () => playlist.listed || playlist.owner === 1,
     [playlist]
   );
 
