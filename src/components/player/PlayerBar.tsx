@@ -1,7 +1,10 @@
 import {
   Box,
   Flex,
+  Grid,
+  GridItem,
   IconButton,
+  Heading,
   Text,
   useBreakpoint,
   useBreakpointValue,
@@ -9,17 +12,20 @@ import {
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { AnimatePresence, LayoutGroup } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, useMemo } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
-import { useStoreActions } from "../../store";
+import { useTranslation } from "react-i18next";
+import { useStoreActions, useStoreState } from "../../store";
 import { formatSeconds } from "../../utils/SongHelper";
 import { MotionBox } from "../common/MotionBox";
 import { PlaybackControl } from "./controls/PlaybackControl";
 import { PlayerOption } from "./controls/PlayerOption";
 import { SongInfo } from "./controls/PlayerSongInfo";
+import { SongLink } from "./controls/PlayerSongLink";
 import { TimeSlider } from "./controls/TimeSlider";
 import { VolumeSlider } from "./controls/VolumeSlider";
+import { SongTable } from "../data/SongTable";
 
 interface PlayerBarProps {
   progress: number;
@@ -47,13 +53,27 @@ export const PlayerBar = React.memo(
     onVolumeChange,
     totalDuration,
   }: PlayerBarProps) => {
+    const { t } = useTranslation();
     const [fullPlayer, setFullPlayer] = useState(false);
     const setPos = useStoreActions((store) => store.player.setOverridePosition);
     const location = useLocation();
     const breakpoint = useBreakpoint();
 
     const [dragStartY, setDragStartY] = useState(0);
-    const canEnlarge = useBreakpointValue({ base: true, lg: false });
+    const canEnlarge = useBreakpointValue({ base: true, lg: true });
+
+    const queue = useStoreState((state) => state.playback.queue);
+    const playlistQueue = useStoreState(
+      (state) => state.playback.playlistQueue
+    );
+    const playedPlaylistQueue = useStoreState(
+      (state) => state.playback.playedPlaylistQueue
+    );
+    const playlistTotalQueue = useMemo(() => {
+      return [...queue, ...playlistQueue, ...playedPlaylistQueue];
+    }, [queue, playedPlaylistQueue, playlistQueue]);
+    const next = useStoreActions((actions) => actions.playback.next);
+
     useEffect(() => {
       if (fullPlayer) {
         toggleFullPlayer();
@@ -170,97 +190,236 @@ export const PlayerBar = React.memo(
         )}
         <AnimatePresence>
           {fullPlayer && (
-            <MotionBox
-              padding={6}
-              paddingTop={3}
-              paddingBottom="env(safe-area-inset-bottom)"
-              display="flex"
-              flex="1"
-              flexDirection="column"
-              justifyContent="space-evenly"
-              exit={{ opacity: 0, pointerEvents: "none" }}
-              drag="y"
-              whileDrag={{ opacity: 0.9 }}
-              dragConstraints={{ top: 0, bottom: 0 }}
-              onDragStart={(event: any, info: any) => {
-                setDragStartY(info.point.y);
-              }}
-              onDragEnd={(event: any, info: any) => {
-                if (info.point.y - dragStartY > 180) {
-                  toggleFullPlayer();
-                }
-              }}
-            >
-              <LayoutGroup>
-                <IconButton
-                  aria-label="Close Full Player"
-                  onClick={() => toggleFullPlayer()}
-                  icon={<FaChevronDown size={20} />}
-                  variant="ghost"
-                  size="lg"
-                  margin={2}
-                  position="absolute"
-                  left={0}
-                  top="env(safe-area-inset-top)"
-                ></IconButton>
-                <MotionBox
-                  layout
-                  layoutId="songInfo"
-                  transition={springTransition}
-                  marginTop="calc(40vh + 56px)"
-                >
-                  {currentSong && (
-                    <SongInfo song={currentSong} fullPlayer={true} />
-                  )}
-                </MotionBox>
+            <>
+              <MotionBox
+                padding={6}
+                paddingTop={3}
+                paddingBottom="env(safe-area-inset-bottom)"
+                display={{ base: "flex", lg: "none" }}
+                flex="1"
+                flexDirection="column"
+                justifyContent="space-evenly"
+                exit={{ opacity: 0, pointerEvents: "none" }}
+                drag="y"
+                whileDrag={{ opacity: 0.9 }}
+                dragConstraints={{ top: 0, bottom: 0 }}
+                onDragStart={(event: any, info: any) => {
+                  setDragStartY(info.point.y);
+                }}
+                onDragEnd={(event: any, info: any) => {
+                  if (info.point.y - dragStartY > 180) {
+                    toggleFullPlayer();
+                  }
+                }}
+              >
+                <LayoutGroup>
+                  <IconButton
+                    aria-label="Close Full Player"
+                    onClick={() => toggleFullPlayer()}
+                    icon={<FaChevronDown size={20} />}
+                    variant="ghost"
+                    size="lg"
+                    margin={2}
+                    position="absolute"
+                    left={0}
+                    top="env(safe-area-inset-top)"
+                  ></IconButton>
+                  <MotionBox
+                    layout
+                    layoutId="songInfo"
+                    transition={springTransition}
+                    marginTop="calc(40vh + 56px)"
+                  >
+                    {currentSong && (
+                      <SongInfo song={currentSong} fullPlayer={true} />
+                    )}
+                  </MotionBox>
 
-                <TimeSlider
-                  progress={progress}
-                  onChange={onProgressChange}
-                  totalDuration={totalDuration}
-                  fullPlayer={true}
-                  marginY={6}
-                />
-
-                <MotionBox
-                  initial={{ opacity: 0, y: "30vh", scale: 0.1 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  // transition={{ ease: "easeOut", duration: 0.3 }}
-                  transition={springTransition}
-                >
-                  <PlaybackControl
-                    isPlaying={isPlaying}
-                    togglePlay={togglePlay}
+                  <TimeSlider
+                    progress={progress}
+                    onChange={onProgressChange}
+                    totalDuration={totalDuration}
                     fullPlayer={true}
-                    justifyContent="space-around"
-                    flexGrow={1}
+                    marginY={6}
                   />
-                </MotionBox>
-                <Box
-                  bgGradient="linear-gradient(
+
+                  <MotionBox
+                    initial={{ opacity: 0, y: "30vh", scale: 0.1 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    // transition={{ ease: "easeOut", duration: 0.3 }}
+                    transition={springTransition}
+                  >
+                    <PlaybackControl
+                      isPlaying={isPlaying}
+                      togglePlay={togglePlay}
+                      fullPlayer={true}
+                      justifyContent="space-around"
+                      flexGrow={1}
+                    />
+                  </MotionBox>
+                  <Box
+                    bgGradient="linear-gradient(
                     to bottom,
                     var(--chakra-colors-brand-300) 30%,
                     var(--chakra-colors-n2-300) 80%
                   );"
-                  backgroundSize="cover"
-                  backgroundPosition="center"
-                  zIndex={-1}
-                  position="absolute"
-                  top="0"
-                  left="0"
-                  width="100%"
-                  height="100%"
-                  opacity={0.25}
-                />
-                <MotionBox
-                  initial={{ opacity: 0, y: "20vh" }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={springTransition}
-                >
-                  <PlayerOption justifyContent="center" fullPlayer={true} />
-                </MotionBox>
-              </LayoutGroup>
-            </MotionBox>
+                    backgroundSize="cover"
+                    backgroundPosition="center"
+                    zIndex={-1}
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    width="100%"
+                    height="100%"
+                    opacity={0.25}
+                  />
+                  <MotionBox
+                    initial={{ opacity: 0, y: "20vh" }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={springTransition}
+                  >
+                    <PlayerOption justifyContent="center" fullPlayer={true} />
+                  </MotionBox>
+                </LayoutGroup>
+              </MotionBox>
+              <MotionBox
+                padding={6}
+                paddingTop={3}
+                paddingBottom="env(safe-area-inset-bottom)"
+                display={{ base: "none", lg: "flex" }}
+                maxH="100vh"
+                maxW="100vw"
+                flex="1"
+                flexDirection="column"
+                justifyContent="space-evenly"
+                exit={{ opacity: 0, pointerEvents: "none" }}
+                // drag="y"
+                // whileDrag={{ opacity: 0.9 }}
+                // dragConstraints={{ top: 0, bottom: 0 }}
+                // onDragStart={(event: any, info: any) => {
+                //   setDragStartY(info.point.y);
+                // }}
+                // onDragEnd={(event: any, info: any) => {
+                //   if (info.point.y - dragStartY > 180) {
+                //     toggleFullPlayer();
+                //   }
+                // }}
+              >
+                <LayoutGroup>
+                  <IconButton
+                    aria-label="Close Full Player"
+                    onClick={() => toggleFullPlayer()}
+                    icon={<FaChevronDown size={20} />}
+                    variant="ghost"
+                    size="lg"
+                    margin={2}
+                    position="absolute"
+                    left={0}
+                    top="env(safe-area-inset-top)"
+                  />
+                  <Grid
+                    maxH="100%"
+                    w="100%"
+                    templateColumns="repeat(2, 1fr)"
+                    gap={8}
+                  >
+                    <GridItem w="100%" maxH="100%">
+                      <Flex
+                        flex="1"
+                        justifyContent="space-evenly"
+                        direction="column"
+                      >
+                        <MotionBox
+                          layout
+                          layoutId="songInfo"
+                          transition={springTransition}
+                          marginTop="min(calc(40vh + 56px), calc(100vw * .5625 + 56px))"
+                        >
+                          {currentSong && (
+                            <SongInfo song={currentSong} fullPlayer={true} />
+                          )}
+                        </MotionBox>
+
+                        <TimeSlider
+                          progress={progress}
+                          onChange={onProgressChange}
+                          totalDuration={totalDuration}
+                          fullPlayer={true}
+                          marginY={6}
+                        />
+                        <MotionBox
+                          initial={{ opacity: 0, y: "30vh", scale: 0.1 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          // transition={{ ease: "easeOut", duration: 0.3 }}
+                          transition={springTransition}
+                        >
+                          <PlaybackControl
+                            isPlaying={isPlaying}
+                            togglePlay={togglePlay}
+                            fullPlayer={true}
+                            justifyContent="space-around"
+                            flexGrow={1}
+                          />
+                        </MotionBox>
+                        <MotionBox
+                          initial={{ opacity: 0, y: "20vh" }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={springTransition}
+                        >
+                          <PlayerOption
+                            justifyContent="center"
+                            fullPlayer={true}
+                          />
+                        </MotionBox>
+                        <MotionBox
+                          initial={{ opacity: 0, y: "20vh" }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={springTransition}
+                        >
+                          {currentSong && (
+                            <SongLink song={currentSong} w="100%" h="100%" />
+                          )}
+                        </MotionBox>
+                      </Flex>
+                    </GridItem>
+                    <GridItem w="100%" maxH="100%">
+                      <Heading my={6} size="lg">
+                        {t("Upcoming")}
+                      </Heading>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <SongTable
+                          songs={playlistTotalQueue}
+                          rowProps={{
+                            songClicked: (e, song, idx) =>
+                              next({ count: idx + 1, userSkipped: true }),
+                            indexShift: queue.length,
+                            hideCol: ["idx", "og_artist", "sang_on"],
+                          }}
+                          maxH="100%"
+                          overflowY="auto"
+                        />
+                      </Suspense>
+                    </GridItem>
+                  </Grid>
+                  <Box
+                    bgGradient="linear-gradient(
+                    to bottom,
+                    var(--chakra-colors-brand-300) 30%,
+                    var(--chakra-colors-n2-300) 80%
+                  );"
+                    backgroundSize="cover"
+                    backgroundPosition="center"
+                    zIndex={-1}
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    width="100%"
+                    height="100%"
+                    opacity={0.25}
+                  />
+                </LayoutGroup>
+              </MotionBox>
+            </>
           )}
         </AnimatePresence>
       </PlayerContainer>
