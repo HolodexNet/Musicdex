@@ -29,7 +29,7 @@ jobs:
         with:
           url: "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache"
           method: "POST"
-          headers: '{ "X-Auth-Key": "${{ secrets.CF_CACHE_PURGE }}", "X-Auth-Email": "${{ secrets.CLOUDFLARE_AUTH_EMAIL }}", "Content-Type": "application/json" }'
+          headers: '{ "X-Auth-Key": "${{ secrets.CLOUDFLARE_AUTH_KEY_XRAVE }}", "X-Auth-Email": "${{ secrets.CLOUDFLARE_AUTH_EMAIL_XRAVE }}", "Content-Type": "application/json" }'
           body: '{"files":["https://music.holodex.net/index.html", "https://music.holodex.net/service-worker.js"]}'
           timeout: 10000
           retries: 3
