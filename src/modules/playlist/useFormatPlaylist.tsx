@@ -44,7 +44,7 @@ export function parsePlaylistID(id: string): {
   const [type, paramString] = id.split(IDSplitter);
   return {
     type: type as any,
-    params: paramString ? qs.parse(paramString.replaceAll(",", "&")) : {},
+    params: paramString ? qs.parse(paramString.split(",").join("&")) : {},
   };
 }
 
