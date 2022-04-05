@@ -5,7 +5,7 @@ import {
   Link,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { ReactText } from "react";
+import { ReactNode } from "react";
 import { IconType } from "react-icons";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -15,7 +15,7 @@ interface NavItemProps extends FlexProps {
   // name: string;
   disabled?: boolean;
 
-  children: ReactText;
+  children: ReactNode;
 }
 
 export function NavItem({
@@ -31,35 +31,35 @@ export function NavItem({
   const { pathname } = useLocation();
 
   return (
-    <Link as={NavLink} to={path || "#"} style={{ textDecoration: "none" }}>
-      <Flex
-        align="center"
-        p="2"
-        mx="2"
-        borderRadius="lg"
-        role="group"
-        cursor="pointer"
-        color={pathname === path ? bgc : disabled ? "bg.400" : "auto"}
-        _hover={{
-          bg: bgcBrand,
-          // color: "white",
-        }}
-        {...rest}
-      >
-        {icon && (
-          <Icon
-            mr="4"
-            fontSize="16"
-            _groupHover={
-              {
-                // color: "white",
-              }
+    <Flex
+      as={NavLink}
+      to={path || "#"}
+      style={{ textDecoration: "none" }}
+      align="center"
+      p="2"
+      mx="2"
+      borderRadius="lg"
+      role="group"
+      cursor="pointer"
+      color={pathname === path ? bgc : disabled ? "bg.400" : "auto"}
+      _hover={{
+        bg: bgcBrand,
+      }}
+      {...rest}
+    >
+      {icon && (
+        <Icon
+          mr="4"
+          fontSize="16"
+          _groupHover={
+            {
+              // color: "white",
             }
-            as={icon}
-          />
-        )}
-        {children}
-      </Flex>
-    </Link>
+          }
+          as={icon}
+        />
+      )}
+      {children}
+    </Flex>
   );
 }

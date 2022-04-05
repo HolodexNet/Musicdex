@@ -5,6 +5,8 @@ import {
   BoxProps,
   useDisclosure,
   useToast,
+  Icon,
+  Text,
 } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 import {
@@ -32,6 +34,8 @@ import { PlaylistList } from "../playlist/PlaylistList";
 import { LogoWithText } from "./LogoWithText";
 import { PlaylistCreateModal } from "../playlist/PlaylistCreateForm";
 import { useTranslation } from "react-i18next";
+import { BsBoxArrowRight } from "react-icons/bs";
+import { HolodexLogo } from "../icons/HolodexLogo";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -43,6 +47,11 @@ export interface LinkItemProps {
   path: string;
   disabled?: boolean;
 }
+
+const HOLODEX_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://holodex.net"
+    : "https://staging.holodex.net";
 
 export function SidebarContent({
   closeOnNav = false,
@@ -100,6 +109,16 @@ export function SidebarContent({
           {page.name}
         </NavItem>
       ))}
+      <NavItem
+        icon={HolodexLogo}
+        mb={1}
+        as="a"
+        // typescript can't figure out that as="a" allows href
+        // @ts-ignore
+        href={HOLODEX_URL}
+      >
+        Holodex <Icon as={BsBoxArrowRight} ml={2} />
+      </NavItem>
       <Divider mb={2} />
       <Flex flexDirection="column" overflowY="auto" flex="1">
         <PlaylistCreateModal {...modalProps} />
