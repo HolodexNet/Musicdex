@@ -9,6 +9,7 @@ import {
   useBreakpoint,
   useBreakpointValue,
   VStack,
+  HStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { AnimatePresence, LayoutGroup } from "framer-motion";
@@ -194,7 +195,6 @@ export const PlayerBar = React.memo(
               <MotionBox
                 padding={6}
                 paddingTop={3}
-                paddingBottom="env(safe-area-inset-bottom)"
                 display={{ base: "flex", lg: "none" }}
                 flex="1"
                 flexDirection="column"
@@ -287,23 +287,12 @@ export const PlayerBar = React.memo(
                 paddingTop={3}
                 paddingBottom="env(safe-area-inset-bottom)"
                 display={{ base: "none", lg: "flex" }}
-                maxH="100vh"
+                maxH="100%"
                 maxW="100vw"
                 flex="1"
                 flexDirection="column"
                 justifyContent="space-evenly"
                 exit={{ opacity: 0, pointerEvents: "none" }}
-                // drag="y"
-                // whileDrag={{ opacity: 0.9 }}
-                // dragConstraints={{ top: 0, bottom: 0 }}
-                // onDragStart={(event: any, info: any) => {
-                //   setDragStartY(info.point.y);
-                // }}
-                // onDragEnd={(event: any, info: any) => {
-                //   if (info.point.y - dragStartY > 180) {
-                //     toggleFullPlayer();
-                //   }
-                // }}
               >
                 <LayoutGroup>
                   <IconButton
@@ -317,13 +306,8 @@ export const PlayerBar = React.memo(
                     left={0}
                     top="env(safe-area-inset-top)"
                   />
-                  <Grid
-                    maxH="100%"
-                    w="100%"
-                    templateColumns="repeat(2, 1fr)"
-                    gap={8}
-                  >
-                    <GridItem w="100%" maxH="100%">
+                  <HStack maxH="80vh" w="100%" gap={8}>
+                    <Box w="100%" h="100%">
                       <Flex
                         flex="1"
                         justifyContent="space-evenly"
@@ -377,30 +361,41 @@ export const PlayerBar = React.memo(
                           transition={springTransition}
                         >
                           {currentSong && (
-                            <SongLink song={currentSong} w="100%" h="100%" />
+                            <SongLink
+                              song={currentSong}
+                              w="100%"
+                              h="100%"
+                              pt={3}
+                            />
                           )}
                         </MotionBox>
                       </Flex>
-                    </GridItem>
-                    <GridItem w="100%" maxH="100%">
+                    </Box>
+                    <Box w="100%" maxH="90vh" overflow="auto">
                       <Heading my={6} size="lg">
                         {t("Upcoming")}
                       </Heading>
                       <Suspense fallback={<div>Loading...</div>}>
-                        <SongTable
-                          songs={playlistTotalQueue}
-                          rowProps={{
-                            songClicked: (e, song, idx) =>
-                              next({ count: idx + 1, userSkipped: true }),
-                            indexShift: queue.length,
-                            hideCol: ["idx", "og_artist", "sang_on"],
-                          }}
-                          maxH="100%"
-                          overflowY="auto"
-                        />
+                        {playlistTotalQueue && playlistTotalQueue.length > 0 ? (
+                          <SongTable
+                            songs={playlistTotalQueue}
+                            rowProps={{
+                              songClicked: (e, song, idx) =>
+                                next({ count: idx + 1, userSkipped: true }),
+                              indexShift: queue.length,
+                              hideCol: ["idx", "og_artist", "sang_on"],
+                            }}
+                            maxH="100%"
+                            overflowY="auto"
+                          />
+                        ) : (
+                          <Heading my={6} size="sm">
+                            {t("No Songs")}
+                          </Heading>
+                        )}
                       </Suspense>
-                    </GridItem>
-                  </Grid>
+                    </Box>
+                  </HStack>
                   <Box
                     bgGradient="linear-gradient(
                     to bottom,
