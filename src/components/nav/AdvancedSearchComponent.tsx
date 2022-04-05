@@ -73,9 +73,9 @@ export function AdvancedSearchFiltersForm({
         is_mv = 0;
     }
     const match3 = FILTER_BY_EXTRACT_CHANNEL_ORG_REGEX.exec(filter);
-    const orgs = match3?.groups?.orgs?.replaceAll("`", "")?.split(",");
+    const orgs = match3?.groups?.orgs?.split("`").join("")?.split(",");
     const match4 = FILTER_BY_EXTRACT_CHANNEL_SUBORG_REGEX.exec(filter);
-    const suborgs = match4?.groups?.suborgs?.replaceAll("`", "")?.split(",");
+    const suborgs = match4?.groups?.suborgs?.split("`").join("")?.split(",");
 
     return [oa, is_mv, orgs, suborgs];
   }, [qObj]);
