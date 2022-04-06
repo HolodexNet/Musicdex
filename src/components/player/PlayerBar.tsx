@@ -1,8 +1,6 @@
 import {
   Box,
   Flex,
-  Grid,
-  GridItem,
   IconButton,
   Heading,
   Text,
@@ -306,72 +304,72 @@ export const PlayerBar = React.memo(
                     left={0}
                     top="env(safe-area-inset-top)"
                   />
-                  <HStack maxH="80vh" w="100%" gap={8}>
-                    <Box w="100%" h="100%">
-                      <Flex
-                        flex="1"
-                        justifyContent="space-evenly"
-                        direction="column"
+                  <HStack maxH="90vh" w="100%" gap={8}>
+                    <Flex
+                      w="100%"
+                      h="100%"
+                      overflow="auto"
+                      justifyContent="space-between"
+                      direction="column"
+                    >
+                      <MotionBox
+                        layout
+                        layoutId="songInfo"
+                        transition={springTransition}
+                        marginTop="min(calc(40vh + 56px), calc(100vw * .5625 + 56px))"
                       >
-                        <MotionBox
-                          layout
-                          layoutId="songInfo"
-                          transition={springTransition}
-                          marginTop="min(calc(40vh + 56px), calc(100vw * .5625 + 56px))"
-                        >
-                          {currentSong && (
-                            <SongInfo song={currentSong} fullPlayer={true} />
-                          )}
-                        </MotionBox>
+                        {currentSong && (
+                          <SongInfo song={currentSong} fullPlayer={true} />
+                        )}
+                      </MotionBox>
 
-                        <TimeSlider
-                          progress={progress}
-                          onChange={onProgressChange}
-                          totalDuration={totalDuration}
+                      <TimeSlider
+                        progress={progress}
+                        onChange={onProgressChange}
+                        totalDuration={totalDuration}
+                        fullPlayer={true}
+                        marginY={6}
+                      />
+                      <MotionBox
+                        initial={{ opacity: 0, y: "30vh", scale: 0.1 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        // transition={{ ease: "easeOut", duration: 0.3 }}
+                        transition={springTransition}
+                      >
+                        <PlaybackControl
+                          isPlaying={isPlaying}
+                          togglePlay={togglePlay}
                           fullPlayer={true}
-                          marginY={6}
+                          justifyContent="space-around"
+                          flexGrow={1}
                         />
-                        <MotionBox
-                          initial={{ opacity: 0, y: "30vh", scale: 0.1 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          // transition={{ ease: "easeOut", duration: 0.3 }}
-                          transition={springTransition}
-                        >
-                          <PlaybackControl
-                            isPlaying={isPlaying}
-                            togglePlay={togglePlay}
-                            fullPlayer={true}
-                            justifyContent="space-around"
-                            flexGrow={1}
+                      </MotionBox>
+                      <MotionBox
+                        initial={{ opacity: 0, y: "20vh" }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={springTransition}
+                      >
+                        <PlayerOption
+                          justifyContent="center"
+                          fullPlayer={true}
+                        />
+                      </MotionBox>
+                      <MotionBox
+                        initial={{ opacity: 0, y: "20vh" }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={springTransition}
+                      >
+                        {currentSong && (
+                          <SongLink
+                            song={currentSong}
+                            w="100%"
+                            h="100%"
+                            pt={3}
                           />
-                        </MotionBox>
-                        <MotionBox
-                          initial={{ opacity: 0, y: "20vh" }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={springTransition}
-                        >
-                          <PlayerOption
-                            justifyContent="center"
-                            fullPlayer={true}
-                          />
-                        </MotionBox>
-                        <MotionBox
-                          initial={{ opacity: 0, y: "20vh" }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={springTransition}
-                        >
-                          {currentSong && (
-                            <SongLink
-                              song={currentSong}
-                              w="100%"
-                              h="100%"
-                              pt={3}
-                            />
-                          )}
-                        </MotionBox>
-                      </Flex>
-                    </Box>
-                    <Box w="100%" maxH="90vh" overflow="auto">
+                        )}
+                      </MotionBox>
+                    </Flex>
+                    <VStack w="100%" h="90vh" maxH="90vh" align="flex-start">
                       <Heading my={6} size="lg">
                         {t("Upcoming")}
                       </Heading>
@@ -385,16 +383,24 @@ export const PlayerBar = React.memo(
                               indexShift: queue.length,
                               hideCol: ["idx", "og_artist", "sang_on"],
                             }}
+                            w="100%"
                             maxH="100%"
-                            overflowY="auto"
+                            overflow="auto"
                           />
                         ) : (
-                          <Heading my={6} size="sm">
-                            {t("No Songs")}
-                          </Heading>
+                          <Flex
+                            w="100%"
+                            h="100%"
+                            align="center"
+                            justify="center"
+                          >
+                            <Heading size="sm" color="gray.500">
+                              {t("No Songs")}
+                            </Heading>
+                          </Flex>
                         )}
                       </Suspense>
-                    </Box>
+                    </VStack>
                   </HStack>
                   <Box
                     bgGradient="linear-gradient(
