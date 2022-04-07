@@ -8,17 +8,21 @@ import {
   formatRelative,
   isDate,
 } from "date-fns";
-import { enUS, ja, zhTW, enGB, de, ko, hu } from "date-fns/locale"; // import all locales we need
+import { enUS, ja, zhTW, zhCN, enGB, de, ko, hu, vi } from "date-fns/locale"; // import all locales we need
 import I18NextHttpBackend from "i18next-http-backend";
 
 const locales: { [key: string]: Locale } = {
   en: enUS,
   "en-GB": enGB,
   ja,
+  "ja-JP": ja,
   zh: zhTW,
-  de,
-  ko,
-  hu,
+  "zh-TW": zhTW,
+  "zh-CN": zhCN,
+  "de-DE": de,
+  "ko-KR": ko,
+  "hu-HU": hu,
+  "vi-VN": vi,
 }; // used to look up the required locale
 
 const SYSTEM_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -32,7 +36,20 @@ i18n
     debug: process.env.NODE_ENV === "development",
     fallbackLng: "en",
     saveMissing: true,
-    supportedLngs: ["en", "ja", "zh", "ko", "de", "hu", "id"],
+    supportedLngs: [
+      "en",
+      "ja-JP",
+      "id-ID" /*"es-MX",*/,
+      "de-DE",
+      "hu-HU",
+      "ko-KR",
+      // "ms-MY",
+      // "ru-RU",
+      // "tr-TR",
+      "vi-VN",
+      "zh-CN",
+      "zh-TW",
+    ],
     interpolation: {
       escapeValue: false,
       format: (value, format, lng, options) => {

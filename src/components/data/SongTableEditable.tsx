@@ -9,6 +9,7 @@ import {
   Th,
   Thead,
   Tr,
+  useBreakpoint,
   useBreakpointValue,
   useColorModeValue,
   VStack,
@@ -157,13 +158,15 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
     useSortBy
   );
 
-  const isXL = useBreakpointValue({ base: false, xl: true }, "xl");
+  const breakpointValue =
+    useBreakpointValue({ base: 0, xs: 0, sm: 1, md: 2, lg: 2, xl: 3 }, "xl") ||
+    0;
 
   useEffect(() => {
-    toggleHideColumn("original_artist", !isXL);
-    toggleHideColumn("duration", !isXL);
+    toggleHideColumn("original_artist", breakpointValue < 2);
+    toggleHideColumn("dur", breakpointValue < 2);
     // toggleHideColumn("idx", !isXL);
-  }, [isXL, toggleHideColumn]);
+  }, [breakpointValue, toggleHideColumn]);
 
   const HOVER_ROW_STYLE: CSSObject = {
     backgroundColor: useColorModeValue("bgAlpha.200", "bgAlpha.800"),
@@ -188,7 +191,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Table {...getTableProps()} size={isXL ? "md" : "sm"}>
+      <Table {...getTableProps()} size={breakpointValue > 2 ? "md" : "sm"}>
         <Thead>
           {headerGroups.map((headerGroup) => (
             <Tr {...headerGroup.getHeaderGroupProps()}>
@@ -196,6 +199,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
                 <Th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   isNumeric={(column as any).isNumeric}
+                  px={breakpointValue}
                 >
                   {column.isSorted &&
                     (column.isSortedDesc ? (
@@ -256,6 +260,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
                                   width:
                                     cell.column.id === "idx" ? "40px" : "100vw",
                                 })}
+                                px={breakpointValue}
                               >
                                 {cell.render("Cell")}
                               </Td>
