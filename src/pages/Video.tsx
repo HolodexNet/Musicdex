@@ -1,4 +1,4 @@
-import { Box, Text, Button, IconButton } from "@chakra-ui/react";
+import { Box, Text, Button } from "@chakra-ui/react";
 import axios from "axios";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";

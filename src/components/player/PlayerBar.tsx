@@ -452,7 +452,8 @@ const PlayerContainer = styled.div<{
   z-index: 10;
 
   :hover {
-    background: var(--chakra-colors-bg-700);
+    ${({ expanded }) =>
+      expanded ? "" : "background: var(--chakra-colors-bg-700);"}
   }
 
   .main {
