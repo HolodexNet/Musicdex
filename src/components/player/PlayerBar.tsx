@@ -25,6 +25,7 @@ import { SongLink } from "./controls/PlayerSongLink";
 import { TimeSlider } from "./controls/TimeSlider";
 import { VolumeSlider } from "./controls/VolumeSlider";
 import { SongTable } from "../data/SongTable";
+import { QUEUE_MENU_ID } from "../song/SongContextMenu";
 
 interface PlayerBarProps {
   progress: number;
@@ -59,7 +60,6 @@ export const PlayerBar = React.memo(
     const breakpoint = useBreakpoint();
 
     const [dragStartY, setDragStartY] = useState(0);
-    const canEnlarge = useBreakpointValue({ base: true, lg: true });
 
     const queue = useStoreState((state) => state.playback.queue);
     const playlistQueue = useStoreState(
@@ -94,7 +94,6 @@ export const PlayerBar = React.memo(
         e?.target?.className &&
         typeof e.target.className === "string" &&
         e?.target?.className.split(" ").length === 1 &&
-        canEnlarge && //only allow toggling on Mobile?
         currentSong
       ) {
         toggleFullPlayer();
@@ -377,6 +376,7 @@ export const PlayerBar = React.memo(
                         {playlistTotalQueue && playlistTotalQueue.length > 0 ? (
                           <SongTable
                             songs={playlistTotalQueue}
+                            menuId={QUEUE_MENU_ID}
                             rowProps={{
                               songClicked: (e, song, idx) =>
                                 next({ count: idx + 1, userSkipped: true }),
@@ -450,6 +450,10 @@ const PlayerContainer = styled.div<{
   flex-direction: column;
   display: flex;
   z-index: 10;
+
+  :hover {
+    background: var(--chakra-colors-bg-700);
+  }
 
   .main {
     display: flex;

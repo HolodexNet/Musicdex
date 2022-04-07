@@ -1,10 +1,11 @@
-import { Box, Text, Button } from "@chakra-ui/react";
+import { Box, Text, Button, IconButton } from "@chakra-ui/react";
 import axios from "axios";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { FiYoutube } from "react-icons/fi";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
+import { LineLogo } from "../components/icons/LineLogo";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
@@ -89,6 +90,26 @@ export default function Video() {
               }}
             >
               <FiYoutube />
+            </Button>
+            {/* <IconButton
+              variant="ghost"
+              icon={<LineLogo width="18px" />}
+              aria-label="open-on-holodex"
+              as="a"
+              href={"https://holodex.net/watch/" + video.id}
+              target="_blank"
+            /> */}
+            <Button
+              variant="ghost"
+              aria-label="open-on-holodex"
+              size="md"
+              colorScheme="gray"
+              title={t("Open in Holodex")}
+              onClick={() => {
+                window.open("https://holodex.net/watch/" + video.id);
+              }}
+            >
+              <LineLogo width="18px" />
             </Button>
           </PlaylistButtonArray>
         )}
