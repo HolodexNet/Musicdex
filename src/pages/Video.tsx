@@ -91,14 +91,6 @@ export default function Video() {
             >
               <FiYoutube />
             </Button>
-            {/* <IconButton
-              variant="ghost"
-              icon={<LineLogo width="18px" />}
-              aria-label="open-on-holodex"
-              as="a"
-              href={"https://holodex.net/watch/" + video.id}
-              target="_blank"
-            /> */}
             <Button
               variant="ghost"
               aria-label="open-on-holodex"
