@@ -63,25 +63,29 @@ export default function Playlist() {
 
   // const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
 
-  const writablePlaylist: Partial<WriteablePlaylist> = useMemo(() => {
-    let c: Partial<WriteablePlaylist> = {
-      ...playlist,
-      content: playlist?.content?.map((x) => x.id),
-    };
-    return c;
-  }, [playlist]);
-
   // Editing:
+  const [newTitle, setNewTitle] = useState<string | undefined>();
+  const [newDescription, setNewDescription] = useState<string | undefined>();
   const [newSongIds, setNewSongIds] = useState<string[] | undefined>();
+
+  useEffect(() => {
+    if (!editMode) {
+      setNewTitle(undefined);
+      setNewDescription(undefined);
+      setNewSongIds(undefined);
+    }
+  }, [editMode]);
 
   const toast = useToast();
 
   const finishSongEditing = useCallback(
-    async (songIds?: string[]) => {
-      if (songIds !== null) {
+    async (songIds?: string[], title?: string, desc?: string) => {
+      if (songIds !== undefined || title !== undefined || desc !== undefined) {
         const newWritable: Partial<WriteablePlaylist> = {
           ...playlist,
           content: songIds,
+          title: title !== undefined ? title : playlist?.title,
+          description: desc !== undefined ? desc : playlist?.description,
         };
         writeNewPlaylist(newWritable).then(
           (_) => {
@@ -151,10 +155,10 @@ export default function Playlist() {
           canEdit={isLoggedIn && playlist.owner === user?.id && editMode}
           editMode={false}
           setDescription={(text) => {
-            writeNewPlaylist({ ...writablePlaylist, description: text });
+            setNewDescription(text);
           }}
           setTitle={(text) => {
-            writeNewPlaylist({ ...writablePlaylist, title: text });
+            setNewTitle(text);
           }}
           count={
             (editMode
@@ -184,7 +188,9 @@ export default function Playlist() {
           onEditClick={() => {
             setEditMode(true);
           }}
-          onFinishEditClick={() => finishSongEditing(newSongIds)}
+          onFinishEditClick={() =>
+            finishSongEditing(newSongIds, newTitle, newDescription)
+          }
         />
 
         {playlist.content &&
