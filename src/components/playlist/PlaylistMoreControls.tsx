@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { FiMoreHorizontal } from "react-icons/fi";
+import { useNavigate } from "react-router";
 import {
   usePlaylistDeleter,
   usePlaylistWriter,
@@ -26,6 +27,7 @@ export function PlaylistMoreControlsMenu({
   const { mutateAsync: write, isLoading } = usePlaylistWriter();
   const { mutateAsync: del } = usePlaylistDeleter();
 
+  const navigate = useNavigate();
   const toast = useToast();
 
   const changeListed = (e: boolean) => {
@@ -55,7 +57,26 @@ export function PlaylistMoreControlsMenu({
   const deletePlaylist = () => {
     // eslint-disable-next-line no-restricted-globals
     const x = confirm(t("Really delete this playlist?"));
-    if (x) del({ playlistId: playlist.id });
+    if (x)
+      del({ playlistId: playlist.id }).then(
+        () => {
+          toast({
+            status: "success",
+            position: "top-right",
+            title: t("Deleted"),
+            duration: 1500,
+          });
+          navigate("/");
+        },
+        () => {
+          toast({
+            status: "warning",
+            position: "top-right",
+            title: t("Something went wrong"),
+            isClosable: true,
+          });
+        }
+      );
   };
   if (!canEdit) return <></>;
   return (
