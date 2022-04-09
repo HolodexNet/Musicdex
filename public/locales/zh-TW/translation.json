@@ -80,7 +80,7 @@
   "Featuring {{name}}": "內含 {{name}} 的播放清單",
   "Discover more from {{org}}": "探索更多 {{org}} 的相關歌曲",
   "All Songs": "所有歌曲",
-  "({{ from }} - {{ to }} of {{ total }})": "({{ from }} - {{ to }} / {{ total }})",
+  "({{ from }} - {{ to }} of {{ total }})": "（第{{ from }}至{{ to }}首，共{{ total }}首）",
   "Your recently played songs": "最近播放過的歌曲",
   "Recent Singing Streams": "最近實況的歌回",
   "{{org}} Playlists": "{{org}} 播放清單",
