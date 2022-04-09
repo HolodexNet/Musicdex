@@ -17,7 +17,11 @@ import { useTranslation } from "react-i18next";
 import { useClient } from "../../modules/client";
 import { usePlaylistWriter } from "../../modules/services/playlist.service";
 
-export default function PlaylistCreateForm(): JSX.Element {
+export default function PlaylistCreateForm({
+  onClose,
+}: {
+  onClose: () => void;
+}): JSX.Element {
   const { t } = useTranslation();
   const { mutateAsync: writePlaylist } = usePlaylistWriter();
 
@@ -57,6 +61,7 @@ export default function PlaylistCreateForm(): JSX.Element {
                 title: t("Created"),
                 duration: 1500,
               });
+              onClose();
             },
             () => {
               toast({
@@ -65,6 +70,7 @@ export default function PlaylistCreateForm(): JSX.Element {
                 title: t("Something went wrong"),
                 isClosable: true,
               });
+              onClose();
             }
           );
         } else {
@@ -111,14 +117,16 @@ export function PlaylistCreateModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create New Playlist</ModalHeader>
+        <ModalHeader>{t("Create New Playlist")}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <PlaylistCreateForm />
+          <PlaylistCreateForm onClose={onClose} />
         </ModalBody>
       </ModalContent>
     </Modal>
