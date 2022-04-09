@@ -48,6 +48,7 @@
   "Edit": "编辑",
   "Save Changes": "保存修改",
   "Created": "已创建",
+  "Deleted": "Deleted",
   "You need to provide both name and description": "你需要输入名称以及简介",
   "Name (Can start with an emoji to set it as the icon)": "名称（支持以emoji表情符号开头，并将其设置为图标）",
   "Description": "简介",
