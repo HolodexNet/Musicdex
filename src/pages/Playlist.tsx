@@ -189,7 +189,7 @@ export default function Playlist() {
 
         {playlist.content &&
           (editMode ? (
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>{t("Loading...")}</div>}>
               <SongEditableTable
                 songs={playlist.content}
                 songsEdited={setNewSongIds}

@@ -373,7 +373,7 @@ export const PlayerBar = React.memo(
                       <Heading my={6} size="lg">
                         {t("Upcoming")}
                       </Heading>
-                      <Suspense fallback={<div>Loading...</div>}>
+                      <Suspense fallback={<div>{t("Loading...")}</div>}>
                         {playlistTotalQueue && playlistTotalQueue.length > 0 ? (
                           <SongTable
                             songs={playlistTotalQueue}
