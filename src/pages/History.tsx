@@ -54,7 +54,7 @@ export default function History() {
             mb={2}
           />
         )}
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>{t("Loading...")}</div>}>
           {playlist?.content && <SongTable playlist={playlist} virtualized />}
         </Suspense>
       </Fragment>
