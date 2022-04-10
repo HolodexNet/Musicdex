@@ -100,7 +100,7 @@ export const Queue = React.memo(() => {
                 onClick={() => clearQueue()}
               ></IconButton>
             </Flex>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>{t("Loading...")}</div>}>
               <SongTable
                 songs={queue}
                 menuId={QUEUE_MENU_ID}
@@ -138,7 +138,7 @@ export const Queue = React.memo(() => {
                 onClick={() => clearPlaylist()}
               ></IconButton>
             </Flex>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>{t("Loading...")}</div>}>
               <SongTable
                 songs={playlistTotalQueue}
                 rowProps={{

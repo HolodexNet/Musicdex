@@ -313,7 +313,6 @@ export const PlayerBar = React.memo(
                     <Flex
                       w="100%"
                       h="100%"
-                      overflow="auto"
                       justifyContent="space-between"
                       direction="column"
                     >

@@ -86,7 +86,7 @@ export default function Search() {
             {t("Search")}: "{qObj.q || ""}"
           </Heading>
         </HStack>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>{t("Loading...")}</div>}>
           {songs && <SongTable songs={songs} />}
         </Suspense>
 
