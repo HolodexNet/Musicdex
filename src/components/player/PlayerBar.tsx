@@ -377,7 +377,7 @@ export const PlayerBar = React.memo(
                       <Heading my={6} size="lg">
                         {t("Upcoming")}
                       </Heading>
-                      <Suspense fallback={<div>Loading...</div>}>
+                      <Suspense fallback={<div>{t("Loading...")}</div>}>
                         <Box w="100%" h="100%" maxH="100%" overflowY="auto">
                           {queue && queue.length > 0 && (
                             <SongTable
