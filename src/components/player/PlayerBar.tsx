@@ -1,6 +1,7 @@
 import {
   Box,
   Flex,
+  Button,
   IconButton,
   Heading,
   Text,
@@ -13,7 +14,7 @@ import styled from "@emotion/styled";
 import { AnimatePresence, LayoutGroup } from "framer-motion";
 import React, { Suspense, useEffect, useState, useMemo } from "react";
 import { FaChevronDown } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
+import { Link as navLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useStoreActions, useStoreState } from "../../store";
 import { formatSeconds } from "../../utils/SongHelper";
@@ -54,12 +55,16 @@ export const PlayerBar = React.memo(
     totalDuration,
   }: PlayerBarProps) => {
     const { t } = useTranslation();
-    const [fullPlayer, setFullPlayer] = useState(false);
+    const fullPlayer = useStoreState((state) => state.player.fullPlayer);
+    const setFullPlayer = useStoreActions(
+      (store) => store.player.setFullPlayer
+    );
     const setPos = useStoreActions((store) => store.player.setOverridePosition);
     const location = useLocation();
     const breakpoint = useBreakpoint();
 
     const [dragStartY, setDragStartY] = useState(0);
+    const canEnlarge = useBreakpointValue({ base: true, lg: false });
 
     const queue = useStoreState((state) => state.playback.queue);
     const playlistQueue = useStoreState(
@@ -69,8 +74,8 @@ export const PlayerBar = React.memo(
       (state) => state.playback.playedPlaylistQueue
     );
     const playlistTotalQueue = useMemo(() => {
-      return [...queue, ...playlistQueue, ...playedPlaylistQueue];
-    }, [queue, playedPlaylistQueue, playlistQueue]);
+      return [...playlistQueue, ...playedPlaylistQueue];
+    }, [playedPlaylistQueue, playlistQueue]);
     const next = useStoreActions((actions) => actions.playback.next);
 
     useEffect(() => {
@@ -81,7 +86,7 @@ export const PlayerBar = React.memo(
     }, [location]);
 
     function toggleFullPlayer() {
-      setFullPlayer((prev) => !prev);
+      setFullPlayer(!fullPlayer);
       if (fullPlayer) {
         setPos(undefined);
       } else {
@@ -94,6 +99,7 @@ export const PlayerBar = React.memo(
         e?.target?.className &&
         typeof e.target.className === "string" &&
         e?.target?.className.split(" ").length === 1 &&
+        canEnlarge &&
         currentSong
       ) {
         toggleFullPlayer();
@@ -373,32 +379,50 @@ export const PlayerBar = React.memo(
                         {t("Upcoming")}
                       </Heading>
                       <Suspense fallback={<div>Loading...</div>}>
-                        {playlistTotalQueue && playlistTotalQueue.length > 0 ? (
-                          <SongTable
-                            songs={playlistTotalQueue}
-                            menuId={QUEUE_MENU_ID}
-                            rowProps={{
-                              songClicked: (e, song, idx) =>
-                                next({ count: idx + 1, userSkipped: true }),
-                              indexShift: queue.length,
-                              hideCol: ["idx", "og_artist", "sang_on"],
-                            }}
-                            w="100%"
-                            maxH="100%"
-                            overflow="auto"
-                          />
-                        ) : (
-                          <Flex
-                            w="100%"
-                            h="100%"
-                            align="center"
-                            justify="center"
-                          >
-                            <Heading size="sm" color="gray.500">
-                              {t("No Songs")}
-                            </Heading>
-                          </Flex>
-                        )}
+                        <Box w="100%" h="100%" maxH="100%" overflowY="auto">
+                          {queue && queue.length > 0 && (
+                            <SongTable
+                              songs={queue}
+                              menuId={QUEUE_MENU_ID}
+                              rowProps={{
+                                songClicked: (e, song, idx) =>
+                                  next({ count: idx + 1, userSkipped: true }),
+                                indexShift: queue.length,
+                                hideCol: ["idx", "og_artist", "sang_on"],
+                              }}
+                            />
+                          )}
+                          {playlistTotalQueue && playlistTotalQueue.length > 0 && (
+                            <SongTable
+                              songs={playlistTotalQueue}
+                              rowProps={{
+                                songClicked: (e, song, idx) =>
+                                  next({
+                                    count: queue.length + idx + 1,
+                                    userSkipped: true,
+                                  }),
+                                hideCol: ["idx", "og_artist", "sang_on"],
+                              }}
+                            />
+                          )}
+                          {queue.length === 0 &&
+                            playlistTotalQueue.length === 0 && (
+                              <Flex
+                                w="100%"
+                                h="100%"
+                                direction="column"
+                                align="center"
+                                justify="center"
+                              >
+                                <Heading my={2} size="md" color="gray.500">
+                                  {t("No Songs")}
+                                </Heading>
+                                <Button as={navLink} to="/" variant="ghost">
+                                  {t("Return to Home")}
+                                </Button>
+                              </Flex>
+                            )}
+                        </Box>
                       </Suspense>
                     </VStack>
                   </HStack>
@@ -450,11 +474,6 @@ const PlayerContainer = styled.div<{
   flex-direction: column;
   display: flex;
   z-index: 10;
-
-  :hover {
-    ${({ expanded }) =>
-      expanded ? "" : "background: var(--chakra-colors-bg-700);"}
-  }
 
   .main {
     display: flex;

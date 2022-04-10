@@ -14,7 +14,7 @@ export const SongLink = React.memo(({ song, ...rest }: SongLinkProps) => {
 
   return (
     <HStack spacing={4} {...rest}>
-      <Tooltip label={t("Go To Song Page")}>
+      <Tooltip label={t("Go To Song Page")} placement="top">
         <IconButton
           size="lg"
           w="100%"
@@ -25,7 +25,7 @@ export const SongLink = React.memo(({ song, ...rest }: SongLinkProps) => {
           variant="ghost"
         />
       </Tooltip>
-      <Tooltip label={t("Go To Video Page")}>
+      <Tooltip label={t("Go To Video Page")} placement="top">
         <IconButton
           size="lg"
           w="100%"
@@ -36,7 +36,7 @@ export const SongLink = React.memo(({ song, ...rest }: SongLinkProps) => {
           variant="ghost"
         />
       </Tooltip>
-      <Tooltip label={t("Go To Channel Page")}>
+      <Tooltip label={t("Go To Channel Page")} placement="top">
         <IconButton
           size="lg"
           w="100%"
