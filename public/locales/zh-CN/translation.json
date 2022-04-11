@@ -50,7 +50,7 @@
   "Created": "已创建",
   "Deleted": "已删除",
   "You need to provide both name and description": "你需要输入名称以及简介",
-  "Name (Can start with an emoji to set it as the icon)": "名称（支持以emoji表情符号开头，并将其设置为图标）",
+  "Name (Can start with an emoji to set it as the icon)": "名称（支持将开头emoji表情符号作为标识显示）",
   "Description": "简介",
   "Create": "新建",
   "Successfully saved playlist": "播放列表保存成功",
@@ -144,5 +144,5 @@
   "Added to liked songs": "添加到我喜欢",
   "Removed from liked songs": "已从我喜欢中删除",
   "An error has occurred": "发生错误",
-  "Return to Home": "Return to Home"
+  "Return to Home": "返回首页"
 }
