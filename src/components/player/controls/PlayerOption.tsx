@@ -1,8 +1,15 @@
-import { Button, Flex, FlexProps, IconButton } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  FlexProps,
+  IconButton,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
 import { RiPlayList2Fill } from "react-icons/ri";
+import { FiMaximize2 } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router";
 import { useStoreActions, useStoreState } from "../../../store";
 import { ChangePlayerLocationButton } from "../ChangePlayerLocationButton";
@@ -24,6 +31,7 @@ function ShuffleIcon(shuffleMode: boolean, size: number = 24) {
 
 interface PlayerOptionProps extends FlexProps {
   fullPlayer?: boolean;
+  toggleFullPlayer?: () => void;
 }
 
 export const PlayerOption = React.memo(
@@ -53,6 +61,16 @@ export const PlayerOption = React.memo(
     const toggleRepeatMode = useStoreActions(
       (actions) => actions.playback.toggleRepeat
     );
+
+    const setFullPlayer = useStoreActions(
+      (store) => store.player.setFullPlayer
+    );
+    const setPos = useStoreActions((store) => store.player.setOverridePosition);
+    const displayFullscreenButton = useBreakpointValue({
+      base: false,
+      lg: true,
+    });
+
     return (
       <Flex align="center" {...rest}>
         <IconButton
@@ -86,6 +104,18 @@ export const PlayerOption = React.memo(
               variant="ghost"
               onClick={() => toggleQueue()}
             />
+            {displayFullscreenButton && (
+              <IconButton
+                aria-label="Fullscreen"
+                icon={<FiMaximize2 />}
+                color="gray"
+                variant="ghost"
+                onClick={() => {
+                  setFullPlayer(true);
+                  setPos("full-player");
+                }}
+              />
+            )}
           </>
         )}
       </Flex>
