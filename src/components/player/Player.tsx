@@ -6,6 +6,7 @@ import { formatSeconds } from "../../utils/SongHelper";
 import { PlayerBar } from "./PlayerBar";
 import { usePlayer, getID } from "./YoutubePlayer";
 import { useTrackSong } from "../../modules/services/songs.service";
+import { PipDrawer } from "./PipDrawer";
 
 const retryCounts: Record<string, number> = {};
 const trackedSongs: Set<string> = new Set();
@@ -263,22 +264,25 @@ export function Player({ player }: { player: any }) {
   }, [currentSong, firstLoadPauseId, isPlaying, player]);
 
   return (
-    <PlayerBar
-      progress={progress}
-      onProgressChange={onProgressChange}
-      currentSong={currentSong}
-      isPlaying={isPlaying}
-      togglePlay={togglePlay}
-      // next={(e: any) => next(e)}
-      // player={player}
-      seconds={seconds}
-      totalDuration={totalDuration}
-      volume={volumeSlider}
-      onVolumeChange={(e) => {
-        player?.unMute();
-        player?.setVolume(e);
-        setVolumeSlider(e);
-      }}
-    />
+    <>
+      <PlayerBar
+        progress={progress}
+        onProgressChange={onProgressChange}
+        currentSong={currentSong}
+        isPlaying={isPlaying}
+        togglePlay={togglePlay}
+        // next={(e: any) => next(e)}
+        // player={player}
+        seconds={seconds}
+        totalDuration={totalDuration}
+        volume={volumeSlider}
+        onVolumeChange={(e) => {
+          player?.unMute();
+          player?.setVolume(e);
+          setVolumeSlider(e);
+        }}
+      />
+      <PipDrawer isPlaying={isPlaying}></PipDrawer>
+    </>
   );
 }

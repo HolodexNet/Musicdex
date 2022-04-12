@@ -2388,6 +2388,11 @@
   resolved "https://registry.npmjs.org/@types/estree/-/estree-0.0.39.tgz"
   integrity sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
 
+"@types/fabric@^4.5.7":
+  version "4.5.7"
+  resolved "https://registry.yarnpkg.com/@types/fabric/-/fabric-4.5.7.tgz#d15a7a8f597cd9d40d9e17b8f3f58351c4f1379f"
+  integrity sha512-GkILNUXudoHWlOgiZRlQAU/u/HOQqB6YK6tRLIGtbCIRad9CLFpFyb6ys62FZawPZ/lSq7wLeRvfqOOt2X2BTQ==
+
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
   resolved "https://registry.npmjs.org/@types/graceful-fs/-/graceful-fs-4.1.5.tgz"
@@ -5145,6 +5150,11 @@ extend@^3.0.0:
   version "3.0.2"
   resolved "https://registry.npmjs.org/extend/-/extend-3.0.2.tgz"
   integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
+
+fabric@5.2.1-browser:
+  version "5.2.1-browser"
+  resolved "https://registry.yarnpkg.com/fabric/-/fabric-5.2.1-browser.tgz#d884353a9ee141366f2999e1f77551536abc27fb"
+  integrity sha512-eFT+TYCkYIvqqoXGL83eb7LISf1RmCbUO+uXzvMIhU2ghKHr3ZLqUTbrxEZ0cPvisZgU6/3WXSaE1rWvgFWA2A==
 
 fast-average-color@^7.1.0:
   version "7.1.0"

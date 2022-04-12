@@ -7,7 +7,12 @@ import {
 } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { MdRepeat, MdRepeatOne, MdShuffle } from "react-icons/md";
+import {
+  MdPictureInPicture,
+  MdRepeat,
+  MdRepeatOne,
+  MdShuffle,
+} from "react-icons/md";
 import { RiPlayList2Fill } from "react-icons/ri";
 import { FiMaximize2 } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router";
@@ -71,6 +76,10 @@ export const PlayerOption = React.memo(
       lg: true,
     });
 
+    const setPictureInPicture = useStoreActions(
+      (store) => store.player.setPictureInPicture
+    );
+
     return (
       <Flex align="center" {...rest}>
         <IconButton
@@ -118,6 +127,15 @@ export const PlayerOption = React.memo(
             )}
           </>
         )}
+        <IconButton
+          aria-label="PictureInPicture"
+          icon={<MdPictureInPicture />}
+          color="gray"
+          variant="ghost"
+          onClick={() => {
+            setPictureInPicture(true);
+          }}
+        />
       </Flex>
     );
   }

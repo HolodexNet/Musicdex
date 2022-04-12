@@ -10,6 +10,8 @@ export interface PlayerModel {
   setOverridePosition: Action<PlayerModel, PlayerPosition | undefined>;
   fullPlayer: boolean;
   setFullPlayer: Action<PlayerModel, boolean>;
+  pictureInPicture: boolean;
+  setPictureInPicture: Action<PlayerModel, boolean>;
 
   position: Computed<PlayerModel, PlayerPosition, StoreModel>;
 }
@@ -28,6 +30,11 @@ const playerModel: PlayerModel = {
   fullPlayer: false,
   setFullPlayer: action((state, val) => {
     state.fullPlayer = val;
+  }),
+
+  pictureInPicture: false,
+  setPictureInPicture: action((state, val) => {
+    state.pictureInPicture = val;
   }),
 
   position: computed(
