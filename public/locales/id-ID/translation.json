@@ -48,6 +48,7 @@
   "Edit": "Ubah",
   "Save Changes": "Simpan Perubahan",
   "Created": "Dibuat",
+  "Deleted": "Deleted",
   "You need to provide both name and description": "Kamu perlu mengisi nama dan deskripsi",
   "Name (Can start with an emoji to set it as the icon)": "Nama (Dapat diawali dengan emoji untuk menjadikannya sebagai ikon)",
   "Description": "Deskripsi",
@@ -142,5 +143,6 @@
   "Playlist is private and cannot be shared.": "Playlist ini bersifat pribadi dan tidak dapat dibagikan.",
   "Added to liked songs": "Ditambahkan ke lagu yang disukai",
   "Removed from liked songs": "Dihapus dari lagu yang disukai",
-  "An error has occurred": "Terjadi kesalahan"
+  "An error has occurred": "Terjadi kesalahan",
+  "Return to Home": "Return to Home"
 }

@@ -48,6 +48,7 @@
   "Edit": "編集",
   "Save Changes": "変更を保存",
   "Created": "作成されました",
+  "Deleted": "Deleted",
   "You need to provide both name and description": "名前と説明の両方を入力する必要があります。",
   "Name (Can start with an emoji to set it as the icon)": "名前 (最初に絵文字を入力するとアイコンになります)",
   "Description": "概要",
@@ -142,5 +143,6 @@
   "Playlist is private and cannot be shared.": "このプレイリストは現在非公開でシェアできません。",
   "Added to liked songs": "お気に入りに追加しました",
   "Removed from liked songs": "お気に入りから削除しました",
-  "An error has occurred": "エラーが発生しました"
+  "An error has occurred": "エラーが発生しました",
+  "Return to Home": "Return to Home"
 }

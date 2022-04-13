@@ -48,6 +48,7 @@
   "Edit": "编辑",
   "Save Changes": "保存修改",
   "Created": "已创建",
+  "Deleted": "已删除",
   "You need to provide both name and description": "你需要输入名称以及简介",
   "Name (Can start with an emoji to set it as the icon)": "名称（支持以emoji表情符号开头，并将其设置为图标）",
   "Description": "简介",
@@ -68,7 +69,7 @@
   "Select and Copy": "选择并复制",
   "Song Name": "歌曲名称",
   "Original Artist": "原唱",
-  "Timestamped Youtube Link": "附带时间戳的Youtube链接",
+  "Timestamped Youtube Link": "附带时间戳的YouTube链接",
   "Go To Song Page": "前往歌曲页面",
   "Go To Video Page": "前往视频页面",
   "Go To Channel Page": "前往频道页面",
@@ -142,5 +143,6 @@
   "Playlist is private and cannot be shared.": "此播放列表目前设定为不公开列出，无法分享。",
   "Added to liked songs": "添加到我喜欢",
   "Removed from liked songs": "已从我喜欢中删除",
-  "An error has occurred": "发生错误"
+  "An error has occurred": "发生错误",
+  "Return to Home": "Return to Home"
 }

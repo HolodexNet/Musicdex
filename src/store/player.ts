@@ -8,6 +8,8 @@ export interface PlayerModel {
   setShowUpcomingOverlay: Action<PlayerModel, boolean>;
   overridePosition: PlayerPosition | undefined;
   setOverridePosition: Action<PlayerModel, PlayerPosition | undefined>;
+  fullPlayer: boolean;
+  setFullPlayer: Action<PlayerModel, boolean>;
 
   position: Computed<PlayerModel, PlayerPosition, StoreModel>;
 }
@@ -21,6 +23,11 @@ const playerModel: PlayerModel = {
   overridePosition: undefined,
   setOverridePosition: action((state, val) => {
     state.overridePosition = val;
+  }),
+
+  fullPlayer: false,
+  setFullPlayer: action((state, val) => {
+    state.fullPlayer = val;
   }),
 
   position: computed(
