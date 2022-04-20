@@ -12,6 +12,7 @@ import {
   RadioGroup,
   Stack,
   Box,
+  Flex,
   Heading,
   useToast,
   Divider,
@@ -23,6 +24,7 @@ import { RiDragDropLine } from "react-icons/ri";
 import useNamePicker from "../../modules/common/useNamePicker";
 import {
   useMyPlaylists,
+  usePlaylistWriter,
   usePlaylistUpdater,
 } from "../../modules/services/playlist.service";
 import { useStoreActions, useStoreState } from "../../store";
@@ -35,6 +37,7 @@ export function AddToPlaylistModal(): JSX.Element {
     (actions) => actions.addPlaylist.clearPlaylistAddDialog
   );
 
+  const { mutateAsync: writeNewPlaylist } = usePlaylistWriter();
   const { mutateAsync } = usePlaylistUpdater();
   const toast = useToast();
 
@@ -55,16 +58,27 @@ export function AddToPlaylistModal(): JSX.Element {
         <ModalHeader>Add To Playlist</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Divider mx={-4} mb={1} />
-          {song && (
+          {song && Array.isArray(song) && (
             <Box>
-              <Heading size="sm">{song.name}</Heading> covered by{" "}
-              <Heading size="sm">
-                {tn(song.channel?.english_name, song.channel?.name)}
+              <Heading size="md" my={1}>
+                {song[0].name}
               </Heading>
+              <Text fontSize="sm">
+                {t("... and {{count}} other", { count: song.length - 1 })}
+              </Text>
             </Box>
           )}
-          <Divider mx={-4} mt={1} mb={2} />
+          {song && !Array.isArray(song) && (
+            <Box>
+              <Heading size="md" my={1}>
+                {song.name}
+              </Heading>
+              <Text fontSize="sm" color="whiteAlpha.600">
+                {tn(song.channel?.english_name, song.channel?.name)}
+              </Text>
+            </Box>
+          )}
+          <Divider my={2} />
           {isLoading ? (
             t("Loading...")
           ) : (
@@ -80,42 +94,83 @@ export function AddToPlaylistModal(): JSX.Element {
           )}
         </ModalBody>
         <ModalFooter>
-          <Text color="whiteAlpha.500">
-            <RiDragDropLine style={{ display: "inline" }}></RiDragDropLine>
-            {t(
-              "Tip: you can also drag songs from tables into playlists to quickly add to playlist."
-            )}
-          </Text>
-          <Button
-            onClick={async () => {
-              if (selectedPlaylistId !== "_" && song && song.id)
-                await mutateAsync({
-                  action: "add",
-                  playlistId: selectedPlaylistId,
-                  song: song.id,
-                }).then(
-                  () => {
-                    toast({
-                      status: "success",
-                      title: t("Added"),
-                      duration: 1500,
-                      position: "top-right",
-                    });
-                  },
-                  () => {
-                    toast({
-                      status: "warning",
-                      position: "top-right",
-                      title: t("Something went wrong"),
-                      isClosable: true,
-                    });
+          <Flex direction="column">
+            <Button
+              onClick={async () => {
+                if (selectedPlaylistId !== "_" && song) {
+                  if (Array.isArray(song)) {
+                    const selectedPlaylist = playlists?.find(
+                      (playlist) => playlist.id === selectedPlaylistId
+                    );
+                    const songIds =
+                      selectedPlaylist?.content?.map((song) => song.id) || [];
+                    const newSongIds = [
+                      ...songIds,
+                      ...song.map((song) => song.id),
+                    ];
+                    console.log(songIds);
+                    console.log(newSongIds);
+                    const newWritable: Partial<WriteablePlaylist> = {
+                      ...selectedPlaylist,
+                      content: newSongIds,
+                    };
+                    await writeNewPlaylist(newWritable).then(
+                      (_) => {
+                        //success:
+                        toast({
+                          status: "success",
+                          title: t("Added"),
+                          duration: 1500,
+                          position: "top-right",
+                        });
+                      },
+                      () => {
+                        toast({
+                          status: "warning",
+                          position: "top-right",
+                          title: t("Something went wrong"),
+                          isClosable: true,
+                        });
+                      }
+                    );
+                    close();
+                  } else if (!Array.isArray(song) && song.id) {
+                    await mutateAsync({
+                      action: "add",
+                      playlistId: selectedPlaylistId,
+                      song: song.id,
+                    }).then(
+                      () => {
+                        toast({
+                          status: "success",
+                          title: t("Added"),
+                          duration: 1500,
+                          position: "top-right",
+                        });
+                      },
+                      () => {
+                        toast({
+                          status: "warning",
+                          position: "top-right",
+                          title: t("Something went wrong"),
+                          isClosable: true,
+                        });
+                      }
+                    );
+                    close();
                   }
-                );
-              close();
-            }}
-          >
-            {t("Save")}
-          </Button>
+                }
+              }}
+            >
+              {t("Save")}
+            </Button>
+            <Text color="whiteAlpha.500" fontSize="sm" my={2}>
+              <RiDragDropLine style={{ display: "inline" }}></RiDragDropLine>
+              {t(
+                "Tip: you can also drag songs from tables into playlists to quickly add to playlist."
+              )}
+            </Text>
+          </Flex>
         </ModalFooter>
       </ModalContent>
     </Modal>

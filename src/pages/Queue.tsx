@@ -1,7 +1,7 @@
 import { Flex, Heading, Spacer } from "@chakra-ui/layout";
 import { IconButton, Text } from "@chakra-ui/react";
 import React, { Suspense, useMemo } from "react";
-import { FiTrash } from "react-icons/fi";
+import { FiTrash, FiFolderPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import {
   DEFAULT_MENU_ID,
@@ -35,6 +35,10 @@ export const Queue = React.memo(() => {
   }, [playedPlaylistQueue, playlistQueue]);
 
   const queue = useStoreState((state) => state.playback.queue);
+
+  const showAddDialog = useStoreActions(
+    (action) => action.addPlaylist.showPlaylistAddDialog
+  );
 
   // const clearAll = useStoreActions((actions) => actions.playback.clearAll);
   const clearQueue = useStoreActions((actions) => actions.playback._queueClear);
@@ -93,12 +97,18 @@ export const Queue = React.memo(() => {
               </Text>
               <Spacer />
               <IconButton
+                aria-label="add to playlist"
+                icon={<FiFolderPlus />}
+                variant="ghost"
+                onClick={() => showAddDialog(queue)}
+              />
+              <IconButton
                 aria-label="clear playlist"
                 icon={<FiTrash />}
                 colorScheme="red"
                 variant="ghost"
                 onClick={() => clearQueue()}
-              ></IconButton>
+              />
             </Flex>
             <Suspense fallback={<div>{t("Loading...")}</div>}>
               <SongTable
