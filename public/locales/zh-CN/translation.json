@@ -81,7 +81,7 @@
   "Featuring {{name}}": "精选{{name}}",
   "Discover more from {{org}}": "探索更多来自{{org}}的歌曲",
   "All Songs": "所有歌曲",
-  "({{ from }} - {{ to }} of {{ total }})": "（第{{ from }}至{{ to }}首，共{{ total }}首）",
+  "({{ from }} - {{ to }} of {{ total }})": "（共{{ total }}首，第{{ from }}至{{ to }}首）",
   "Your recently played songs": "最近播放过的歌曲",
   "Recent Singing Streams": "最近的直播歌回",
   "{{org}} Playlists": "{{org}}播放列表",
