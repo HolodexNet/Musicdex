@@ -353,16 +353,6 @@ export const PlayerBar = React.memo(
                         animate={{ opacity: 1, y: 0 }}
                         transition={springTransition}
                       >
-                        <PlayerOption
-                          justifyContent="center"
-                          fullPlayer={true}
-                        />
-                      </MotionBox>
-                      <MotionBox
-                        initial={{ opacity: 0, y: "20vh" }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={springTransition}
-                      >
                         {currentSong && (
                           <SongLink
                             song={currentSong}
