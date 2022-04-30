@@ -86,6 +86,7 @@ export const SongRow = React.memo(
           onContextMenu={(e) => show?.(e, { props: song })}
           borderTop="1px solid var(--chakra-colors-whiteAlpha-200)"
           boxSizing="border-box"
+          transition="all 0.2s ease-out"
           _hover={HOVER_ROW_STYLE}
           onMouseEnter={() => setHoveredRowIndex(true)}
           onMouseLeave={() => setHoveredRowIndex(false)}
