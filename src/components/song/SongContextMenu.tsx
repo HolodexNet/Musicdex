@@ -10,7 +10,15 @@ import {
 import { useTranslation } from "react-i18next";
 import { BiListPlus } from "react-icons/bi";
 import { BsInputCursorText } from "react-icons/bs";
-import { FiChevronRight, FiCopy, FiFolderPlus, FiLink } from "react-icons/fi";
+import {
+  FiChevronRight,
+  FiCopy,
+  FiFolderPlus,
+  FiLink,
+  FiMusic,
+  FiUser,
+  FiFilm,
+} from "react-icons/fi";
 import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import { useStoreActions, useStoreState } from "../../store";
@@ -139,7 +147,7 @@ export const SongContextMenu = ({
           song && window.open("/song/" + song.id, "_blank");
         }}
       >
-        <Icon mr={2} as={FiChevronRight}></Icon> {t("Go To Song Page")}
+        <Icon mr={2} as={FiMusic}></Icon> {t("Go To Song Page")}
       </Item>
       <Item
         onClick={(x: ItemParams) => {
@@ -149,7 +157,7 @@ export const SongContextMenu = ({
           song && window.open("/video/" + song.video_id, "_blank");
         }}
       >
-        <Icon mr={2} as={FiChevronRight}></Icon> {t("Go To Video Page")}
+        <Icon mr={2} as={FiFilm}></Icon> {t("Go To Video Page")}
       </Item>
       <Item
         onClick={(x: ItemParams) => {
@@ -159,7 +167,7 @@ export const SongContextMenu = ({
           song && window.open("/channel/" + song.channel_id, "_blank");
         }}
       >
-        <Icon mr={2} as={FiChevronRight}></Icon> {t("Go To Channel Page")}
+        <Icon mr={2} as={FiUser}></Icon> {t("Go To Channel Page")}
       </Item>
     </CMenu>
   );
