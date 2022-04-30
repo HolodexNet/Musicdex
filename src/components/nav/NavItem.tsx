@@ -42,6 +42,7 @@ export function NavItem({
       role="group"
       cursor="pointer"
       color={pathname === path ? bgc : disabled ? "bg.400" : "auto"}
+      transition={"all 0.2s ease-out"}
       _hover={{
         bg: bgcBrand,
       }}
