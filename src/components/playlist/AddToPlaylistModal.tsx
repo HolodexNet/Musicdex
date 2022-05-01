@@ -58,7 +58,7 @@ export function AddToPlaylistModal(): JSX.Element {
     <Modal onClose={close} isOpen={showDialog}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Add To Playlist</ModalHeader>
+        <ModalHeader>{t("Add To Playlist")}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           {song && (
@@ -99,12 +99,10 @@ export function AddToPlaylistModal(): JSX.Element {
               onClick={async () => {
                 if (selectedPlaylistId !== "_" && song) {
                   if (Array.isArray(song)) {
-                    // Merge previous playlist songs and new songs
-                    const selectedPlaylist = playlists?.find(
-                      (playlist) => playlist.id === selectedPlaylistId
-                    );
+                    // Merge old playlist songs and new songs
                     const songIds =
-                      selectedPlaylist?.content?.map((song) => song.id) || [];
+                      selectedPlaylistFull?.content?.map((song) => song.id) ||
+                      [];
                     const newSongIds = [
                       ...songIds,
                       ...song.map((song) => song.id),
@@ -113,6 +111,7 @@ export function AddToPlaylistModal(): JSX.Element {
                       ...selectedPlaylistFull,
                       content: newSongIds,
                     };
+                    close();
                     await writeNewPlaylist(newWritable).then(
                       (_) => {
                         //success:
@@ -132,8 +131,8 @@ export function AddToPlaylistModal(): JSX.Element {
                         });
                       }
                     );
-                    close();
                   } else if (!Array.isArray(song) && song.id) {
+                    close();
                     await mutateAsync({
                       action: "add",
                       playlistId: selectedPlaylistId,
@@ -156,7 +155,6 @@ export function AddToPlaylistModal(): JSX.Element {
                         });
                       }
                     );
-                    close();
                   }
                 }
               }}
