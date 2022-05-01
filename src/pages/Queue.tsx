@@ -67,7 +67,9 @@ export const Queue = React.memo(() => {
       <SongContextMenu menuId={QUEUE_MENU_ID} />
       <div className="bgOver"></div>
       <ContainerInlay>
-        <Heading size="lg">{t("Now Playing")}</Heading>
+        <Heading my={2} size="lg">
+          {t("Now Playing")}
+        </Heading>
         {currentlyPlaying.song ? (
           <SongRow
             index={0}
@@ -89,7 +91,7 @@ export const Queue = React.memo(() => {
 
         {queue.length > 0 && (
           <React.Fragment>
-            <Flex mt={4} alignItems="center">
+            <Flex mt={4} gap={2} alignItems="center">
               <Text fontSize={["md", "lg"]}>
                 <Text opacity={0.66} as={"span"}>
                   {t("Queue")}
@@ -99,6 +101,8 @@ export const Queue = React.memo(() => {
               <IconButton
                 aria-label="add to playlist"
                 icon={<FiFolderPlus />}
+                colorScheme="whiteAlpha"
+                color="white"
                 variant="ghost"
                 onClick={() => showAddDialog(queue)}
               />

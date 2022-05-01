@@ -26,6 +26,7 @@ import {
   useMyPlaylists,
   usePlaylistWriter,
   usePlaylistUpdater,
+  usePlaylist,
 } from "../../modules/services/playlist.service";
 import { useStoreActions, useStoreState } from "../../store";
 
@@ -44,6 +45,8 @@ export function AddToPlaylistModal(): JSX.Element {
   const { data: playlists, isLoading } = useMyPlaylists();
 
   const [selectedPlaylistId, setPlaylist] = useState("_");
+  const { data: selectedPlaylistFull } = usePlaylist(selectedPlaylistId);
+  const isContainMultipleSongs = Array.isArray(song) && song.length > 1;
 
   useEffect(() => {
     if (playlists && playlists[0]) {
@@ -58,23 +61,20 @@ export function AddToPlaylistModal(): JSX.Element {
         <ModalHeader>Add To Playlist</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {song && Array.isArray(song) && (
+          {song && (
             <Box>
               <Heading size="md" my={1}>
-                {song[0].name}
+                {Array.isArray(song) ? song[0].name : song.name}
               </Heading>
-              <Text fontSize="sm">
-                {t("... and {{count}} other", { count: song.length - 1 })}
-              </Text>
-            </Box>
-          )}
-          {song && !Array.isArray(song) && (
-            <Box>
-              <Heading size="md" my={1}>
-                {song.name}
-              </Heading>
-              <Text fontSize="sm" color="whiteAlpha.600">
-                {tn(song.channel?.english_name, song.channel?.name)}
+              <Text
+                fontSize="sm"
+                color={isContainMultipleSongs ? "" : "whiteAlpha.600"}
+              >
+                {isContainMultipleSongs
+                  ? t("... and {{count}} other", { count: song.length - 1 })
+                  : Array.isArray(song)
+                  ? tn(song[0].channel?.english_name, song[0].channel?.name)
+                  : tn(song.channel?.english_name, song.channel?.name)}
               </Text>
             </Box>
           )}
@@ -99,6 +99,7 @@ export function AddToPlaylistModal(): JSX.Element {
               onClick={async () => {
                 if (selectedPlaylistId !== "_" && song) {
                   if (Array.isArray(song)) {
+                    // Merge previous playlist songs and new songs
                     const selectedPlaylist = playlists?.find(
                       (playlist) => playlist.id === selectedPlaylistId
                     );
@@ -108,10 +109,8 @@ export function AddToPlaylistModal(): JSX.Element {
                       ...songIds,
                       ...song.map((song) => song.id),
                     ];
-                    console.log(songIds);
-                    console.log(newSongIds);
                     const newWritable: Partial<WriteablePlaylist> = {
-                      ...selectedPlaylist,
+                      ...selectedPlaylistFull,
                       content: newSongIds,
                     };
                     await writeNewPlaylist(newWritable).then(
