@@ -20,7 +20,12 @@ export function QueryStatus({ queryStatus, ...rest }: QueryStatusProps) {
   const { t } = useTranslation();
 
   return (
-    <VStack textAlign="center" h="100%" w="100%" {...rest}>
+    <VStack
+      textAlign="center"
+      h={queryStatus.isLoading ? "100%" : ""}
+      w="100%"
+      {...rest}
+    >
       {queryStatus.isLoading && (
         <Flex
           h="100%"
