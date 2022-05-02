@@ -46,9 +46,6 @@ export const SongContextMenu: React.FC<{
   const queueRemove = useStoreActions((store) => store.playback.queueRemove);
 
   const { mutateAsync: updatePlaylist } = usePlaylistUpdater();
-  const showAddDialog = useStoreActions(
-    (action) => action.addPlaylist.showPlaylistAddDialog
-  );
 
   const { data: playlists, isLoading } = useMyPlaylists();
 
@@ -126,24 +123,26 @@ export const SongContextMenu: React.FC<{
         </Item>
       )}
 
-      <Submenu
-        label={
-          <>
-            <Icon mr={2} as={FiFolderPlus}></Icon> {t("Add To Playlist...")}
-          </>
-        }
-      >
-        {playlists!.map((list) => (
-          <Item
-            key={list.id}
-            onClick={(x: ItemParams) =>
-              onPlaylistItemClicked(list.id, x.props.id)
-            }
-          >
-            {list.title}
-          </Item>
-        ))}
-      </Submenu>
+      {playlists && playlists.length > 0 && (
+        <Submenu
+          label={
+            <>
+              <Icon mr={2} as={FiFolderPlus}></Icon> {t("Add To Playlist...")}
+            </>
+          }
+        >
+          {playlists.map((list) => (
+            <Item
+              key={list.id}
+              onClick={(x: ItemParams) =>
+                onPlaylistItemClicked(list.id, x.props.id)
+              }
+            >
+              {list.title}
+            </Item>
+          ))}
+        </Submenu>
+      )}
 
       <Item
         onClick={(x: ItemParams) => {
