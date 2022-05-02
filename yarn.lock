@@ -8577,6 +8577,11 @@ qs@6.7.0:
   resolved "https://registry.npmjs.org/qs/-/qs-6.7.0.tgz"
   integrity sha512-VCdBRNFTX1fyE7Nb6FYoURo/SPe62QCaAyzJvUjwRaIsc+NePBEniHlvxFmmX56+HZphIGtV0XeCirBtpDrTyQ==
 
+query-state-core@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/query-state-core/-/query-state-core-3.0.0.tgz#b830d1d34e2dabcad65ecd2b8c8c68cb58a29604"
+  integrity sha512-Vmo3LLQn6YHJGbkhlEaHxh+NihLbyeov5Svz2F/kznLg07ax4bJr/CwioAnWK8eZI2eq0wBAKZgoYfLaqeqx+Q==
+
 querystring@0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/querystring/-/querystring-0.2.0.tgz"
@@ -8869,6 +8874,13 @@ react-router-dom@^6.3.0:
   dependencies:
     history "^5.2.0"
     react-router "6.3.0"
+
+react-router-use-location-state@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/react-router-use-location-state/-/react-router-use-location-state-3.0.2.tgz#e8b835f9d0be67fc918d51151c6c893a0808d063"
+  integrity sha512-t6fe9b/cZfeEXWEfICmVJJ9UCPhBwUugyLssW3O2xFmaa0j2QvHo51wBwaUEDnGrSE7ldBstVxnj6jtYJOEnag==
+  dependencies:
+    use-location-state "^3.0.2"
 
 react-router@6.3.0, react-router@^6.3.0:
   version "6.3.0"
@@ -10423,6 +10435,13 @@ use-debouncy@^4.2.0:
   version "4.2.1"
   resolved "https://registry.npmjs.org/use-debouncy/-/use-debouncy-4.2.1.tgz"
   integrity sha512-wvKcvmftk716UkRPC7+/W3AIWj0m4TKLkKTrgBeR+4/e1//turjZLlSIu8ix2AeeFK/3E4poCqN/eMr2qNApcQ==
+
+use-location-state@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/use-location-state/-/use-location-state-3.0.2.tgz#dde45d50afddb07f270c702c048d9edc2c222663"
+  integrity sha512-FJyq9wJp93x5HQm1g37DQp/I8GgLnzNKGoempdAEgkwAOsbzHWFyWV6QfcpW/fBeWm0sWUymWr2+9ZxoYeC5lw==
+  dependencies:
+    query-state-core "^3.0.0"
 
 use-memo-one@^1.1.1:
   version "1.1.2"

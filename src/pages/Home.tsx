@@ -19,8 +19,11 @@ import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreActions, useStoreState } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { useEffect, useMemo } from "react";
+import { useServerOrgList } from "../modules/services/statics.service";
+import { useQueryState } from "react-router-use-location-state";
 
 const HomeHeading = function ({ children }: { children: React.ReactNode }) {
   return (
@@ -37,9 +40,24 @@ const HomeHeading = function ({ children }: { children: React.ReactNode }) {
 export default function Home() {
   const { t } = useTranslation();
   const org = useStoreState((store) => store.org.currentOrg);
+  const setOrg = useStoreActions((state) => state.org.setOrg);
+  const { data: orgs } = useServerOrgList();
   const { data: trendingSongs, ...trendingStatus } = useTrendingSongs(
     org.name !== "All Vtubers" ? { org: org.name } : {}
   );
+
+  const [orgFromQuery, setOrgInQuery] = useQueryState("org", org.name);
+  useEffect(() => {
+    if (orgFromQuery !== org.name) {
+      // if it's not the same, then overwrite it.
+      if (orgFromQuery) {
+        const targetOrg = orgs?.filter((x) => x.name === orgFromQuery);
+        if (targetOrg && targetOrg.length === 1 && targetOrg[0]) {
+          setOrg(targetOrg[0]);
+        }
+      }
+    }
+  }, [org, orgFromQuery, orgs]);
 
   const isMobile = useBreakpointValue({ base: true, md: false });
   const queueSongs = useSongQueuer();

@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useQueryState } from "react-router-use-location-state";
 import { useServerOrgList } from "../../modules/services/statics.service";
 import { useStoreActions, useStoreState } from "../../store";
 import { Org } from "../../store/org";
@@ -22,6 +23,7 @@ export function OrgSelector() {
   const orglist = useStoreState((s) => s.org.orgsList);
 
   const { data: orgs } = useServerOrgList();
+  const [orgFromQuery, setOrgInQuery] = useQueryState("org", org.name);
 
   const { t } = useTranslation();
   const usableOrgs = useMemo(() => {
@@ -55,8 +57,10 @@ export function OrgSelector() {
           value={org.name}
           onChange={(e) => {
             const tgt = orgs?.find((x) => x.name === e.target.value);
-            if (tgt) setOrg(tgt);
-            else onOpen();
+            if (tgt) {
+              setOrg(tgt);
+              setOrgInQuery(tgt.name);
+            } else onOpen();
           }}
         >
           {usableOrgs?.map((x) => {
@@ -84,7 +88,10 @@ export function OrgSelector() {
           <ModalBody width="auto">
             <OrgPickerPanel
               pickOrg={(org) => {
-                org && setOrg(org);
+                if (org) {
+                  setOrg(org);
+                  setOrgInQuery(org.name);
+                }
                 onClose();
               }}
             />
