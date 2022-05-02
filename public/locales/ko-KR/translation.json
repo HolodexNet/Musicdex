@@ -144,5 +144,8 @@
   "Added to liked songs": "좋아하는 노래에 추가됨",
   "Removed from liked songs": "좋아하는 노래에서 삭제됨",
   "An error has occurred": "오류가 발생했어요",
-  "Return to Home": "Return to Home"
+  "Return to Home": "처음으로 돌아가기",
+  "Add To Playlist": "재생목록에 추가",
+  "... and {{count}} other": "외 {{count}}개의 노래",
+  "... and {{count}} other_plural": "외 {{count}}개의 노래"
 }

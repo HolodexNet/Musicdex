@@ -48,7 +48,7 @@
   "Edit": "Szerkesztés",
   "Save Changes": "Módosítások mentése",
   "Created": "Létrehozva",
-  "Deleted": "Deleted",
+  "Deleted": "Törölve",
   "You need to provide both name and description": "Meg kell adnod egy nevet és egy leírást is",
   "Name (Can start with an emoji to set it as the icon)": "Név (Kezdődhet emojival és akkor az lesz az ikonja)",
   "Description": "Leírás",
@@ -144,5 +144,8 @@
   "Added to liked songs": "Hozzáadva kedvelt dalokhoz",
   "Removed from liked songs": "Eltávolítva kedvelt dalok közül",
   "An error has occurred": "Hiba történt",
-  "Return to Home": "Return to Home"
+  "Return to Home": "Vissza a főoldalra",
+  "Add To Playlist": "Add To Playlist",
+  "... and {{count}} other": "... and {{count}} other",
+  "... and {{count}} other_plural": "... and {{count}} other"
 }
