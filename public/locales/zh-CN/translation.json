@@ -144,5 +144,8 @@
   "Added to liked songs": "添加到我喜欢",
   "Removed from liked songs": "已从我喜欢中删除",
   "An error has occurred": "发生错误",
-  "Return to Home": "返回首页"
+  "Return to Home": "返回首页",
+  "Add To Playlist": "Add To Playlist",
+  "... and {{count}} other": "... and {{count}} other",
+  "... and {{count}} other_plural": "... and {{count}} other"
 }
