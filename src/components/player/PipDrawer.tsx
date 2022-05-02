@@ -23,6 +23,10 @@ export function PipDrawer({ isPlaying }: PipDrawerProps) {
     canvasElement.width = 400;
     canvasElement.height = 120;
 
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1572422#c7
+    // doesn't work unless you call a getContext on firefox LMAO
+    canvasElement.getContext("2d");
+
     const videoElement = document.createElement("video");
     videoElement.srcObject = canvasElement.captureStream();
     videoElement.muted = true;
@@ -54,7 +58,9 @@ export function PipDrawer({ isPlaying }: PipDrawerProps) {
         videoElement.requestPictureInPicture();
       } else {
         videoElement.play();
-        (videoElement as any).webkitSetPresentationMode("picture-in-picture");
+        (videoElement as any)?.webkitSetPresentationMode?.(
+          "picture-in-picture"
+        );
       }
     }
   }, [videoElement, pictureInPicture]);
