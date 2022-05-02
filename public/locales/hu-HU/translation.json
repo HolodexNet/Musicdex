@@ -144,5 +144,8 @@
   "Added to liked songs": "Hozzáadva kedvelt dalokhoz",
   "Removed from liked songs": "Eltávolítva kedvelt dalok közül",
   "An error has occurred": "Hiba történt",
-  "Return to Home": "Vissza a főoldalra"
+  "Return to Home": "Vissza a főoldalra",
+  "Add To Playlist": "Add To Playlist",
+  "... and {{count}} other": "... and {{count}} other",
+  "... and {{count}} other_plural": "... and {{count}} other"
 }
