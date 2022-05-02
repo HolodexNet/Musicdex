@@ -21,6 +21,7 @@ import {
   SearchParams,
   useSongSearch,
 } from "../modules/services/search.service";
+import { useSongQueuer } from "../utils/SongQueuerHook";
 import { FiFilter } from "react-icons/fi";
 import {
   AdvancedSearchProps,
@@ -38,6 +39,7 @@ export default function Search() {
   const { t } = useTranslation();
   const [search] = useSearchParams();
   const navigate = useNavigate();
+  const queueSongs = useSongQueuer();
   const qObj: Partial<SearchParams<SearchableSong>> = Object.fromEntries(
     search.entries()
   );
@@ -81,10 +83,22 @@ export default function Search() {
       ></AdvancedSearchFilters>
       <QueryStatus queryStatus={rest} />
       <Suspense fallback={<div></div>}>
-        <HStack align="end">
+        <HStack align="end" my={2}>
           <Heading size="lg">
             {t("Search")}: "{qObj.q || ""}"
           </Heading>
+          <Button
+            variant="ghost"
+            size="sm"
+            py={0}
+            colorScheme="n2"
+            float="right"
+            onClick={() => {
+              queueSongs({ songs: songs || [], immediatelyPlay: false });
+            }}
+          >
+            {t("Queue ({{amount}})", { amount: (songs && songs.length) || 0 })}
+          </Button>
         </HStack>
         <Suspense fallback={<div>{t("Loading...")}</div>}>
           {songs && <SongTable songs={songs} />}

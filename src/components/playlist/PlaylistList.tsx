@@ -56,6 +56,7 @@ export const PlaylistList = ({
                   borderRadius="lg"
                   role="group"
                   cursor="pointer"
+                  transition={"all 0.2s ease-out"}
                   _hover={{
                     bg: "brand.700",
                     color: "white",

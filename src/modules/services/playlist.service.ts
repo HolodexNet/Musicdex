@@ -184,9 +184,9 @@ export const usePlaylist = (
 
 export const useMyPlaylists = (
   config: UseQueryOptions<
-    PlaylistStub[],
+    PlaylistFull[],
     unknown,
-    PlaylistStub[],
+    PlaylistFull[],
     string[]
   > = {}
 ) => {
@@ -194,11 +194,11 @@ export const useMyPlaylists = (
 
   const result = useQuery(
     ["allPlaylists", uid],
-    async (q): Promise<PlaylistStub[]> => {
+    async (q): Promise<PlaylistFull[]> => {
       // fetch cached
       if (!isLoggedIn) return [];
       const playlists = (
-        await AxiosInstance<PlaylistStub[]>(`/musicdex/playlist/`)
+        await AxiosInstance<PlaylistFull[]>(`/musicdex/playlist/`)
       ).data;
       playlists.sort(
         (a, b) =>

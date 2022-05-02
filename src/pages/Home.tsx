@@ -56,7 +56,7 @@ export default function Home() {
           <HomeHeading>{t("Recent Singing Streams")}</HomeHeading>
 
           {isMobile ? (
-            <CardCarousel height={210} width={160} scrollMultiplier={4}>
+            <CardCarousel height={210} width={160} scrollMultiplier={2}>
               {discovery?.recentSingingStreams
                 .filter((stream: any) => stream.playlist?.content?.length)
                 .map((stream: any) => (
@@ -76,7 +76,11 @@ export default function Home() {
 
         <HomeSection>
           <HomeHeading>{t("{{org}} Playlists", { org: org.name })}</HomeHeading>
-          <CardCarousel height={210} width={160} scrollMultiplier={4}>
+          <CardCarousel
+            height={210}
+            width={160}
+            scrollMultiplier={isMobile ? 2 : 4}
+          >
             {discovery?.recommended?.playlists?.map(
               (p: Partial<PlaylistFull>) => (
                 <PlaylistCard
@@ -109,7 +113,11 @@ export default function Home() {
               {t("Queue ({{amount}})", { amount: trendingSongs?.length })}
             </Button>
           </HStack>
-          <CardCarousel height={180} width={128} scrollMultiplier={4}>
+          <CardCarousel
+            height={180}
+            width={128}
+            scrollMultiplier={isMobile ? 2 : 4}
+          >
             {trendingSongs?.map((song) => (
               <SongCard song={song} key={song.id} mx={["2px", null, 1, 2]} />
             ))}
@@ -123,7 +131,12 @@ export default function Home() {
             </Button>
           </Link>
           <HomeHeading>{t("Discover {{org}}", { org: org.name })}</HomeHeading>
-          <CardCarousel height={180} width={160} scrollMultiplier={4} mb={2}>
+          <CardCarousel
+            height={180}
+            width={160}
+            scrollMultiplier={isMobile ? 2 : 4}
+            mb={2}
+          >
             {discovery?.channels?.slice(0, 10).map((c: Channel) => (
               <ChannelCard
                 channel={c}
