@@ -1,3 +1,7 @@
+/**
+ * Song table editable is a React-Tables supported table. It's only used when editing the songs...
+ *
+ */
 import {
   CSSObject,
   Icon,

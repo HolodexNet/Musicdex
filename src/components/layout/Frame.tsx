@@ -77,6 +77,7 @@ const POSITIONS: { [key: string]: ChakraProps } = {
     position: "absolute",
   },
 };
+
 export const FrameRef = createContext<any>(null);
 
 export default function Frame({ children }: { children?: ReactNode }) {

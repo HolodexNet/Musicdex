@@ -4,14 +4,16 @@ import {
   Flex,
   HStack,
   Icon,
+  IconButton,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import { useContextMenu } from "react-contexify";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
 import { FaPlay } from "react-icons/fa";
-import { FiShare2, FiYoutube } from "react-icons/fi";
+import { FiMoreHorizontal, FiShare2, FiYoutube } from "react-icons/fi";
 import { SiApplemusic } from "react-icons/si";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
@@ -20,6 +22,7 @@ import { QueryStatus } from "../components/common/QueryStatus";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { SongArtwork } from "../components/song/SongArtwork";
+import { DEFAULT_MENU_ID } from "../components/song/SongContextMenu";
 import { SongLikeButton } from "../components/song/SongLikeButton";
 import { useClipboardWithToast } from "../modules/common/clipboard";
 import useNamePicker from "../modules/common/useNamePicker";
@@ -48,6 +51,8 @@ export default function Song() {
   const clip = useClipboardWithToast();
   const tn = useNamePicker();
   const channelName = song && tn(song.channel.english_name, song.channel.name);
+  const { show } = useContextMenu({ id: DEFAULT_MENU_ID });
+
   return (
     <PageContainer>
       <Helmet>
@@ -122,6 +127,15 @@ export default function Song() {
                 >
                   {t("Play")}
                 </Button>
+                <IconButton
+                  icon={<FiMoreHorizontal />}
+                  size="md"
+                  variant="outline"
+                  colorScheme="n2"
+                  aria-label="More"
+                  onClick={(e) => show(e, { props: song })}
+                ></IconButton>
+
                 <Button
                   variant="ghost"
                   aria-label="share link"

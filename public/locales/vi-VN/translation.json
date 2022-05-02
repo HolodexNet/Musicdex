@@ -144,5 +144,8 @@
   "Added to liked songs": "Đã thêm vào danh sách các bài hát yêu thích",
   "Removed from liked songs": "Đã xoá khỏi danh sách các bài hát yêu thích",
   "An error has occurred": "Đã xảy ra lỗi",
-  "Return to Home": "Return to Home"
+  "Return to Home": "Return to Home",
+  "Add To Playlist": "Add To Playlist",
+  "... and {{count}} other": "... and {{count}} other",
+  "... and {{count}} other_plural": "... and {{count}} other"
 }

@@ -19,7 +19,7 @@ import { useLocation, useNavigate } from "react-router";
 import { useStoreActions, useStoreState } from "../../../store";
 import { ChangePlayerLocationButton } from "../ChangePlayerLocationButton";
 
-function RepeatIcon(repeatMode: string, size: number = 24) {
+export function RepeatIcon(repeatMode: string, size: number = 24) {
   switch (repeatMode) {
     case "repeat":
       return <MdRepeat size={size} />;
@@ -30,7 +30,7 @@ function RepeatIcon(repeatMode: string, size: number = 24) {
   }
 }
 
-function ShuffleIcon(shuffleMode: boolean, size: number = 24) {
+export function ShuffleIcon(shuffleMode: boolean, size: number = 24) {
   return <MdShuffle size={size} color={shuffleMode ? "" : "grey"} />;
 }
 

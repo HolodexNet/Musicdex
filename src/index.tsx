@@ -28,7 +28,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { HelmetProvider } from "react-helmet-async";
 
-console.log(`${process.env.REACT_APP_NAME} ${process.env.REACT_APP_VERSION}`);
+console.log(
+  `VERSION: ${process.env.REACT_APP_NAME} ${process.env.REACT_APP_VERSION}`
+);
 (window as any)["App_Version"] = process.env.REACT_APP_VERSION;
 
 store.persist.resolveRehydration().then(() => {

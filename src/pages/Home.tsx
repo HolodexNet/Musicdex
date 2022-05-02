@@ -19,8 +19,11 @@ import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreActions, useStoreState } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { useEffect, useMemo } from "react";
+import { useServerOrgList } from "../modules/services/statics.service";
+import { useQueryState } from "react-router-use-location-state";
 
 const HomeHeading = function ({ children }: { children: React.ReactNode }) {
   return (
@@ -37,9 +40,24 @@ const HomeHeading = function ({ children }: { children: React.ReactNode }) {
 export default function Home() {
   const { t } = useTranslation();
   const org = useStoreState((store) => store.org.currentOrg);
+  const setOrg = useStoreActions((state) => state.org.setOrg);
+  const { data: orgs } = useServerOrgList();
   const { data: trendingSongs, ...trendingStatus } = useTrendingSongs(
     org.name !== "All Vtubers" ? { org: org.name } : {}
   );
+
+  const [orgFromQuery, setOrgInQuery] = useQueryState("org", org.name);
+  useEffect(() => {
+    if (orgFromQuery !== org.name) {
+      // if it's not the same, then overwrite it.
+      if (orgFromQuery) {
+        const targetOrg = orgs?.filter((x) => x.name === orgFromQuery);
+        if (targetOrg && targetOrg.length === 1 && targetOrg[0]) {
+          setOrg(targetOrg[0]);
+        }
+      }
+    }
+  }, [org, orgFromQuery, orgs]);
 
   const isMobile = useBreakpointValue({ base: true, md: false });
   const queueSongs = useSongQueuer();
@@ -56,7 +74,7 @@ export default function Home() {
           <HomeHeading>{t("Recent Singing Streams")}</HomeHeading>
 
           {isMobile ? (
-            <CardCarousel height={210} width={160} scrollMultiplier={4}>
+            <CardCarousel height={210} width={160} scrollMultiplier={2}>
               {discovery?.recentSingingStreams
                 .filter((stream: any) => stream.playlist?.content?.length)
                 .map((stream: any) => (
@@ -76,7 +94,11 @@ export default function Home() {
 
         <HomeSection>
           <HomeHeading>{t("{{org}} Playlists", { org: org.name })}</HomeHeading>
-          <CardCarousel height={210} width={160} scrollMultiplier={4}>
+          <CardCarousel
+            height={210}
+            width={160}
+            scrollMultiplier={isMobile ? 2 : 4}
+          >
             {discovery?.recommended?.playlists?.map(
               (p: Partial<PlaylistFull>) => (
                 <PlaylistCard
@@ -109,7 +131,11 @@ export default function Home() {
               {t("Queue ({{amount}})", { amount: trendingSongs?.length })}
             </Button>
           </HStack>
-          <CardCarousel height={180} width={128} scrollMultiplier={4}>
+          <CardCarousel
+            height={180}
+            width={128}
+            scrollMultiplier={isMobile ? 2 : 4}
+          >
             {trendingSongs?.map((song) => (
               <SongCard song={song} key={song.id} mx={["2px", null, 1, 2]} />
             ))}
@@ -123,7 +149,12 @@ export default function Home() {
             </Button>
           </Link>
           <HomeHeading>{t("Discover {{org}}", { org: org.name })}</HomeHeading>
-          <CardCarousel height={180} width={160} scrollMultiplier={4} mb={2}>
+          <CardCarousel
+            height={180}
+            width={160}
+            scrollMultiplier={isMobile ? 2 : 4}
+            mb={2}
+          >
             {discovery?.channels?.slice(0, 10).map((c: Channel) => (
               <ChannelCard
                 channel={c}

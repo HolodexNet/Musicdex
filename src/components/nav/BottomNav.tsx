@@ -38,8 +38,8 @@ export function BottomNav() {
           key={path}
           color={path === pathname ? "brand.100" : "white"}
         >
-          <Icon as={icon} aria-label={name} w={4} h={4} />
-          <Text fontSize="sm" noOfLines={1}>
+          <Icon as={icon} aria-label={name} w={5} h={5} />
+          <Text fontSize="xs" noOfLines={1}>
             {name}
           </Text>
         </Stack>

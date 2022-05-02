@@ -1,10 +1,17 @@
-import { BoxProps, Flex, FlexProps } from "@chakra-ui/react";
+import {
+  BoxProps,
+  Flex,
+  IconButton,
+  FlexProps,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { ReactElement } from "react";
+import { useStoreActions, useStoreState } from "../../../store";
 import { FaStepBackward, FaPause, FaPlay, FaStepForward } from "react-icons/fa";
-import { useStoreActions } from "../../../store";
 import { MotionBox } from "../../common/MotionBox";
 import { ChangePlayerLocationButton } from "../ChangePlayerLocationButton";
+import { ShuffleIcon, RepeatIcon } from "./PlayerOption";
 
 interface PlaybackControlProps extends FlexProps {
   isPlaying: boolean;
@@ -49,13 +56,33 @@ export const PlaybackControl = React.memo(
     const next = useStoreActions((actions) => actions.playback.next);
 
     const sizeMultiplier = useMemo(() => (fullPlayer ? 2 : 1), [fullPlayer]);
+    const isMobile = useBreakpointValue({ base: true, lg: false });
+
+    const shuffleMode = useStoreState((state) => state.playback.shuffleMode);
+    const toggleShuffleMode = useStoreActions(
+      (actions) => actions.playback.toggleShuffle
+    );
+
+    const repeatMode = useStoreState((state) => state.playback.repeatMode);
+    const toggleRepeatMode = useStoreActions(
+      (actions) => actions.playback.toggleRepeat
+    );
+
     return (
       <Flex
         justifyContent="center"
+        alignItems="center"
         paddingRight={mobilePlayer ? 2 : 0}
         {...rest}
       >
         {mobilePlayer && <ChangePlayerLocationButton size="lg" />}
+        {fullPlayer && !isMobile && (
+          <PlaybackButton
+            aria-label="Shuffle"
+            icon={ShuffleIcon(shuffleMode, 36)}
+            onClick={() => toggleShuffleMode()}
+          />
+        )}
         {!mobilePlayer && (
           <PlaybackButton
             icon={<FaStepBackward size={sizeMultiplier * 16} />}
@@ -79,6 +106,13 @@ export const PlaybackControl = React.memo(
           onClick={() => next({ count: 1, userSkipped: true })}
           marginX={3}
         />
+        {fullPlayer && !isMobile && (
+          <PlaybackButton
+            aria-label="Repeat Mode"
+            icon={RepeatIcon(repeatMode, 36)}
+            onClick={() => toggleRepeatMode()}
+          />
+        )}
       </Flex>
     );
   }
