@@ -144,5 +144,8 @@
   "Added to liked songs": "Ditambahkan ke lagu yang disukai",
   "Removed from liked songs": "Dihapus dari lagu yang disukai",
   "An error has occurred": "Terjadi kesalahan",
-  "Return to Home": "Return to Home"
+  "Return to Home": "Return to Home",
+  "Add To Playlist": "Add To Playlist",
+  "... and {{count}} other": "... and {{count}} other",
+  "... and {{count}} other_plural": "... and {{count}} other"
 }
