@@ -57,7 +57,7 @@ export default function Home() {
         }
       }
     }
-  }, [org, orgFromQuery, orgs]);
+  }, [org, orgFromQuery, orgs, setOrg]);
 
   const isMobile = useBreakpointValue({ base: true, md: false });
   const queueSongs = useSongQueuer();
