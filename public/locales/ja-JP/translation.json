@@ -145,7 +145,7 @@
   "Removed from liked songs": "お気に入りから削除しました",
   "An error has occurred": "エラーが発生しました",
   "Return to Home": "ホームに戻る",
-  "Add To Playlist": "Add To Playlist",
-  "... and {{count}} other": "... and {{count}} other",
-  "... and {{count}} other_plural": "... and {{count}} other"
+  "Add To Playlist": "プレイリストに追加",
+  "... and {{count}} other": "... 他 {{count}} 曲",
+  "... and {{count}} other_plural": "... 他 {{count}} 曲"
 }
