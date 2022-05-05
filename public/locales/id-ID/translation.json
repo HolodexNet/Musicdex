@@ -48,7 +48,7 @@
   "Edit": "Ubah",
   "Save Changes": "Simpan Perubahan",
   "Created": "Dibuat",
-  "Deleted": "Deleted",
+  "Deleted": "Terhapus",
   "You need to provide both name and description": "Kamu perlu mengisi nama dan deskripsi",
   "Name (Can start with an emoji to set it as the icon)": "Nama (Dapat diawali dengan emoji untuk menjadikannya sebagai ikon)",
   "Description": "Deskripsi",
@@ -144,8 +144,8 @@
   "Added to liked songs": "Ditambahkan ke lagu yang disukai",
   "Removed from liked songs": "Dihapus dari lagu yang disukai",
   "An error has occurred": "Terjadi kesalahan",
-  "Return to Home": "Return to Home",
-  "Add To Playlist": "Add To Playlist",
-  "... and {{count}} other": "... and {{count}} other",
-  "... and {{count}} other_plural": "... and {{count}} other"
+  "Return to Home": "Kembali ke Beranda",
+  "Add To Playlist": "Tambah Ke Playlist",
+  "... and {{count}} other": "... dan {{count}} lainnya",
+  "... and {{count}} other_plural": "... dan {{count}} lainnya"
 }
