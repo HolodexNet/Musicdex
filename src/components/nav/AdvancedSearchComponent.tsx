@@ -137,13 +137,14 @@ export function AdvancedSearchFiltersForm({
         .join(",")}]`;
 
     const filter_by = [part1, part2, part3, part4].filter((x) => x).join("&&");
+    const query = q || "*";
     // console.log(filter_by);
     // fullreset();
 
     navigate({
       pathname: "/search",
       search: `?${createSearchParams({
-        q,
+        query,
         ...(filter_by && { filter_by }),
       } as any)}`,
     });
@@ -210,10 +211,7 @@ export function AdvancedSearchFiltersForm({
           id="q"
           placeholder={t("Song Query")}
           defaultValue={qObj.q}
-          {...register("q", {
-            required: "Required",
-            minLength: { value: 1, message: t("Minimum length should be 1") },
-          })}
+          {...register("q")}
         />
         <FormErrorMessage>{errors.q && errors.q.message}</FormErrorMessage>
       </FormControl>
