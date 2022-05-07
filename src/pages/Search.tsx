@@ -60,7 +60,7 @@ export default function Search() {
     navigate({
       pathname: "/search",
       search: `?${createSearchParams({
-        q: qObj.q,
+        q: qObj.q || "*",
         ...qObj,
         ...queryNew,
       } as any)}`,
