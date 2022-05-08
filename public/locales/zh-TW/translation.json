@@ -48,6 +48,7 @@
   "Edit": "編輯",
   "Save Changes": "保存變更",
   "Created": "已建立播放清單",
+  "Deleted": "已刪除",
   "You need to provide both name and description": "建立播放清單時需要同時填寫該清單的名稱與簡述",
   "Name (Can start with an emoji to set it as the icon)": "播放清單名稱（可使用emoji作為辨認圖示）",
   "Description": "清單描述",
@@ -80,7 +81,7 @@
   "Featuring {{name}}": "內含 {{name}} 的播放清單",
   "Discover more from {{org}}": "探索更多 {{org}} 的相關歌曲",
   "All Songs": "所有歌曲",
-  "({{ from }} - {{ to }} of {{ total }})": "({{ from }} - {{ to }} / {{ total }})",
+  "({{ from }} - {{ to }} of {{ total }})": "（共{{ total }}首，第{{ from }}至{{ to }}首）",
   "Your recently played songs": "最近播放過的歌曲",
   "Recent Singing Streams": "最近實況的歌回",
   "{{org}} Playlists": "{{org}} 播放清單",
@@ -142,5 +143,9 @@
   "Playlist is private and cannot be shared.": "本列表已被設為無法分享的私人播放清單",
   "Added to liked songs": "加入我的最愛",
   "Removed from liked songs": "從我的最愛移除",
-  "An error has occurred": "發生錯誤"
+  "An error has occurred": "發生錯誤",
+  "Return to Home": "回到首頁",
+  "Add To Playlist": "新增至播放清單",
+  "... and {{count}} other": "... 和其他 {{count}} 首",
+  "... and {{count}} other_plural": "... 和其他 {{count}} 首"
 }

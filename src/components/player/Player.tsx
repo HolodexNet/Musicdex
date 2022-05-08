@@ -275,6 +275,7 @@ export function Player({ player }: { player: any }) {
       totalDuration={totalDuration}
       volume={volumeSlider}
       onVolumeChange={(e) => {
+        player?.unMute();
         player?.setVolume(e);
         setVolumeSlider(e);
       }}

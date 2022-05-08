@@ -62,7 +62,7 @@ export default function LikedSongs() {
             </HStack>
             {paginatedSongs?.content?.length && (
               <>
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<div>{t("Loading...")}</div>}>
                   <SongTable songs={paginatedSongs.content}></SongTable>
                 </Suspense>
                 <HStack justifyContent="center">

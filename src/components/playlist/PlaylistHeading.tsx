@@ -1,7 +1,6 @@
 import {
   useColorModeValue,
   Box,
-  Heading,
   Input,
   IconButton,
   Text,
@@ -10,7 +9,7 @@ import {
   BoxProps,
 } from "@chakra-ui/react";
 import { intervalToDuration } from "date-fns";
-import { useState, FormEventHandler, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { FiEdit3 } from "react-icons/fi";
 
 type PlaylistHeadingProps = {
@@ -18,8 +17,8 @@ type PlaylistHeadingProps = {
   description: string;
   canEdit: boolean;
   editMode?: boolean;
-  setTitle?: (text: string) => void;
-  setDescription?: (text: string) => void;
+  setTitle?: (text: string | undefined) => void;
+  setDescription?: (text: string | undefined) => void;
   count: number;
   totalLengthSecs?: number;
   max?: number;
@@ -46,18 +45,34 @@ export function PlaylistHeading({
   const [descInvalid, setDescInvalid] = useState(false);
   const [titleInvalid, setTitleInvalid] = useState(false);
 
-  const submitHandlerTitle: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    setEditTitle(false);
-    if (setTitle && !titleInvalid)
-      setTitle((e.target as any)[0].value as string);
-  };
-  const submitHandlerDesc: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    setEditDescription(false);
-    if (setDescription && !titleInvalid)
-      setDescription((e.target as any)[0].value as string);
-  };
+  useEffect(() => {
+    setEditTitle(canEdit && editMode);
+    setEditDescription(canEdit && editMode);
+    setTitleInvalid(false);
+    setDescInvalid(false);
+  }, [canEdit, editMode]);
+
+  const titleChangeHandler = useCallback(
+    (text: string) => {
+      const valid = isValid(text, 1, 70);
+      setTitleInvalid(!valid);
+      if (setTitle) {
+        setTitle(valid ? text : undefined);
+      }
+    },
+    [setTitle]
+  );
+
+  const descChangeHandler = useCallback(
+    (text: string) => {
+      const valid = isValid(text, 0, 200);
+      setDescInvalid(!valid);
+      if (setDescription) {
+        setDescription(valid ? text : undefined);
+      }
+    },
+    [setDescription]
+  );
 
   const isValid = (t: string, min: number, max: number) =>
     t.length > min && t.length < max;
@@ -80,24 +95,17 @@ export function PlaylistHeading({
         fontSize={{ base: "2xl", sm: "3xl", md: "4xl", lg: "5xl" }}
       >
         {editTitle ? (
-          <form onSubmit={submitHandlerTitle}>
-            <InputGroup
-              colorScheme={titleInvalid ? "red" : "brand"}
-              size={"lg"}
-            >
-              <Input
-                placeholder="Playlist Title"
-                autoFocus
-                isInvalid={titleInvalid}
-                defaultValue={title}
-                onChange={(e) =>
-                  setTitleInvalid(!isValid(e.currentTarget.value, 1, 70))
-                }
-                enterKeyHint="done"
-              />
-              {titleInvalid && <InputRightAddon color="red" children="1~70" />}
-            </InputGroup>
-          </form>
+          <InputGroup colorScheme={titleInvalid ? "red" : "brand"} size={"lg"}>
+            <Input
+              placeholder="Playlist Title"
+              autoFocus
+              isInvalid={titleInvalid}
+              defaultValue={title}
+              onChange={(e) => titleChangeHandler(e.currentTarget.value)}
+              enterKeyHint="done"
+            />
+            {titleInvalid && <InputRightAddon color="red" children="1~70" />}
+          </InputGroup>
         ) : (
           title
         )}
@@ -121,21 +129,17 @@ export function PlaylistHeading({
         as={"div"}
       >
         {editDescription ? (
-          <form onSubmit={submitHandlerDesc}>
-            <InputGroup colorScheme={descInvalid ? "red" : "brand"}>
-              <Input
-                placeholder="Playlist Description"
-                defaultValue={description}
-                autoFocus
-                isInvalid={descInvalid}
-                enterKeyHint="done"
-                onChange={(e) =>
-                  setDescInvalid(!isValid(e.currentTarget.value, 0, 200))
-                }
-              />
-              {descInvalid && <InputRightAddon color="red" children="0~200" />}
-            </InputGroup>
-          </form>
+          <InputGroup colorScheme={descInvalid ? "red" : "brand"}>
+            <Input
+              placeholder="Playlist Description"
+              defaultValue={description}
+              autoFocus
+              isInvalid={descInvalid}
+              enterKeyHint="done"
+              onChange={(e) => descChangeHandler(e.currentTarget.value)}
+            />
+            {descInvalid && <InputRightAddon color="red" children="0~200" />}
+          </InputGroup>
         ) : (
           <span>{description}</span>
         )}

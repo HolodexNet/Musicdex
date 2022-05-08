@@ -36,7 +36,6 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 
 export default function Channel() {
-  // const history = useStoreState((store) => store.playback.history);
   let params = useParams();
   let channelId = params.id!;
 
@@ -96,20 +95,22 @@ export default function Channel() {
             mr={isMobile ? 2 : 6}
             shadow="xl"
           ></ChannelPhoto>
-          <PlaylistHeading
-            title={name}
-            description={
-              channel.org +
-              (channel?.suborg?.slice(2)
-                ? " — " + channel?.suborg?.slice(2)
-                : "")
-            }
-            canEdit={false}
-            editMode={false}
-            count={0}
-            max={0}
-            textShadow="1px 1px 5px var(--chakra-colors-bgAlpha-500);"
-          />
+          <Link to={`/?org=${encodeURIComponent(channel.org)}`}>
+            <PlaylistHeading
+              title={name}
+              description={
+                channel.org +
+                (channel?.suborg?.slice(2)
+                  ? " — " + channel?.suborg?.slice(2)
+                  : "")
+              }
+              canEdit={false}
+              editMode={false}
+              count={0}
+              max={0}
+              textShadow="1px 1px 5px var(--chakra-colors-bgAlpha-500);"
+            />
+          </Link>
         </HStack>
         {!isMobile && <Spacer />}
         <ChannelSocialButtons isMobile={isMobile} channel={channel} />

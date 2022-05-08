@@ -1,7 +1,7 @@
 import { Flex, Heading, Spacer } from "@chakra-ui/layout";
 import { IconButton, Text } from "@chakra-ui/react";
 import React, { Suspense, useMemo } from "react";
-import { FiTrash } from "react-icons/fi";
+import { FiTrash, FiFolderPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import {
   DEFAULT_MENU_ID,
@@ -36,6 +36,10 @@ export const Queue = React.memo(() => {
 
   const queue = useStoreState((state) => state.playback.queue);
 
+  const showAddDialog = useStoreActions(
+    (action) => action.addPlaylist.showPlaylistAddDialog
+  );
+
   // const clearAll = useStoreActions((actions) => actions.playback.clearAll);
   const clearQueue = useStoreActions((actions) => actions.playback._queueClear);
 
@@ -63,7 +67,9 @@ export const Queue = React.memo(() => {
       <SongContextMenu menuId={QUEUE_MENU_ID} />
       <div className="bgOver"></div>
       <ContainerInlay>
-        <Heading size="lg">{t("Now Playing")}</Heading>
+        <Heading my={2} size="lg">
+          {t("Now Playing")}
+        </Heading>
         {currentlyPlaying.song ? (
           <SongRow
             index={0}
@@ -85,7 +91,7 @@ export const Queue = React.memo(() => {
 
         {queue.length > 0 && (
           <React.Fragment>
-            <Flex mt={4} alignItems="center">
+            <Flex mt={4} gap={2} alignItems="center">
               <Text fontSize={["md", "lg"]}>
                 <Text opacity={0.66} as={"span"}>
                   {t("Queue")}
@@ -93,14 +99,22 @@ export const Queue = React.memo(() => {
               </Text>
               <Spacer />
               <IconButton
+                aria-label="add to playlist"
+                icon={<FiFolderPlus />}
+                colorScheme="whiteAlpha"
+                color="white"
+                variant="ghost"
+                onClick={() => showAddDialog(queue)}
+              />
+              <IconButton
                 aria-label="clear playlist"
                 icon={<FiTrash />}
                 colorScheme="red"
                 variant="ghost"
                 onClick={() => clearQueue()}
-              ></IconButton>
+              />
             </Flex>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>{t("Loading...")}</div>}>
               <SongTable
                 songs={queue}
                 menuId={QUEUE_MENU_ID}
@@ -138,12 +152,12 @@ export const Queue = React.memo(() => {
                 onClick={() => clearPlaylist()}
               ></IconButton>
             </Flex>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>{t("Loading...")}</div>}>
               <SongTable
                 songs={playlistTotalQueue}
                 rowProps={{
                   songClicked: (e, song, idx) =>
-                    next({ count: idx + 1, userSkipped: true }),
+                    next({ count: queue.length + idx + 1, userSkipped: true }),
                   indexShift: queue.length,
                 }}
                 limit={10}

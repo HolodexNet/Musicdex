@@ -90,7 +90,7 @@ export default function ChannelSongs() {
           {t("Queue ({{amount}})", { amount: latest.length })}
         </Button>
       </HStack>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>{t("Loading...")}</div>}>
         <SongTable songs={latest} rowProps={{ indexShift: offset }}></SongTable>
       </Suspense>
       <ButtonGroup colorScheme="brand" mt="3" spacing="5">

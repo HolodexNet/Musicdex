@@ -1,4 +1,11 @@
-import { VStack, Text, Spinner, StackProps } from "@chakra-ui/react";
+import {
+  VStack,
+  Flex,
+  Heading,
+  Text,
+  Spinner,
+  StackProps,
+} from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,12 +20,24 @@ export function QueryStatus({ queryStatus, ...rest }: QueryStatusProps) {
   const { t } = useTranslation();
 
   return (
-    <VStack textAlign="center" {...rest}>
+    <VStack
+      textAlign="center"
+      h={queryStatus.isLoading ? "100%" : ""}
+      w="100%"
+      {...rest}
+    >
       {queryStatus.isLoading && (
-        <Fragment>
+        <Flex
+          h="100%"
+          w="100%"
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          gap={4}
+        >
           <Spinner size="xl" />
-          <Text fontSize="3xl">{t("Loading...")}</Text>
-        </Fragment>
+          <Text fontSize="2xl">{t("Loading...")}</Text>
+        </Flex>
       )}
 
       {queryStatus.isError && (

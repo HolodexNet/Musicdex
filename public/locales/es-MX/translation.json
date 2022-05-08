@@ -48,6 +48,7 @@
   "Edit": "Editar",
   "Save Changes": "Save Changes",
   "Created": "Created",
+  "Deleted": "Deleted",
   "You need to provide both name and description": "You need to provide both name and description",
   "Name (Can start with an emoji to set it as the icon)": "Name (Can start with an emoji to set it as the icon)",
   "Description": "Descripción",
@@ -142,5 +143,9 @@
   "Playlist is private and cannot be shared.": "This playlist is currently private and cannot be shared.",
   "Added to liked songs": "Added to liked songs",
   "Removed from liked songs": "Removed from liked songs",
-  "An error has occurred": "An error has occurred"
+  "An error has occurred": "An error has occurred",
+  "Return to Home": "Return to Home",
+  "Add To Playlist": "Add To Playlist",
+  "... and {{count}} other": "... and {{count}} other",
+  "... and {{count}} other_plural": "... and {{count}} other"
 }

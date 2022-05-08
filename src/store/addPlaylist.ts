@@ -2,9 +2,9 @@ import { action, Action } from "easy-peasy";
 
 export interface AddPlaylistModel {
   dialogShow: boolean;
-  songToAdd?: Song;
+  songToAdd?: Song[] | Song;
 
-  showPlaylistAddDialog: Action<AddPlaylistModel, Song>;
+  showPlaylistAddDialog: Action<AddPlaylistModel, Song[] | Song>;
   clearPlaylistAddDialog: Action<AddPlaylistModel, void>;
 }
 

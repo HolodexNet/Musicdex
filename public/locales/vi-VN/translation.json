@@ -48,6 +48,7 @@
   "Edit": "Chỉnh sửa",
   "Save Changes": "Lưu thay đổi",
   "Created": "Đã tạo",
+  "Deleted": "Deleted",
   "You need to provide both name and description": "Bạn cần phải cung cấp tên và mô tả",
   "Name (Can start with an emoji to set it as the icon)": "Tên (Có thể bắt đầu bởi một emoji để đặt nó làm biểu tượng)",
   "Description": "Mô tả",
@@ -142,5 +143,9 @@
   "Playlist is private and cannot be shared.": "Danh sách phát này hiện đang ở chế độ riêng tư và không thể chia sẻ.",
   "Added to liked songs": "Đã thêm vào danh sách các bài hát yêu thích",
   "Removed from liked songs": "Đã xoá khỏi danh sách các bài hát yêu thích",
-  "An error has occurred": "Đã xảy ra lỗi"
+  "An error has occurred": "Đã xảy ra lỗi",
+  "Return to Home": "Return to Home",
+  "Add To Playlist": "Add To Playlist",
+  "... and {{count}} other": "... and {{count}} other",
+  "... and {{count}} other_plural": "... and {{count}} other"
 }

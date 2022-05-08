@@ -48,6 +48,7 @@
   "Edit": "Szerkesztés",
   "Save Changes": "Módosítások mentése",
   "Created": "Létrehozva",
+  "Deleted": "Törölve",
   "You need to provide both name and description": "Meg kell adnod egy nevet és egy leírást is",
   "Name (Can start with an emoji to set it as the icon)": "Név (Kezdődhet emojival és akkor az lesz az ikonja)",
   "Description": "Leírás",
@@ -142,5 +143,9 @@
   "Playlist is private and cannot be shared.": "Ez a lejátszási lista jelenleg privát és nem lehet megosztani.",
   "Added to liked songs": "Hozzáadva kedvelt dalokhoz",
   "Removed from liked songs": "Eltávolítva kedvelt dalok közül",
-  "An error has occurred": "Hiba történt"
+  "An error has occurred": "Hiba történt",
+  "Return to Home": "Vissza a főoldalra",
+  "Add To Playlist": "Hozzáadás lejátszási listához",
+  "... and {{count}} other": "... és még {{count}} más",
+  "... and {{count}} other_plural": "... és még {{count}} más"
 }
