@@ -1,4 +1,5 @@
 import { intervalToDuration } from "date-fns";
+import { resizeArtwork } from "../modules/songs/utils";
 
 export function formatSeconds(secs: number) {
   const { hours, minutes, seconds } = intervalToDuration({
@@ -27,4 +28,15 @@ export function getVideoThumbnails(ytVideoKey: string, useWebP = false) {
     maxres: `${base}/${ytVideoKey}/maxresdefault.${ext}`,
     hq720: `${base}/${ytVideoKey}/hq720.${ext}`,
   };
+}
+
+export function getSongArtwork(song: Song | undefined, size = 200) {
+  let url = `https://via.placeholder.com/${size}x${size}.jpg`;
+  const videoArtSize = size > 200 ? "maxres" : "medium";
+  if (song) {
+    url = song.art
+      ? resizeArtwork(song.art, size)
+      : getVideoThumbnails(song.video_id)[videoArtSize];
+  }
+  return url;
 }

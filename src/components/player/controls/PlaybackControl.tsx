@@ -5,7 +5,7 @@ import {
   FlexProps,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { ReactElement } from "react";
 import { useStoreActions, useStoreState } from "../../../store";
 import { FaStepBackward, FaPause, FaPlay, FaStepForward } from "react-icons/fa";
@@ -67,6 +67,30 @@ export const PlaybackControl = React.memo(
     const toggleRepeatMode = useStoreActions(
       (actions) => actions.playback.toggleRepeat
     );
+
+    useEffect(() => {
+      navigator.mediaSession.setActionHandler("previoustrack", function () {
+        console.log('> User clicked "Previous Track" button.');
+        previous();
+      });
+
+      navigator.mediaSession.setActionHandler("nexttrack", function () {
+        console.log('> User clicked "Next Track" button.');
+        next({ count: 1, userSkipped: true });
+      });
+
+      navigator.mediaSession.setActionHandler("play", function () {
+        console.log('> User clicked "Play" button.');
+        if (!isPlaying) togglePlay();
+        (document.pictureInPictureElement as HTMLVideoElement)?.play();
+      });
+
+      navigator.mediaSession.setActionHandler("pause", function () {
+        console.log('> User clicked "Pause" button.');
+        if (isPlaying) togglePlay();
+        (document.pictureInPictureElement as HTMLVideoElement)?.pause();
+      });
+    }, [previous, next, isPlaying, togglePlay]);
 
     return (
       <Flex

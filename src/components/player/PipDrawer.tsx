@@ -1,12 +1,19 @@
 import { fabric } from "fabric";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useStoreActions, useStoreState } from "../../store";
+import { getSongArtwork } from "../../utils/SongHelper";
 
 interface PipDrawerProps {
   isPlaying: boolean;
+  progress: number;
+  totalDuration: number;
 }
 
-export function PipDrawer({ isPlaying }: PipDrawerProps) {
+export function PipDrawer({
+  isPlaying,
+  progress,
+  totalDuration,
+}: PipDrawerProps) {
   const [canvas, setCanvas] = useState<fabric.StaticCanvas | undefined>();
 
   const pictureInPicture = useStoreState(
@@ -112,8 +119,11 @@ export function PipDrawer({ isPlaying }: PipDrawerProps) {
       let objs: fabric.Object[] = [];
 
       fabric.Image.fromURL(
-        currentSong.art,
+        // getSongArtwork(currentSong, 100),
+        currentSong.art ??
+          `https://holodex.net/statics/channelImg/${currentSong.channel_id}/100.png`,
         (img) => {
+          img.scaleToWidth(100);
           img.set({
             top: 10,
             left: 10,
@@ -151,6 +161,14 @@ export function PipDrawer({ isPlaying }: PipDrawerProps) {
 
       videoElement.play();
 
+      // if ("mediaSession" in navigator) {
+      //   navigator.mediaSession.metadata = new MediaMetadata({
+      //     title: currentSong.name,
+      //     artist: currentSong.channel.name,
+      //     artwork: [{ src: getSongArtwork(currentSong) }],
+      //   });
+      // }
+
       return () => {
         canvas.remove(...objs);
       };
@@ -173,6 +191,32 @@ export function PipDrawer({ isPlaying }: PipDrawerProps) {
   useEffect(() => {
     updatePlaying(isPlaying);
   }, [updatePlaying, isPlaying]);
+
+  useEffect(() => {
+    if ("mediaSession" in navigator) {
+      if (!currentSong) {
+        navigator.mediaSession.metadata = null;
+        navigator.mediaSession.playbackState = "none";
+        return;
+      }
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentSong.name,
+        artist: currentSong.channel.name,
+        artwork: [{ src: getSongArtwork(currentSong) }],
+      });
+      navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+    }
+  }, [currentSong, isPlaying, pictureInPicture]);
+
+  // useEffect(() => {
+  //   if ("mediaSession" in navigator) {
+  //     navigator.mediaSession.setPositionState({
+  //       duration: totalDuration,
+  //       playbackRate: 1,
+  //       position: (progress / 100) * totalDuration,
+  //     });
+  //   }
+  // }, [progress, totalDuration]);
 
   return <></>;
 }

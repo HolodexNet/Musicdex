@@ -282,7 +282,11 @@ export function Player({ player }: { player: any }) {
           setVolumeSlider(e);
         }}
       />
-      <PipDrawer isPlaying={isPlaying}></PipDrawer>
+      <PipDrawer
+        isPlaying={isPlaying}
+        progress={progress}
+        totalDuration={totalDuration}
+      ></PipDrawer>
     </>
   );
 }

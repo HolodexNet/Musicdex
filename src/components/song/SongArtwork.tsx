@@ -1,6 +1,5 @@
-import { Box, Image, ImageProps } from "@chakra-ui/react";
-import { resizeArtwork } from "../../modules/songs/utils";
-import { getVideoThumbnails } from "../../utils/SongHelper";
+import { Image, ImageProps } from "@chakra-ui/react";
+import { getSongArtwork } from "../../utils/SongHelper";
 
 interface SongArtworkProps extends ImageProps {
   artUrl?: string;
@@ -16,14 +15,7 @@ export function SongArtwork({
   resizeHint,
   ...rest
 }: SongArtworkProps) {
-  let url = `https://via.placeholder.com/${size}x${size}.jpg`;
-  const resizeSize = resizeHint || size;
-  const videoArtSize = resizeSize > 200 ? "maxres" : "medium";
-  if (song) {
-    url = song.art
-      ? resizeArtwork(song.art, resizeHint || size)
-      : getVideoThumbnails(song.video_id)[videoArtSize];
-  }
+  const url = getSongArtwork(song, resizeHint || size);
 
   return (
     <Image
