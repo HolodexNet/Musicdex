@@ -43,7 +43,9 @@ export const AddToPlaylistModal: React.FC = () => {
     (actions) => actions.addPlaylist.clearPlaylistAddDialog
   );
 
-  const [selectedPlaylistId, setSelectedPlaylist] = useState<string>("_");
+  const [selectedPlaylistId, setSelectedPlaylist] = useState<
+    string | undefined
+  >();
   const isContainMultipleSongs = Array.isArray(song) && song.length > 1;
 
   const { data: playlists, isLoading } = useMyPlaylists();
@@ -56,7 +58,7 @@ export const AddToPlaylistModal: React.FC = () => {
   }, [playlists]);
 
   async function onSave() {
-    if (selectedPlaylistId === "_" || !song) return;
+    if (!selectedPlaylistId || !song) return;
 
     close();
 
