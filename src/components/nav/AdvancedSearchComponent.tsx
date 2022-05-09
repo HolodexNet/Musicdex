@@ -137,14 +137,13 @@ export function AdvancedSearchFiltersForm({
         .join(",")}]`;
 
     const filter_by = [part1, part2, part3, part4].filter((x) => x).join("&&");
-    const query = q || "*";
     // console.log(filter_by);
     // fullreset();
 
     navigate({
       pathname: "/search",
       search: `?${createSearchParams({
-        query,
+        q: q || "*",
         ...(filter_by && { filter_by }),
       } as any)}`,
     });

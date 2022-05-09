@@ -97,13 +97,13 @@ export const usePlaylistDeleter = (
 };
 
 export const usePlaylist = (
-  playlistId: string,
+  playlistId: string | undefined,
   config: UseQueryOptions<PlaylistFull, unknown, PlaylistFull, string[]> = {}
 ) => {
   const queryClient = useQueryClient();
   const { AxiosInstance, isLoggedIn, uid } = useClient();
   const result = useQuery(
-    ["playlist", playlistId, uid],
+    ["playlist", playlistId!, uid],
     async (q): Promise<PlaylistFull> => {
       // fetch cached
       const cached: PlaylistFull | undefined = queryClient.getQueryData([
@@ -176,6 +176,7 @@ export const usePlaylist = (
     {
       ...DEFAULT_FETCH_CONFIG,
       ...config,
+      enabled: playlistId !== undefined,
     }
   );
 

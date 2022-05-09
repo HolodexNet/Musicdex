@@ -47,7 +47,7 @@ export default function Search() {
     delete qObj.q;
   }
   const { data: searchResult, ...rest } = useSongSearch<SearchableSong>({
-    q: " ",
+    q: "*",
     query_by:
       "name, channel_name, channel_english_name, original_artist, channel_org, channel_suborg, title",
     sort_by: "_text_match:desc,available_at:desc",
@@ -60,7 +60,6 @@ export default function Search() {
     navigate({
       pathname: "/search",
       search: `?${createSearchParams({
-        q: qObj.q || "*",
         ...qObj,
         ...queryNew,
       } as any)}`,
