@@ -191,22 +191,28 @@ export default function Frame({ children }: { children?: ReactNode }) {
                 {/* <Box minH={pos === "hover-bottom" ? "250px" : "0px"}></Box> */}
               </Flex>
             </FrameRef.Provider>
-            <MotionBox
-              {...props}
-              transition={{ duration: 0.4, type: "spring", ease: "easeInOut" }}
-              layout
-            >
-              <Box
-                visibility={pos === "background" ? "visible" : "hidden"}
-                width="100%"
-                height="100%"
-                position="absolute"
-                float="initial"
-                opacity={0.6}
-                bgColor="bg.900"
-              ></Box>
-              {loadPlayer && <YoutubePlayer onReady={onReady} />}
-            </MotionBox>
+            {loadPlayer && (
+              <MotionBox
+                {...props}
+                transition={{
+                  duration: 0.4,
+                  type: "spring",
+                  ease: "easeInOut",
+                }}
+                layout
+              >
+                <Box
+                  visibility={pos === "background" ? "visible" : "hidden"}
+                  width="100%"
+                  height="100%"
+                  position="absolute"
+                  float="initial"
+                  opacity={0.6}
+                  bgColor="bg.900"
+                ></Box>
+                <YoutubePlayer onReady={onReady} />
+              </MotionBox>
+            )}
           </Flex>
         </Flex>
         <Player player={player} />
