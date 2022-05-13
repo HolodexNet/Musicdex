@@ -12,10 +12,12 @@ import { usePlaylistUpdater } from "../../modules/services/playlist.service";
 export const PlaylistList = ({
   playlistStubs,
   vibe = false,
+  editable = false,
   defaultIcon = FiFolder,
 }: {
   playlistStubs: PlaylistStub[];
   vibe?: boolean;
+  editable?: boolean;
   defaultIcon?: IconType;
 }) => {
   const { t } = useTranslation();
@@ -65,17 +67,19 @@ export const PlaylistList = ({
                     vibe ? "inset 0 0 4px 0px var(--chakra-colors-n2-500)" : ""
                   }
                   onDragOver={(e) => {
-                    e.preventDefault();
-                    (e.currentTarget as any).style.boxShadow =
-                      "inset 0 0 4px 3px var(--chakra-colors-n2-500)";
+                    if (editable && vibe) {
+                      e.preventDefault();
+                      (e.currentTarget as any).style.boxShadow =
+                        "inset 0 0 4px 3px var(--chakra-colors-n2-500)";
+                    }
                   }}
                   onDragEnter={(e) => {}}
                   onDragLeave={(e) => {
-                    (e.target as any).style.boxShadow = "";
+                    (e.currentTarget as any).style.boxShadow = "";
                   }}
                   onDrop={(e: DragEvent<HTMLDivElement>) => {
                     const s = e.dataTransfer.getData("song");
-                    (e.target as any).style.boxShadow = "";
+                    (e.currentTarget as any).style.boxShadow = "";
                     if (s) {
                       e.preventDefault();
                       const song = JSON.parse(s);

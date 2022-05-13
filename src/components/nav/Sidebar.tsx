@@ -147,6 +147,7 @@ export function SidebarContent({
             <PlaylistList
               playlistStubs={playlistList as any}
               vibe={isDragging}
+              editable={true}
             />
           )}
           <Divider my={2} />
