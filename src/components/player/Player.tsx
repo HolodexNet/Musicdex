@@ -130,7 +130,14 @@ export function Player({ player }: { player: any }) {
       setOverridePos("hidden");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, currentSong, repeat, setError]);
+  }, [
+    player?.playVideo,
+    player?.loadVideoById,
+    player?.pauseVideo,
+    currentSong,
+    repeat,
+    setError,
+  ]);
 
   // CurrentTime Event
   useEffect(() => {
@@ -247,7 +254,16 @@ export function Player({ player }: { player: any }) {
       setProgress(e);
       player?.seekTo(currentSong.start + (e / 100) * totalDuration, true);
     },
-    [currentSong, player, totalDuration]
+    [currentSong, player?.seekTo, totalDuration]
+  );
+
+  const onVolumeChange = useCallback(
+    (e) => {
+      player?.unMute();
+      player?.setVolume(e);
+      setVolumeSlider(e);
+    },
+    [player, setVolumeSlider]
   );
 
   const seconds = useMemo(() => {
@@ -274,11 +290,7 @@ export function Player({ player }: { player: any }) {
       seconds={seconds}
       totalDuration={totalDuration}
       volume={volumeSlider}
-      onVolumeChange={(e) => {
-        player?.unMute();
-        player?.setVolume(e);
-        setVolumeSlider(e);
-      }}
+      onVolumeChange={onVolumeChange}
     />
   );
 }
