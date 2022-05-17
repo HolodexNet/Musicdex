@@ -54,7 +54,6 @@ export const PlayerBar = React.memo(
     onVolumeChange,
     totalDuration,
   }: PlayerBarProps) => {
-    const { t } = useTranslation();
     const fullPlayer = useStoreState((state) => state.player.fullPlayer);
     const setFullPlayer = useStoreActions(
       (store) => store.player.setFullPlayer
@@ -65,18 +64,6 @@ export const PlayerBar = React.memo(
 
     const [dragStartY, setDragStartY] = useState(0);
     const canEnlarge = useBreakpointValue({ base: true, lg: false });
-
-    const queue = useStoreState((state) => state.playback.queue);
-    const playlistQueue = useStoreState(
-      (state) => state.playback.playlistQueue
-    );
-    const playedPlaylistQueue = useStoreState(
-      (state) => state.playback.playedPlaylistQueue
-    );
-    const playlistTotalQueue = useMemo(() => {
-      return [...playlistQueue, ...playedPlaylistQueue];
-    }, [playedPlaylistQueue, playlistQueue]);
-    const next = useStoreActions((actions) => actions.playback.next);
 
     useEffect(() => {
       if (fullPlayer) {
@@ -363,64 +350,14 @@ export const PlayerBar = React.memo(
                         )}
                       </MotionBox>
                     </Flex>
-                    <VStack w="100%" h="90vh" maxH="90vh" align="flex-start">
-                      <Heading my={6} size="lg">
-                        {t("Upcoming")}
-                      </Heading>
-                      <Suspense fallback={<div>{t("Loading...")}</div>}>
-                        <Box w="100%" h="100%" maxH="100%" overflowY="auto">
-                          {queue && queue.length > 0 && (
-                            <SongTable
-                              songs={queue}
-                              menuId={QUEUE_MENU_ID}
-                              rowProps={{
-                                songClicked: (e, song, idx) =>
-                                  next({ count: idx + 1, userSkipped: true }),
-                                indexShift: queue.length,
-                                hideCol: ["idx", "og_artist", "sang_on"],
-                              }}
-                            />
-                          )}
-                          {playlistTotalQueue && playlistTotalQueue.length > 0 && (
-                            <SongTable
-                              songs={playlistTotalQueue}
-                              rowProps={{
-                                songClicked: (e, song, idx) =>
-                                  next({
-                                    count: queue.length + idx + 1,
-                                    userSkipped: true,
-                                  }),
-                                hideCol: ["idx", "og_artist", "sang_on"],
-                              }}
-                            />
-                          )}
-                          {queue.length === 0 &&
-                            playlistTotalQueue.length === 0 && (
-                              <Flex
-                                w="100%"
-                                h="100%"
-                                direction="column"
-                                align="center"
-                                justify="center"
-                              >
-                                <Heading my={2} size="md" color="gray.500">
-                                  {t("No Songs")}
-                                </Heading>
-                                <Button as={navLink} to="/" variant="ghost">
-                                  {t("Return to Home")}
-                                </Button>
-                              </Flex>
-                            )}
-                        </Box>
-                      </Suspense>
-                    </VStack>
+                    <PlayerBarExpandedRightSide />
                   </HStack>
                   <Box
                     bgGradient="linear-gradient(
-                    to bottom,
-                    var(--chakra-colors-brand-300) 30%,
-                    var(--chakra-colors-n2-300) 80%
-                  );"
+                      to bottom,
+                      var(--chakra-colors-brand-300) 30%,
+                      var(--chakra-colors-n2-300) 80%
+                    );"
                     backgroundSize="cover"
                     backgroundPosition="center"
                     zIndex={-1}
@@ -472,3 +409,70 @@ const PlayerContainer = styled.div<{
     margin-top: ${({ dense }) => (dense ? "3.5px" : "11.5px")};
   }
 `;
+const PlayerBarExpandedRightSide = React.memo(() => {
+  const { t } = useTranslation();
+
+  const queue = useStoreState((state) => state.playback.queue);
+  const playlistQueue = useStoreState((state) => state.playback.playlistQueue);
+  const playedPlaylistQueue = useStoreState(
+    (state) => state.playback.playedPlaylistQueue
+  );
+
+  const playlistTotalQueue = useMemo(() => {
+    return [...playlistQueue, ...playedPlaylistQueue];
+  }, [playedPlaylistQueue, playlistQueue]);
+  const next = useStoreActions((actions) => actions.playback.next);
+
+  return (
+    <VStack w="100%" h="90vh" maxH="90vh" align="flex-start">
+      <Heading mb={6} size="lg">
+        {t("Upcoming")}
+      </Heading>
+      <Suspense fallback={<div>{t("Loading...")}</div>}>
+        <Box w="100%" h="100%" maxH="100%" overflowY="auto">
+          {queue && queue.length > 0 && (
+            <SongTable
+              songs={queue}
+              menuId={QUEUE_MENU_ID}
+              rowProps={{
+                songClicked: (e, song, idx) =>
+                  next({ count: idx + 1, userSkipped: true }),
+                indexShift: queue.length,
+                hideCol: ["idx", "og_artist", "sang_on"],
+              }}
+            />
+          )}
+          {playlistTotalQueue && playlistTotalQueue.length > 0 && (
+            <SongTable
+              songs={playlistTotalQueue}
+              rowProps={{
+                songClicked: (e, song, idx) =>
+                  next({
+                    count: queue.length + idx + 1,
+                    userSkipped: true,
+                  }),
+                hideCol: ["idx", "og_artist", "sang_on"],
+              }}
+            />
+          )}
+          {queue.length === 0 && playlistTotalQueue.length === 0 && (
+            <Flex
+              w="100%"
+              h="100%"
+              direction="column"
+              align="center"
+              justify="center"
+            >
+              <Heading my={2} size="md" color="gray.500">
+                {t("No Songs")}
+              </Heading>
+              <Button as={navLink} to="/" variant="ghost">
+                {t("Return to Home")}
+              </Button>
+            </Flex>
+          )}
+        </Box>
+      </Suspense>
+    </VStack>
+  );
+});
