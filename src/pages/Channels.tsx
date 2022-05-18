@@ -7,7 +7,7 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { groupBy } from "lodash-es";
+import groupBy from "lodash-es/groupBy";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { FiArrowLeft } from "react-icons/fi";

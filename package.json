@@ -20,7 +20,7 @@
     "i18n": "rimraf -r build/tmp && tsc --jsx preserve --noEmit false --target es2020 --outDir build/tmp && i18next-scanner"
   },
   "dependencies": {
-    "@appbaseio/reactivesearch": "^3.23.0",
+    "@appbaseio/reactivesearch": "^3.31.0",
     "@chakra-ui/react": "^1.8.7",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",

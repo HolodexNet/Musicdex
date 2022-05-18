@@ -38,7 +38,11 @@ export const SongInfo = React.memo(
           size={fullPlayer ? 70 : 50}
           resizeHint={70}
           onClick={mobileArtClick}
-          _hover={!isMobile ? { transform: "translateY(-1px)" } : {}}
+          _hover={
+            !isMobile
+              ? { transform: "translateY(-1px)", outline: "#fffa solid 1px" }
+              : {}
+          }
         />
 
         <Box>
