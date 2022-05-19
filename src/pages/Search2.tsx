@@ -104,6 +104,7 @@ export default function SearchV2() {
       <Flex alignItems="stretch" wrap={flexWrap} mt={4}>
         <VStack
           minW="200px"
+          className="m-filters"
           alignItems="stretch"
           px={2}
           flexGrow={1}
@@ -135,8 +136,10 @@ export default function SearchV2() {
               className="datasearch"
               componentId="q"
               URLParams
-              debounce={200}
+              debounce={1000}
               customQuery={(q) => {
+                if (!q) return {};
+
                 return {
                   query: {
                     bool: {
@@ -158,6 +161,7 @@ export default function SearchV2() {
                   },
                 };
               }}
+              dataField=""
               queryFormat="and"
               placeholder="Search for Music / Artist"
               autosuggest={false}
@@ -172,8 +176,10 @@ export default function SearchV2() {
               className="datasearch"
               componentId="q"
               URLParams
-              debounce={200}
+              debounce={1000}
+              dataField=""
               customQuery={(q) => {
+                if (!q) return {};
                 return {
                   query: {
                     bool: {
@@ -237,14 +243,14 @@ export default function SearchV2() {
             dataField="channel.name"
             filterLabel="Channel"
             title="Filter by Channel"
-            react={{ and: ["q", "isMv", ...(channelSelected ? [] : ["org"])] }}
+            react={{ and: ["q", "isMv", "org"] }}
             showSearch={true}
             onValueChange={(e) => {
               if (e && e.length > 0) setChannelSelected(true);
               else setChannelSelected(false);
             }}
             URLParams={true}
-            size={6}
+            size={12}
             showCheckbox={true}
           />
           {!channelSelected && (

@@ -1,3 +1,16 @@
 .m-search .input-fix input {
   height: unset !important;
 }
+
+.m-search label > span > span:nth-child(2) {
+  color: #555 !important;
+}
+
+.m-search .m-filters li {
+  padding: 0px 4px;
+  border-radius: 3px;
+}
+
+.m-search .m-filters li[aria-checked="true"] {
+  background-color: var(--chakra-colors-gray-800);
+}
