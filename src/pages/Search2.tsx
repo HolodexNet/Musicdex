@@ -12,6 +12,7 @@ import {
   Button,
   Flex,
   Input,
+  Progress,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
@@ -20,7 +21,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { SongTable, SongTableCol } from "../components/data/SongTable";
 import "./Search2.css";
 
-const SearchResultSongTable = ({ data }: { data: any }) => {
+const SearchResultSongTable = ({
+  data,
+  loading,
+}: {
+  data: any;
+  loading: any;
+}) => {
   // console.log(data);
   const detailLevel = useBreakpointValue<SongTableCol[] | undefined>(
     {
@@ -32,14 +39,17 @@ const SearchResultSongTable = ({ data }: { data: any }) => {
     "xl"
   );
   return (
-    data && (
-      <SongTable
-        songs={data}
-        rowProps={{ hideCol: detailLevel }}
-        width="100%"
-        flexGrow={1}
-      />
-    )
+    <>
+      {loading && <Progress size="xs" isIndeterminate />}
+      {data && (
+        <SongTable
+          songs={data}
+          rowProps={{ hideCol: detailLevel }}
+          width="100%"
+          flexGrow={1}
+        />
+      )}
+    </>
   );
 };
 
@@ -217,6 +227,7 @@ export default function SearchV2() {
               { label: "Stream", value: "false" },
             ]}
             title="Presentation"
+            filterLabel="Presentation"
             defaultValue={[]}
             URLParams={true}
           />
@@ -224,6 +235,7 @@ export default function SearchV2() {
             className="input-fix"
             componentId="ch"
             dataField="channel.name"
+            filterLabel="Channel"
             title="Filter by Channel"
             react={{ and: ["q", "isMv", ...(channelSelected ? [] : ["org"])] }}
             showSearch={true}
@@ -239,6 +251,7 @@ export default function SearchV2() {
             <SingleList
               componentId="org"
               dataField="org"
+              filterLabel="Org"
               title="Filter by Org"
               react={{ and: ["q", "isMv"] }}
               showSearch={false}
@@ -253,6 +266,7 @@ export default function SearchV2() {
             <MultiList
               componentId="suborg"
               dataField="suborg"
+              filterLabel="Suborg"
               title="Filter by Suborg"
               showCheckbox={true}
               showSearch={false}
