@@ -1,29 +1,24 @@
-import React, { Component, useEffect, useState } from "react";
 import {
-  ReactiveBase,
   DataSearch,
   MultiList,
-  RangeSlider,
-  SingleRange,
-  SelectedFilters,
-  ResultCard,
+  ReactiveBase,
+  ReactiveComponent,
   ReactiveList,
+  SelectedFilters,
   SingleList,
   ToggleButton,
-  ReactiveComponent,
 } from "@appbaseio/reactivesearch";
 import {
   Button,
   Flex,
-  HStack,
-  Tab,
-  TabList,
+  Input,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-import { SongTable, SongTableCol } from "../components/data/SongTable";
-import { Searchbox } from "../components/nav/Searchbox";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { SongTable, SongTableCol } from "../components/data/SongTable";
+import "./Search2.css";
 
 const SearchResultSongTable = ({ data }: { data: any }) => {
   // console.log(data);
@@ -50,6 +45,7 @@ const SearchResultSongTable = ({ data }: { data: any }) => {
 
 export default function SearchV2() {
   const [suborgVisible, setSuborgVisible] = useState(false);
+
   const flexWrap: "nowrap" | "wrap" | undefined = useBreakpointValue({
     base: "wrap",
     sm: "wrap",
@@ -61,16 +57,26 @@ export default function SearchV2() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isExact, setExact] = useState(searchParams.get("mode") === "exact");
+  const [channelSelected, setChannelSelected] = useState(
+    searchParams.has("ch")
+  );
 
   useEffect(() => {
     const newSP = new URLSearchParams(searchParams);
     newSP.delete("mode");
     newSP.set("mode", isExact ? "exact" : "fuzzy");
     setSearchParams(newSP, { replace: true });
-  }, [isExact]);
+  }, [isExact]); // isExact -> searchParams
+
+  useEffect(() => {
+    const mode = searchParams.get("mode");
+    if (isExact !== (mode === "exact")) setExact(mode === "exact");
+    if (searchParams.has("ch")) setChannelSelected(true);
+  }, [searchParams]); // searchParams --> isExact
 
   return (
     <ReactiveBase
+      className="m-search"
       app="songs_db"
       url={window.location.origin + "/api/v2/musicdex/elasticsearch"}
       transformRequest={({ url, ...req }) => {
@@ -92,6 +98,7 @@ export default function SearchV2() {
           px={2}
           flexGrow={1}
           spacing={2}
+          mr={3}
         >
           <div style={{ marginBottom: "-0.5rem" }}>
             <Button
@@ -213,20 +220,36 @@ export default function SearchV2() {
             defaultValue={[]}
             URLParams={true}
           />
-
-          <SingleList
-            componentId="org"
-            dataField="org"
-            title="Filter by Org"
-            react={{ and: ["q", "isMv"] }}
-            showSearch={false}
+          <MultiList
+            className="input-fix"
+            componentId="ch"
+            dataField="channel.name"
+            title="Filter by Channel"
+            react={{ and: ["q", "isMv", ...(channelSelected ? [] : ["org"])] }}
+            showSearch={true}
             onValueChange={(e) => {
-              if (e && e.length > 0) setSuborgVisible(true);
-              else setSuborgVisible(false);
+              if (e && e.length > 0) setChannelSelected(true);
+              else setChannelSelected(false);
             }}
             URLParams={true}
+            size={6}
+            showCheckbox={true}
           />
-          {suborgVisible && (
+          {!channelSelected && (
+            <SingleList
+              componentId="org"
+              dataField="org"
+              title="Filter by Org"
+              react={{ and: ["q", "isMv"] }}
+              showSearch={false}
+              onValueChange={(e) => {
+                if (e) setSuborgVisible(true);
+                else setSuborgVisible(false);
+              }}
+              URLParams={true}
+            />
+          )}
+          {suborgVisible && !channelSelected && (
             <MultiList
               componentId="suborg"
               dataField="suborg"
@@ -251,7 +274,13 @@ export default function SearchV2() {
             componentId="results"
             dataField="name"
             react={{
-              and: ["q", "org", ...(suborgVisible ? ["suborg"] : []), "isMv"],
+              and: [
+                "q",
+                ...(!channelSelected ? ["org"] : []),
+                ...(suborgVisible && !channelSelected ? ["suborg"] : []),
+                "isMv",
+                "ch",
+              ],
             }}
             // pagination
             URLParams={true}
