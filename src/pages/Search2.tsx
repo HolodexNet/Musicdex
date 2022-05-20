@@ -9,8 +9,15 @@ import {
   ToggleButton,
 } from "@appbaseio/reactivesearch";
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
   Button,
   Flex,
+  Heading,
   Input,
   Progress,
   useBreakpointValue,
@@ -224,63 +231,168 @@ export default function SearchV2() {
               ? "Exact search is better for Japanese and Kanji"
               : "Fuzzy search supports Romaji lookup"}
           </small>
+          <Accordion allowToggle defaultIndex={0}>
+            <AccordionItem>
+              <AccordionButton>
+                <Heading flex="1" textAlign="center" size="sm">
+                  Advanced Filters
+                </Heading>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel p={0}>
+                <VStack alignItems="stretch" flexGrow={1} spacing={2}>
+                  <ToggleButton
+                    componentId="isMv"
+                    dataField="is_mv"
+                    data={[
+                      { label: "MV", value: "true" },
+                      { label: "Stream", value: "false" },
+                    ]}
+                    title="Presentation"
+                    filterLabel="Presentation"
+                    defaultValue={[]}
+                    URLParams={true}
+                    style={{ marginLeft: 0 }}
+                  />
+                  <Button
+                    colorScheme="brand"
+                    size="xs"
+                    variant={"solid"}
+                    rounded="0.2rem 0.2rem 0 0"
+                    style={{ marginBottom: "-0.5rem" }}
+                    alignSelf="start"
+                    cursor="default"
+                  >
+                    Song
+                  </Button>
+                  <DataSearch
+                    className="datasearch"
+                    componentId="song"
+                    URLParams
+                    debounce={1000}
+                    dataField=""
+                    customQuery={(q) => {
+                      if (!q) return {};
+                      return {
+                        query: {
+                          bool: {
+                            should: [
+                              {
+                                multi_match: {
+                                  query: q,
+                                  fields: ["name.ngram", "name"],
+                                  type: "phrase",
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      };
+                    }}
+                    queryFormat="and"
+                    placeholder="Song Name"
+                    autosuggest={false}
+                    enableDefaultSuggestions={false}
+                    iconPosition="left"
+                    onError={(e) => console.log(e)}
+                    filterLabel="Song Name"
+                  />
+                  <Button
+                    colorScheme="brand"
+                    size="xs"
+                    variant={"solid"}
+                    rounded="0.2rem 0.2rem 0 0"
+                    style={{ marginBottom: "-0.5rem" }}
+                    alignSelf="start"
+                    cursor="default"
+                  >
+                    Artist
+                  </Button>
 
-          <ToggleButton
-            componentId="isMv"
-            dataField="is_mv"
-            data={[
-              { label: "MV", value: "true" },
-              { label: "Stream", value: "false" },
-            ]}
-            title="Presentation"
-            filterLabel="Presentation"
-            defaultValue={[]}
-            URLParams={true}
-          />
-          <MultiList
-            className="input-fix"
-            componentId="ch"
-            dataField="channel.name"
-            filterLabel="Channel"
-            title="Filter by Channel"
-            react={{ and: ["q", "isMv", "org"] }}
-            showSearch={true}
-            onValueChange={(e) => {
-              if (e && e.length > 0) setChannelSelected(true);
-              else setChannelSelected(false);
-            }}
-            URLParams={true}
-            size={12}
-            showCheckbox={true}
-          />
-          {!channelSelected && (
-            <SingleList
-              componentId="org"
-              dataField="org"
-              filterLabel="Org"
-              title="Filter by Org"
-              react={{ and: ["q", "isMv"] }}
-              showSearch={false}
-              onValueChange={(e) => {
-                if (e) setSuborgVisible(true);
-                else setSuborgVisible(false);
-              }}
-              URLParams={true}
-            />
-          )}
-          {suborgVisible && !channelSelected && (
-            <MultiList
-              componentId="suborg"
-              dataField="suborg"
-              filterLabel="Suborg"
-              title="Filter by Suborg"
-              showCheckbox={true}
-              showSearch={false}
-              queryFormat="and"
-              react={{ and: ["q", "org", "isMv"] }}
-              URLParams={true}
-            />
-          )}
+                  <DataSearch
+                    className="datasearch"
+                    componentId="artist"
+                    URLParams
+                    debounce={1000}
+                    dataField=""
+                    customQuery={(q) => {
+                      if (!q) return {};
+                      return {
+                        query: {
+                          bool: {
+                            should: [
+                              {
+                                multi_match: {
+                                  query: q,
+                                  fields: [
+                                    "original_artist.ngram^2",
+                                    "original_artist^2",
+                                    "original_artist.romaji^0.5",
+                                  ],
+                                  type: "phrase",
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      };
+                    }}
+                    queryFormat="and"
+                    placeholder="Original Artist Name"
+                    autosuggest={false}
+                    enableDefaultSuggestions={false}
+                    iconPosition="left"
+                    onError={(e) => console.log(e)}
+                    filterLabel="Original Artist"
+                  />
+                  <MultiList
+                    className="input-fix"
+                    componentId="ch"
+                    dataField="channel.name"
+                    filterLabel="Channel"
+                    title="Filter by Channel"
+                    react={{ and: ["q", "song", "artist", "isMv", "org"] }}
+                    showSearch={true}
+                    onValueChange={(e) => {
+                      if (e && e.length > 0) setChannelSelected(true);
+                      else setChannelSelected(false);
+                    }}
+                    URLParams={true}
+                    size={12}
+                    showCheckbox={true}
+                  />
+                  {!channelSelected && (
+                    <SingleList
+                      componentId="org"
+                      dataField="org"
+                      filterLabel="Org"
+                      title="Filter by Org"
+                      react={{ and: ["q", "song", "artist", "isMv"] }}
+                      showSearch={false}
+                      onValueChange={(e) => {
+                        if (e) setSuborgVisible(true);
+                        else setSuborgVisible(false);
+                      }}
+                      URLParams={true}
+                    />
+                  )}
+                  {suborgVisible && !channelSelected && (
+                    <MultiList
+                      componentId="suborg"
+                      dataField="suborg"
+                      filterLabel="Suborg"
+                      title="Filter by Suborg"
+                      showCheckbox={true}
+                      showSearch={false}
+                      queryFormat="and"
+                      react={{ and: ["q", "org", "song", "artist", "isMv"] }}
+                      URLParams={true}
+                    />
+                  )}
+                </VStack>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
         </VStack>
         <VStack
           minW="350px"
@@ -296,6 +408,8 @@ export default function SearchV2() {
             react={{
               and: [
                 "q",
+                "song",
+                "artist",
                 ...(!channelSelected ? ["org"] : []),
                 ...(suborgVisible && !channelSelected ? ["suborg"] : []),
                 "isMv",
