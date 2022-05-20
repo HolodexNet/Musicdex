@@ -32,8 +32,6 @@ export default function History() {
         <PlaylistHeading
           title={t("Recently Played")}
           description={t("Your recently played songs")}
-          canEdit={false}
-          editMode={false}
           count={playlist?.content?.length || 0}
         />
         {playlist?.content && (
