@@ -35,7 +35,6 @@ const SearchResultSongTable = ({
   data: any;
   loading: any;
 }) => {
-  // console.log(data);
   const detailLevel = useBreakpointValue<SongTableCol[] | undefined>(
     {
       sm: ["idx", "og_artist", "sang_on", "duration"],
@@ -103,7 +102,7 @@ export default function SearchV2() {
       }}
       themePreset="dark"
       setSearchParams={(newurl) => {
-        console.log(newurl);
+        // console.log(newurl);
         navigate({ search: new URL(newurl).search });
       }}
       enableAppbase={false}
