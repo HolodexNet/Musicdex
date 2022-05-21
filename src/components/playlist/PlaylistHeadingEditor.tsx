@@ -2,6 +2,7 @@ import {
   Box,
   BoxProps,
   Button,
+  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -17,7 +18,7 @@ import { intervalToDuration } from "date-fns";
 import { Picker } from "emoji-mart";
 import debounce from "lodash-es/debounce";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FiFolder } from "react-icons/fi";
+import { FiEdit3, FiFolder } from "react-icons/fi";
 import { splitPlaylistEmoji } from "../../modules/playlist/utils";
 
 type PlaylistHeadingEditorProps = {
@@ -46,6 +47,9 @@ export default function PlaylistHeadingEditor({
     return splitPlaylistEmoji(title);
   }, [title]);
 
+  const [editTitle, setEditTitle] = useState(false);
+  const [editDescription, setEditDescription] = useState(false);
+
   const [changedEmoji, changeEmoji] = useState<string | undefined>();
   const [changedTitle, changeTitle] = useState<string | undefined>();
 
@@ -61,42 +65,44 @@ export default function PlaylistHeadingEditor({
 
   const emojiMartRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    const p = new Picker({
-      ref: emojiMartRef,
-      data: emojiMartData,
-      categories: [
-        "custom_1",
-        "frequent",
-        ...emojiMartData.categories.map((c) => c.id),
-      ],
-      custom: [
-        {
-          name: "Clear Emoji",
-          emojis: [
-            {
-              id: "clear-emoji",
-              name: "Clear Emoji",
-              keywords: ["null", "empty", "clear"],
-              skins: [
-                {
-                  native: "-",
-                },
-              ],
-              version: 1,
-            },
-          ],
+    if (editTitle) {
+      const p = new Picker({
+        ref: emojiMartRef,
+        data: emojiMartData,
+        categories: [
+          "custom_1",
+          "frequent",
+          ...emojiMartData.categories.map((c) => c.id),
+        ],
+        custom: [
+          {
+            name: "Clear Emoji",
+            emojis: [
+              {
+                id: "clear-emoji",
+                name: "Clear Emoji",
+                keywords: ["null", "empty", "clear"],
+                skins: [
+                  {
+                    native: "-",
+                  },
+                ],
+                version: 1,
+              },
+            ],
+          },
+        ],
+        theme: "dark",
+        maxFrequentRows: 0,
+        onEmojiSelect: (s: any) => {
+          changeEmoji(s.id === "clear-emoji" ? "" : s.native);
         },
-      ],
-      theme: "dark",
-      maxFrequentRows: 0,
-      onEmojiSelect: (s: any) => {
-        changeEmoji(s.id === "clear-emoji" ? "" : s.native);
-      },
-    });
-    return () => {
-      p.remove();
-    };
-  }, []);
+      });
+      return () => {
+        p.remove();
+      };
+    }
+  }, [editTitle]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const titleChangeHandler = useCallback(
@@ -139,30 +145,46 @@ export default function PlaylistHeadingEditor({
         fontSize={{ base: "2xl", sm: "3xl", md: "4xl", lg: "5xl" }}
         as={"div"}
       >
-        <InputGroup colorScheme={titleInvalid ? "red" : "brand"} size={"lg"}>
-          <InputLeftElement>
-            <Popover>
-              <PopoverTrigger>
-                <Button variant="ghost">
-                  {(changedEmoji ?? emoji ?? "") || <FiFolder />}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                bg="transparent"
-                border="none"
-                ref={emojiMartRef}
-              />
-            </Popover>
-          </InputLeftElement>
-          <Input
-            placeholder="Playlist Title"
-            autoFocus
-            defaultValue={rest}
-            isInvalid={titleInvalid}
-            onChange={(e) => titleChangeHandler(e.currentTarget.value)}
-          />
-          {titleInvalid && <InputRightAddon color="red" children="1~70" />}
-        </InputGroup>
+        {editTitle ? (
+          <InputGroup colorScheme={titleInvalid ? "red" : "brand"} size={"lg"}>
+            <InputLeftElement>
+              <Popover>
+                <PopoverTrigger>
+                  <Button variant="ghost">
+                    {(changedEmoji ?? emoji ?? "") || <FiFolder />}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  bg="transparent"
+                  border="none"
+                  ref={emojiMartRef}
+                />
+              </Popover>
+            </InputLeftElement>
+            <Input
+              placeholder="Playlist Title"
+              autoFocus
+              defaultValue={rest}
+              isInvalid={titleInvalid}
+              onChange={(e) => titleChangeHandler(e.currentTarget.value)}
+            />
+            {titleInvalid && <InputRightAddon color="red" children="1~70" />}
+          </InputGroup>
+        ) : (
+          title
+        )}
+        <IconButton
+          display={!editTitle ? "inline-block" : "none"}
+          onClick={() => {
+            setEditTitle(true);
+          }}
+          ml={2}
+          size="lg"
+          verticalAlign="baseline"
+          aria-label="edit title"
+          variant="link"
+          icon={<FiEdit3 />}
+        ></IconButton>
       </Text>
       <Text
         color={descColor}
@@ -170,15 +192,30 @@ export default function PlaylistHeadingEditor({
         fontSize={{ base: "lg", md: "xl" }}
         as={"div"}
       >
-        <InputGroup colorScheme={descInvalid ? "red" : "brand"}>
-          <Input
-            placeholder="Playlist Description"
-            defaultValue={description}
-            isInvalid={descInvalid}
-            onChange={(e) => descChangeHandler(e.currentTarget.value)}
-          />
-          {descInvalid && <InputRightAddon color="red" children="0~200" />}
-        </InputGroup>{" "}
+        {editDescription ? (
+          <InputGroup colorScheme={descInvalid ? "red" : "brand"}>
+            <Input
+              placeholder="Playlist Description"
+              defaultValue={description}
+              isInvalid={descInvalid}
+              onChange={(e) => descChangeHandler(e.currentTarget.value)}
+            />
+            {descInvalid && <InputRightAddon color="red" children="0~200" />}
+          </InputGroup>
+        ) : (
+          <span>{description}</span>
+        )}
+        <IconButton
+          display={!editDescription ? "inline" : "none"}
+          verticalAlign="middle"
+          onClick={() => {
+            setEditDescription(true);
+          }}
+          ml={2}
+          aria-label="edit title"
+          variant="link"
+          icon={<FiEdit3 />}
+        ></IconButton>{" "}
         <Text color="bg.200" float="right" fontSize={"xl"}>
           {count > 0 ? `${count} songs` : ""}
           {durationString ? ` • ${durationString}` : ""}
