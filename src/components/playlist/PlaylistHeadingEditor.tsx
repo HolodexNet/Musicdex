@@ -65,13 +65,41 @@ export default function PlaylistHeadingEditor({
 
   const emojiMartRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    new Picker({
-      data: emojiMartData,
+    const p = new Picker({
       ref: emojiMartRef,
+      data: emojiMartData,
+      categories: [
+        "custom_1",
+        "frequent",
+        ...emojiMartData.categories.map((c) => c.id),
+      ],
+      custom: [
+        {
+          name: "Clear Emoji",
+          emojis: [
+            {
+              id: "clear-emoji",
+              name: "Clear Emoji",
+              keywords: ["null", "empty", "clear"],
+              skins: [
+                {
+                  native: "-",
+                },
+              ],
+              version: 1,
+            },
+          ],
+        },
+      ],
+      theme: "dark",
+      maxFrequentRows: 0,
       onEmojiSelect: (s: any) => {
-        changeEmoji(s.native);
+        changeEmoji(s.id === "clear-emoji" ? "" : s.native);
       },
     });
+    return () => {
+      p.remove();
+    };
   }, []);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -117,10 +145,10 @@ export default function PlaylistHeadingEditor({
       >
         <InputGroup colorScheme={titleInvalid ? "red" : "brand"} size={"lg"}>
           <InputLeftElement>
-            <Popover isLazy>
+            <Popover>
               <PopoverTrigger>
                 <Button variant="ghost">
-                  {changedEmoji ?? emoji ?? <FiFolder />}
+                  {(changedEmoji ?? emoji ?? "") || <FiFolder />}
                 </Button>
               </PopoverTrigger>
               <PopoverContent
