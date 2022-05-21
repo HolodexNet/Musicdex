@@ -16,13 +16,7 @@ import emojiMartData from "@emoji-mart/data/sets/13.1/native.json";
 import { intervalToDuration } from "date-fns";
 import { Picker } from "emoji-mart";
 import debounce from "lodash-es/debounce";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FiFolder } from "react-icons/fi";
 import { splitPlaylistEmoji } from "../../modules/playlist/utils";
 
@@ -60,7 +54,9 @@ export default function PlaylistHeadingEditor({
 
   useEffect(() => {
     const finalTitle = `${changedEmoji ?? emoji ?? ""}${changedTitle ?? rest}`;
-    setTitle(finalTitle);
+    if (changedEmoji !== undefined || changedTitle !== undefined) {
+      setTitle(finalTitle);
+    }
   }, [setTitle, emoji, rest, changedEmoji, changedTitle]);
 
   const emojiMartRef = useRef<HTMLDivElement | null>(null);
