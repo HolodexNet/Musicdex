@@ -60,6 +60,8 @@ export default function PlaylistHeadingEditor({
     const finalTitle = `${changedEmoji ?? emoji ?? ""}${changedTitle ?? rest}`;
     if (changedEmoji !== undefined || changedTitle !== undefined) {
       setTitle(finalTitle);
+    } else {
+      setTitle(undefined);
     }
   }, [setTitle, emoji, rest, changedEmoji, changedTitle]);
 
