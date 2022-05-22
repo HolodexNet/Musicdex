@@ -1,6 +1,6 @@
 {
-  "Unauthorized": "Unauthorized",
-  "Server error": "Server error",
+  "Unauthorized": "Tiada izin",
+  "Server error": "Ralat pelayan",
   "Something went wrong": "Something went wrong",
   "Step 1: Refresh Page": "Step 1: Refresh Page",
   "Step 2: Reset Cache & Logout": "Step 2: Reset Cache & Logout",
