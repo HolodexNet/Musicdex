@@ -44,15 +44,12 @@ interface SongEditableTableProps {
 const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
   const { t } = useTranslation();
   const tn = useNamePicker();
-  const [newSongIds, setNewSongIds] = useState(() => songs.map((x) => x.id));
-  const s: IndexedSong[] = useMemo(() => {
-    return newSongIds.map((id, idx) => {
-      return {
-        ...songs.find((x) => x.id === id)!,
-        idx: idx,
-      };
-    });
-  }, [newSongIds, songs]);
+  const [newSongs, setNewSongs] = useState<IndexedSong[]>(() =>
+    songs.map((song, idx) => ({
+      ...song,
+      idx,
+    }))
+  );
 
   const moveOrDeleteItem = useCallback(
     (idx: number, toIdx: number | undefined) => {
@@ -60,16 +57,16 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
       // console.log(idx, toIdx);
 
       const arrayAroundDragged = [
-        ...newSongIds.slice(0, idx),
-        ...newSongIds.slice(idx + 1),
+        ...newSongs.slice(0, idx),
+        ...newSongs.slice(idx + 1),
       ];
       if (toIdx !== undefined)
-        arrayAroundDragged.splice(toIdx, 0, newSongIds[idx]);
-      setNewSongIds(arrayAroundDragged);
-      songsEdited(arrayAroundDragged);
+        arrayAroundDragged.splice(toIdx, 0, newSongs[idx]);
+      setNewSongs(arrayAroundDragged);
+      songsEdited(arrayAroundDragged.map((x) => x.id));
       // console.log(arrayAroundDragged);
     },
-    [newSongIds, songsEdited]
+    [newSongs, songsEdited]
   );
 
   const columns: Column<IndexedSong>[] = useMemo<Column<IndexedSong>[]>(
@@ -154,7 +151,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
   } = useTable(
     {
       columns: columns as any,
-      data: s,
+      data: newSongs,
       initialState: { hiddenColumns: ["channel"] },
       disableSortBy: true,
       //   getRowId: (or, idx) => idx.toString(),
