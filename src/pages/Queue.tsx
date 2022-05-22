@@ -37,7 +37,7 @@ export const Queue = React.memo(() => {
   const queue = useStoreState((state) => state.playback.queue);
 
   const showAddDialog = useStoreActions(
-    (action) => action.addPlaylist.showPlaylistAddDialog
+    (action) => action.playlist.showPlaylistAddDialog
   );
 
   // const clearAll = useStoreActions((actions) => actions.playback.clearAll);

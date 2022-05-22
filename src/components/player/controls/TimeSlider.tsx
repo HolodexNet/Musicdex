@@ -39,6 +39,7 @@ export const TimeSlider = React.memo(
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
         onChange={onChange}
+        focusThumbOnChange={false}
         {...rest}
       >
         {fullPlayer && (
