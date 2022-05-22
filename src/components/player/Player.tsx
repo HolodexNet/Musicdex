@@ -331,16 +331,17 @@ export function Player({ player }: { player: any }) {
     "ctrl+up, cmd+up, ctrl+down, cmd+down, ctrl+shift+up, cmd+shift+up, ctrl+shift+down, cmd+shift+down",
     (e, handler) => {
       e.preventDefault();
+      const currentVol = player?.getVolume() ?? 100;
       switch (handler.key) {
         case "ctrl+up":
         case "cmd+up":
           player?.unMute();
-          player?.setVolume(volumeSlider !== 100 ? volumeSlider + 5 : 100);
+          player?.setVolume(currentVol !== 100 ? currentVol + 5 : 100);
           break;
         case "ctrl+down":
         case "cmd+down":
           player?.unMute();
-          player?.setVolume(volumeSlider !== 0 ? volumeSlider - 5 : 0);
+          player?.setVolume(currentVol !== 0 ? currentVol - 5 : 0);
           break;
         case "ctrl+shift+up":
         case "cmd+shift+up":
