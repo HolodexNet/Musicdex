@@ -8,8 +8,8 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { useTranslation } from "react-i18next";
-import { FiFilter, FiSearch } from "react-icons/fi";
 import { RiCompasses2Fill, RiSearch2Line } from "react-icons/ri";
 import { useNavigate } from "react-router";
 import { createSearchParams, useSearchParams } from "react-router-dom";
@@ -28,6 +28,11 @@ export function Searchbox({ ...props }: BoxProps & {}) {
     setValue(pq || "");
     input.current.value = pq || "";
   }, [searchParams]);
+
+  useHotkeys("ctrl+l,cmd+l, cmd+alt+f", (e) => {
+    e.preventDefault();
+    input.current.focus();
+  });
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();

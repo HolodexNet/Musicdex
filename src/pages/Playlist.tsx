@@ -23,6 +23,7 @@ import {
   usePlaylistWriter,
 } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
+import { useKeyControl } from "../utils/HotkeyHook";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
@@ -59,6 +60,14 @@ export default function Playlist() {
   const queueSongs = useSongQueuer();
   const setPlaylist = useStoreActions(
     (actions) => actions.playback.setPlaylist
+  );
+
+  useKeyControl(
+    {
+      actions: ["playPlaylist"],
+      playlist: playlist,
+    },
+    [playlist]
   );
 
   // const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");

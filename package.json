@@ -52,6 +52,7 @@
     "react-ga4": "^1.4.1",
     "react-helmet-async": "^1.2.3",
     "react-hook-form": "^7.29.0",
+    "react-hotkeys-hook": "^3.4.6",
     "react-i18next": "^11.16.2",
     "react-icons": "^4.3.1",
     "react-query": "^3.34.19",

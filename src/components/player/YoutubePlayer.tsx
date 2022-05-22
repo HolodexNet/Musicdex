@@ -70,7 +70,7 @@ export function usePlayer(player?: YouTubePlayer) {
           setVolume(await player.getVolume());
           setMuted(await player.isMuted());
         }
-      }, 333);
+      }, 200);
     }
     return () => {
       timer && clearInterval(timer);
