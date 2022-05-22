@@ -52,8 +52,6 @@ export default function Video() {
         <PlaylistHeading
           title={title || "Video"}
           description={description || ""}
-          canEdit={false}
-          editMode={false}
           count={playlist?.content?.length || 0}
           max={0}
           totalLengthSecs={playlist?.content?.reduce(

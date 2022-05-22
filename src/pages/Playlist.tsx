@@ -24,6 +24,9 @@ import {
 } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
+const PlaylistHeadingEditor = React.lazy(
+  () => import("../components/playlist/PlaylistHeadingEditor")
+);
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
 );
@@ -149,27 +152,35 @@ export default function Playlist() {
         <BGImg banner_url={banner || ""} height="200px"></BGImg>
       </BGImgContainer>
       <ContainerInlay mt="12">
-        <PlaylistHeading
-          title={title || t("Untitled Playlist")}
-          description={description || ""}
-          canEdit={isLoggedIn && playlist.owner === user?.id && editMode}
-          editMode={false}
-          setDescription={(text) => {
-            setNewDescription(text);
-          }}
-          setTitle={(text) => {
-            setNewTitle(text);
-          }}
-          count={
-            (editMode
-              ? newSongIds?.length ?? playlist?.content?.length
-              : playlist?.content?.length) || 0
-          }
-          totalLengthSecs={playlist.content?.reduce(
-            (a, c) => a + c.end - c.start,
-            0
-          )}
-        />
+        {editMode ? (
+          <Suspense fallback={<div>{t("Loading...")}</div>}>
+            <PlaylistHeadingEditor
+              title={title || t("Untitled Playlist")}
+              description={description || ""}
+              setDescription={(text) => {
+                setNewDescription(text);
+              }}
+              setTitle={(text) => {
+                setNewTitle(text);
+              }}
+              count={newSongIds?.length ?? (playlist?.content?.length || 0)}
+              totalLengthSecs={playlist.content?.reduce(
+                (a, c) => a + c.end - c.start,
+                0
+              )}
+            />
+          </Suspense>
+        ) : (
+          <PlaylistHeading
+            title={title || t("Untitled Playlist")}
+            description={description || ""}
+            count={playlist?.content?.length ?? 0}
+            totalLengthSecs={playlist.content?.reduce(
+              (a, c) => a + c.end - c.start,
+              0
+            )}
+          />
+        )}
         <PlaylistButtonArray
           mb={2}
           playlist={playlist}
@@ -192,7 +203,6 @@ export default function Playlist() {
             finishSongEditing(newSongIds, newTitle, newDescription)
           }
         />
-
         {playlist.content &&
           (editMode ? (
             <Suspense fallback={<div>{t("Loading...")}</div>}>

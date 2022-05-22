@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
 import { FiFolder } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import runes from "runes";
 import { useFormatPlaylist } from "../../modules/playlist/useFormatPlaylist";
+import { splitPlaylistEmoji } from "../../modules/playlist/utils";
 import { usePlaylistUpdater } from "../../modules/services/playlist.service";
 
 export const PlaylistList = ({
@@ -29,18 +29,7 @@ export const PlaylistList = ({
       <AnimatePresence>
         {playlistStubs.map((x) => {
           const title = formatPlaylist("title", x) || "Untitled";
-          let rest = title;
-          let emoji: string | undefined;
-          try {
-            if (title.match(/^(?!\d)\p{Emoji}/gu)) {
-              // Pick the first emoji if the first character is an emoji.
-              emoji = runes(title).at(0);
-              // ignore the first emoji IF it is an emoji.
-              rest = emoji ? runes(title).slice(1).join("").trim() : title;
-            }
-          } catch (e) {
-            console.error(e);
-          }
+          const { rest, emoji } = splitPlaylistEmoji(title);
 
           return (
             <motion.div
