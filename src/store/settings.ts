@@ -23,7 +23,7 @@ const englishNamePrefs = ["en", "es", "fr", "id", "pt", "de", "ru", "it"];
 
 // DND State Management
 export const settingsStore: SettingsStore = {
-  selectedPosition: "hidden",
+  selectedPosition: "sidebar",
   setSelectedPosition: action((state, newloc) => {
     state.selectedPosition = newloc;
   }),
