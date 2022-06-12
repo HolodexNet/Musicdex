@@ -11,24 +11,51 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { FiMoreHorizontal } from "react-icons/fi";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import { FiEdit2, FiMoreHorizontal, FiShare2, FiTrash } from "react-icons/fi";
 import { useNavigate } from "react-router";
+import { useClipboardWithToast } from "../../modules/common/clipboard";
 import {
   usePlaylistDeleter,
+  usePlaylistStarUpdater,
   usePlaylistWriter,
 } from "../../modules/services/playlist.service";
+import {
+  ClickEventHandler,
+  PlaylistButtonElement,
+  PlaylistButtonChildren,
+} from "./PlaylistButtonArray";
 
 export function PlaylistMoreControlsMenu({
   playlist,
   canEdit,
+  canStar,
+  canShare,
+  starred,
+  hideElement,
+  onDelete,
+  onEditClick,
+  children,
   ...rest
-}: Omit<MenuProps, "children"> & { playlist: PlaylistFull; canEdit: boolean }) {
+}: Omit<MenuProps, "children"> & {
+  playlist: PlaylistFull;
+  canEdit: boolean;
+  canStar: boolean;
+  canShare: boolean;
+  starred?: boolean;
+  hideElement?: PlaylistButtonElement[];
+  onDelete?: ClickEventHandler;
+  onEditClick?: ClickEventHandler;
+  children?: PlaylistButtonChildren[];
+}) {
   const { t } = useTranslation();
   const { mutateAsync: write, isLoading } = usePlaylistWriter();
   const { mutateAsync: del } = usePlaylistDeleter();
+  const { mutateAsync: updateStar } = usePlaylistStarUpdater();
 
   const navigate = useNavigate();
   const toast = useToast();
+  const clip = useClipboardWithToast();
 
   const changeListed = (e: boolean) => {
     const update = { ...playlist, listed: e };
@@ -54,31 +81,14 @@ export function PlaylistMoreControlsMenu({
     );
   };
 
-  const deletePlaylist = () => {
-    // eslint-disable-next-line no-restricted-globals
-    const x = confirm(t("Really delete this playlist?"));
-    if (x)
-      del({ playlistId: playlist.id }).then(
-        () => {
-          toast({
-            status: "success",
-            position: "top-right",
-            title: t("Deleted"),
-            duration: 1500,
-          });
-          navigate("/");
-        },
-        () => {
-          toast({
-            status: "warning",
-            position: "top-right",
-            title: t("Something went wrong"),
-            isClosable: true,
-          });
-        }
-      );
-  };
-  if (!canEdit) return <></>;
+  if (
+    !canEdit &&
+    (!canShare || !hideElement?.includes("share")) &&
+    (!canStar || !hideElement?.includes("star")) &&
+    (!children || !hideElement?.includes("children"))
+  )
+    return <></>;
+
   return (
     <Menu {...rest} isLazy>
       <MenuButton
@@ -89,37 +99,79 @@ export function PlaylistMoreControlsMenu({
         variant="ghost"
         colorScheme="n2"
         aria-label="More"
-      ></MenuButton>
+      />
       <MenuList>
-        <MenuOptionGroup
-          defaultValue={playlist.listed ? "1" : "0"}
-          title={t("Playlist Visibility State")}
-          type="radio"
-        >
-          <MenuItemOption
-            value={"1"}
-            onClick={() => {
-              changeListed(true);
-            }}
+        {hideElement?.includes("star") && canStar && (
+          <MenuItem
+            icon={starred ? <FaRegStar /> : <FaStar />}
+            onClick={() =>
+              updateStar({
+                playlist_id: playlist.id,
+                action: starred ? "delete" : "add",
+              })
+            }
           >
-            {t("Public Playlist")}
-          </MenuItemOption>
-          <MenuItemOption
-            value={"0"}
-            onClick={() => {
-              changeListed(false);
-            }}
+            {t(starred ? "Unstar" : "Star")}
+          </MenuItem>
+        )}
+        {hideElement?.includes("share") && canShare && (
+          <MenuItem
+            icon={<FiShare2 />}
+            onClick={() => clip(window.location.toString(), false)}
           >
-            {t("Private Playlist")}
-          </MenuItemOption>
-        </MenuOptionGroup>
-        <MenuDivider />
-        <MenuItem
-          _hover={{ backgroundColor: "red.700" }}
-          onClick={deletePlaylist}
-        >
-          {t("Delete Playlist")}
-        </MenuItem>
+            {t("Copy link")}
+          </MenuItem>
+        )}
+        {hideElement?.includes("children") &&
+          children?.map(({ title, icon, onClick }) => (
+            <MenuItem icon={icon} onClick={onClick}>
+              {title}
+            </MenuItem>
+          ))}
+        {hideElement?.includes("edit") && canEdit && (
+          <MenuItem icon={<FiEdit2 />} onClick={onEditClick}>
+            {t("Edit")}
+          </MenuItem>
+        )}
+        {canEdit && (
+          <>
+            <MenuOptionGroup
+              defaultValue={playlist.listed ? "1" : "0"}
+              title={t("Playlist Visibility State")}
+              type="radio"
+            >
+              <MenuItemOption
+                value={"1"}
+                onClick={() => {
+                  changeListed(true);
+                }}
+              >
+                {t("Public Playlist")}
+              </MenuItemOption>
+              <MenuItemOption
+                value={"0"}
+                onClick={() => {
+                  changeListed(false);
+                }}
+              >
+                {t("Private Playlist")}
+              </MenuItemOption>
+            </MenuOptionGroup>
+          </>
+        )}
+        {hideElement?.includes("delete") && canEdit && (
+          <>
+            <MenuDivider />
+            <MenuItem
+              icon={<FiTrash />}
+              color="red.300"
+              _hover={{ backgroundColor: "red.700" }}
+              onClick={onDelete}
+            >
+              {t("Delete Playlist")}
+            </MenuItem>
+          </>
+        )}
       </MenuList>
     </Menu>
   );

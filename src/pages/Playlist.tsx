@@ -194,6 +194,7 @@ export default function Playlist() {
           mb={2}
           playlist={playlist}
           canEdit={isLoggedIn && playlist.owner === user?.id}
+          canStar={isLoggedIn && playlist.owner !== user?.id}
           editMode={editMode}
           onPlayClick={() => {
             setPlaylist({ playlist });
@@ -211,6 +212,7 @@ export default function Playlist() {
           onFinishEditClick={() =>
             finishSongEditing(newSongIds, newTitle, newDescription)
           }
+          onAbortEditClick={() => setEditMode(false)}
         />
         {playlist.content &&
           (editMode ? (

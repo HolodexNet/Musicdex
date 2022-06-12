@@ -1,4 +1,4 @@
-import { Box, Text, Button } from "@chakra-ui/react";
+import { Box, Text, Button, IconButton } from "@chakra-ui/react";
 import axios from "axios";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
@@ -77,30 +77,43 @@ export default function Video() {
             }}
             mb={2}
           >
-            <Button
+            {[
+              {
+                title: t("Open in YouTube"),
+                ariaLabel: "open-on-youtube",
+                icon: <FiYoutube />,
+                onClick: () => window.open("https://youtu.be/" + video.id),
+              },
+              {
+                title: t("Open in Holodex"),
+                ariaLabel: "open-on-holodex",
+                icon: <LineLogo />,
+                onClick: () =>
+                  window.open("https://holodex.net/watch/" + video.id),
+              },
+            ]}
+            {/* <IconButton
               variant="ghost"
               aria-label="open-on-youtube"
+              icon={<FiYoutube />}
               size="md"
               colorScheme="gray"
               title={t("Open in YouTube")}
               onClick={() => {
                 window.open("https://youtu.be/" + video.id);
               }}
-            >
-              <FiYoutube />
-            </Button>
-            <Button
+            />
+            <IconButton
               variant="ghost"
               aria-label="open-on-holodex"
+              icon={<LineLogo />}
               size="md"
               colorScheme="gray"
               title={t("Open in Holodex")}
               onClick={() => {
                 window.open("https://holodex.net/watch/" + video.id);
               }}
-            >
-              <LineLogo width="18px" />
-            </Button>
+            /> */}
           </PlaylistButtonArray>
         )}
         <Suspense fallback={<div>{t("Loading...")}</div>}>

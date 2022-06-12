@@ -85,7 +85,10 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
             <VStack alignItems="start" spacing={1}>
               <span>{cellInfo.row.original?.name}</span>
               <Text color="whiteAlpha.600" fontWeight={300} fontSize="sm">
-                {cellInfo.row.original.channel?.name}
+                {tn(
+                  cellInfo.row.original.channel?.english_name,
+                  cellInfo.row.original.channel?.name
+                )}
               </Text>
             </VStack>
           );
