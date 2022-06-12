@@ -13,10 +13,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { FiEdit2, FiMoreHorizontal, FiShare2, FiTrash } from "react-icons/fi";
-import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
 import {
-  usePlaylistDeleter,
   usePlaylistStarUpdater,
   usePlaylistWriter,
 } from "../../modules/services/playlist.service";
@@ -50,10 +48,8 @@ export function PlaylistMoreControlsMenu({
 }) {
   const { t } = useTranslation();
   const { mutateAsync: write, isLoading } = usePlaylistWriter();
-  const { mutateAsync: del } = usePlaylistDeleter();
   const { mutateAsync: updateStar } = usePlaylistStarUpdater();
 
-  const navigate = useNavigate();
   const toast = useToast();
   const clip = useClipboardWithToast();
 

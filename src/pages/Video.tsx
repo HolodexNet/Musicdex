@@ -1,8 +1,8 @@
-import { Box, Text, Button, IconButton } from "@chakra-ui/react";
+import { Box, Text, Button, IconButton, VStack } from "@chakra-ui/react";
 import axios from "axios";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
-import { FiYoutube } from "react-icons/fi";
+import { FiTag, FiYoutube, FiExternalLink } from "react-icons/fi";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { LineLogo } from "../components/icons/LineLogo";
@@ -92,35 +92,14 @@ export default function Video() {
                   window.open("https://holodex.net/watch/" + video.id),
               },
             ]}
-            {/* <IconButton
-              variant="ghost"
-              aria-label="open-on-youtube"
-              icon={<FiYoutube />}
-              size="md"
-              colorScheme="gray"
-              title={t("Open in YouTube")}
-              onClick={() => {
-                window.open("https://youtu.be/" + video.id);
-              }}
-            />
-            <IconButton
-              variant="ghost"
-              aria-label="open-on-holodex"
-              icon={<LineLogo />}
-              size="md"
-              colorScheme="gray"
-              title={t("Open in Holodex")}
-              onClick={() => {
-                window.open("https://holodex.net/watch/" + video.id);
-              }}
-            /> */}
           </PlaylistButtonArray>
         )}
         <Suspense fallback={<div>{t("Loading...")}</div>}>
           {playlist?.content && <SongTable playlist={playlist} />}{" "}
         </Suspense>
         {!playlist && status.isError && (
-          <Box>
+          <VStack w="100%" h="100%" justify="center">
+            <FiTag size={40} />
             <Text>{t("Stream is not yet tagged with any songs.")}</Text>
             <Button
               variant="link"
@@ -128,10 +107,11 @@ export default function Video() {
               as="a"
               href={`https://holodex.net/edit/video/${video.id}/music`}
               target="_blank"
+              rightIcon={<FiExternalLink />}
             >
               {t("Help us tag it on Holodex")}
             </Button>
-          </Box>
+          </VStack>
         )}
       </ContainerInlay>
     </PageContainer>

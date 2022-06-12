@@ -6,7 +6,7 @@ import {
   useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
-import React, { ReactNode, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { FiPlay, FiShare2, FiTrash, FiEdit2, FiSave } from "react-icons/fi";
@@ -83,9 +83,10 @@ export function PlaylistButtonArray({
     [hideElement, responseButtonLv]
   );
 
-  let { user, isLoggedIn } = useClient();
+  let { isLoggedIn } = useClient();
   let { data: playlists } = useStarredPlaylists();
   const { mutateAsync: del } = usePlaylistDeleter();
+  const { mutateAsync: updateStar } = usePlaylistStarUpdater();
 
   const deletePlaylist = () => {
     // eslint-disable-next-line no-restricted-globals
@@ -124,10 +125,6 @@ export function PlaylistButtonArray({
     () => playlist.listed || playlist.owner === 1,
     [playlist]
   );
-
-  const showShare = useMemo(() => playlist.type !== ":history", [playlist]);
-
-  const { mutateAsync: updateStar } = usePlaylistStarUpdater();
 
   return (
     <HStack w="100%" spacing={4} {...rest}>
