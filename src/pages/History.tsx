@@ -47,6 +47,7 @@ export default function History() {
           <PlaylistButtonArray
             playlist={playlist}
             canEdit={false}
+            canStar={false}
             editMode={false}
             onPlayClick={() => {
               setPlaylist({ playlist });

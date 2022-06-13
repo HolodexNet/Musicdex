@@ -254,7 +254,7 @@ export const usePlaylistStarUpdater = (
     {
       ...callbacks,
       onSuccess: (data, payload, ...rest) => {
-        console.log("starred sucess");
+        console.log("starred success");
         queryClient.cancelQueries(["starredPlaylists"]);
         queryClient.invalidateQueries(["starredPlaylists"]);
         // queryClient.invalidateQueries([`likeSongStatus-${payload.song_id}`]);

@@ -1,4 +1,13 @@
-import { Box, Center, Code, Heading, useToast, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Code,
+  Heading,
+  useToast,
+  VStack,
+  Flex,
+  Text,
+} from "@chakra-ui/react";
 import React, {
   Suspense,
   useCallback,
@@ -194,6 +203,7 @@ export default function Playlist() {
           mb={2}
           playlist={playlist}
           canEdit={isLoggedIn && playlist.owner === user?.id}
+          canStar={isLoggedIn && playlist.owner !== user?.id}
           editMode={editMode}
           onPlayClick={() => {
             setPlaylist({ playlist });
@@ -211,9 +221,10 @@ export default function Playlist() {
           onFinishEditClick={() =>
             finishSongEditing(newSongIds, newTitle, newDescription)
           }
+          onAbortEditClick={() => setEditMode(false)}
         />
-        {playlist.content &&
-          (editMode ? (
+        {playlist.content?.length ? (
+          editMode ? (
             <Suspense fallback={<div>{t("Loading...")}</div>}>
               <SongEditableTable
                 songs={playlist.content}
@@ -222,7 +233,14 @@ export default function Playlist() {
             </Suspense>
           ) : (
             <SongTable playlist={playlist} virtualized />
-          ))}
+          )
+        ) : (
+          <Flex grow={1} align="center" justify="center">
+            <Text fontSize="2xl" color="whiteAlpha.500">
+              {t("No Songs")}
+            </Text>
+          </Flex>
+        )}
       </ContainerInlay>
     </PageContainer>
   );
