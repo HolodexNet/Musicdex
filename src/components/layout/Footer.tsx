@@ -6,7 +6,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { FaDiscord, FaTwitter } from "react-icons/fa";
+import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
 import { SiKofi } from "react-icons/si";
 import { ContainerInlay } from "./ContainerInlay";
 import GitInfo from "react-git-info/macro";
@@ -70,6 +70,14 @@ export default function Footer() {
               title="Discord"
               as="a"
               href="https://discord.gg/A24AbzgvRJ"
+              target="_blank"
+            />
+            <SocialButton
+              aria-label="GitHub"
+              icon={<FaGithub />}
+              title="GitHub"
+              as="a"
+              href="https://github.com/HolodexNet/Musicdex"
               target="_blank"
             />
           </Stack>
