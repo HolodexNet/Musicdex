@@ -142,10 +142,10 @@
   "... Other Orgs": "... Diğer Orglar",
   "Playlist is private and cannot be shared.": "Çalma listesi şu an gizli ve paylaşılamıyor.",
   "Added to liked songs": "Beğenilen şarkılara eklendi",
-  "Removed from liked songs": "Removed from liked songs",
-  "An error has occurred": "An error has occurred",
-  "Return to Home": "Return to Home",
-  "Add To Playlist": "Add To Playlist",
-  "... and {{count}} other": "... and {{count}} other",
-  "... and {{count}} other_plural": "... and {{count}} other"
+  "Removed from liked songs": "Beğenilen şarkılardan çıkarıldı",
+  "An error has occurred": "Bir hata oluştu",
+  "Return to Home": "Ana Sayfaya Dön",
+  "Add To Playlist": "Çalma Listesine Ekle",
+  "... and {{count}} other": "... ve {{count}} daha",
+  "... and {{count}} other_plural": "... ve {{count}} daha"
 }
