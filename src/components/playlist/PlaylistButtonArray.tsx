@@ -54,7 +54,14 @@ export function PlaylistButtonArray({
     [playlist]
   );
 
-  const showShare = useMemo(() => playlist.type !== ":history", [playlist]);
+  // covering future migrations of 'type' - i think we'll settle on <class>/<variant> naming strategy.
+  const showShare = useMemo(
+    () =>
+      playlist.type !== ":history" &&
+      playlist.type !== "history" &&
+      playlist.type !== "playlist/history",
+    [playlist]
+  );
 
   const { mutateAsync: updateStar } = usePlaylistStarUpdater();
 

@@ -43,8 +43,7 @@ export const PlaylistArtwork = React.memo(
     const { title, description, type } = useMemo(() => {
       let type;
       if (isSGPPlaylist(playlist.id!)) {
-        const { type: t } = parsePlaylistID(playlist.id!);
-        type = t;
+        type = parsePlaylistID(playlist.id!).type;
       }
       return {
         title: formatPlaylist("title", playlist),
@@ -59,7 +58,9 @@ export const PlaylistArtwork = React.memo(
     );
     const thumbnail = useMemo(() => {
       const videoId: string =
-        (playlist as any).videoids?.[0] || playlist.content?.[0].video_id;
+        (playlist as any).videoids?.[0] ||
+        playlist.art_context?.videos?.[0] ||
+        playlist.content?.[0].video_id;
       if (videoId) return getVideoThumbnails(videoId).medium;
       return null;
     }, [playlist]);
@@ -117,7 +118,7 @@ export const PlaylistArtwork = React.memo(
     return (
       <OverlayTextArt
         titleText={title || ""}
-        imageUrl={thumbnail || channelImg || ""}
+        imageUrl={channelImg || thumbnail || ""}
         showUserIcon={playlist.type === "ugp"}
         iconType={iconType}
         {...props}
