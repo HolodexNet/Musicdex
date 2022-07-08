@@ -18,12 +18,15 @@ import { PlaylistCreateModal } from "../components/playlist/PlaylistCreateForm";
 import { useTranslation } from "react-i18next";
 import { RiPlayListFill } from "react-icons/ri";
 import { Helmet } from "react-helmet-async";
+import { useStoreActions } from "../store";
 
 export default function Library() {
   const { t } = useTranslation();
   const { data: playlistList, ...status } = useMyPlaylists();
   const { data: starredList } = useStarredPlaylists();
-  const { onOpen, ...modalProps } = useDisclosure();
+  const openModal = useStoreActions(
+    (actions) => actions.playlist.showPlaylistCreateDialog
+  );
   return (
     <PageContainer>
       <Helmet>
@@ -34,8 +37,8 @@ export default function Library() {
           <Icon as={RiPlayListFill} marginBottom={-1} marginRight={2} />
           {t("Library")}
         </Heading>
-        <PlaylistCreateModal {...modalProps} />
-        <Button onClick={onOpen} maxW="200px">
+        <PlaylistCreateModal />
+        <Button onClick={() => openModal()} maxW="200px">
           {t("Create Playlist")}
         </Button>
         {status.isLoading ? (

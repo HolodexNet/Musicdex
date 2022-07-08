@@ -16,9 +16,10 @@ import {
   useRef,
   useState,
 } from "react";
-import { useLocation } from "react-router-dom";
+import { useHotkeys } from "react-hotkeys-hook";
+import { useLocation, useNavigate } from "react-router-dom";
 import { YouTubePlayer } from "youtube-player/dist/types";
-import { useStoreState } from "../../store";
+import { useStoreState, useStoreActions } from "../../store";
 import { SongContextMenu } from "../song/SongContextMenu";
 import { GlobalLoadingStatus } from "../common/GlobalLoadingStatus";
 import { MotionBox } from "../common/MotionBox";
@@ -29,6 +30,7 @@ import { SidebarContent } from "../nav/Sidebar";
 import { Player } from "../player/Player";
 import { YoutubePlayer } from "../player/YoutubePlayer";
 import { AddToPlaylistModal } from "../playlist/AddToPlaylistModal";
+import { useClient } from "../../modules/client";
 import Footer from "./Footer";
 
 const POSITIONS: { [key: string]: ChakraProps } = {
@@ -67,7 +69,7 @@ const POSITIONS: { [key: string]: ChakraProps } = {
     position: "fixed",
     top: "calc(40vh/2 - min(40vh, calc(100vw * .5625))/2 + 56px + env(safe-area-inset-top))",
     left: { base: "0", lg: "6" },
-    width: { base: "100vw", lg: "calc(50vw - 2rem)" },
+    width: { base: "100vw", lg: "calc(50vw - 2.75rem)" },
     h: "min(40vh, calc(100vw * .5625))",
     zIndex: 15,
   },
@@ -82,6 +84,7 @@ export const FrameRef = createContext<any>(null);
 
 export default function Frame({ children }: { children?: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const client = useClient();
 
   const colorMode = useColorModeValue("applight", "appdark");
   const showBottomNav = useBreakpointValue({
@@ -97,6 +100,8 @@ export default function Frame({ children }: { children?: ReactNode }) {
   // START: Scroll Set to 0 every navigation
   const { pathname } = useLocation();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     frameRef.current?.scrollTo(0, 0);
   }, [pathname]);
@@ -106,6 +111,10 @@ export default function Frame({ children }: { children?: ReactNode }) {
 
   const currentlyPlaying = useStoreState(
     (state) => state.playback.currentlyPlaying
+  );
+
+  const showCreateDialog = useStoreActions(
+    (actions) => actions.playlist.showPlaylistCreateDialog
   );
 
   // Lazy load the player, wait for first song to be played
@@ -124,6 +133,33 @@ export default function Frame({ children }: { children?: ReactNode }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, onClose]);
+
+  // Keyboard shortcut
+  // Follows spotify keyboard shortcuts
+  useHotkeys(
+    "ctrl+n, cmd+n, ctrl+l, cmd+l, cmd+alt+f, ctrl+p, cmd+,, ctrl+shift+w, cmd+shift+w",
+    (e, handler) => {
+      e.preventDefault();
+
+      switch (handler.key) {
+        case "ctrl+n":
+        case "cmd+n":
+          // Create new playlist
+          showCreateDialog();
+          break;
+        case "ctrl+p":
+        case "cmd+,":
+          // Go to settings page
+          navigate("/settings");
+          break;
+        case "ctrl+shift+w":
+        case "cmd+shift+w":
+          // Logout
+          client.logout();
+      }
+    },
+    [client]
+  );
 
   return (
     <Box

@@ -36,6 +36,7 @@ interface PlayerBarProps {
   togglePlay: () => void;
   seconds: string;
   volume: number;
+  muted: boolean;
   onVolumeChange: (e: number) => void;
   totalDuration: number;
 }
@@ -51,6 +52,7 @@ export const PlayerBar = React.memo(
     togglePlay,
     seconds,
     volume,
+    muted,
     onVolumeChange,
     totalDuration,
   }: PlayerBarProps) => {
@@ -161,8 +163,12 @@ export const PlayerBar = React.memo(
                     mr={2}
                     display={{ base: "none", md: "block" }}
                   >
-                    <VStack spacing={-1}>
-                      <VolumeSlider volume={volume} onChange={onVolumeChange} />
+                    <VStack spacing={0}>
+                      <VolumeSlider
+                        volume={volume}
+                        muted={muted}
+                        onChange={onVolumeChange}
+                      />
                       <Text
                         fontSize=".85em"
                         display="inline-block"

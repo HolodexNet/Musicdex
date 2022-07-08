@@ -37,10 +37,10 @@ export const AddToPlaylistModal: React.FC = () => {
   const { mutateAsync: writeNewPlaylist } = usePlaylistWriter();
   const { mutateAsync } = usePlaylistUpdater();
 
-  const song = useStoreState((state) => state.addPlaylist.songToAdd);
-  const showDialog = useStoreState((state) => state.addPlaylist.dialogShow);
+  const song = useStoreState((state) => state.playlist.songToAdd);
+  const showDialog = useStoreState((state) => state.playlist.addDialogShow);
   const close = useStoreActions(
-    (actions) => actions.addPlaylist.clearPlaylistAddDialog
+    (actions) => actions.playlist.clearPlaylistAddDialog
   );
 
   const [selectedPlaylistId, setSelectedPlaylist] = useState<

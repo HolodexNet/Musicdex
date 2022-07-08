@@ -91,13 +91,12 @@ export default function Radio() {
         <PlaylistHeading
           title={title || t("Untitled Playlist")}
           description={description || ""}
-          canEdit={false}
-          editMode={false}
           count={0}
         />
         <PlaylistButtonArray
           mb={2}
           playlist={playlist}
+          hideElement={["addToQueue", "delete", "edit"]}
           canEdit={false}
           editMode={false}
           onPlayClick={() => {
