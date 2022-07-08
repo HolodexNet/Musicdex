@@ -26,7 +26,7 @@ export function PlaylistButtonArray({
   ...rest
 }: {
   onPlayClick: ClickEventHandler;
-  onAddQueueClick: ClickEventHandler;
+  onAddQueueClick?: ClickEventHandler;
   onEditClick?: ClickEventHandler;
   onFinishEditClick?: ClickEventHandler;
   editMode: boolean;
@@ -77,6 +77,7 @@ export function PlaylistButtonArray({
         {t("Play")}
       </Button>
       <Button
+        display={onAddQueueClick ? "block" : "none"}
         variant="ghost"
         aria-label="add to queue"
         size="md"

@@ -183,6 +183,32 @@ export const usePlaylist = (
   return result;
 };
 
+export const useRadio = (
+  radioId: string | undefined,
+  config: UseQueryOptions<PlaylistFull, unknown, PlaylistFull, string[]> = {}
+) => {
+  const { AxiosInstance } = useClient();
+  const result = useQuery(
+    ["radio", radioId!],
+    async (q): Promise<PlaylistFull> => {
+      const playlistUrl = `/musicdex/radio/${radioId}`;
+
+      // Not logged in, just request
+      return (await AxiosInstance<PlaylistFull>(playlistUrl)).data;
+    },
+    {
+      ...DEFAULT_FETCH_CONFIG,
+      ...config,
+      cacheTime: 1000 * 60 * 2, //2 min cache.
+      keepPreviousData: true,
+      staleTime: 1000 * 45, // 45s staleness.
+      enabled: radioId !== undefined,
+    }
+  );
+
+  return result;
+};
+
 export const useMyPlaylists = (
   config: UseQueryOptions<
     PlaylistFull[],

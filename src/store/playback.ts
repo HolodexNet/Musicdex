@@ -5,6 +5,7 @@ interface SongPlayback {
   song?: Song;
   repeat: number;
 }
+
 export interface PlaybackModel {
   // ==== Currently Playing. It is separate from queue and playlistQueue.
   currentlyPlaying: SongPlayback;
@@ -48,7 +49,7 @@ export interface PlaybackModel {
   // Adds a new song to now playing.
   _insertCurrentlyPlaying: Action<
     PlaybackModel,
-    "playlist" | "queue" | "repeat-one"
+    "playlist" | "queue" | "repeat-one" | "radio"
   >;
   // Forcibly insert a song into now playing.
   _forceInsertCurrentlyPlaying: Action<PlaybackModel, Song>;
@@ -277,6 +278,11 @@ const playbackModel: PlaybackModel = {
         state.currentlyPlaying.from = "playlist";
         state.currentlyPlaying.song = state.playlistQueue.shift();
         state.currentlyPlaying.repeat++;
+      } else if (src === "radio") {
+        // never use playedPlaylistQueue for radio.
+        state.currentlyPlaying.from = "playlist";
+        state.currentlyPlaying.song = state.playlistQueue.shift();
+        state.currentlyPlaying.repeat++;
       }
     }
   }),
@@ -339,22 +345,34 @@ const playbackModel: PlaybackModel = {
 
   setPlaylist: thunk((actions, { playlist, startPos }, h) => {
     actions._ejectCurrentlyPlaying();
-    actions.clearAll();
+    actions.clearPlaylist();
 
-    if (startPos === undefined) {
-      actions._setPlaylist(playlist);
-      actions._insertCurrentlyPlaying("playlist");
-    } else {
-      const oldShuffleMode = h.getState().shuffleMode;
-      actions._setShuffleMode(false);
-      actions._setPlaylist(playlist);
-      actions._insertCurrentlyPlaying("playlist");
-      while (startPos > 0) {
-        actions._prepareEject();
+    if (playlist.type === "ugp" || playlist.type.startsWith("playlist")) {
+      if (startPos === undefined) {
+        actions._setPlaylist(playlist);
         actions._insertCurrentlyPlaying("playlist");
-        startPos--;
+      } else {
+        const oldShuffleMode = h.getState().shuffleMode;
+        actions._setShuffleMode(false);
+        actions._setPlaylist(playlist);
+        actions._insertCurrentlyPlaying("playlist");
+        while (startPos > 0) {
+          actions._prepareEject();
+          actions._insertCurrentlyPlaying("playlist");
+          startPos--;
+        }
+        actions._setShuffleMode(oldShuffleMode);
       }
-      actions._setShuffleMode(oldShuffleMode);
+    } else if (playlist.type.startsWith("radio")) {
+      // assume startPos doesn't exist?
+      // unset shuffle (or maybe turn off canShuffle)
+      actions._setShuffleMode(false);
+      // set radio to current playlist
+      actions._setPlaylist(playlist);
+      // unset repeat if on repeat-all (or turn off canRepeatAll)
+      if (h.getState().repeatMode === "repeat") actions._setRepeatMode("none");
+
+      actions._insertCurrentlyPlaying("radio");
     }
   }),
 
@@ -374,13 +392,20 @@ const playbackModel: PlaybackModel = {
           h.getState().playedPlaylistQueue.length >
         0;
       const isRepeatOne = h.getState().repeatMode === "repeat-one";
-      const src = hasQ
-        ? "queue"
-        : hasPlaylist
-        ? "playlist"
-        : isRepeatOne
-        ? "repeat-one"
-        : undefined;
+      const playlistIsRadio = h
+        .getState()
+        .currentPlaylist?.type.startsWith("radio");
+      // next function prioritizes Queue over Playlist.
+
+      let src: "queue" | "playlist" | "repeat-one" | "radio" | undefined;
+      if (hasQ) {
+        src = "queue";
+      } else {
+        if (hasPlaylist) {
+          src = playlistIsRadio ? "radio" : "playlist";
+        } else if (isRepeatOne) src = "repeat-one";
+      }
+
       // console.log("considering next song from", src);
       if (src) {
         actions._prepareEject();
@@ -390,6 +415,9 @@ const playbackModel: PlaybackModel = {
       }
       count--;
     }
+
+    // check if radio needs filling with more?
+
     if (userSkipped) {
       actions._setRepeatMode(oldRepeatMode);
     }
