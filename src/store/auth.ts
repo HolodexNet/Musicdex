@@ -8,6 +8,7 @@ export interface AuthModel {
   user: User | null;
 
   isLoggedIn: Computed<AuthModel, boolean>;
+  authHeader: Computed<AuthModel, { Authorization?: string }>;
 
   setToken: Action<AuthModel, string | null>;
   setLastCookieToken: Action<AuthModel, string | null>;
@@ -20,7 +21,9 @@ const authModel: AuthModel = {
   lastCookieToken: null,
 
   isLoggedIn: computed((state) => state.user != null),
-
+  authHeader: computed((state) =>
+    state.token ? { Authorization: `Bearer ${state.token}` } : {}
+  ),
   setToken: action((state, payload) => {
     state.token = payload;
   }),

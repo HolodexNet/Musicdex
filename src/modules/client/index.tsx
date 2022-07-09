@@ -36,6 +36,7 @@ const BASE_URL = `${window.location.protocol}//${window.location.host}/api/v2`;
 export function useClient() {
   const isLoggedIn = useStoreState((state) => state.auth.isLoggedIn);
   const user = useStoreState((state) => state.auth.user);
+  const authHeader = useStoreState((state) => state.auth.authHeader);
   const token = useStoreState((state) => state.auth.token);
 
   const setUser = useStoreActions((actions) => actions.auth.setUser);
@@ -52,12 +53,12 @@ export function useClient() {
         ...config,
         headers: {
           ...config?.headers,
-          ...(token && { Authorization: `Bearer ${token}` }),
+          ...authHeader,
         },
       };
       return axios(url, configWithUser);
     },
-    [token]
+    [authHeader]
   );
 
   const logout = useCallback(() => {

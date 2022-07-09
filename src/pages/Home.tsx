@@ -69,6 +69,17 @@ export default function Home() {
 
   const { data: discovery, ...discoveryStatus } = useDiscoveryOrg(org.name);
 
+  const recPlaylists = useMemo(() => {
+    return discovery?.recommended?.playlists.filter(
+      (x: PlaylistStub) => !x.type.startsWith("radio")
+    );
+  }, [discovery]);
+  const recRadios = useMemo(() => {
+    return discovery?.recommended?.playlists.filter((x: PlaylistStub) =>
+      x.type.startsWith("radio")
+    );
+  }, [discovery]);
+
   return (
     <PageContainer>
       <Helmet>
@@ -104,17 +115,34 @@ export default function Home() {
             width={160}
             scrollMultiplier={isMobile ? 2 : 4}
           >
-            {discovery?.recommended?.playlists?.map(
-              (p: Partial<PlaylistFull>) => (
+            {recPlaylists?.map((p: Partial<PlaylistFull>) => (
+              <PlaylistCard
+                playlist={p}
+                key={"rec" + p.id}
+                mx={["2px", null, 1, 2]}
+              />
+            ))}
+          </CardCarousel>
+        </HomeSection>
+
+        {recRadios && (
+          <HomeSection>
+            <HomeHeading>{t("Radios")}</HomeHeading>
+            <CardCarousel
+              height={210}
+              width={160}
+              scrollMultiplier={isMobile ? 2 : 4}
+            >
+              {recRadios?.map((p: Partial<PlaylistFull>) => (
                 <PlaylistCard
                   playlist={p}
                   key={"rec" + p.id}
                   mx={["2px", null, 1, 2]}
                 />
-              )
-            )}
-          </CardCarousel>
-        </HomeSection>
+              ))}
+            </CardCarousel>
+          </HomeSection>
+        )}
 
         <HomeSection>
           <HStack alignItems="flex-end" mb={3}>
@@ -169,27 +197,6 @@ export default function Home() {
             ))}
           </CardCarousel>
         </HomeSection>
-
-        {discovery?.recommended?.radios && (
-          <HomeSection>
-            <HomeHeading>{t("Radios at Musicdex")}</HomeHeading>
-            <CardCarousel
-              height={210}
-              width={160}
-              scrollMultiplier={isMobile ? 2 : 4}
-            >
-              {discovery?.recommended?.radios?.map(
-                (p: Partial<PlaylistFull>) => (
-                  <PlaylistCard
-                    playlist={p}
-                    key={"rec" + p.id}
-                    mx={["2px", null, 1, 2]}
-                  />
-                )
-              )}
-            </CardCarousel>
-          </HomeSection>
-        )}
       </ContainerInlay>
     </PageContainer>
   );

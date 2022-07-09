@@ -20,8 +20,15 @@ type RadioTypes = ":artist" | ":hot";
 
 const DEFAULT_PARAM_PARSER = (playlistId: string) =>
   parsePlaylistID(playlistId).params;
-const DEFAULT_DISC_PARSER = <T1,>(x: string | undefined) =>
-  x ? (JSON.parse(x) as T1) : undefined;
+const DEFAULT_DISC_PARSER = <T1,>(x: string | undefined) => {
+  if (x) {
+    try {
+      return JSON.parse(x) as T1;
+    } catch (_) {
+      return x;
+    }
+  } else return undefined;
+};
 
 const DEF_PARSER_GROUP = {
   descParser: DEFAULT_DISC_PARSER,

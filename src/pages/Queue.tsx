@@ -132,7 +132,10 @@ export const Queue = React.memo(() => {
             <Flex mt={4} alignItems="center">
               <Text fontSize={["md", "lg"]} noOfLines={1}>
                 <Text opacity={0.66} as={"span"}>
-                  {t("Playlist")}:
+                  {currentPlaylist.type.startsWith("radio")
+                    ? t("Radio")
+                    : t("Playlist")}
+                  :&nbsp;
                 </Text>
                 <Text
                   fontWeight={600}
