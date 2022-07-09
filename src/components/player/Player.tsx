@@ -1,4 +1,5 @@
 import { usePrevious, useToast } from "@chakra-ui/react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { useStoreState, useStoreActions, store } from "../../store";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import PlayerStates from "youtube-player/dist/constants/PlayerStates";
@@ -23,7 +24,18 @@ export function Player({ player }: { player: any }) {
   const repeat = useStoreState(
     (state) => state.playback.currentlyPlaying.repeat
   );
+  const previous = useStoreActions((actions) => actions.playback.previous);
   const next = useStoreActions((actions) => actions.playback.next);
+  const toggleShuffleMode = useStoreActions(
+    (acitons) => acitons.playback.toggleShuffle
+  );
+  const toggleRepeatMode = useStoreActions(
+    (actions) => actions.playback.toggleRepeat
+  );
+
+  const setFullPlayer = useStoreActions(
+    (actions) => actions.player.setFullPlayer
+  );
 
   const totalDuration = useMemo(
     () => (currentSong ? currentSong.end - currentSong.start : 0),
@@ -32,8 +44,15 @@ export function Player({ player }: { player: any }) {
 
   const { mutate: trackSong, isSuccess, isError, isLoading } = useTrackSong();
 
-  const { currentVideo, state, currentTime, setError, hasError, volume } =
-    usePlayer(player);
+  const {
+    currentVideo,
+    state,
+    currentTime,
+    setError,
+    hasError,
+    volume,
+    muted,
+  } = usePlayer(player);
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volumeSlider, setVolumeSlider] = useState(0);
@@ -130,7 +149,14 @@ export function Player({ player }: { player: any }) {
       setOverridePos("hidden");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, currentSong, repeat, setError]);
+  }, [
+    player?.playVideo,
+    player?.loadVideoById,
+    player?.pauseVideo,
+    currentSong,
+    repeat,
+    setError,
+  ]);
 
   // CurrentTime Event
   useEffect(() => {
@@ -247,7 +273,16 @@ export function Player({ player }: { player: any }) {
       setProgress(e);
       player?.seekTo(currentSong.start + (e / 100) * totalDuration, true);
     },
-    [currentSong, player, totalDuration]
+    [currentSong, player?.seekTo, totalDuration]
+  );
+
+  const onVolumeChange = useCallback(
+    (e) => {
+      player?.unMute();
+      player?.setVolume(e);
+      setVolumeSlider(e);
+    },
+    [player, setVolumeSlider]
   );
 
   const seconds = useMemo(() => {
@@ -262,6 +297,108 @@ export function Player({ player }: { player: any }) {
     setIsPlaying((prev) => !prev);
   }, [currentSong, firstLoadPauseId, isPlaying, player]);
 
+  // Keyboard shortcuts
+  // Follows spotify keyboard shortcuts
+  // Toggle playing status
+  useHotkeys(
+    "space",
+    (e) => {
+      e.preventDefault();
+      togglePlay();
+    },
+    [currentSong, firstLoadPauseId, isPlaying, player]
+  );
+
+  // Toggle repeat / shuffle mode
+  useHotkeys("ctrl+r, cmd+r, ctrl+s, cmd+s", (e, handler) => {
+    e.preventDefault();
+
+    switch (handler.key) {
+      case "ctrl+r":
+      case "cmd+r":
+        toggleRepeatMode();
+        break;
+
+      case "ctrl+s":
+      case "cmd+s":
+        toggleShuffleMode();
+        break;
+    }
+  });
+
+  // Change volume
+  useHotkeys(
+    "ctrl+up, cmd+up, ctrl+down, cmd+down, ctrl+shift+up, cmd+shift+up, ctrl+shift+down, cmd+shift+down",
+    (e, handler) => {
+      e.preventDefault();
+      const currentVol = player?.getVolume() ?? 100;
+      switch (handler.key) {
+        case "ctrl+up":
+        case "cmd+up":
+          player?.unMute();
+          player?.setVolume(currentVol !== 100 ? currentVol + 5 : 100);
+          break;
+        case "ctrl+down":
+        case "cmd+down":
+          player?.unMute();
+          player?.setVolume(currentVol !== 0 ? currentVol - 5 : 0);
+          break;
+        case "ctrl+shift+up":
+        case "cmd+shift+up":
+          // Unmute / Max volume (when unmuted)
+          muted ? player?.unMute() : player?.setVolume(100);
+          break;
+        case "ctrl+shift+down":
+        case "cmd+shift+down":
+          player?.mute();
+          break;
+      }
+    },
+    [volumeSlider, muted]
+  );
+
+  // Forward / Reward tracks
+  useHotkeys(
+    "ctrl+left, cmd+left, ctrl+right, cmd+right",
+    (e, handler) => {
+      e.preventDefault();
+
+      switch (handler.key) {
+        case "ctrl+left":
+        case "cmd+left":
+          if (player && currentSong) {
+            if (progress <= 2) {
+              previous();
+            } else {
+              player.seekTo(currentSong.start, true);
+              setProgress(0);
+            }
+          }
+          break;
+        case "ctrl+right":
+        case "cmd+right":
+          next({ count: 1, userSkipped: true });
+          break;
+      }
+    },
+    [player, currentSong, progress]
+  );
+
+  // Open / Close full-screen player
+  useHotkeys("f, esc", (e, handler) => {
+    e.preventDefault();
+    switch (handler.key) {
+      case "f":
+        setFullPlayer(true);
+        setOverridePos("full-player");
+        break;
+      case "esc":
+        setFullPlayer(false);
+        setOverridePos(undefined);
+        break;
+    }
+  });
+
   return (
     <PlayerBar
       progress={progress}
@@ -274,11 +411,8 @@ export function Player({ player }: { player: any }) {
       seconds={seconds}
       totalDuration={totalDuration}
       volume={volumeSlider}
-      onVolumeChange={(e) => {
-        player?.unMute();
-        player?.setVolume(e);
-        setVolumeSlider(e);
-      }}
+      muted={muted}
+      onVolumeChange={onVolumeChange}
     />
   );
 }

@@ -16,6 +16,7 @@ export function LoginButtons() {
         <Button
           w={"full"}
           h={30}
+          mb={4}
           colorScheme={"purple"}
           leftIcon={<FaDiscord />}
           onClick={DiscordOAuth}
@@ -28,7 +29,7 @@ export function LoginButtons() {
 
       {/* Google */}
       {GoogleAuthFn && (
-        <GoogleButton onCredentialResponse={GoogleAuthFn} my={4}></GoogleButton>
+        <GoogleButton onCredentialResponse={GoogleAuthFn} mb={4}></GoogleButton>
       )}
 
       {/* LinkedIn */}
@@ -36,6 +37,7 @@ export function LoginButtons() {
         <Button
           w={"full"}
           h={30}
+          mb={4}
           colorScheme={"twitter"}
           leftIcon={<FaTwitter />}
           onClick={TwitterAuth}

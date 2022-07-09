@@ -34,9 +34,7 @@ export default function LikedSongs() {
         <PlaylistHeading
           title={t("Liked Songs")}
           description={""}
-          canEdit={false}
           count={0}
-          editMode={false}
         ></PlaylistHeading>
         {status.isLoading ? (
           <QueryStatus queryStatus={status} />

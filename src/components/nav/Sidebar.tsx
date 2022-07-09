@@ -25,7 +25,7 @@ import {
 import { NavItem } from "./NavItem";
 import { OrgSelector } from "./OrgSelector";
 import { useLocation } from "react-router-dom";
-import { useStoreState } from "../../store";
+import { useStoreActions, useStoreState } from "../../store";
 import { AnimatePresence } from "framer-motion";
 
 import { Flex, useColorModeValue } from "@chakra-ui/react";
@@ -73,7 +73,9 @@ export function SidebarContent({
   const { pathname } = useLocation();
   const isDragging = useStoreState((s) => s.dnd.dragging);
   const toast = useToast();
-  const { onOpen: openModal, ...modalProps } = useDisclosure();
+  const openModal = useStoreActions(
+    (actions) => actions.playlist.showPlaylistCreateDialog
+  );
   return (
     <Box
       display="flex"
@@ -121,9 +123,9 @@ export function SidebarContent({
       </NavItem>
       <Divider mb={2} />
       <Flex flexDirection="column" overflowY="auto" flex="1">
-        <PlaylistCreateModal {...modalProps} />
+        <PlaylistCreateModal />
         <NavItem
-          key="playlist"
+          key="playlist-create-item"
           icon={FiPlusCircle}
           onClick={(e) => {
             if (!user?.id)
@@ -139,6 +141,7 @@ export function SidebarContent({
           mx="2"
           px="2"
           py="2"
+          path="#"
         >
           {t("Create New Playlist") as string}
         </NavItem>
@@ -147,6 +150,7 @@ export function SidebarContent({
             <PlaylistList
               playlistStubs={playlistList as any}
               vibe={isDragging}
+              editable={true}
             />
           )}
           <Divider my={2} />

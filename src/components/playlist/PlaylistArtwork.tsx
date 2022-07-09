@@ -13,6 +13,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
 import { BiCalendar, BiMovie } from "react-icons/bi";
+import { GiSoundWaves } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
 import useNamePicker from "../../modules/common/useNamePicker";
 import {
@@ -23,17 +24,18 @@ import {
 } from "../../modules/playlist/useFormatPlaylist";
 import { getVideoThumbnails } from "../../utils/SongHelper";
 import { LineLogo } from "../icons/LineLogo";
+import { FiRadio } from "react-icons/fi";
 
 interface PlaylistArtworkProps extends FlexProps {
   playlist: Partial<PlaylistFull>;
-  renderType?: "dropShadowText" | "auto";
+  // renderType?: "dropShadowText" | "auto"; (not being used anywhere?)
   size?: string;
 }
 
 export const PlaylistArtwork = React.memo(
   ({
     playlist,
-    renderType = "auto",
+    // renderType = "auto",
     size = "148px",
     ...rest
   }: PlaylistArtworkProps) => {
@@ -43,8 +45,7 @@ export const PlaylistArtwork = React.memo(
     const { title, description, type } = useMemo(() => {
       let type;
       if (isSGPPlaylist(playlist.id!)) {
-        const { type: t } = parsePlaylistID(playlist.id!);
-        type = t;
+        type = parsePlaylistID(playlist.id!).type;
       }
       return {
         title: formatPlaylist("title", playlist),
@@ -59,7 +60,9 @@ export const PlaylistArtwork = React.memo(
     );
     const thumbnail = useMemo(() => {
       const videoId: string =
-        (playlist as any).videoids?.[0] || playlist.content?.[0].video_id;
+        (playlist as any).videoids?.[0] ||
+        playlist.art_context?.videos?.[0] ||
+        playlist.content?.[0].video_id;
       if (videoId) return getVideoThumbnails(videoId).medium;
       return null;
     }, [playlist]);
@@ -114,10 +117,22 @@ export const PlaylistArtwork = React.memo(
       iconType = BiCalendar;
     }
 
+    if (type === ":artist" || type === ":hot") {
+      iconType = GiSoundWaves;
+      return (
+        <RadioTextArt
+          titleText={title || ""}
+          imageUrl={channelImg || thumbnail || ""}
+          showUserIcon={playlist.type === "ugp"}
+          iconType={iconType}
+          {...props}
+        />
+      );
+    }
     return (
       <OverlayTextArt
         titleText={title || ""}
-        imageUrl={thumbnail || channelImg || ""}
+        imageUrl={channelImg || thumbnail || ""}
         showUserIcon={playlist.type === "ugp"}
         iconType={iconType}
         {...props}
@@ -214,6 +229,101 @@ function OverlayTextArt({
   );
 }
 
+function RadioTextArt({
+  titleText,
+  imageUrl,
+  showUserIcon = false,
+  iconType = undefined,
+  ...rest
+}: {
+  titleText: string;
+  imageUrl: string;
+  showUserIcon: boolean;
+  iconType?: IconType;
+} & FlexProps) {
+  const bgColor =
+    titleText.length % 2 === 0
+      ? "var(--chakra-colors-n2-600)"
+      : "var(--chakra-colors-brand-600)";
+
+  const adjFontSize = Math.max(
+    16,
+    Math.round(-Math.pow(titleText.length / 15, 2) + 20)
+  );
+  return (
+    <Flex
+      position="relative"
+      flexBasis="148px"
+      minWidth="148px"
+      width="100%"
+      flexDirection={"column"}
+      flexGrow={1}
+      overflow="hidden"
+      {...rest}
+    >
+      <Image
+        src={imageUrl}
+        objectFit="cover"
+        loading="lazy"
+        top="0"
+        height="100%"
+        width="100%"
+        position="absolute"
+        // style={{maskImage: 'url(#line-logo)', maskRepeat: 'repeat'}}
+      />
+      <BrandColorGradientText
+        bgColor={bgColor}
+        opacity={0.5}
+      ></BrandColorGradientText>
+      <Box p={2} position="absolute" mt={3} width="100%">
+        <Text
+          fontSize={adjFontSize}
+          fontWeight={600}
+          textAlign="center"
+          noOfLines={2}
+        >
+          {titleText}
+        </Text>
+      </Box>
+      {showUserIcon ? (
+        <Icon
+          as={FaUser}
+          w={6}
+          h={6}
+          position="absolute"
+          left="4px"
+          bottom="4px"
+          opacity={0.4}
+        ></Icon>
+      ) : (
+        <LineLogo
+          position="absolute"
+          w={6}
+          h={6}
+          left="4px"
+          bottom="4px"
+          color="var(--chakra-colors-bg-800)"
+          zIndex={1}
+        />
+      )}
+      {iconType && (
+        <Icon
+          width="120px"
+          height="120px"
+          margin-bottom="2px"
+          // transform={`translate(50%, 100%)`}
+          blendMode="soft-light"
+          color="bg.800"
+          bottom="-61px"
+          position="absolute"
+          right="10px"
+          as={iconType}
+        ></Icon>
+      )}
+    </Flex>
+  );
+}
+
 function StackedTextArt({
   typeText,
   titleText,
@@ -296,13 +406,16 @@ function StackedTextArt({
   );
 }
 
-const BrandColorGradientText = styled.div<{ bgColor: string }>`
+const BrandColorGradientText = styled.div<{
+  bgColor: string;
+  opacity?: number;
+}>`
   mix-blend-mode: multiply;
   position: absolute;
   height: 100%;
   width: 100%;
   background-color: ${({ bgColor }) => bgColor};
-  opacity: 0.7;
+  opacity: ${({ opacity }) => opacity || 0.7};
 
   &::after {
     background-image: linear-gradient(

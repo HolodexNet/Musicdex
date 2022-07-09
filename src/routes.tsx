@@ -11,6 +11,7 @@ import Library from "./pages/Library";
 import { RequireLogin } from "./components/login/RequireLogin";
 import Channels from "./pages/Channels";
 
+const Radio = React.lazy(() => import("./pages/Radio"));
 const Channel = React.lazy(() => import("./pages/Channel"));
 // const History = React.lazy(() => import("./pages/History"));
 // const Home = React.lazy(() => import("./pages/Home"));
@@ -21,6 +22,7 @@ const Settings = React.lazy(() => import("./pages/Settings"));
 // const Song = React.lazy(() => import("./pages/Song"));
 // const Video = React.lazy(() => import("./pages/Video"));
 const Search = React.lazy(() => import("./pages/Search"));
+const SearchV2 = React.lazy(() => import("./pages/Search2"));
 
 const routes: RouteObject[] = [
   {
@@ -34,6 +36,10 @@ const routes: RouteObject[] = [
   {
     path: "/playlists/:playlistId",
     element: <Playlist />,
+  },
+  {
+    path: "/radio/:radioId",
+    element: <Radio />,
   },
   {
     path: "/song/:songId",
@@ -58,6 +64,10 @@ const routes: RouteObject[] = [
   {
     path: "/search",
     element: <Search />,
+  },
+  {
+    path: "/searchV2",
+    element: <SearchV2 />,
   },
   {
     path: "/video/:id",

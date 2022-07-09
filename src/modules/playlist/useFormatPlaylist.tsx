@@ -16,10 +16,19 @@ type SGPTypes =
   | ":latest"
   | ":mv";
 
+type RadioTypes = ":artist" | ":hot";
+
 const DEFAULT_PARAM_PARSER = (playlistId: string) =>
   parsePlaylistID(playlistId).params;
-const DEFAULT_DISC_PARSER = <T1,>(x: string | undefined) =>
-  x ? (JSON.parse(x) as T1) : undefined;
+const DEFAULT_DISC_PARSER = <T1,>(x: string | undefined) => {
+  if (x) {
+    try {
+      return JSON.parse(x) as T1;
+    } catch (_) {
+      return x;
+    }
+  } else return undefined;
+};
 
 const DEF_PARSER_GROUP = {
   descParser: DEFAULT_DISC_PARSER,
@@ -38,12 +47,12 @@ const IDSplitter = /[[\]]/;
  * @returns generator type and params object
  */
 export function parsePlaylistID(id: string): {
-  type: SGPTypes;
+  type: SGPTypes | RadioTypes;
   params: any;
 } {
   const [type, paramString] = id.split(IDSplitter);
   return {
-    type: type as any,
+    type: type as SGPTypes | RadioTypes,
     params: paramString ? qs.parse(paramString.split(",").join("&")) : {},
   };
 }
@@ -54,7 +63,10 @@ export function parsePlaylistID(id: string): {
  * @param params any playlist params
  * @returns string id
  */
-export function formatPlaylistID(type: SGPTypes, params: Record<string, any>) {
+export function formatPlaylistID(
+  type: SGPTypes | RadioTypes,
+  params: Record<string, any>
+) {
   return `${String(type)}[${qs.stringify(params)}]`;
 }
 
@@ -107,6 +119,7 @@ export function usePlaylistTitleDesc(playlist: PlaylistLike | undefined) {
   };
 }
 
+// @TODO Ricecakes I have no idea what these formatters are doing. There's a formatters.default, why are we not using that? why use DEF_PARSER_GROUP?
 export function parsePlaylistDesc(playlist: PlaylistLike) {
   if (isSGPPlaylist(playlist.id!)) {
     const { type } = parsePlaylistID(playlist.id!);

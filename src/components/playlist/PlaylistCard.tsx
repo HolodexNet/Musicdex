@@ -52,21 +52,30 @@ export const PlaylistCard = ({
     async (e: any) => {
       e.stopPropagation();
       e.preventDefault();
+
       try {
-        const cached: PlaylistFull | undefined = queryClient.getQueryData([
-          "playlist",
-          playlist.id,
-        ]);
-        let p = cached;
-        if (!cached) {
-          p = (
-            await AxiosInstance<PlaylistFull>(
-              `/musicdex/playlist/${playlist.id}`
-            )
+        if (playlist?.type?.startsWith("radio")) {
+          const p = (
+            await AxiosInstance<PlaylistFull>(`/musicdex/radio/${playlist.id}`)
           ).data;
+          if (p) setPlaylist({ playlist: p });
+          else throw new Error("Fetch failed");
+        } else {
+          const cached: PlaylistFull | undefined = queryClient.getQueryData([
+            "playlist",
+            playlist.id,
+          ]);
+          let p = cached;
+          if (!cached) {
+            p = (
+              await AxiosInstance<PlaylistFull>(
+                `/musicdex/playlist/${playlist.id}`
+              )
+            ).data;
+          }
+          if (p) setPlaylist({ playlist: p });
+          else throw new Error("Fetch failed");
         }
-        if (p) setPlaylist({ playlist: p });
-        else throw new Error("Fetch failed");
       } catch (e) {
         toast({
           title: t("Failed to load playlist"),
@@ -76,7 +85,15 @@ export const PlaylistCard = ({
         });
       }
     },
-    [AxiosInstance, playlist.id, queryClient, setPlaylist, t, toast]
+    [
+      AxiosInstance,
+      playlist.id,
+      playlist.type,
+      queryClient,
+      setPlaylist,
+      t,
+      toast,
+    ]
   );
   if (!playlist) return <div>Playlist doko...</div>;
   return (

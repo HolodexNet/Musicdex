@@ -1,4 +1,13 @@
-import { Box, Center, Code, Heading, useToast, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Code,
+  Heading,
+  useToast,
+  VStack,
+  Flex,
+  Text,
+} from "@chakra-ui/react";
 import React, {
   Suspense,
   useCallback,
@@ -23,7 +32,11 @@ import {
   usePlaylistWriter,
 } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
+import { useKeyControl } from "../utils/HotkeyHook";
 import { useSongQueuer } from "../utils/SongQueuerHook";
+const PlaylistHeadingEditor = React.lazy(
+  () => import("../components/playlist/PlaylistHeadingEditor")
+);
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
 );
@@ -59,6 +72,14 @@ export default function Playlist() {
   const queueSongs = useSongQueuer();
   const setPlaylist = useStoreActions(
     (actions) => actions.playback.setPlaylist
+  );
+
+  useKeyControl(
+    {
+      actions: ["playPlaylist"],
+      playlist: playlist,
+    },
+    [playlist]
   );
 
   // const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
@@ -149,31 +170,40 @@ export default function Playlist() {
         <BGImg banner_url={banner || ""} height="200px"></BGImg>
       </BGImgContainer>
       <ContainerInlay mt="12">
-        <PlaylistHeading
-          title={title || t("Untitled Playlist")}
-          description={description || ""}
-          canEdit={isLoggedIn && playlist.owner === user?.id && editMode}
-          editMode={false}
-          setDescription={(text) => {
-            setNewDescription(text);
-          }}
-          setTitle={(text) => {
-            setNewTitle(text);
-          }}
-          count={
-            (editMode
-              ? newSongIds?.length ?? playlist?.content?.length
-              : playlist?.content?.length) || 0
-          }
-          totalLengthSecs={playlist.content?.reduce(
-            (a, c) => a + c.end - c.start,
-            0
-          )}
-        />
+        {editMode ? (
+          <Suspense fallback={<div>{t("Loading...")}</div>}>
+            <PlaylistHeadingEditor
+              title={title || t("Untitled Playlist")}
+              description={description || ""}
+              setDescription={(text) => {
+                setNewDescription(text);
+              }}
+              setTitle={(text) => {
+                setNewTitle(text);
+              }}
+              count={newSongIds?.length ?? (playlist?.content?.length || 0)}
+              totalLengthSecs={playlist.content?.reduce(
+                (a, c) => a + c.end - c.start,
+                0
+              )}
+            />
+          </Suspense>
+        ) : (
+          <PlaylistHeading
+            title={title || t("Untitled Playlist")}
+            description={description || ""}
+            count={playlist?.content?.length ?? 0}
+            totalLengthSecs={playlist.content?.reduce(
+              (a, c) => a + c.end - c.start,
+              0
+            )}
+          />
+        )}
         <PlaylistButtonArray
           mb={2}
           playlist={playlist}
           canEdit={isLoggedIn && playlist.owner === user?.id}
+          canStar={isLoggedIn && playlist.owner !== user?.id}
           editMode={editMode}
           onPlayClick={() => {
             setPlaylist({ playlist });
@@ -191,10 +221,10 @@ export default function Playlist() {
           onFinishEditClick={() =>
             finishSongEditing(newSongIds, newTitle, newDescription)
           }
+          onAbortEditClick={() => setEditMode(false)}
         />
-
-        {playlist.content &&
-          (editMode ? (
+        {playlist.content?.length ? (
+          editMode ? (
             <Suspense fallback={<div>{t("Loading...")}</div>}>
               <SongEditableTable
                 songs={playlist.content}
@@ -203,7 +233,14 @@ export default function Playlist() {
             </Suspense>
           ) : (
             <SongTable playlist={playlist} virtualized />
-          ))}
+          )
+        ) : (
+          <Flex grow={1} align="center" justify="center">
+            <Text fontSize="2xl" color="whiteAlpha.500">
+              {t("No Songs")}
+            </Text>
+          </Flex>
+        )}
       </ContainerInlay>
     </PageContainer>
   );

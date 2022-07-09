@@ -6,9 +6,10 @@ export function LineLogo(props: IconProps) {
       <g
         xmlns="http://www.w3.org/2000/svg"
         style={{
-          mixBlendMode: "color-dodge",
+          mixBlendMode: "normal",
         }}
-        fill="white"
+        fill="currentColor"
+        id="line-logo"
       >
         <path d="M4.6 18.8V4.2l1.3.8v13l-1.3.8Z" />
         <path d="M5.4 22.6a2 2 0 0 0 2.2 0L23 13.3a2 2 0 0 0 0-3.4L7.6.3a2 2 0 0 0-2.2.1l13.7 8.4.3.2 3 1.8c.5.3.5 1 0 1.4l-3 1.8-.3.2-13.7 8.4Z" />

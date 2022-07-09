@@ -145,7 +145,7 @@
   "Removed from liked songs": "Von Lieblingsliedern entfernt",
   "An error has occurred": "Ein Fehler ist aufgetreten",
   "Return to Home": "Zurück zur Startseite",
-  "Add To Playlist": "Add To Playlist",
-  "... and {{count}} other": "... and {{count}} other",
-  "... and {{count}} other_plural": "... and {{count}} other"
+  "Add To Playlist": "Zu Playlist hinzufügen",
+  "... and {{count}} other": "... und {{count}} weitere",
+  "... and {{count}} other_plural": "... und {{count}} weitere"
 }

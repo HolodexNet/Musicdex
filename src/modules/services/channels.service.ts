@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 
 /**
  *
@@ -37,3 +37,40 @@ export function useChannelListForOrg(org: string) {
     }
   );
 }
+// export function useChannelSearch(partial: string) {
+//   return useQuery<Pick<Channel, 'id' | 'name' | 'english_name'>[]>(
+//     ["chPartial", partial],
+//     async () => {
+//       return (await axios.post("/api/v2/search/channelSearch", {
+//         params: {
+//           type: "vtuber",
+//           queryText: partial,
+//         },
+//       })).data;
+//     },
+//     {
+//       cacheTime: 1000 * 60 * 60 * 5,
+//       refetchOnMount: false,
+//       refetchOnWindowFocus: false,
+//       staleTime: 1000 * 60 * 60 * 5,
+//       refetchOnReconnect: false,
+//     }
+//   );
+// }
+// export function useChannel(id?: string) {
+//   return useQuery<Channel | undefined>(
+//     ["channel", id],
+//     async () => {
+//       if (id)
+//         return (await axios.get("/api/v2/channels/" + id)).data;
+//       else return undefined;
+//     },
+//     {
+//       cacheTime: 1000 * 60 * 60 * 5,
+//       refetchOnMount: false,
+//       refetchOnWindowFocus: false,
+//       staleTime: 1000 * 60 * 60 * 5,
+//       refetchOnReconnect: false,
+//     }
+//   );
+// }

@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Heading,
+  HeadingProps,
   HStack,
   Spacer,
   useBreakpointValue,
@@ -25,12 +26,16 @@ import { useEffect, useMemo } from "react";
 import { useServerOrgList } from "../modules/services/statics.service";
 import { useQueryState } from "react-router-use-location-state";
 
-const HomeHeading = function ({ children }: { children: React.ReactNode }) {
+const HomeHeading = function ({
+  children,
+  ...props
+}: { children: React.ReactNode } & HeadingProps) {
   return (
     <Heading
       size="lg"
       fontSize={["1.25rem", null, "1.5rem", null, "1.875rem"]}
       mb={3}
+      {...props}
     >
       {children}
     </Heading>
@@ -63,6 +68,17 @@ export default function Home() {
   const queueSongs = useSongQueuer();
 
   const { data: discovery, ...discoveryStatus } = useDiscoveryOrg(org.name);
+
+  const recPlaylists = useMemo(() => {
+    return discovery?.recommended?.playlists.filter(
+      (x: PlaylistStub) => !x.type.startsWith("radio")
+    );
+  }, [discovery]);
+  const recRadios = useMemo(() => {
+    return discovery?.recommended?.playlists.filter((x: PlaylistStub) =>
+      x.type.startsWith("radio")
+    );
+  }, [discovery]);
 
   return (
     <PageContainer>
@@ -99,21 +115,38 @@ export default function Home() {
             width={160}
             scrollMultiplier={isMobile ? 2 : 4}
           >
-            {discovery?.recommended?.playlists?.map(
-              (p: Partial<PlaylistFull>) => (
+            {recPlaylists?.map((p: Partial<PlaylistFull>) => (
+              <PlaylistCard
+                playlist={p}
+                key={"rec" + p.id}
+                mx={["2px", null, 1, 2]}
+              />
+            ))}
+          </CardCarousel>
+        </HomeSection>
+
+        {recRadios && (
+          <HomeSection>
+            <HomeHeading>{t("Radios")}</HomeHeading>
+            <CardCarousel
+              height={210}
+              width={160}
+              scrollMultiplier={isMobile ? 2 : 4}
+            >
+              {recRadios?.map((p: Partial<PlaylistFull>) => (
                 <PlaylistCard
                   playlist={p}
                   key={"rec" + p.id}
                   mx={["2px", null, 1, 2]}
                 />
-              )
-            )}
-          </CardCarousel>
-        </HomeSection>
+              ))}
+            </CardCarousel>
+          </HomeSection>
+        )}
 
         <HomeSection>
           <HStack alignItems="flex-end" mb={3}>
-            <HomeHeading>
+            <HomeHeading mb={0}>
               {t("Trending {{org}} Songs", { org: org.name })}
             </HomeHeading>
             <Spacer />
@@ -171,4 +204,5 @@ export default function Home() {
 
 const HomeSection = styled.div`
   margin-bottom: 0.75rem;
+  margin-top: 0.5rem;
 `;

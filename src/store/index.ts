@@ -1,5 +1,5 @@
 import { createStore, createTypedHooks, persist } from "easy-peasy";
-import addPlaylistModel, { AddPlaylistModel } from "./addPlaylist";
+import playlistModel, { PlaylistModel } from "./playlist";
 import authModel, { AuthModel } from "./auth";
 import { dndAtom, DnDStore } from "./dragAndDrop";
 import orgModel, { OrgModel } from "./org";
@@ -13,7 +13,7 @@ export interface StoreModel {
   playback: PlaybackModel;
   org: OrgModel;
   dnd: DnDStore;
-  addPlaylist: AddPlaylistModel;
+  playlist: PlaylistModel;
   settings: SettingsStore;
 }
 
@@ -23,7 +23,7 @@ const storeModel: StoreModel = {
   playback: playbackModel,
   org: orgModel,
   dnd: dndAtom,
-  addPlaylist: addPlaylistModel,
+  playlist: playlistModel,
   settings: settingsStore,
 };
 

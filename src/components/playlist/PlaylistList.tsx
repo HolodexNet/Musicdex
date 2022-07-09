@@ -5,17 +5,19 @@ import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
 import { FiFolder } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import runes from "runes";
 import { useFormatPlaylist } from "../../modules/playlist/useFormatPlaylist";
+import { splitPlaylistEmoji } from "../../modules/playlist/utils";
 import { usePlaylistUpdater } from "../../modules/services/playlist.service";
 
 export const PlaylistList = ({
   playlistStubs,
   vibe = false,
+  editable = false,
   defaultIcon = FiFolder,
 }: {
   playlistStubs: PlaylistStub[];
   vibe?: boolean;
+  editable?: boolean;
   defaultIcon?: IconType;
 }) => {
   const { t } = useTranslation();
@@ -27,27 +29,16 @@ export const PlaylistList = ({
       <AnimatePresence>
         {playlistStubs.map((x) => {
           const title = formatPlaylist("title", x) || "Untitled";
-          let rest = title;
-          let emoji: string | undefined;
-          try {
-            if (title.match(/^(?!\d)\p{Emoji}/gu)) {
-              // Pick the first emoji if the first character is an emoji.
-              emoji = runes(title).at(0);
-              // ignore the first emoji IF it is an emoji.
-              rest = emoji ? runes(title).slice(1).join("").trim() : title;
-            }
-          } catch (e) {
-            console.error(e);
-          }
+          const { rest, emoji } = splitPlaylistEmoji(title);
 
           return (
             <motion.div
-              key={x.id}
+              key={"p-sb-" + x.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <Link to={"/playlists/" + x.id}>
+              <Link to={formatPlaylist("link", x) || "#"}>
                 <Flex
                   align="center"
                   mx="2"
@@ -65,17 +56,19 @@ export const PlaylistList = ({
                     vibe ? "inset 0 0 4px 0px var(--chakra-colors-n2-500)" : ""
                   }
                   onDragOver={(e) => {
-                    e.preventDefault();
-                    (e.currentTarget as any).style.boxShadow =
-                      "inset 0 0 4px 3px var(--chakra-colors-n2-500)";
+                    if (editable && vibe) {
+                      e.preventDefault();
+                      (e.currentTarget as any).style.boxShadow =
+                        "inset 0 0 4px 3px var(--chakra-colors-n2-500)";
+                    }
                   }}
                   onDragEnter={(e) => {}}
                   onDragLeave={(e) => {
-                    (e.target as any).style.boxShadow = "";
+                    (e.currentTarget as any).style.boxShadow = "";
                   }}
                   onDrop={(e: DragEvent<HTMLDivElement>) => {
                     const s = e.dataTransfer.getData("song");
-                    (e.target as any).style.boxShadow = "";
+                    (e.currentTarget as any).style.boxShadow = "";
                     if (s) {
                       e.preventDefault();
                       const song = JSON.parse(s);

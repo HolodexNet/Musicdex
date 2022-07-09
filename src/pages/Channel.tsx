@@ -104,8 +104,6 @@ export default function Channel() {
                   ? " — " + channel?.suborg?.slice(2)
                   : "")
               }
-              canEdit={false}
-              editMode={false}
               count={0}
               max={0}
               textShadow="1px 1px 5px var(--chakra-colors-bgAlpha-500);"

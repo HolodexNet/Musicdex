@@ -18,6 +18,7 @@ interface PlaylistStub {
   type: string;
   owner: string | number;
   listed: boolean;
+  art_context?: { channels?: string[]; videos?: string[] };
   // image_song: Song;
 }
 

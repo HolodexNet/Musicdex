@@ -19,6 +19,7 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { QueryStatus } from "../components/common/QueryStatus";
+import { useDraggableSong } from "../components/data/DraggableSong";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { SongArtwork } from "../components/song/SongArtwork";
@@ -52,6 +53,7 @@ export default function Song() {
   const tn = useNamePicker();
   const channelName = song && tn(song.channel.english_name, song.channel.name);
   const { show } = useContextMenu({ id: DEFAULT_MENU_ID });
+  const dragSongProps = useDraggableSong(song!);
 
   return (
     <PageContainer>
@@ -76,6 +78,7 @@ export default function Song() {
                 WebkitBoxReflect:
                   "below 0px linear-gradient(to bottom, rgba(0,0,0,0.0) 80%, rgba(0,0,0,0.3))",
               }}
+              {...dragSongProps}
             />
             <Flex
               flexDirection="column"

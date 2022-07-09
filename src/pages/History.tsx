@@ -10,6 +10,7 @@ import { useClient } from "../modules/client";
 import { formatPlaylistID } from "../modules/playlist/useFormatPlaylist";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
+import { useKeyControl } from "../utils/HotkeyHook";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 
 export default function History() {
@@ -27,19 +28,26 @@ export default function History() {
         user_id: user?.id,
       })
     );
+    useKeyControl(
+      {
+        actions: ["playPlaylist"],
+        playlist: playlist,
+      },
+      [playlist]
+    );
+
     return (
       <Fragment>
         <PlaylistHeading
           title={t("Recently Played")}
           description={t("Your recently played songs")}
-          canEdit={false}
-          editMode={false}
           count={playlist?.content?.length || 0}
         />
         {playlist?.content && (
           <PlaylistButtonArray
             playlist={playlist}
             canEdit={false}
+            canStar={false}
             editMode={false}
             onPlayClick={() => {
               setPlaylist({ playlist });
