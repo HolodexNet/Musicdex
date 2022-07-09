@@ -125,7 +125,7 @@ export function SidebarContent({
       <Flex flexDirection="column" overflowY="auto" flex="1">
         <PlaylistCreateModal />
         <NavItem
-          key="playlist"
+          key="playlist-create-item"
           icon={FiPlusCircle}
           onClick={(e) => {
             if (!user?.id)
@@ -141,6 +141,7 @@ export function SidebarContent({
           mx="2"
           px="2"
           py="2"
+          path="#"
         >
           {t("Create New Playlist") as string}
         </NavItem>

@@ -33,12 +33,12 @@ export const PlaylistList = ({
 
           return (
             <motion.div
-              key={x.id}
+              key={"p-sb-" + x.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <Link to={"/playlists/" + x.id}>
+              <Link to={formatPlaylist("link", x) || "#"}>
                 <Flex
                   align="center"
                   mx="2"
