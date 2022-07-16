@@ -173,7 +173,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
         {/* Generic Display: always present */}
         <NavBar
           onOpen={onOpen}
-          zIndex={5}
+          zIndex={15}
           bg={useColorModeValue("bg.100", "bg.900")}
         />
         <GlobalLoadingStatus />
