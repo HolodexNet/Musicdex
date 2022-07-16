@@ -7,7 +7,7 @@ import {
   Spacer,
   Text,
 } from "@chakra-ui/react";
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { VariableSizeList } from "react-window";
 import { DEFAULT_MENU_ID, QUEUE_MENU_ID } from "../../song/SongContextMenu";
 import { RowProps, SongRow } from "./SongRow";
@@ -17,10 +17,12 @@ import { t } from "i18next";
 import { FiFolderPlus, FiTrash } from "react-icons/fi";
 import { useStoreActions, useStoreState } from "../../../store";
 import { useFormatPlaylist } from "../../../modules/playlist/useFormatPlaylist";
-import { AutoSizer } from "react-virtualized";
+import { AutoSizer, Size, WindowScroller } from "react-virtualized";
+import { FrameRef } from "../../layout/Frame";
 
 interface UpcomingSongTableProps extends SongTableProps {
   queue: Song[];
+  useWindowScroller?: boolean;
 }
 
 interface RawRowProps {
@@ -147,6 +149,7 @@ export const UpcomingSongList = ({
   songs,
   queue,
   playlist,
+  useWindowScroller = false,
   ...rest
 }: UpcomingSongTableProps & BoxProps) => {
   const { t } = useTranslation();
@@ -174,28 +177,43 @@ export const UpcomingSongList = ({
     // Hint at variablesizelist to recheck row heights after queue length changed
     list.current?.resetAfterIndex(queue.length);
   }, [queue.length]);
-  if (!songList) return <>{t("No Songs")}</>;
 
+  const frameRef = useContext(FrameRef);
+  const onScroll = useCallback(({ scrollTop }) => {
+    list.current?.scrollTo(scrollTop);
+  }, []);
+
+  const renderList = useCallback(
+    ({ height, width }: Size) => (
+      <VariableSizeList
+        height={height || 800}
+        width={useWindowScroller ? "100%" : width}
+        itemCount={songList.length}
+        itemSize={(index: number) => {
+          // This row contains both a header AND a song row, double its size
+          if (index === 0 || index === queue.length) return 120;
+          return 60;
+        }}
+        itemData={data}
+        ref={list}
+        style={useWindowScroller ? { height: "100vh !important" } : {}}
+      >
+        {Row}
+      </VariableSizeList>
+    ),
+    [data, queue.length, songList.length, useWindowScroller]
+  );
+
+  if (!songList) return <>{t("No Songs")}</>;
   return (
     <Box height="100%" width="100%">
-      <AutoSizer>
-        {({ height, width }) => (
-          <VariableSizeList
-            height={height || 800}
-            width={width}
-            itemCount={songList.length}
-            itemSize={(index: number) => {
-              // This row contains both a header AND a song row, double its size
-              if (index === 0 || index === queue.length) return 120;
-              return 60;
-            }}
-            itemData={data}
-            ref={list}
-          >
-            {Row}
-          </VariableSizeList>
-        )}
-      </AutoSizer>
+      {!useWindowScroller ? (
+        <AutoSizer>{renderList}</AutoSizer>
+      ) : (
+        <WindowScroller onScroll={onScroll} scrollElement={frameRef?.current}>
+          {renderList}
+        </WindowScroller>
+      )}
     </Box>
   );
 };

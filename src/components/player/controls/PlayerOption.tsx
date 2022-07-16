@@ -97,13 +97,13 @@ export const PlayerOption = React.memo(
         {!fullPlayer && (
           <>
             <ChangePlayerLocationButton />
-            <IconButton
+            {/* <IconButton
               aria-label="Expand"
               icon={<RiPlayList2Fill />}
               color={queueActive ? "brand.200" : "gray"}
               variant="ghost"
               onClick={() => toggleQueue()}
-            />
+            /> */}
             {displayFullscreenButton && (
               <IconButton
                 aria-label="Fullscreen"

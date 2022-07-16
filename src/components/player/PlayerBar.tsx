@@ -270,13 +270,15 @@ export const PlayerBar = React.memo(
                     height="100%"
                     opacity={0.25}
                   />
-                  <MotionBox
-                    initial={{ opacity: 0, y: "20vh" }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={springTransition}
-                  >
-                    <PlayerOption justifyContent="center" fullPlayer={true} />
-                  </MotionBox>
+                  {isMobile && (
+                    <MotionBox
+                      initial={{ opacity: 0, y: "20vh" }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={springTransition}
+                    >
+                      <PlayerOption justifyContent="center" fullPlayer={true} />
+                    </MotionBox>
+                  )}
                 </LayoutGroup>
               </MotionBox>
               {!isMobile && <PlayerBarExpandedRightSide />}
