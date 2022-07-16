@@ -8,11 +8,10 @@ import {
   useBreakpoint,
   useBreakpointValue,
   VStack,
-  HStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { AnimatePresence, LayoutGroup } from "framer-motion";
-import React, { Suspense, useEffect, useState, useMemo } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { Link as navLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -22,11 +21,9 @@ import { MotionBox } from "../common/MotionBox";
 import { PlaybackControl } from "./controls/PlaybackControl";
 import { PlayerOption } from "./controls/PlayerOption";
 import { SongInfo } from "./controls/PlayerSongInfo";
-import { SongLink } from "./controls/PlayerSongLink";
 import { TimeSlider } from "./controls/TimeSlider";
 import { VolumeSlider } from "./controls/VolumeSlider";
-import { SongTable } from "../data/SongTable";
-import { QUEUE_MENU_ID } from "../song/SongContextMenu";
+import { UpcomingSongList } from "../data/SongTable/UpcomingSongList";
 
 interface PlayerBarProps {
   progress: number;
@@ -327,13 +324,6 @@ const PlayerBarExpandedRightSide = React.memo(() => {
 
   const queue = useStoreState((state) => state.playback.queue);
   const playlistQueue = useStoreState((state) => state.playback.playlistQueue);
-  const playedPlaylistQueue = useStoreState(
-    (state) => state.playback.playedPlaylistQueue
-  );
-
-  const playlistTotalQueue = useMemo(() => {
-    return [...playlistQueue, ...playedPlaylistQueue];
-  }, [playedPlaylistQueue, playlistQueue]);
   const next = useStoreActions((actions) => actions.playback.next);
 
   return (
@@ -349,33 +339,8 @@ const PlayerBarExpandedRightSide = React.memo(() => {
         {t("Upcoming")}
       </Heading>
       <Suspense fallback={<div>{t("Loading...")}</div>}>
-        <Box w="100%" h="100%" maxH="100%" overflowY="auto">
-          {queue && queue.length > 0 && (
-            <SongTable
-              songs={queue}
-              menuId={QUEUE_MENU_ID}
-              rowProps={{
-                songClicked: (e, song, idx) =>
-                  next({ count: idx + 1, userSkipped: true }),
-                indexShift: queue.length,
-                hideCol: ["idx", "og_artist", "sang_on"],
-              }}
-            />
-          )}
-          {playlistTotalQueue && playlistTotalQueue.length > 0 && (
-            <SongTable
-              songs={playlistTotalQueue}
-              rowProps={{
-                songClicked: (e, song, idx) =>
-                  next({
-                    count: queue.length + idx + 1,
-                    userSkipped: true,
-                  }),
-                hideCol: ["idx", "og_artist", "sang_on"],
-              }}
-            />
-          )}
-          {queue.length === 0 && playlistTotalQueue.length === 0 && (
+        <Box w="100%" h="100%" maxH="100%">
+          {queue.length === 0 && playlistQueue.length === 0 ? (
             <Flex
               w="100%"
               h="100%"
@@ -390,6 +355,15 @@ const PlayerBarExpandedRightSide = React.memo(() => {
                 {t("Return to Home")}
               </Button>
             </Flex>
+          ) : (
+            <UpcomingSongList
+              songs={playlistQueue}
+              queue={queue}
+              rowProps={{
+                songClicked: (e, song, idx) =>
+                  next({ count: idx + 1, userSkipped: true }),
+              }}
+            />
           )}
         </Box>
       </Suspense>
