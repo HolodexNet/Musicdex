@@ -304,7 +304,7 @@ function ChannelContent({
       </Heading>
       {discovery && (
         <CardCarousel height={180} width={160} scrollMultiplier={4}>
-          {discovery.channels.map((c: Channel) => (
+          {discovery.channels.slice(0, 10).map((c: Channel) => (
             <ChannelCard channel={c} key={c.id} marginX={["2px", null, 1, 2]} />
           ))}
         </CardCarousel>
