@@ -2,11 +2,12 @@ import {
   Button,
   HStack,
   IconButton,
+  IconButtonProps,
   StackProps,
   useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { FiPlay, FiShare2, FiTrash, FiEdit2, FiSave } from "react-icons/fi";
@@ -22,15 +23,8 @@ import { PlaylistMoreControlsMenu } from "./PlaylistMoreControls";
 
 export type ClickEventHandler = React.MouseEventHandler<HTMLButtonElement>;
 
-export interface PlaylistButtonChildren {
-  title: string;
-  ariaLabel: string;
-  icon: React.ReactElement;
-  onClick: ClickEventHandler;
-  disabled?: boolean;
-}
-
 export type PlaylistButtonElement =
+  | "play"
   | "children"
   | "addToQueue"
   | "star"
@@ -40,12 +34,20 @@ export type PlaylistButtonElement =
 
 const useResponsePlaylistArray = () => {
   return useBreakpointValue<PlaylistButtonElement[] | undefined>({
-    base: ["children", "star", "edit", "share", "delete"],
+    base: ["addToQueue", "children", "star", "edit", "delete"],
     sm: ["children", "star", "edit", "delete"],
     md: ["delete"],
     lg: ["delete"],
   });
 };
+
+export interface PlalyistButtonType
+  extends Omit<Partial<IconButtonProps>, "type"> {
+  type: PlaylistButtonElement;
+  hidden?: boolean;
+  ariaLabel?: string;
+  text?: string;
+}
 
 export function PlaylistButtonArray({
   onPlayClick,
@@ -71,7 +73,7 @@ export function PlaylistButtonArray({
   canStar?: boolean;
   playlist: PlaylistFull;
   hideElement?: PlaylistButtonElement[];
-  children?: PlaylistButtonChildren[];
+  children?: Partial<PlalyistButtonType>[];
 } & StackProps): JSX.Element {
   const { t } = useTranslation();
   const clip = useClipboardWithToast();
@@ -88,7 +90,7 @@ export function PlaylistButtonArray({
   const { mutateAsync: del } = usePlaylistDeleter();
   const { mutateAsync: updateStar } = usePlaylistStarUpdater();
 
-  const deletePlaylist = () => {
+  const deletePlaylist = useCallback(() => {
     // eslint-disable-next-line no-restricted-globals
     const x = confirm(t("Really delete this playlist?"));
     if (x)
@@ -111,7 +113,7 @@ export function PlaylistButtonArray({
           });
         }
       );
-  };
+  }, [del, navigate, playlist.id, t, toast]);
 
   const starred = useMemo(() => {
     return (
@@ -126,6 +128,101 @@ export function PlaylistButtonArray({
     [playlist]
   );
 
+  // List of all buttons and props
+  const buttonList: PlalyistButtonType[] = useMemo(() => {
+    return [
+      {
+        type: "play",
+        variant: "solid",
+        ariaLabel: "play",
+        icon: <FiPlay />,
+        text: t("Play"),
+        onClick: onPlayClick,
+      },
+      {
+        type: "addToQueue",
+        ariaLabel: "add to queue",
+        text: t("Add to Queue"),
+        onClick: onAddQueueClick,
+      },
+      {
+        type: "star",
+        ariaLabel: "star",
+        icon: starred ? <FaStar /> : <FaRegStar />,
+        title: t(starred ? "Unstar" : "Star"),
+        hidden: !canStar,
+        onClick: () => {
+          updateStar({
+            playlist_id: playlist.id,
+            action: starred ? "delete" : "add",
+          });
+        },
+      },
+      {
+        type: "share",
+        ariaLabel: "share link",
+        icon: <FiShare2 />,
+        title: canShare
+          ? t("Copy link")
+          : t("Playlist is private and cannot be shared."),
+        hidden: !canShare,
+        onClick: () => clip(window.location.toString(), false),
+      },
+      {
+        type: "edit",
+        ariaLabel: "edit",
+        icon: <FiEdit2 />,
+        title: t("Edit"),
+        hidden: !canEdit,
+        onClick: (e) => {
+          onEditClick && onEditClick(e);
+        },
+      },
+      {
+        type: "delete",
+        ariaLabel: "delete",
+        hidden: !canEdit,
+        icon: <FiTrash />,
+        title: t("Delete Playlist"),
+        onClick: deletePlaylist,
+        colorScheme: "red",
+      },
+      ...(children?.map((props) => ({
+        ...props,
+        type: "children" as PlaylistButtonElement,
+      })) || []),
+    ];
+  }, [
+    canEdit,
+    canShare,
+    canStar,
+    children,
+    clip,
+    deletePlaylist,
+    onAddQueueClick,
+    onEditClick,
+    onPlayClick,
+    playlist.id,
+    starred,
+    t,
+    updateStar,
+  ]);
+
+  // Find buttons to render in line
+  const visibleButtons = useMemo(
+    () =>
+      buttonList.filter(
+        (btn) => !btn.hidden && !hideButton?.includes(btn.type)
+      ),
+    [buttonList, hideButton]
+  );
+
+  // Find buttons to render in the menu
+  const collapsedButtons = useMemo(
+    () =>
+      buttonList.filter((btn) => !btn.hidden && hideButton?.includes(btn.type)),
+    [buttonList, hideButton]
+  );
   return (
     <HStack w="100%" spacing={4} {...rest}>
       <HStack spacing={4} flexGrow={1}>
@@ -134,7 +231,7 @@ export function PlaylistButtonArray({
             <Button
               aria-label="finish edit"
               size="md"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 onFinishEditClick && onFinishEditClick(e);
               }}
               colorScheme="green"
@@ -154,105 +251,51 @@ export function PlaylistButtonArray({
           </>
         ) : (
           <>
-            <Button
-              aria-label="play"
-              leftIcon={<FiPlay />}
-              size="md"
-              colorScheme="n2"
-              onClick={onPlayClick}
-            >
-              {t("Play")}
-            </Button>
-            {!hideButton?.includes("addToQueue") && (
-              <Button
-                variant="ghost"
-                aria-label="add to queue"
-                size="md"
-                colorScheme="n2"
-                onClick={onAddQueueClick}
-              >
-                {t("Add to Queue")}
-              </Button>
+            {visibleButtons.map(
+              (
+                {
+                  type,
+                  variant = "ghost",
+                  ariaLabel,
+                  icon,
+                  title,
+                  text,
+                  onClick,
+                  colorScheme = "n2",
+                  size,
+                },
+                index
+              ) => {
+                return icon && !text ? (
+                  <IconButton
+                    variant={variant}
+                    aria-label={ariaLabel || ""}
+                    icon={icon}
+                    title={title}
+                    onClick={onClick}
+                    colorScheme={colorScheme}
+                    key={type + index}
+                  />
+                ) : (
+                  <Button
+                    variant={variant}
+                    aria-label={ariaLabel || ""}
+                    size={size}
+                    onClick={onClick}
+                    colorScheme={colorScheme}
+                    leftIcon={icon}
+                    key={type + index}
+                  >
+                    {text}
+                  </Button>
+                );
+              }
             )}
-            {!hideButton?.includes("star") && canStar && (
-              <IconButton
-                variant="ghost"
-                aria-label="star"
-                icon={starred ? <FaStar /> : <FaRegStar />}
-                onClick={() =>
-                  updateStar({
-                    playlist_id: playlist.id,
-                    action: starred ? "delete" : "add",
-                  })
-                }
-                colorScheme="n2"
-              />
+            {(canEdit || !!collapsedButtons.length) && (
+              <PlaylistMoreControlsMenu playlist={playlist} canEdit={canEdit}>
+                {collapsedButtons}
+              </PlaylistMoreControlsMenu>
             )}
-            {!hideButton?.includes("share") && canShare && (
-              <IconButton
-                variant="ghost"
-                aria-label="share link"
-                icon={<FiShare2 />}
-                title={
-                  canShare
-                    ? t("Copy link")
-                    : t("Playlist is private and cannot be shared.")
-                }
-                onClick={() => clip(window.location.toString(), false)}
-                colorScheme="n2"
-                disabled={!canShare}
-              />
-            )}
-            {!hideButton?.includes("children") &&
-              children?.map(({ ariaLabel, icon, title, onClick, disabled }) => (
-                <IconButton
-                  variant="ghost"
-                  aria-label={ariaLabel}
-                  icon={icon}
-                  title={title}
-                  onClick={onClick}
-                  colorScheme="n2"
-                  disabled={disabled}
-                />
-              ))}
-          </>
-        )}
-      </HStack>
-      <HStack spacing={2}>
-        {!editMode && (
-          <>
-            {!hideButton?.includes("edit") && canEdit && (
-              <IconButton
-                variant="ghost"
-                aria-label="edit"
-                icon={<FiEdit2 />}
-                colorScheme="n2"
-                onClick={(e) => {
-                  onEditClick && onEditClick(e);
-                }}
-              />
-            )}
-            {!hideButton?.includes("delete") && canEdit && (
-              <IconButton
-                variant="ghost"
-                aria-label="delete"
-                icon={<FiTrash />}
-                title={t("Delete Playlist")}
-                onClick={deletePlaylist}
-                colorScheme="red"
-              />
-            )}
-            <PlaylistMoreControlsMenu
-              playlist={playlist}
-              canEdit={canEdit}
-              canStar={canStar}
-              canShare={canShare}
-              starred={starred}
-              hideElement={hideButton}
-              onDelete={deletePlaylist}
-              onEditClick={onEditClick}
-              children={children}
-            />
           </>
         )}
       </HStack>

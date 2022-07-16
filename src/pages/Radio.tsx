@@ -103,13 +103,6 @@ export default function Radio() {
           onPlayClick={() => {
             setPlaylist({ playlist });
           }}
-          // onAddQueueClick={() => {
-          //   playlist.content &&
-          //     queueSongs({
-          //       songs: [...playlist.content],
-          //       immediatelyPlay: false,
-          //     });
-          // }}
         />
 
         {playlist.content && <SongTable playlist={playlist} virtualized />}

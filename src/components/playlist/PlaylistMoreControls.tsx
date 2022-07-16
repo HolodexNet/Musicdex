@@ -2,7 +2,6 @@ import {
   IconButton,
   Menu,
   MenuButton,
-  MenuDivider,
   MenuItem,
   MenuItemOption,
   MenuList,
@@ -11,47 +10,23 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { FaRegStar, FaStar } from "react-icons/fa";
-import { FiEdit2, FiMoreHorizontal, FiShare2, FiTrash } from "react-icons/fi";
-import { useClipboardWithToast } from "../../modules/common/clipboard";
-import {
-  usePlaylistStarUpdater,
-  usePlaylistWriter,
-} from "../../modules/services/playlist.service";
-import {
-  ClickEventHandler,
-  PlaylistButtonElement,
-  PlaylistButtonChildren,
-} from "./PlaylistButtonArray";
+import { FiMoreHorizontal } from "react-icons/fi";
+import { usePlaylistWriter } from "../../modules/services/playlist.service";
+import { PlalyistButtonType } from "./PlaylistButtonArray";
 
 export function PlaylistMoreControlsMenu({
   playlist,
   canEdit,
-  canStar,
-  canShare,
-  starred,
-  hideElement,
-  onDelete,
-  onEditClick,
   children,
   ...rest
 }: Omit<MenuProps, "children"> & {
   playlist: PlaylistFull;
   canEdit: boolean;
-  canStar: boolean;
-  canShare: boolean;
-  starred?: boolean;
-  hideElement?: PlaylistButtonElement[];
-  onDelete?: ClickEventHandler;
-  onEditClick?: ClickEventHandler;
-  children?: PlaylistButtonChildren[];
+  children?: PlalyistButtonType[];
 }) {
   const { t } = useTranslation();
-  const { mutateAsync: write, isLoading } = usePlaylistWriter();
-  const { mutateAsync: updateStar } = usePlaylistStarUpdater();
-
+  const { mutateAsync: write } = usePlaylistWriter();
   const toast = useToast();
-  const clip = useClipboardWithToast();
 
   const changeListed = (e: boolean) => {
     const update = { ...playlist, listed: e };
@@ -77,14 +52,6 @@ export function PlaylistMoreControlsMenu({
     );
   };
 
-  if (
-    !canEdit &&
-    (!canShare || !hideElement?.includes("share")) &&
-    (!canStar || !hideElement?.includes("star")) &&
-    (!children || !hideElement?.includes("children"))
-  )
-    return <></>;
-
   return (
     <Menu {...rest} isLazy>
       <MenuButton
@@ -97,38 +64,11 @@ export function PlaylistMoreControlsMenu({
         aria-label="More"
       />
       <MenuList>
-        {hideElement?.includes("star") && canStar && (
-          <MenuItem
-            icon={starred ? <FaRegStar /> : <FaStar />}
-            onClick={() =>
-              updateStar({
-                playlist_id: playlist.id,
-                action: starred ? "delete" : "add",
-              })
-            }
-          >
-            {t(starred ? "Unstar" : "Star")}
+        {children?.map(({ text, title, icon, onClick, type }, index) => (
+          <MenuItem icon={icon} onClick={onClick} key={type + index}>
+            {text || title}
           </MenuItem>
-        )}
-        {hideElement?.includes("share") && canShare && (
-          <MenuItem
-            icon={<FiShare2 />}
-            onClick={() => clip(window.location.toString(), false)}
-          >
-            {t("Copy link")}
-          </MenuItem>
-        )}
-        {hideElement?.includes("children") &&
-          children?.map(({ title, icon, onClick }) => (
-            <MenuItem icon={icon} onClick={onClick}>
-              {title}
-            </MenuItem>
-          ))}
-        {hideElement?.includes("edit") && canEdit && (
-          <MenuItem icon={<FiEdit2 />} onClick={onEditClick}>
-            {t("Edit")}
-          </MenuItem>
-        )}
+        ))}
         {canEdit && (
           <>
             <MenuOptionGroup
@@ -153,19 +93,6 @@ export function PlaylistMoreControlsMenu({
                 {t("Private Playlist")}
               </MenuItemOption>
             </MenuOptionGroup>
-          </>
-        )}
-        {hideElement?.includes("delete") && canEdit && (
-          <>
-            <MenuDivider />
-            <MenuItem
-              icon={<FiTrash />}
-              color="red.300"
-              _hover={{ backgroundColor: "red.700" }}
-              onClick={onDelete}
-            >
-              {t("Delete Playlist")}
-            </MenuItem>
           </>
         )}
       </MenuList>
