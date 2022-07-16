@@ -295,8 +295,9 @@ function RadioTextArt({
         p={2}
         position="absolute"
         width="100%"
-        fontSize="1.2rem"
-        fontWeight={600}
+        fontSize="1rem"
+        opacity="0.8"
+        fontWeight={400}
         textAlign="center"
         noOfLines={2}
         bottom={0}
