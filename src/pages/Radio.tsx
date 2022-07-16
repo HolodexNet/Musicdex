@@ -89,6 +89,7 @@ export default function Radio() {
       </BGImgContainer>
       <ContainerInlay mt="12">
         <PlaylistHeading
+          playlist={playlist}
           title={title || t("Untitled Playlist")}
           description={description || ""}
           count={0}

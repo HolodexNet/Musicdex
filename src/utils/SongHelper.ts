@@ -6,8 +6,7 @@ export function formatSeconds(secs: number) {
     end: secs * 1000,
   });
   return `${hours ? hours + ":" : ""}${
-    String(minutes).padStart(!hours && minutes ? 1 : 2, "0") ||
-    (hours ? "00" : "0")
+    String(minutes).padStart(!hours ? 1 : 2, "0") || (hours ? "00" : "0")
   }:${String(seconds).padStart(2, "0") || "00"}`;
 }
 

@@ -94,7 +94,7 @@ i18n
               return formatDistanceToNow(value, {
                 locale,
                 addSuffix: true,
-              });
+              }).replace("about", "");
           if (format === "datetime") return formatDate(value, "Pp", { locale });
           return formatDate(value, format!, { locale });
         }

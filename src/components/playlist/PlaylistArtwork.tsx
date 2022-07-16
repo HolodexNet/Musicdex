@@ -257,6 +257,13 @@ function RadioTextArt({
       overflow="hidden"
       {...rest}
     >
+      <Box
+        bgColor="bg.600"
+        top="0"
+        height="100%"
+        width="100%"
+        position="absolute"
+      ></Box>
       <BrandColorGradientText bgColor={bgColor} />
       <Icon
         opacity="0.9"

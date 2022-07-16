@@ -197,6 +197,7 @@ export default function Playlist() {
               (a, c) => a + c.end - c.start,
               0
             )}
+            playlist={playlist}
           />
         )}
         <PlaylistButtonArray
