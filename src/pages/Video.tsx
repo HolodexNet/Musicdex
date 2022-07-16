@@ -25,17 +25,6 @@ export default function Video() {
   let videoId = params.id!;
   const { data: playlist, ...status } = usePlaylist(`:video[id=${videoId}]`);
   const { title, description } = usePlaylistTitleDesc(playlist);
-  const { data: video, ...videoStatus } = useQuery(
-    ["video", videoId],
-    async (q) => {
-      return (await axios.get("/api/v2/videos/" + q.queryKey[1])).data;
-    },
-    {
-      ...DEFAULT_FETCH_CONFIG /* 10 mins */,
-      cacheTime: 600000,
-      staleTime: 600000,
-    }
-  );
 
   const tn = useNamePicker();
 
@@ -44,7 +33,7 @@ export default function Video() {
     (actions) => actions.playback.setPlaylist
   );
 
-  if (videoStatus.isLoading) return <QueryStatus queryStatus={status} />;
+  // if (videoStatus.isLoading) return <QueryStatus queryStatus={status} />;
 
   return (
     <PageContainer>
@@ -82,14 +71,14 @@ export default function Video() {
                 title: t("Open in YouTube"),
                 ariaLabel: "open-on-youtube",
                 icon: <FiYoutube />,
-                onClick: () => window.open("https://youtu.be/" + video.id),
+                onClick: () => window.open("https://youtu.be/" + videoId),
               },
               {
                 title: t("Open in Holodex"),
                 ariaLabel: "open-on-holodex",
                 icon: <LineLogo />,
                 onClick: () =>
-                  window.open("https://holodex.net/watch/" + video.id),
+                  window.open("https://holodex.net/watch/" + videoId),
               },
             ]}
           </PlaylistButtonArray>
@@ -105,7 +94,7 @@ export default function Video() {
               variant="link"
               colorScheme={"n2"}
               as="a"
-              href={`https://holodex.net/edit/video/${video.id}/music`}
+              href={`https://holodex.net/edit/video/${videoId}/music`}
               target="_blank"
               rightIcon={<FiExternalLink />}
             >

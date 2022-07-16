@@ -75,6 +75,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
         Header: "#",
         accessor: "idx",
         maxWidth: 40,
+        Cell: (cellInfo: any) => String(cellInfo.row.index + 1),
       },
       {
         Header: "Title",
@@ -130,7 +131,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
           return (
             <IconButton
               onClick={() => {
-                moveOrDeleteItem(cellInfo.row.original.idx, undefined);
+                moveOrDeleteItem(cellInfo.row.index, undefined);
               }}
               variant="outline"
               aria-label="delete"

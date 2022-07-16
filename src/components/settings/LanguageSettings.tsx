@@ -28,7 +28,7 @@ export function LanguageSettings() {
       credit: "Doubleturtle#3660",
     },
     // { value: "it", display: "Italiano", credit: "テオさん#0139" },
-    // { value: "tr", display: "Türkçe", credit: "creeperkafasipw#1861" },
+    { value: "tr-TR", display: "Türkçe", credit: "creeperkafasipw#1861" },
     { value: "vi-VN", display: "Tiếng Việt", credit: "Frincess" },
     { value: "hu-HU", display: "Magyar", credit: "kuroihikikomori#7216" },
     // { value: "th", display: "ไทย", credit: "SnowNeko#0282" },

@@ -41,7 +41,11 @@ interface PlayerBarProps {
   totalDuration: number;
 }
 
-const springTransition = { type: "spring", stiffness: 350, damping: 23 };
+const springTransition = {
+  type: "spring",
+  stiffness: 350,
+  damping: 23,
+};
 
 export const PlayerBar = React.memo(
   ({
@@ -65,8 +69,7 @@ export const PlayerBar = React.memo(
     const breakpoint = useBreakpoint();
 
     const [dragStartY, setDragStartY] = useState(0);
-    const canEnlarge = useBreakpointValue({ base: true, lg: false });
-
+    const isMobile = useBreakpointValue({ base: true, lg: false });
     useEffect(() => {
       if (fullPlayer) {
         toggleFullPlayer();
@@ -88,7 +91,7 @@ export const PlayerBar = React.memo(
         e?.target?.className &&
         typeof e.target.className === "string" &&
         e?.target?.className.split(" ").length === 1 &&
-        canEnlarge &&
+        isMobile &&
         currentSong
       ) {
         toggleFullPlayer();
@@ -127,8 +130,8 @@ export const PlayerBar = React.memo(
                   layoutId="songInfo"
                   // JUNKY BUG FIX for framer... randomly shifts top and applies transform
                   // These two initial/animate does nothing but hints at framer to not apply transforms
-                  initial={{ opacity: 0, y: "0px" }}
-                  animate={{ opacity: 1, y: 0 }}
+                  // initial={{ opacity: 0, y: "0px" }}
+                  // animate={{ opacity: 1, y: 0 }}
                 >
                   {currentSong && (
                     <SongInfo
@@ -187,11 +190,12 @@ export const PlayerBar = React.memo(
         )}
         <AnimatePresence>
           {fullPlayer && (
-            <>
+            <Flex height="100vh">
               <MotionBox
                 padding={6}
                 paddingTop={3}
-                display={{ base: "flex", lg: "none" }}
+                display="flex"
+                width={{ base: "100vw", lg: "50%" }}
                 flex="1"
                 flexDirection="column"
                 justifyContent="space-evenly"
@@ -278,105 +282,8 @@ export const PlayerBar = React.memo(
                   </MotionBox>
                 </LayoutGroup>
               </MotionBox>
-              <MotionBox
-                padding={6}
-                paddingTop={3}
-                paddingBottom="env(safe-area-inset-bottom)"
-                display={{ base: "none", lg: "flex" }}
-                maxH="100%"
-                maxW="100vw"
-                flex="1"
-                flexDirection="column"
-                justifyContent="space-evenly"
-                exit={{ opacity: 0, pointerEvents: "none" }}
-              >
-                <LayoutGroup>
-                  <IconButton
-                    aria-label="Close Full Player"
-                    onClick={() => toggleFullPlayer()}
-                    icon={<FaChevronDown size={20} />}
-                    variant="ghost"
-                    size="lg"
-                    margin={2}
-                    position="absolute"
-                    left={0}
-                    top="env(safe-area-inset-top)"
-                  />
-                  <HStack maxH="90vh" w="100%" gap={8}>
-                    <Flex
-                      w="100%"
-                      h="100%"
-                      justifyContent="space-between"
-                      direction="column"
-                    >
-                      <MotionBox
-                        layout
-                        layoutId="songInfo"
-                        transition={springTransition}
-                        marginTop="min(calc(40vh + 56px), calc(100vw * .5625 + 56px))"
-                      >
-                        {currentSong && (
-                          <SongInfo song={currentSong} fullPlayer={true} />
-                        )}
-                      </MotionBox>
-
-                      <TimeSlider
-                        progress={progress}
-                        onChange={onProgressChange}
-                        totalDuration={totalDuration}
-                        fullPlayer={true}
-                        marginY={6}
-                      />
-                      <MotionBox
-                        initial={{ opacity: 0, y: "30vh", scale: 0.1 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        // transition={{ ease: "easeOut", duration: 0.3 }}
-                        transition={springTransition}
-                      >
-                        <PlaybackControl
-                          isPlaying={isPlaying}
-                          togglePlay={togglePlay}
-                          fullPlayer={true}
-                          justifyContent="space-around"
-                          flexGrow={1}
-                        />
-                      </MotionBox>
-                      <MotionBox
-                        initial={{ opacity: 0, y: "20vh" }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={springTransition}
-                      >
-                        {currentSong && (
-                          <SongLink
-                            song={currentSong}
-                            w="100%"
-                            h="100%"
-                            pt={3}
-                          />
-                        )}
-                      </MotionBox>
-                    </Flex>
-                    <PlayerBarExpandedRightSide />
-                  </HStack>
-                  <Box
-                    bgGradient="linear-gradient(
-                      to bottom,
-                      var(--chakra-colors-brand-300) 30%,
-                      var(--chakra-colors-n2-300) 80%
-                    );"
-                    backgroundSize="cover"
-                    backgroundPosition="center"
-                    zIndex={-1}
-                    position="absolute"
-                    top="0"
-                    left="0"
-                    width="100%"
-                    height="100%"
-                    opacity={0.25}
-                  />
-                </LayoutGroup>
-              </MotionBox>
-            </>
+              {!isMobile && <PlayerBarExpandedRightSide />}
+            </Flex>
           )}
         </AnimatePresence>
       </PlayerContainer>
@@ -430,7 +337,14 @@ const PlayerBarExpandedRightSide = React.memo(() => {
   const next = useStoreActions((actions) => actions.playback.next);
 
   return (
-    <VStack w="100%" h="90vh" maxH="90vh" align="flex-start">
+    <VStack
+      w="50%"
+      h="90vh"
+      maxH="90vh"
+      align="flex-start"
+      margin="auto"
+      px={6}
+    >
       <Heading mb={6} size="lg">
         {t("Upcoming")}
       </Heading>
