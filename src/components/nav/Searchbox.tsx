@@ -38,17 +38,10 @@ export function Searchbox({ ...props }: BoxProps & {}) {
     e.preventDefault();
     if (currentValue) {
       const newSP = new URLSearchParams(searchParams);
-      newSP.delete("q");
-      newSP.delete("mode");
       newSP.append("q", JSON.stringify(currentValue));
-      newSP.append("mode", "fuzzy");
-
-      // const isChanged =
-      //   newSP.get("q") === searchParams.get("q") &&
-      //   newSP.get("mode") === searchParams.get("mode");
 
       navigate({
-        pathname: "/searchV2",
+        pathname: "/search",
         search: `?${newSP}`,
       });
     }
@@ -67,7 +60,7 @@ export function Searchbox({ ...props }: BoxProps & {}) {
             paddingRight="80px"
             ref={input}
           />
-          <InputRightElement width="80px">
+          <InputRightElement>
             <HStack>
               <IconButton
                 color="green.500"
@@ -77,9 +70,9 @@ export function Searchbox({ ...props }: BoxProps & {}) {
                 aria-label="Search"
                 icon={<RiSearch2Line />}
                 type="submit"
-                title="Fuzzy Search"
+                title="Search"
               ></IconButton>
-              <IconButton
+              {/* <IconButton
                 size="sm"
                 aria-label="Blurry Search"
                 colorScheme={isFocused ? "pink" : "bgAlpha"}
@@ -105,7 +98,7 @@ export function Searchbox({ ...props }: BoxProps & {}) {
                   }
                 }}
                 title="Exact Search"
-              ></IconButton>
+              ></IconButton> */}
             </HStack>
           </InputRightElement>
         </InputGroup>

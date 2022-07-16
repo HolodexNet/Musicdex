@@ -1,199 +1,445 @@
 import {
+  DataSearch,
+  MultiList,
+  ReactiveBase,
+  ReactiveComponent,
+  ReactiveList,
+  SelectedFilters,
+  SingleList,
+  ToggleButton,
+} from "@appbaseio/reactivesearch";
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Button,
-  CloseButton,
+  Flex,
   Heading,
-  HStack,
-  Text,
+  Input,
+  Progress,
   useBreakpointValue,
-  useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
-import { Suspense, useEffect, useMemo, useState } from "react";
-import {
-  createSearchParams,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
-import { QueryStatus } from "../components/common/QueryStatus";
-import { SongTable } from "../components/data/SongTable";
-import { PageContainer } from "../components/layout/PageContainer";
-import {
-  SearchParams,
-  useSongSearch,
-} from "../modules/services/search.service";
-import { useSongQueuer } from "../utils/SongQueuerHook";
-import { FiFilter } from "react-icons/fi";
-import {
-  AdvancedSearchProps,
-  AdvancedSearchFiltersForm,
-} from "../components/nav/AdvancedSearchComponent";
-import { useTranslation } from "react-i18next";
-import { Helmet } from "react-helmet-async";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { SongTable, SongTableCol } from "../components/data/SongTable";
+import "./Search.css";
 
-export interface SearchableSong extends Song {
-  channel_org?: string;
-  channel_suborg?: string;
-}
+const SearchResultSongTable = ({
+  data,
+  loading,
+}: {
+  data: any;
+  loading: any;
+}) => {
+  const detailLevel = useBreakpointValue<SongTableCol[] | undefined>(
+    {
+      sm: ["idx", "og_artist", "sang_on", "duration"],
+      md: ["idx", "og_artist", "sang_on"],
+      lg: ["idx", "og_artist"],
+      xl: [],
+    },
+    "xl"
+  );
+  return (
+    <>
+      {loading && <Progress size="xs" isIndeterminate />}
+      {data && (
+        <SongTable
+          songs={data}
+          rowProps={{ hideCol: detailLevel }}
+          width="100%"
+          flexGrow={1}
+        />
+      )}
+    </>
+  );
+};
 
 export default function Search() {
-  const { t } = useTranslation();
-  const [search] = useSearchParams();
-  const navigate = useNavigate();
-  const queueSongs = useSongQueuer();
-  const qObj: Partial<SearchParams<SearchableSong>> = Object.fromEntries(
-    search.entries()
-  );
-  if (qObj?.q?.length === 0 || qObj?.q?.trim()?.length === 0) {
-    delete qObj.q;
-  }
-  const { data: searchResult, ...rest } = useSongSearch<SearchableSong>({
-    q: "*",
-    query_by:
-      "name, channel_name, channel_english_name, original_artist, channel_org, channel_suborg, title",
-    sort_by: "_text_match:desc,available_at:desc",
-    ...qObj,
-    facet_by: "channel_org, is_mv, channel_suborg",
-    // filter_by: "original_artist: doriko",
+  const [suborgVisible, setSuborgVisible] = useState(false);
+
+  const flexWrap: "nowrap" | "wrap" | undefined = useBreakpointValue({
+    base: "wrap",
+    sm: "wrap",
+    xs: "wrap",
+    md: "nowrap",
+    lg: "nowrap",
+    xl: "nowrap",
   });
-
-  function doSearch(queryNew: Partial<SearchParams<Song>> = {}) {
-    navigate({
-      pathname: "/search",
-      search: `?${createSearchParams({
-        ...qObj,
-        ...queryNew,
-      } as any)}`,
-    });
-  }
-
-  const songs = useMemo(() => {
-    return searchResult?.hits?.map((doc) => {
-      return doc.document;
-    });
-  }, [searchResult]);
-
-  return (
-    <PageContainer>
-      <Helmet>
-        <title>{t("Search")} - Musicdex</title>
-      </Helmet>
-      <AdvancedSearchFilters
-        facets={searchResult?.facet_counts}
-      ></AdvancedSearchFilters>
-      <QueryStatus queryStatus={rest} />
-      <Suspense fallback={<div></div>}>
-        <HStack align="end" my={2}>
-          <Heading size="lg">
-            {t("Search")}: "{qObj.q || ""}"
-          </Heading>
-          <Button
-            variant="ghost"
-            size="sm"
-            py={0}
-            colorScheme="n2"
-            float="right"
-            onClick={() => {
-              queueSongs({ songs: songs || [], immediatelyPlay: false });
-            }}
-          >
-            {t("Queue ({{amount}})", { amount: (songs && songs.length) || 0 })}
-          </Button>
-        </HStack>
-        <Suspense fallback={<div>{t("Loading...")}</div>}>
-          {songs && <SongTable songs={songs} />}
-        </Suspense>
-
-        {searchResult && (
-          <HStack spacing={3} my={3}>
-            <Button
-              disabled={searchResult?.page <= 1}
-              onClick={() =>
-                searchResult?.page > 1 &&
-                doSearch({ page: searchResult?.page - 1 })
-              }
-            >
-              {t("Prev")}
-            </Button>
-            <Text>
-              {t("({{ from }} - {{ to }} of {{ total }})", {
-                from: (searchResult?.page || 0) * 10 - 9,
-                to: (searchResult?.page || 0) * 10 - 10 + (songs?.length || 0),
-                total: searchResult?.found || 0,
-              })}
-            </Text>
-
-            <Button
-              disabled={
-                searchResult?.page * 10 + (songs?.length || 0) - 10 >=
-                searchResult?.found
-              }
-              onClick={() =>
-                searchResult?.page >= 1 &&
-                doSearch({ page: searchResult?.page + 1 })
-              }
-            >
-              {t("Next")}
-            </Button>
-          </HStack>
-        )}
-      </Suspense>
-    </PageContainer>
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [channelSelected, setChannelSelected] = useState(
+    searchParams.has("ch")
   );
-}
-
-function AdvancedSearchFilters({ ...props }: AdvancedSearchProps) {
-  const { t } = useTranslation();
-  const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
-  const [search] = useSearchParams();
 
   useEffect(() => {
-    const qObj: Partial<SearchParams<SearchableSong>> = Object.fromEntries(
-      search.entries()
-    );
-    if ((qObj as any)?.advanced) {
-      onOpen();
-    }
-  }, [onOpen, search]);
-
-  const [id, incr] = useState(200);
-  const isMobile = useBreakpointValue({ base: true, md: false });
+    if (searchParams.has("ch")) setChannelSelected(true);
+  }, [searchParams]); // searchParams --> isExact
 
   return (
-    <Box
-      style={{
-        width: isOpen ? "100%" : "120px",
-        backgroundColor: isOpen ? "#222" : "transparent",
-        padding: isOpen ? (isMobile ? "0.5rem" : "1.5rem") : "0px",
-        borderRadius: isOpen ? (isMobile ? "0.5rem" : "1.5rem") : "auto",
-        // marginLeft: "auto",
-        // marginRight: "0px",
+    <ReactiveBase
+      className="m-search"
+      app="songs_db"
+      url={window.location.origin + "/api/v2/musicdex/elasticsearch"}
+      transformRequest={({ url, ...req }) => {
+        req.url = "/api/v2/musicdex/elasticsearch/search";
+        // console.log(req);
+        return req;
       }}
-      my={4}
-      // layout
-      transition="all 0.4s"
+      themePreset="dark"
+      setSearchParams={(newurl) => {
+        // console.log(newurl);
+        navigate({ search: new URL(newurl).search });
+      }}
+      enableAppbase={false}
     >
-      {isOpen ? (
-        <Box>
-          <CloseButton
-            onClick={onClose}
-            mt="-3"
-            mr="-3"
-            mb="-3"
-            ml="auto"
-            position="relative"
-          />
+      <Flex alignItems="stretch" wrap={flexWrap} mt={4}>
+        <VStack
+          minW="200px"
+          className="m-filters"
+          alignItems="stretch"
+          px={2}
+          flexGrow={1}
+          spacing={2}
+          mr={3}
+        >
+          <DataSearch
+            className="datasearch"
+            componentId="q"
+            URLParams
+            debounce={1000}
+            customQuery={(q) => {
+              if (!q) return {};
 
-          <AdvancedSearchFiltersForm
-            {...props}
-            key={id + "search"}
-            fullreset={() => incr((x) => x + 100)}
+              return {
+                query: {
+                  bool: {
+                    must: [
+                      {
+                        multi_match: {
+                          query: q,
+                          fields: [
+                            "general",
+                            "general.romaji",
+                            "original_artist",
+                            "original_artist.romaji",
+                          ],
+                          type: "phrase",
+                        },
+                      },
+                    ],
+                  },
+                },
+              };
+            }}
+            dataField=""
+            queryFormat="and"
+            placeholder="Search for Music / Artist"
+            autosuggest={false}
+            enableDefaultSuggestions={false}
+            iconPosition="left"
+            onError={(e) => console.log(e)}
+            filterLabel="Search"
           />
-        </Box>
-      ) : (
-        <Button w="120px" onClick={onOpen} leftIcon={<FiFilter />}>
-          {t("Filter")}
-        </Button>
-      )}
-    </Box>
+          <Accordion allowToggle defaultIndex={0}>
+            <AccordionItem>
+              <AccordionButton>
+                <Heading flex="1" textAlign="center" size="sm">
+                  Advanced Filters
+                </Heading>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel p={0}>
+                <VStack alignItems="stretch" flexGrow={1} spacing={2}>
+                  <ToggleButton
+                    componentId="isMv"
+                    dataField="is_mv"
+                    data={[
+                      { label: "MV", value: "true" },
+                      { label: "Stream", value: "false" },
+                    ]}
+                    title="Presentation"
+                    filterLabel="Presentation"
+                    defaultValue={[]}
+                    URLParams={true}
+                    style={{ marginLeft: 0 }}
+                  />
+                  <Button
+                    colorScheme="brand"
+                    size="xs"
+                    variant={"solid"}
+                    rounded="0.2rem 0.2rem 0 0"
+                    style={{ marginBottom: "-0.5rem" }}
+                    alignSelf="start"
+                    cursor="default"
+                  >
+                    Song
+                  </Button>
+                  <DataSearch
+                    className="datasearch"
+                    componentId="song"
+                    URLParams
+                    debounce={1000}
+                    dataField=""
+                    customQuery={(q) => {
+                      if (!q) return {};
+                      return {
+                        query: {
+                          bool: {
+                            should: [
+                              {
+                                multi_match: {
+                                  query: q,
+                                  fields: ["name.ngram", "name"],
+                                  type: "phrase",
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      };
+                    }}
+                    queryFormat="and"
+                    placeholder="Song Name"
+                    autosuggest={false}
+                    enableDefaultSuggestions={false}
+                    iconPosition="left"
+                    onError={(e) => console.log(e)}
+                    filterLabel="Song Name"
+                  />
+                  <Button
+                    colorScheme="brand"
+                    size="xs"
+                    variant={"solid"}
+                    rounded="0.2rem 0.2rem 0 0"
+                    style={{ marginBottom: "-0.5rem" }}
+                    alignSelf="start"
+                    cursor="default"
+                  >
+                    Artist
+                  </Button>
+
+                  <DataSearch
+                    className="datasearch"
+                    componentId="artist"
+                    URLParams
+                    debounce={1000}
+                    dataField=""
+                    customQuery={(q) => {
+                      if (!q) return {};
+                      return {
+                        query: {
+                          bool: {
+                            should: [
+                              {
+                                multi_match: {
+                                  query: q,
+                                  fields: [
+                                    "original_artist.ngram^2",
+                                    "original_artist^2",
+                                    "original_artist.romaji^0.5",
+                                  ],
+                                  type: "phrase",
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      };
+                    }}
+                    queryFormat="and"
+                    placeholder="Original Artist Name"
+                    autosuggest={false}
+                    enableDefaultSuggestions={false}
+                    iconPosition="left"
+                    onError={(e) => console.log(e)}
+                    filterLabel="Original Artist"
+                  />
+                  <MultiList
+                    className="input-fix"
+                    componentId="ch"
+                    dataField="channel.name"
+                    filterLabel="Channel"
+                    title="Filter by Channel"
+                    react={{ and: ["q", "song", "artist", "isMv", "org"] }}
+                    showSearch={true}
+                    onValueChange={(e) => {
+                      if (e && e.length > 0) setChannelSelected(true);
+                      else setChannelSelected(false);
+                    }}
+                    URLParams={true}
+                    size={12}
+                    showCheckbox={true}
+                  />
+                  {!channelSelected && (
+                    <SingleList
+                      componentId="org"
+                      dataField="org"
+                      filterLabel="Org"
+                      title="Filter by Org"
+                      react={{ and: ["q", "song", "artist", "isMv"] }}
+                      showSearch={false}
+                      onValueChange={(e) => {
+                        if (e) setSuborgVisible(true);
+                        else setSuborgVisible(false);
+                      }}
+                      URLParams={true}
+                    />
+                  )}
+                  {suborgVisible && !channelSelected && (
+                    <MultiList
+                      componentId="suborg"
+                      dataField="suborg"
+                      filterLabel="Suborg"
+                      title="Filter by Suborg"
+                      showCheckbox={true}
+                      showSearch={false}
+                      queryFormat="and"
+                      react={{ and: ["q", "org", "song", "artist", "isMv"] }}
+                      URLParams={true}
+                    />
+                  )}
+                </VStack>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        </VStack>
+        <VStack
+          minW="350px"
+          w="50vw"
+          alignItems="stretch"
+          flexGrow={2}
+          flexShrink={1}
+        >
+          <SelectedFilters showClearAll="default" />
+          <ReactiveList
+            componentId="results"
+            dataField="name"
+            react={{
+              and: [
+                "q",
+                "song",
+                "artist",
+                ...(!channelSelected ? ["org"] : []),
+                ...(suborgVisible && !channelSelected ? ["suborg"] : []),
+                "isMv",
+                "ch",
+              ],
+            }}
+            // pagination
+            URLParams={true}
+            pagination={true}
+            showLoader={true}
+            size={12}
+            sortOptions={[
+              { dataField: "_score", sortBy: "desc", label: "Relevance" },
+              { dataField: "available_at", sortBy: "desc", label: "Latest" },
+              { dataField: "available_at", sortBy: "asc", label: "Earliest" },
+            ]}
+            render={SearchResultSongTable}
+          />
+        </VStack>
+      </Flex>
+    </ReactiveBase>
   );
 }
+
+// Garbage stuff:
+/* <ReactiveComponent
+        componentId="q"
+        showFilter={true}
+        filterLabel="Query"
+        // defaultQuery={}
+        defaultQuery={(args) => {
+          console.log(args);
+          return {
+            query: {
+              bool: {
+                must: [
+                  {
+                    multi_match: {
+                      query: qFuzzy,
+                      fields: [
+                        "general",
+                        "general.romaji",
+                        "original_artist",
+                        "original_artist.romaji",
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            value: qFuzzy,
+          }
+        }}
+        render={({ setQuery, value }) => {
+          return (
+            <Searchbox
+              w={{ base: "100%", lg: "40%" }}
+              paddingX={4}
+              didChange={({ qFuzzy, qExact }) => {
+                if (qFuzzy) {
+                  setQuery({
+                    query: {
+                      bool: {
+                        must: [
+                          {
+                            multi_match: {
+                              query: qFuzzy,
+                              fields: [
+                                "general",
+                                "general.romaji",
+                                "original_artist",
+                                "original_artist.romaji",
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    value: qFuzzy,
+                  });
+                } else if (qExact) {
+                  setQuery({
+                    query: {
+                      bool: {
+                        must: [
+                          {
+                            multi_match: {
+                              query: qExact,
+                              fields: [
+                                "general.ngram",
+                                "original_artist.ngram",
+                              ],
+                            },
+                          },
+                          ,
+                        ],
+                        should: [
+                          {
+                            multi_match: {
+                              query: qExact,
+                              fields: [
+                                "general",
+                                "general.romaji",
+                                "original_artist",
+                                "original_artist.romaji",
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    value: qExact,
+                  });
+                }
+              }}
+            />
+          );
+        }}
+      ></ReactiveComponent> */
