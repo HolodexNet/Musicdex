@@ -3,12 +3,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { DragEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
-import { FiFolder } from "react-icons/fi";
+import { FiFolder, FiRadio } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useFormatPlaylist } from "../../modules/playlist/useFormatPlaylist";
 import { splitPlaylistEmoji } from "../../modules/playlist/utils";
 import { usePlaylistUpdater } from "../../modules/services/playlist.service";
 
+function getIcon(type: string, defaultIcon: IconType) {
+  if (type.indexOf("radio/") === 0) {
+    return FiRadio;
+  }
+  return defaultIcon;
+}
 export const PlaylistList = ({
   playlistStubs,
   vibe = false,
@@ -55,15 +61,15 @@ export const PlaylistList = ({
                   boxShadow={
                     vibe ? "inset 0 0 4px 0px var(--chakra-colors-n2-500)" : ""
                   }
-                  onDragOver={(e) => {
+                  onDragOver={(e: DragEvent) => {
                     if (editable && vibe) {
                       e.preventDefault();
                       (e.currentTarget as any).style.boxShadow =
                         "inset 0 0 4px 3px var(--chakra-colors-n2-500)";
                     }
                   }}
-                  onDragEnter={(e) => {}}
-                  onDragLeave={(e) => {
+                  onDragEnter={(e: DragEvent) => {}}
+                  onDragLeave={(e: DragEvent) => {
                     (e.currentTarget as any).style.boxShadow = "";
                   }}
                   onDrop={(e: DragEvent<HTMLDivElement>) => {
@@ -98,19 +104,18 @@ export const PlaylistList = ({
                   }}
                 >
                   {emoji ? (
-                    <Flex mr="4" maxW="1rem">
+                    <Flex mr="4" fontSize=".85rem">
                       {emoji}
                     </Flex>
                   ) : (
                     <Icon
                       mr="4"
-                      fontSize="18"
-                      width="1rem"
+                      width="1.15rem"
                       height="24px"
                       _groupHover={{
                         color: "white",
                       }}
-                      as={defaultIcon}
+                      as={getIcon(x.type, defaultIcon)}
                     />
                   )}
                   <Text noOfLines={1}>{rest}</Text>
