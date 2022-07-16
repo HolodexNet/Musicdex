@@ -8,7 +8,18 @@ import {
   formatRelative,
   isDate,
 } from "date-fns";
-import { enUS, ja, zhTW, zhCN, enGB, de, ko, hu, vi } from "date-fns/locale"; // import all locales we need
+import {
+  enUS,
+  ja,
+  zhTW,
+  zhCN,
+  enGB,
+  de,
+  ko,
+  hu,
+  vi,
+  tr,
+} from "date-fns/locale"; // import all locales we need
 import I18NextHttpBackend from "i18next-http-backend";
 
 const locales: { [key: string]: Locale } = {
@@ -23,6 +34,7 @@ const locales: { [key: string]: Locale } = {
   "ko-KR": ko,
   "hu-HU": hu,
   "vi-VN": vi,
+  "tr-TR": tr,
 }; // used to look up the required locale
 
 const SYSTEM_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -45,7 +57,7 @@ i18n
       "ko-KR",
       // "ms-MY",
       // "ru-RU",
-      // "tr-TR",
+      "tr-TR",
       "vi-VN",
       "zh-CN",
       "zh-TW",
