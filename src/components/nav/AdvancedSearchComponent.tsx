@@ -29,7 +29,7 @@ import {
   SearchParams,
   SearchResponseFacetCountSchema,
 } from "../../modules/services/search.service";
-import { SearchableSong } from "../../pages/Search";
+import { SearchableSong } from "../../pages/SearchDeprecated";
 
 export interface AdvancedSearchProps {
   facets?: SearchResponseFacetCountSchema<SearchableSong>[];

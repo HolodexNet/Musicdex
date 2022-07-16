@@ -15,7 +15,7 @@ export type SongTableCol =
   | "sang_on"
   | "menu";
 
-interface SongTableProps {
+export interface SongTableProps {
   songs?: Song[];
   playlist?: PlaylistFull;
   // reactive hooks:

@@ -103,7 +103,7 @@ export const SongRow = React.memo(
             </Box>
           ) : undefined}
           {!hideCol?.includes("title") && (
-            <HStack flex="1.4 1 90px" px={2} margin="auto">
+            <HStack flex="1.4 1 90px" margin="auto">
               {rowProps?.showArtwork && (
                 <SongArtwork song={song} size={40} rounded="sm" />
               )}

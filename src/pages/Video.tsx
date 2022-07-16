@@ -39,6 +39,7 @@ export default function Video() {
     <PageContainer>
       <ContainerInlay>
         <PlaylistHeading
+          playlist={playlist}
           title={title || "Video"}
           description={description || ""}
           count={playlist?.content?.length || 0}

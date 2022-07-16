@@ -122,24 +122,25 @@ export default function Song() {
                     queueSongs({ songs: [song], immediatelyPlay: true });
                   }}
                   marginTop="auto"
-                  bgColor="brand.100"
+                  // bgColor="brand.100"
                   size="md"
                   title="Play"
                   flexBasis={["100%", "auto"]}
-                  rightIcon={<FaPlay style={{ scale: "1" }} />}
+                  leftIcon={<FaPlay style={{ scale: "1" }} />}
+                  colorScheme="n2"
                 >
                   {t("Play")}
                 </Button>
                 <IconButton
                   icon={<FiMoreHorizontal />}
                   size="md"
-                  variant="outline"
+                  variant="ghost"
                   colorScheme="n2"
                   aria-label="More"
                   onClick={(e) => show(e, { props: song })}
                 ></IconButton>
 
-                <Button
+                {/* <Button
                   variant="ghost"
                   aria-label="share link"
                   size="md"
@@ -148,8 +149,8 @@ export default function Song() {
                   title={t("Copy link")}
                 >
                   <FiShare2 />
-                </Button>
-                <Button
+                </Button> */}
+                {/* <Button
                   variant="ghost"
                   aria-label="youtube"
                   size="md"
@@ -163,7 +164,7 @@ export default function Song() {
                   title={t("Open in YouTube")}
                 >
                   <FiYoutube />
-                </Button>
+                </Button> */}
 
                 <SongLikeButton song={song}></SongLikeButton>
                 {song.amUrl && (
