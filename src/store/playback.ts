@@ -371,7 +371,17 @@ const playbackModel: PlaybackModel = {
     actions._ejectCurrentlyPlaying();
     actions.clearPlaylist();
 
-    if (playlist.type === "ugp" || playlist.type.startsWith("playlist")) {
+    if (playlist.type.startsWith("radio")) {
+      // assume startPos doesn't exist?
+      // unset shuffle (or maybe turn off canShuffle)
+      actions._setShuffleMode(false);
+      // set radio to current playlist
+      actions._setPlaylist(playlist);
+      // unset repeat if on repeat-all (or turn off canRepeatAll)
+      if (h.getState().repeatMode === "repeat") actions._setRepeatMode("none");
+
+      actions._insertCurrentlyPlaying(SRC.RADIO);
+    } else {
       if (startPos === undefined) {
         actions._setPlaylist(playlist);
         actions._insertCurrentlyPlaying(SRC.PLAYLIST);
@@ -387,16 +397,6 @@ const playbackModel: PlaybackModel = {
         }
         actions._setShuffleMode(oldShuffleMode);
       }
-    } else if (playlist.type.startsWith("radio")) {
-      // assume startPos doesn't exist?
-      // unset shuffle (or maybe turn off canShuffle)
-      actions._setShuffleMode(false);
-      // set radio to current playlist
-      actions._setPlaylist(playlist);
-      // unset repeat if on repeat-all (or turn off canRepeatAll)
-      if (h.getState().repeatMode === "repeat") actions._setRepeatMode("none");
-
-      actions._insertCurrentlyPlaying(SRC.RADIO);
     }
   }),
 
