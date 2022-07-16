@@ -22,8 +22,8 @@ export const artistFormatter: PlaylistFormatter<
   },
   description: (playlist, { ch }, data, { tn }) => {
     if (!data) return;
-    // const name = tn(data.channel.english_name, data.channel.name);
-    return t("Musicdex Radio");
+    const name = tn(data.channel.english_name, data.channel.name);
+    return t("Musicdex Radio featuring {{name}}", { name });
     // return t(``);
   },
   // link: (p, { id }, d: any) => {}

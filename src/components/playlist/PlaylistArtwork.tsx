@@ -118,13 +118,11 @@ export const PlaylistArtwork = React.memo(
     }
 
     if (type === ":artist" || type === ":hot") {
-      iconType = GiSoundWaves;
       return (
         <RadioTextArt
           titleText={title || ""}
           imageUrl={channelImg || thumbnail || ""}
-          showUserIcon={playlist.type === "ugp"}
-          iconType={iconType}
+          bottomText={t("Radio")}
           {...props}
         />
       );
@@ -231,15 +229,13 @@ function OverlayTextArt({
 
 function RadioTextArt({
   titleText,
+  bottomText = "Radio",
   imageUrl,
-  showUserIcon = false,
-  iconType = undefined,
   ...rest
 }: {
   titleText: string;
+  bottomText?: string;
   imageUrl: string;
-  showUserIcon: boolean;
-  iconType?: IconType;
 } & FlexProps) {
   const bgColor =
     titleText.length % 2 === 0
@@ -247,7 +243,7 @@ function RadioTextArt({
       : "var(--chakra-colors-brand-600)";
 
   const adjFontSize = Math.max(
-    16,
+    14,
     Math.round(-Math.pow(titleText.length / 15, 2) + 20)
   );
   return (
@@ -261,21 +257,31 @@ function RadioTextArt({
       overflow="hidden"
       {...rest}
     >
+      <BrandColorGradientText bgColor={bgColor} />
+      <Icon
+        opacity="0.9"
+        top="-10%"
+        left="-10%"
+        height="120%"
+        width="120%"
+        blendMode="soft-light"
+        position="absolute"
+        as={FiRadio}
+      ></Icon>
       <Image
         src={imageUrl}
         objectFit="cover"
         loading="lazy"
-        top="0"
-        height="100%"
-        width="100%"
+        top="25%"
+        left="25%"
+        height="50%"
+        width="50%"
+        borderRadius="50%"
         position="absolute"
-        // style={{maskImage: 'url(#line-logo)', maskRepeat: 'repeat'}}
+        dropShadow="dark-lg"
       />
-      <BrandColorGradientText
-        bgColor={bgColor}
-        opacity={0.5}
-      ></BrandColorGradientText>
-      <Box p={2} position="absolute" mt={3} width="100%">
+
+      <Box p={2} position="absolute" mt={1} width="100%">
         <Text
           fontSize={adjFontSize}
           fontWeight={600}
@@ -285,41 +291,18 @@ function RadioTextArt({
           {titleText}
         </Text>
       </Box>
-      {showUserIcon ? (
-        <Icon
-          as={FaUser}
-          w={6}
-          h={6}
-          position="absolute"
-          left="4px"
-          bottom="4px"
-          opacity={0.4}
-        ></Icon>
-      ) : (
-        <LineLogo
-          position="absolute"
-          w={6}
-          h={6}
-          left="4px"
-          bottom="4px"
-          color="var(--chakra-colors-bg-800)"
-          zIndex={1}
-        />
-      )}
-      {iconType && (
-        <Icon
-          width="120px"
-          height="120px"
-          margin-bottom="2px"
-          // transform={`translate(50%, 100%)`}
-          blendMode="soft-light"
-          color="bg.800"
-          bottom="-61px"
-          position="absolute"
-          right="10px"
-          as={iconType}
-        ></Icon>
-      )}
+      <Text
+        p={2}
+        position="absolute"
+        width="100%"
+        fontSize="1.2rem"
+        fontWeight={600}
+        textAlign="center"
+        noOfLines={2}
+        bottom={0}
+      >
+        {bottomText}
+      </Text>
     </Flex>
   );
 }
