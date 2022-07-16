@@ -111,7 +111,7 @@ export function useSongLikeCheck_Loader():
     };
 
     dataloader = new Dataloader<string, boolean>(fetchDataPromise, {
-      batchScheduleFn: (callback) => setTimeout(callback, 100),
+      batchScheduleFn: (callback) => setTimeout(callback, 500),
       cache: false, // <-- IMPORTANT, dataloader doesn't have the same cache management as react-query
     });
 

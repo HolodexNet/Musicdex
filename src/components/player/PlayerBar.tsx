@@ -335,9 +335,7 @@ const PlayerBarExpandedRightSide = React.memo(() => {
       margin="auto"
       px={6}
     >
-      <Heading mb={6} size="lg">
-        {t("Upcoming")}
-      </Heading>
+      <Heading size="lg">{t("Upcoming")}</Heading>
       <Suspense fallback={<div>{t("Loading...")}</div>}>
         <Box w="100%" h="100%" maxH="100%">
           {queue.length === 0 && playlistQueue.length === 0 ? (
