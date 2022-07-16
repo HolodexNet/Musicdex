@@ -283,10 +283,10 @@ function RadioTextArt({
 
       <Box p={2} position="absolute" mt={1} width="100%">
         <Text
-          fontSize={adjFontSize}
+          fontSize={adjFontSize * 0.85}
           fontWeight={600}
           textAlign="center"
-          noOfLines={2}
+          isTruncated
         >
           {titleText}
         </Text>
