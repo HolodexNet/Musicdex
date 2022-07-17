@@ -18,7 +18,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useAllPlaylistDiscovery } from "../modules/services/discovery.service";
 import { PlaylistCard } from "../components/playlist/PlaylistCard";
-import { LazyLoad } from "../components/common/LazyLoad";
 
 export default function Channels({ type }: { type: "ugp" | "sgp" | "radio" }) {
   const { t, i18n } = useTranslation();
