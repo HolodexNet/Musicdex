@@ -11,6 +11,7 @@ import Library from "./pages/Library";
 import { RequireLogin } from "./components/login/RequireLogin";
 import Channels from "./pages/Channels";
 import { useStoreState } from "./store";
+import SeeMoreCardGrid from "./pages/SeeMoreCardGrid";
 
 const Radio = React.lazy(() => import("./pages/Radio"));
 const Channel = React.lazy(() => import("./pages/Channel"));
@@ -41,6 +42,18 @@ const routes: RouteObject[] = [
   {
     path: "/org/:org/channels",
     element: <Channels />,
+  },
+  {
+    path: "/org/:org/playlists",
+    element: <SeeMoreCardGrid type="sgp" />,
+  },
+  {
+    path: "/org/:org/radios",
+    element: <SeeMoreCardGrid type="radio" />,
+  },
+  {
+    path: "/org/:org/community",
+    element: <SeeMoreCardGrid type="ugp" />,
   },
   {
     path: "/playlists/:playlistId",

@@ -17,12 +17,14 @@ import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { useChannelListForOrg } from "../modules/services/channels.service";
 import { useStoreState } from "../store";
-import { Link as NavLink, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 export default function Channels() {
   //   let params = useParams();
-  const org = useStoreState((store) => store.org.currentOrg);
+  const storeOrg = useStoreState((store) => store.org.currentOrg);
+  const { org: paramOrg } = useParams();
+  const org = paramOrg || storeOrg.name;
   const {
     data: channelPages,
     fetchNextPage,
@@ -30,7 +32,7 @@ export default function Channels() {
     hasNextPage,
     status,
     ...rest
-  } = useChannelListForOrg(org.name);
+  } = useChannelListForOrg(org);
 
   useEffect(() => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
@@ -60,7 +62,7 @@ export default function Channels() {
   return (
     <PageContainer>
       <Helmet>
-        <title>{t("{{org}} Channels", { org: org.name })} - Musicdex</title>
+        <title>{t("{{org}} Channels", { org })} - Musicdex</title>
       </Helmet>
       <ContainerInlay>
         <HStack mb={3}>
@@ -71,9 +73,7 @@ export default function Channels() {
             size="sm"
             onClick={() => navigate(-1)}
           />
-          <Heading size="lg">
-            {t("{{org}} Channels", { org: org.name })}
-          </Heading>
+          <Heading size="lg">{t("{{org}} Channels", { org })}</Heading>
         </HStack>
         <Box>
           <QueryStatus queryStatus={rest} />

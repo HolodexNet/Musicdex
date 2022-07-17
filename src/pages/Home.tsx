@@ -135,7 +135,7 @@ export default function Home() {
 
         {recPlaylists?.length && (
           <HomeSection>
-            <HomeHeading seeMoreTo="/">
+            <HomeHeading seeMoreTo="./playlists">
               {t("{{org}} Playlists", { org: org.name })}
             </HomeHeading>
             <CardCarousel
@@ -156,7 +156,7 @@ export default function Home() {
 
         {recRadios?.length && (
           <HomeSection>
-            <HomeHeading seeMoreTo="/">{t("Radios")}</HomeHeading>
+            <HomeHeading seeMoreTo="./radios">{t("Radios")}</HomeHeading>
             <CardCarousel
               height={210}
               width={160}
@@ -175,7 +175,7 @@ export default function Home() {
 
         {communityPlaylists?.length && (
           <HomeSection>
-            <HomeHeading seeMoreTo="/">
+            <HomeHeading seeMoreTo="./community">
               {t("{{org}} Community Playlists", { org: org.name })}
             </HomeHeading>
             <CardCarousel
