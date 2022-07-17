@@ -10,20 +10,25 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useQueryState } from "react-router-use-location-state";
+import { useNavigate } from "react-router";
 import { useServerOrgList } from "../../modules/services/statics.service";
 import { useStoreActions, useStoreState } from "../../store";
 import { Org } from "../../store/org";
 import { MotionBox } from "../common/MotionBox";
 import { OrgPickerPanel } from "../settings/OrgManagement";
 
+export const useOrgPath = () => {
+  const org = useStoreState((state) => state.org.currentOrg);
+  return `/org/${org.name}`;
+};
+
 export function OrgSelector() {
   const org = useStoreState((state) => state.org.currentOrg);
   const setOrg = useStoreActions((state) => state.org.setOrg);
   const orglist = useStoreState((s) => s.org.orgsList);
+  const navigate = useNavigate();
 
   const { data: orgs } = useServerOrgList();
-  const [orgFromQuery, setOrgInQuery] = useQueryState("org", org.name);
 
   const { t } = useTranslation();
   const usableOrgs = useMemo(() => {
@@ -59,7 +64,7 @@ export function OrgSelector() {
             const tgt = orgs?.find((x) => x.name === e.target.value);
             if (tgt) {
               setOrg(tgt);
-              setOrgInQuery(tgt.name);
+              navigate(`/org/${tgt.name}`);
             } else onOpen();
           }}
         >
@@ -90,7 +95,7 @@ export function OrgSelector() {
               pickOrg={(org) => {
                 if (org) {
                   setOrg(org);
-                  setOrgInQuery(org.name);
+                  navigate(`/org/${org.name}`);
                 }
                 onClose();
               }}

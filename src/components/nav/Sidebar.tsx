@@ -23,7 +23,7 @@ import {
   useStarredPlaylists,
 } from "../../modules/services/playlist.service";
 import { NavItem } from "./NavItem";
-import { OrgSelector } from "./OrgSelector";
+import { OrgSelector, useOrgPath } from "./OrgSelector";
 import { useLocation } from "react-router-dom";
 import { useStoreActions, useStoreState } from "../../store";
 import { AnimatePresence } from "framer-motion";
@@ -76,6 +76,8 @@ export function SidebarContent({
   const openModal = useStoreActions(
     (actions) => actions.playlist.showPlaylistCreateDialog
   );
+  const orgPath = useOrgPath();
+
   return (
     <Box
       display="flex"
@@ -100,11 +102,11 @@ export function SidebarContent({
         <LogoWithText />
         <CloseButton onClick={onClose} />
       </Flex>
-      <NavItem icon={FiHome} key={"Home"} mb={1} path="/">
+      <NavItem icon={FiHome} key={"Home"} mb={1} path={orgPath}>
         {t("Home") as string}
       </NavItem>
       <AnimatePresence>
-        {(pathname === "/" || pathname === "/channels") && <OrgSelector />}
+        {pathname.startsWith("/org/") && <OrgSelector />}
       </AnimatePresence>
       {pages.map((page) => (
         <NavItem {...page} key={page.name} mb={1}>

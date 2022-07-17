@@ -21,7 +21,7 @@ import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreActions, useStoreState } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useEffect, useMemo } from "react";
 import { useServerOrgList } from "../modules/services/statics.service";
@@ -55,7 +55,7 @@ const HomeHeading = function ({
           colorScheme="n2"
           size="sm"
           as={Link}
-          to="/"
+          to={seeMoreTo}
           ml={2}
         >
           {seeMoreText || t("See More")}
@@ -73,19 +73,16 @@ export default function Home() {
   const { data: trendingSongs, ...trendingStatus } = useTrendingSongs(
     org.name !== "All Vtubers" ? { org: org.name } : {}
   );
-
-  const [orgFromQuery, setOrgInQuery] = useQueryState("org", org.name);
+  const { org: orgParam } = useParams();
   useEffect(() => {
-    if (orgFromQuery !== org.name) {
+    if (orgParam && orgParam !== org.name) {
       // if it's not the same, then overwrite it.
-      if (orgFromQuery) {
-        const targetOrg = orgs?.filter((x) => x.name === orgFromQuery);
-        if (targetOrg && targetOrg.length === 1 && targetOrg[0]) {
-          setOrg(targetOrg[0]);
-        }
+      const targetOrg = orgs?.filter((x) => x.name === orgParam);
+      if (targetOrg && targetOrg.length === 1 && targetOrg[0]) {
+        setOrg(targetOrg[0]);
       }
     }
-  }, [org, orgFromQuery, orgs, setOrg]);
+  }, [org, orgParam, orgs, setOrg]);
 
   const isMobile = useBreakpointValue({ base: true, md: false });
   const queueSongs = useSongQueuer();
@@ -179,7 +176,7 @@ export default function Home() {
         {communityPlaylists?.length && (
           <HomeSection>
             <HomeHeading seeMoreTo="/">
-              {t("Community {{org}} Playlists", { org: org.name })}
+              {t("{{org}} Community Playlists", { org: org.name })}
             </HomeHeading>
             <CardCarousel
               height={210}
@@ -229,7 +226,7 @@ export default function Home() {
         </HomeSection>
 
         <HomeSection>
-          <HomeHeading seeMoreTo="/channels">
+          <HomeHeading seeMoreTo={`./channels`}>
             {t("Discover {{org}}", { org: org.name })}
           </HomeHeading>
           <CardCarousel

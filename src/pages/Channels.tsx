@@ -17,7 +17,7 @@ import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { useChannelListForOrg } from "../modules/services/channels.service";
 import { useStoreState } from "../store";
-import { Link as NavLink } from "react-router-dom";
+import { Link as NavLink, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 export default function Channels() {
@@ -56,6 +56,7 @@ export default function Channels() {
     return channels.map((x) => (x as any).group || "").filter(onlyUnique);
   }, [channels]);
 
+  const navigate = useNavigate();
   return (
     <PageContainer>
       <Helmet>
@@ -63,14 +64,13 @@ export default function Channels() {
       </Helmet>
       <ContainerInlay>
         <HStack mb={3}>
-          <Link as={NavLink} to={"/"}>
-            <IconButton
-              as={FiArrowLeft}
-              aria-label="Home"
-              variant="ghost"
-              size="sm"
-            />
-          </Link>
+          <IconButton
+            as={FiArrowLeft}
+            aria-label="Home"
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(-1)}
+          />
           <Heading size="lg">
             {t("{{org}} Channels", { org: org.name })}
           </Heading>
