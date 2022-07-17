@@ -18,6 +18,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useAllPlaylistDiscovery } from "../modules/services/discovery.service";
 import { PlaylistCard } from "../components/playlist/PlaylistCard";
+import { LazyLoad } from "../components/common/LazyLoad";
 
 export default function Channels({ type }: { type: "ugp" | "sgp" | "radio" }) {
   const { t, i18n } = useTranslation();
@@ -60,12 +61,20 @@ export default function Channels({ type }: { type: "ugp" | "sgp" | "radio" }) {
         <title>{pageTitle} - Musicdex</title>
       </Helmet>
       <ContainerInlay>
-        <HStack mb={3}>
+        <HStack
+          pb={3}
+          pt={1}
+          position="sticky"
+          top={0}
+          bgColor="bg.900"
+          zIndex={5}
+        >
           <IconButton
             as={FiArrowLeft}
             aria-label="Home"
             variant="ghost"
             size="sm"
+            mx={1}
             onClick={() => navigate(-1)}
           />
           <Heading size="lg">{pageTitle}</Heading>
