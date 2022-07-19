@@ -53,7 +53,7 @@ export function useAllPlaylistDiscovery(org: string, type: string) {
             offset: 100 * pageParam,
           },
         })
-      ).data?.playlists;
+      ).data?.items;
       return list;
     },
     {
