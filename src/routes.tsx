@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteObject, useRoutes } from "react-router";
+import { Navigate, RouteObject, useRoutes } from "react-router";
 import LikedSongs from "./pages/LikedSongs";
 import History from "./pages/History";
 import Login from "./pages/Login";
@@ -10,6 +10,8 @@ import { Queue } from "./pages/Queue";
 import Library from "./pages/Library";
 import { RequireLogin } from "./components/login/RequireLogin";
 import Channels from "./pages/Channels";
+import { useStoreState } from "./store";
+import SeeMoreCardGrid from "./pages/SeeMoreCardGrid";
 
 const Radio = React.lazy(() => import("./pages/Radio"));
 const Channel = React.lazy(() => import("./pages/Channel"));
@@ -23,14 +25,35 @@ const Settings = React.lazy(() => import("./pages/Settings"));
 // const Video = React.lazy(() => import("./pages/Video"));
 const Search = React.lazy(() => import("./pages/Search"));
 
+const RedirectToOrg = () => {
+  const org = useStoreState((store) => store.org.currentOrg);
+  return <Navigate to={`/org/${org.name || "Hololive"}`} />;
+};
+
 const routes: RouteObject[] = [
   {
     path: "/",
+    element: <RedirectToOrg />,
+  },
+  {
+    path: "/org/:org",
     element: <Home />,
   },
   {
-    path: "/channels",
+    path: "/org/:org/channels",
     element: <Channels />,
+  },
+  {
+    path: "/org/:org/playlists",
+    element: <SeeMoreCardGrid type="sgp" />,
+  },
+  {
+    path: "/org/:org/radios",
+    element: <SeeMoreCardGrid type="radio" />,
+  },
+  {
+    path: "/org/:org/community",
+    element: <SeeMoreCardGrid type="ugp" />,
   },
   {
     path: "/playlists/:playlistId",
@@ -97,6 +120,7 @@ const routes: RouteObject[] = [
     ),
   },
 ];
+
 export default function Routes() {
   const elements = useRoutes(routes);
   return elements;

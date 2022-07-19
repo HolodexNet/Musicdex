@@ -29,7 +29,6 @@ export function NavItem({
   const bgcBrand = useColorModeValue("brand.200", "brand.700");
 
   const { pathname } = useLocation();
-
   return (
     <Flex
       as={NavLink}
@@ -41,7 +40,9 @@ export function NavItem({
       borderRadius="lg"
       role="group"
       cursor="pointer"
-      color={pathname === path ? bgc : disabled ? "bg.400" : "auto"}
+      color={
+        path && pathname.startsWith(path) ? bgc : disabled ? "bg.400" : "auto"
+      }
       transition="all 0.2s ease-out"
       _hover={{
         bg: bgcBrand,

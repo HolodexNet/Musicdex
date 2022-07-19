@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   Heading,
   HeadingProps,
   HStack,
@@ -20,7 +21,7 @@ import { useTrendingSongs } from "../modules/services/songs.service";
 import { useStoreActions, useStoreState } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useEffect, useMemo } from "react";
 import { useServerOrgList } from "../modules/services/statics.service";
@@ -28,16 +29,38 @@ import { useQueryState } from "react-router-use-location-state";
 
 const HomeHeading = function ({
   children,
+  seeMoreTo,
+  seeMoreText,
   ...props
-}: { children: React.ReactNode } & HeadingProps) {
+}: {
+  children: React.ReactNode;
+  seeMoreTo?: string;
+  seeMoreText?: string;
+} & HeadingProps) {
+  const { t } = useTranslation();
   return (
     <Heading
+      as={Flex}
+      alignItems="center"
+      justifyContent="space-between"
       size="lg"
-      fontSize={["1.25rem", null, "1.5rem", null, "1.875rem"]}
-      mb={3}
+      fontSize={["lg", null, "xl", null, "xl"]}
+      mb={{ base: 2, md: 3 }}
       {...props}
     >
-      {children}
+      <Box>{children}</Box>
+      {seeMoreTo && (
+        <Button
+          variant="ghost"
+          colorScheme="n2"
+          size="sm"
+          as={Link}
+          to={seeMoreTo}
+          ml={2}
+        >
+          {seeMoreText || t("See More")}
+        </Button>
+      )}
     </Heading>
   );
 };
@@ -50,34 +73,36 @@ export default function Home() {
   const { data: trendingSongs, ...trendingStatus } = useTrendingSongs(
     org.name !== "All Vtubers" ? { org: org.name } : {}
   );
-
-  const [orgFromQuery, setOrgInQuery] = useQueryState("org", org.name);
+  const { org: orgParam } = useParams();
   useEffect(() => {
-    if (orgFromQuery !== org.name) {
+    if (orgParam && orgParam !== org.name) {
       // if it's not the same, then overwrite it.
-      if (orgFromQuery) {
-        const targetOrg = orgs?.filter((x) => x.name === orgFromQuery);
-        if (targetOrg && targetOrg.length === 1 && targetOrg[0]) {
-          setOrg(targetOrg[0]);
-        }
+      const targetOrg = orgs?.filter((x) => x.name === orgParam);
+      if (targetOrg && targetOrg.length === 1 && targetOrg[0]) {
+        setOrg(targetOrg[0]);
       }
     }
-  }, [org, orgFromQuery, orgs, setOrg]);
+  }, [org, orgParam, orgs, setOrg]);
 
   const isMobile = useBreakpointValue({ base: true, md: false });
   const queueSongs = useSongQueuer();
 
   const { data: discovery, ...discoveryStatus } = useDiscoveryOrg(org.name);
 
-  const recPlaylists = useMemo(() => {
-    return discovery?.recommended?.playlists.filter(
-      (x: PlaylistStub) => !x.type.startsWith("radio")
-    );
-  }, [discovery]);
-  const recRadios = useMemo(() => {
-    return discovery?.recommended?.playlists.filter((x: PlaylistStub) =>
-      x.type.startsWith("radio")
-    );
+  const {
+    sgp: recPlaylists,
+    radios: recRadios,
+    ugp: communityPlaylists,
+  } = useMemo(() => {
+    const sgp: PlaylistStub[] = [];
+    const radios: PlaylistStub[] = [];
+    const ugp: PlaylistStub[] = [];
+    discovery?.recommended?.playlists.forEach((p: PlaylistStub) => {
+      if (p.type === "ugp") ugp.push(p);
+      else if (p.type.startsWith("radio")) radios.push(p);
+      else sgp.push(p);
+    });
+    return { sgp, radios, ugp };
   }, [discovery]);
 
   return (
@@ -108,32 +133,57 @@ export default function Home() {
           )}
         </HomeSection>
 
-        <HomeSection>
-          <HomeHeading>{t("{{org}} Playlists", { org: org.name })}</HomeHeading>
-          <CardCarousel
-            height={210}
-            width={160}
-            scrollMultiplier={isMobile ? 2 : 4}
-          >
-            {recPlaylists?.map((p: Partial<PlaylistFull>) => (
-              <PlaylistCard
-                playlist={p}
-                key={"rec" + p.id}
-                mx={["2px", null, 1, 2]}
-              />
-            ))}
-          </CardCarousel>
-        </HomeSection>
-
-        {recRadios && (
+        {recPlaylists?.length && (
           <HomeSection>
-            <HomeHeading>{t("Radios")}</HomeHeading>
+            <HomeHeading seeMoreTo="./playlists">
+              {t("{{org}} Playlists", { org: org.name })}
+            </HomeHeading>
+            <CardCarousel
+              height={210}
+              width={160}
+              scrollMultiplier={isMobile ? 2 : 4}
+            >
+              {recPlaylists?.map((p: Partial<PlaylistFull>) => (
+                <PlaylistCard
+                  playlist={p}
+                  key={"rec" + p.id}
+                  mx={["2px", null, 1, 2]}
+                />
+              ))}
+            </CardCarousel>
+          </HomeSection>
+        )}
+
+        {recRadios?.length && (
+          <HomeSection>
+            <HomeHeading seeMoreTo="./radios">{t("Radios")}</HomeHeading>
             <CardCarousel
               height={210}
               width={160}
               scrollMultiplier={isMobile ? 2 : 4}
             >
               {recRadios?.map((p: Partial<PlaylistFull>) => (
+                <PlaylistCard
+                  playlist={p}
+                  key={"rec" + p.id}
+                  mx={["2px", null, 1, 2]}
+                />
+              ))}
+            </CardCarousel>
+          </HomeSection>
+        )}
+
+        {communityPlaylists?.length && (
+          <HomeSection>
+            <HomeHeading seeMoreTo="./community">
+              {t("{{org}} Community Playlists", { org: org.name })}
+            </HomeHeading>
+            <CardCarousel
+              height={210}
+              width={160}
+              scrollMultiplier={isMobile ? 2 : 4}
+            >
+              {communityPlaylists?.map((p: Partial<PlaylistFull>) => (
                 <PlaylistCard
                   playlist={p}
                   key={"rec" + p.id}
@@ -176,12 +226,9 @@ export default function Home() {
         </HomeSection>
 
         <HomeSection>
-          <Link to="/channels">
-            <Button float="right" variant="outline" colorScheme="n2" size="sm">
-              {t("See All")}
-            </Button>
-          </Link>
-          <HomeHeading>{t("Discover {{org}}", { org: org.name })}</HomeHeading>
+          <HomeHeading seeMoreTo={`./channels`}>
+            {t("Discover {{org}}", { org: org.name })}
+          </HomeHeading>
           <CardCarousel
             height={180}
             width={160}

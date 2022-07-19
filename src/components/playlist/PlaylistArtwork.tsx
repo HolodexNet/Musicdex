@@ -258,7 +258,7 @@ function RadioTextArt({
       {...rest}
     >
       <Box
-        bgColor="bg.600"
+        bgColor="bg.800"
         top="0"
         height="100%"
         width="100%"

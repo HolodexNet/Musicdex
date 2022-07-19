@@ -17,7 +17,9 @@ import { t } from "i18next";
 import { FiFolderPlus, FiTrash } from "react-icons/fi";
 import { useStoreActions, useStoreState } from "../../../store";
 import { useFormatPlaylist } from "../../../modules/playlist/useFormatPlaylist";
-import { AutoSizer, Size, WindowScroller } from "react-virtualized";
+import WindowScroller from "react-virtualized/dist/es/WindowScroller";
+import AutoSizer from "react-virtualized/dist/es/AutoSizer";
+
 import { FrameRef } from "../../layout/Frame";
 
 interface UpcomingSongTableProps extends SongTableProps {
@@ -184,7 +186,7 @@ export const UpcomingSongList = ({
   }, []);
 
   const renderList = useCallback(
-    ({ height, width }: Size) => (
+    ({ height, width }: { height: number; width: number }) => (
       <VariableSizeList
         height={height || 800}
         width={useWindowScroller ? "100%" : width}
