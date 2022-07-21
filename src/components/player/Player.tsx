@@ -27,7 +27,7 @@ export function Player({ player }: { player: any }) {
   const previous = useStoreActions((actions) => actions.playback.previous);
   const next = useStoreActions((actions) => actions.playback.next);
   const toggleShuffleMode = useStoreActions(
-    (acitons) => acitons.playback.toggleShuffle
+    (actions) => actions.playback.toggleShuffle
   );
   const toggleRepeatMode = useStoreActions(
     (actions) => actions.playback.toggleRepeat
@@ -127,7 +127,7 @@ export function Player({ player }: { player: any }) {
   useEffect(() => {
     if (!player) return;
 
-    // Song changed, and is no longer the paause locked song, allow autoplay
+    // Song changed, and is no longer the pause locked song, allow autoplay
     if (
       firstLoadPauseId &&
       firstLoadPauseId !== `${currentSong?.id || ""}${repeat || ""}`
