@@ -19,7 +19,10 @@ export const defaultFormatter: PlaylistFormatter<any, any> = {
       if (chs.length < 4 && chs.length > 0)
         return `https://holodex.net/statics/channelImg/${chs[0]}.png`;
       else return `https://i.ytimg.com/vi/${vids[0]}/hqdefault.jpg`;
-    } else if ((playlist as any).art_context) {
+    } else if (
+      (playlist as any).art_context &&
+      Object.keys((playlist as any).art_context).length !== 0
+    ) {
       const chs = (playlist as any).art_context.channels || [];
       const vids = (playlist as any).art_context.videos || [];
       //if it's more channel focused than single video focused.
