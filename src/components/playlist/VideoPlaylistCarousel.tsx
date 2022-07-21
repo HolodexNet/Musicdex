@@ -45,7 +45,7 @@ export function VideoPlaylistCarousel({
   }, [currentlyPlayingPlaylistId, videoPlaylists]);
 
   useInterval(() => {
-    // Dont change if hovering on an item, or playing from an item
+    // Don't change if hovering on an item, or playing from an item
     if (
       !hovering &&
       (playingFromIdx < 0 || playingFromIdx !== currentItemAuto)
@@ -65,7 +65,7 @@ export function VideoPlaylistCarousel({
   if (!videoPlaylists)
     return (
       <AspectRatio
-        ratio={34 / 9}
+        ratio={34 / 12}
         maxH="auto"
         overflow="hidden"
         boxSizing="border-box"

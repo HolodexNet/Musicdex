@@ -71,7 +71,6 @@ export const TimeSlider = React.memo(
         >
           <SliderThumb
             opacity={hovering || fullPlayer ? 1 : 0}
-            scale={hovering || fullPlayer ? 1 : 0}
             transition="opacity var(--chakra-transition-duration-fast) ease-in"
           />
         </Tooltip>

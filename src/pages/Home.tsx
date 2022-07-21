@@ -133,7 +133,7 @@ export default function Home() {
           )}
         </HomeSection>
 
-        {recPlaylists?.length && (
+        {recPlaylists?.length ? (
           <HomeSection>
             <HomeHeading seeMoreTo="./playlists">
               {t("{{org}} Playlists", { org: org.name })}
@@ -152,9 +152,9 @@ export default function Home() {
               ))}
             </CardCarousel>
           </HomeSection>
-        )}
+        ) : null}
 
-        {recRadios?.length && (
+        {recRadios?.length ? (
           <HomeSection>
             <HomeHeading seeMoreTo="./radios">{t("Radios")}</HomeHeading>
             <CardCarousel
@@ -171,9 +171,9 @@ export default function Home() {
               ))}
             </CardCarousel>
           </HomeSection>
-        )}
+        ) : null}
 
-        {communityPlaylists?.length && (
+        {communityPlaylists?.length ? (
           <HomeSection>
             <HomeHeading seeMoreTo="./community">
               {t("{{org}} Community Playlists", { org: org.name })}
@@ -192,7 +192,7 @@ export default function Home() {
               ))}
             </CardCarousel>
           </HomeSection>
-        )}
+        ) : null}
 
         <HomeSection>
           <HStack alignItems="flex-end" mb={3}>
