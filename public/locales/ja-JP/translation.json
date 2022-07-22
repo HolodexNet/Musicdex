@@ -20,7 +20,6 @@
   "Search for VTubers, songs, original artists...": "VTuber、楽曲、オリジナルアーティストを検索......",
   "Search by Everything (Name, Original Artist, Channel,Organization)": "すべてで検索 (名前、オリジナルアーティスト、チャンネル、グループ)",
   "Song Query": "楽曲のクエリ",
-  "Minimum length should be 1": "長さは 1 以上でなければなりません",
   "Filter by Original Artist": "原曲のアーティストで絞り込む",
   "Filter by status": "ステータスで絞り込む",
   "All Song Types": "すべてのタイプ",
@@ -46,7 +45,6 @@
   "Play": "再生",
   "Add to Queue": "キューに追加",
   "Edit": "編集",
-  "Save Changes": "変更を保存",
   "Created": "作成されました",
   "Deleted": "削除しました",
   "You need to provide both name and description": "名前と説明の両方を入力する必要があります。",
@@ -121,7 +119,6 @@
   "Open in Holodex": "Holodexで開く",
   "Open in YouTube": "YouTubeで開く",
   "Added {{amount}} to Queue": "{{amount}} 曲をキューに追加しました",
-  "See All": "全て表示",
   "English": "英語",
   "Original Name on YouTube (Japanese, etc)": "YouTube上での元の名前 (日本語など)",
   "{{org}} Channels": "{{org}} チャンネル",
@@ -147,5 +144,13 @@
   "Return to Home": "ホームに戻る",
   "Add To Playlist": "プレイリストに追加",
   "... and {{count}} other": "... 他 {{count}} 曲",
-  "... and {{count}} other_plural": "... 他 {{count}} 曲"
+  "... and {{count}} other_plural": "... 他 {{count}} 曲",
+  "Radio": "Radio",
+  "Abort Changes": "Abort Changes",
+  "Radio featuring {{name}}": "Radio featuring {{name}}",
+  "Trending Songs": "Trending Songs",
+  "Trending songs radio": "Trending songs radio",
+  "See More": "See More",
+  "{{org}} Community Playlists": "{{org}} Community Playlists",
+  "{{org}} Radios": "{{org}} Radios"
 }
