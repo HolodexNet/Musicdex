@@ -1,22 +1,20 @@
 import { useCallback, useEffect, useState } from "react";
-import YouTube from "react-youtube";
+import YouTube, { YouTubeProps } from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
 
 export function YoutubePlayer({
   onReady,
 }: {
-  onReady: (event: { target: YouTubePlayer }) => void;
+  onReady: YouTubeProps["onReady"];
 }) {
   return (
     <YouTube
-      containerClassName="yt-player"
       className="yt-player"
-      videoId={""}
+      iframeClassName="yt-player"
       opts={{
         playerVars: {
           // https://developers.google.com/youtube/player_parameters
           // autoplay: 0,
-          showinfo: 0,
           rel: 0,
           modestbranding: 1,
           origin: window.location.origin,
@@ -35,7 +33,7 @@ export function getID(url: string | undefined) {
   return url?.match(VideoIDRegex)?.[2] || "";
 }
 
-export function usePlayer(player?: YouTubePlayer) {
+export function usePlayer(player: YouTubePlayer | null) {
   // const [status, setStatus] =
   //   useState<Partial<typeof INITIALSTATE>>(INITIALSTATE);
   const [currentTime, setCurrentTime] = useState(0);
@@ -46,7 +44,7 @@ export function usePlayer(player?: YouTubePlayer) {
   const [state, setState] = useState(0);
   const [hasError, setError] = useState(false);
   const errorHandler = useCallback((e: any) => {
-    console.warn("PLAYER ERROR ORCCURED", e);
+    console.warn("PLAYER ERROR OCCURRED", e);
     setError(true);
   }, []);
 

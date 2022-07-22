@@ -12,7 +12,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { usePlaylistWriter } from "../../modules/services/playlist.service";
-import { PlalyistButtonType } from "./PlaylistButtonArray";
+import { PlaylistButtonType } from "./PlaylistButtonArray";
 
 export function PlaylistMoreControlsMenu({
   playlist,
@@ -22,7 +22,7 @@ export function PlaylistMoreControlsMenu({
 }: Omit<MenuProps, "children"> & {
   playlist: PlaylistFull;
   canEdit: boolean;
-  children?: PlalyistButtonType[];
+  children?: PlaylistButtonType[];
 }) {
   const { t } = useTranslation();
   const { mutateAsync: write } = usePlaylistWriter();

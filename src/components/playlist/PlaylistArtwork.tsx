@@ -86,10 +86,12 @@ export const PlaylistArtwork = React.memo(
       return (
         <StackedTextArt
           typeText={t("Daily Mix")}
-          titleText={tn(
-            description?.channel.english_name,
-            description?.channel.name
-          )}
+          titleText={
+            tn(
+              description?.channel.english_name,
+              description?.channel.name
+            ) as string
+          }
           imageUrl={thumbnail || ""}
           {...props}
         />
@@ -293,7 +295,7 @@ function RadioTextArt({
           fontSize={adjFontSize * 0.85}
           fontWeight={600}
           textAlign="center"
-          isTruncated
+          noOfLines={1}
         >
           {titleText}
         </Text>
@@ -368,7 +370,7 @@ function StackedTextArt({
         >
           {typeText}
         </Text>
-        <Heading isTruncated={true} fontSize={adjFontSize} my="auto" zIndex={1}>
+        <Heading noOfLines={1} fontSize={adjFontSize} my="auto" zIndex={1}>
           {titleText}
         </Heading>
         {!hideLogo && (

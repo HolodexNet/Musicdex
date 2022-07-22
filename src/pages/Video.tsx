@@ -67,15 +67,17 @@ export default function Video() {
             }}
             mb={2}
           >
+            {/* @ts-ignore */}
             {[
               {
-                title: t("Open in YouTube"),
+                // @ts-ignore
+                title: t("Open in YouTube") as string,
                 ariaLabel: "open-on-youtube",
                 icon: <FiYoutube />,
                 onClick: () => window.open("https://youtu.be/" + videoId),
               },
               {
-                title: t("Open in Holodex"),
+                title: t("Open in Holodex") as string,
                 ariaLabel: "open-on-holodex",
                 icon: <LineLogo />,
                 onClick: () =>

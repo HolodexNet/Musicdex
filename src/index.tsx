@@ -9,7 +9,7 @@ import { StoreProvider } from "easy-peasy";
 // https://chakra-ui.com/docs/migration#css-reset
 import "focus-visible/dist/focus-visible";
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import {
   queryClient,
   QueryClientProvider,
@@ -18,7 +18,6 @@ import App from "./App";
 import "./modules/common/i18n";
 import { store } from "./store";
 import { theme } from "./theme";
-// import reportWebVitals from "./utils/reportWebVitals";
 import "./global.css";
 import "@fontsource/manrope/700.css";
 import "@fontsource/assistant/400.css";
@@ -27,16 +26,26 @@ import "@fontsource/assistant/600.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { HelmetProvider } from "react-helmet-async";
+import ReactDOM from "react-dom";
 
 console.log(
   `VERSION: ${process.env.REACT_APP_NAME} ${process.env.REACT_APP_VERSION}`
 );
 (window as any)["App_Version"] = process.env.REACT_APP_VERSION;
 
+// https://github.com/ctrlplusb/easy-peasy/issues/741
+type Props = StoreProvider["props"] & { children: React.ReactNode };
+const StoreProviderReact18Casted =
+  StoreProvider as unknown as React.ComponentType<Props>;
+
+// Using new root kills the player iframe
+// const container = document.getElementById("root");
+// const root = createRoot(container!);
+
 store.persist.resolveRehydration().then(() => {
   ReactDOM.render(
     <React.StrictMode>
-      <StoreProvider store={store}>
+      <StoreProviderReact18Casted store={store}>
         <ChakraProvider theme={theme}>
           <QueryClientProvider client={queryClient}>
             <HelmetProvider>
@@ -46,15 +55,10 @@ store.persist.resolveRehydration().then(() => {
             </HelmetProvider>
           </QueryClientProvider>
         </ChakraProvider>
-      </StoreProvider>
+      </StoreProviderReact18Casted>
     </React.StrictMode>,
     document.getElementById("root")
   );
 });
 
 serviceWorkerRegistration.register();
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-// reportWebVitals();

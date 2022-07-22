@@ -10,7 +10,7 @@ export function LoginPanel() {
     <Stack spacing={4} align={"center"} maxW={"md"} w={"full"}>
       {!isLoggedIn ? (
         <>
-          <Heading size="lg">{t("Sign in to Musicdex")}</Heading>
+          <Heading size="lg">{t("Sign in to Musicdex") as string}</Heading>
           <Divider width={12} py={2} />
           <Text>
             <Trans i18nKey="loginIntro"></Trans>
@@ -18,7 +18,9 @@ export function LoginPanel() {
         </>
       ) : (
         <>
-          <Heading size="md">{t("Connect more accounts to Musicdex")}</Heading>
+          <Heading size="md">
+            {t("Connect more accounts to Musicdex") as string}
+          </Heading>
         </>
       )}
       <LoginButtons />

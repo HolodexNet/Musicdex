@@ -97,7 +97,7 @@ export default function Channel() {
           ></ChannelPhoto>
           <Link to={`/?org=${encodeURIComponent(channel.org)}`}>
             <PlaylistHeading
-              title={name}
+              title={name as string}
               description={
                 channel.org +
                 (channel?.suborg?.slice(2)
@@ -133,6 +133,7 @@ export default function Channel() {
     </PageContainer>
   );
 }
+
 function ChannelSocialButtons({
   isMobile,
   channel,
