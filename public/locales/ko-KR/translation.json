@@ -20,7 +20,6 @@
   "Search for VTubers, songs, original artists...": "버튜버, 노래, 원곡 가수로 검색",
   "Search by Everything (Name, Original Artist, Channel,Organization)": "모두 검색 (이름, 원곡 가수, 채널, 소속)",
   "Song Query": "노래 대기열",
-  "Minimum length should be 1": "최소 길이는 1보다 낮을 수 없습니다",
   "Filter by Original Artist": "원곡 가수로 필터링",
   "Filter by status": "상태별로 필터링",
   "All Song Types": "모든 노래 유형",
@@ -46,7 +45,6 @@
   "Play": "재생",
   "Add to Queue": "대기열에 추가",
   "Edit": "편집",
-  "Save Changes": "변경사항 저장",
   "Created": "생성됨",
   "Deleted": "삭제됨",
   "You need to provide both name and description": "이름과 설명을 둘 다 포함해야 합니다",
@@ -121,7 +119,6 @@
   "Open in Holodex": "Holodex에서 열기",
   "Open in YouTube": "YouTube에서 열기",
   "Added {{amount}} to Queue": "대기열에 곡 {{amount}}개 추가됨",
-  "See All": "모두 보기",
   "English": "영어",
   "Original Name on YouTube (Japanese, etc)": "YouTube에서 나오는 원어명 (일본어 등)",
   "{{org}} Channels": "{{org}} 채널",
@@ -147,5 +144,13 @@
   "Return to Home": "처음으로 돌아가기",
   "Add To Playlist": "재생목록에 추가",
   "... and {{count}} other": "외 {{count}}개의 노래",
-  "... and {{count}} other_plural": "외 {{count}}개의 노래"
+  "... and {{count}} other_plural": "외 {{count}}개의 노래",
+  "Radio": "Radio",
+  "Abort Changes": "Abort Changes",
+  "Radio featuring {{name}}": "Radio featuring {{name}}",
+  "Trending Songs": "Trending Songs",
+  "Trending songs radio": "Trending songs radio",
+  "See More": "See More",
+  "{{org}} Community Playlists": "{{org}} Community Playlists",
+  "{{org}} Radios": "{{org}} Radios"
 }
