@@ -20,7 +20,6 @@
   "Search for VTubers, songs, original artists...": "搜索VTubers、歌曲、原唱……",
   "Search by Everything (Name, Original Artist, Channel,Organization)": "输入关键词开始搜索（如歌名、原唱、YouTube频道或所属团体）",
   "Song Query": "搜索歌曲",
-  "Minimum length should be 1": "最小长度应为1",
   "Filter by Original Artist": "按原唱筛选",
   "Filter by status": "按状态筛选",
   "All Song Types": "所有歌曲类型",
@@ -46,7 +45,6 @@
   "Play": "播放",
   "Add to Queue": "添加到队列",
   "Edit": "编辑",
-  "Save Changes": "保存修改",
   "Created": "已创建",
   "Deleted": "已删除",
   "You need to provide both name and description": "你需要输入名称以及简介",
@@ -121,7 +119,6 @@
   "Open in Holodex": "在 Holodex 上打开",
   "Open in YouTube": "在 YouTube 上打开",
   "Added {{amount}} to Queue": "将{{amount}}首歌曲添加到队列",
-  "See All": "查看全部",
   "English": "英语",
   "Original Name on YouTube (Japanese, etc)": "YouTube频道原始名称",
   "{{org}} Channels": "{{org}}所属频道",
@@ -147,5 +144,13 @@
   "Return to Home": "返回首页",
   "Add To Playlist": "加入播放列表",
   "... and {{count}} other": "... and {{count}} other",
-  "... and {{count}} other_plural": "... and {{count}} other"
+  "... and {{count}} other_plural": "... and {{count}} other",
+  "Radio": "Radio",
+  "Abort Changes": "Abort Changes",
+  "Radio featuring {{name}}": "Radio featuring {{name}}",
+  "Trending Songs": "Trending Songs",
+  "Trending songs radio": "Trending songs radio",
+  "See More": "See More",
+  "{{org}} Community Playlists": "{{org}} Community Playlists",
+  "{{org}} Radios": "{{org}} Radios"
 }
