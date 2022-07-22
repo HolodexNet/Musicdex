@@ -18,12 +18,12 @@ export const artistFormatter: PlaylistFormatter<
   title: (playlist, { ch }, data, { tn, t }) => {
     if (!data) return;
     const name = tn(data.channel.english_name, data.channel.name);
-    return t(`{{name}}`, { name });
+    return name;
   },
   description: (playlist, { ch }, data, { tn }) => {
     if (!data) return;
     const name = tn(data.channel.english_name, data.channel.name);
-    return t("Musicdex Radio featuring {{name}}", { name });
+    return t("Radio featuring {{name}}", { name });
     // return t(``);
   },
   // link: (p, { id }, d: any) => {}

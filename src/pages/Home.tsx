@@ -156,7 +156,9 @@ export default function Home() {
 
         {recRadios?.length ? (
           <HomeSection>
-            <HomeHeading seeMoreTo="./radios">{t("Radios")}</HomeHeading>
+            <HomeHeading seeMoreTo="./radios">
+              {t("{{org}} Radios", { org })}
+            </HomeHeading>
             <CardCarousel
               height={210}
               width={160}
