@@ -20,7 +20,6 @@
   "Search for VTubers, songs, original artists...": "VTuber, şarkı, orijinal sanatçı ara...",
   "Search by Everything (Name, Original Artist, Channel,Organization)": "Her şeye göre ara (İsim, Orijinal Sanatçı, Kanal, Organizasyon)",
   "Song Query": "Şarkı Sorgusu",
-  "Minimum length should be 1": "Minimum uzunluk 1 olmalı",
   "Filter by Original Artist": "Orijinal Sanatçıya göre filtrele",
   "Filter by status": "Duruma göre filtrele",
   "All Song Types": "Tüm Şarkı Türleri",
@@ -46,7 +45,6 @@
   "Play": "Oynat",
   "Add to Queue": "Sıraya Ekle",
   "Edit": "Düzenle",
-  "Save Changes": "Değişiklikleri Kaydet",
   "Created": "Oluşturuldu",
   "Deleted": "Silindi",
   "You need to provide both name and description": "Hem isim hem açıklama sağlamalısınız",
@@ -121,7 +119,6 @@
   "Open in Holodex": "Holodex'te aç",
   "Open in YouTube": "YouTube'da aç",
   "Added {{amount}} to Queue": "Sıraya {{amount}} Şarkı Eklendi",
-  "See All": "Tümünü Göster",
   "English": "İngilizce",
   "Original Name on YouTube (Japanese, etc)": "YouTube'daki Orijinal İsim (Japonca, vb)",
   "{{org}} Channels": "{{org}} Kanalları",
@@ -147,5 +144,13 @@
   "Return to Home": "Ana Sayfaya Dön",
   "Add To Playlist": "Çalma Listesine Ekle",
   "... and {{count}} other": "... ve {{count}} daha",
-  "... and {{count}} other_plural": "... ve {{count}} daha"
+  "... and {{count}} other_plural": "... ve {{count}} daha",
+  "Radio": "Radio",
+  "Abort Changes": "Abort Changes",
+  "Radio featuring {{name}}": "Radio featuring {{name}}",
+  "Trending Songs": "Trending Songs",
+  "Trending songs radio": "Trending songs radio",
+  "See More": "See More",
+  "{{org}} Community Playlists": "{{org}} Community Playlists",
+  "{{org}} Radios": "{{org}} Radios"
 }
