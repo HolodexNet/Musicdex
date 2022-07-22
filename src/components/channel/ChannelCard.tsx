@@ -40,11 +40,11 @@ export function ChannelCard({ channel, ...rest }: ChannelCardProps) {
         boxShadow="0 8px 24px rgba(0,0,0,0.5)"
       />
       <Text
-        isTruncated
         fontWeight={500}
         fontSize="md"
         textAlign="center"
         maxWidth="100%"
+        noOfLines={1}
       >
         {tn(channel.english_name, channel.name)}
       </Text>

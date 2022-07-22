@@ -9,7 +9,7 @@ export default function Login() {
   return (
     <PageContainer>
       <Helmet>
-        <title>{t("Login")} - Musicdex</title>
+        <title>{t("Login") as string} - Musicdex</title>
       </Helmet>
       <ContainerInlay>
         <Center p={8}>
