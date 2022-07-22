@@ -20,7 +20,6 @@
   "Search for VTubers, songs, original artists...": "輸入VTuber, 歌曲, 原唱藝人…等關鍵字進行搜尋",
   "Search by Everything (Name, Original Artist, Channel,Organization)": "使用任意關鍵字進行搜尋（曲名/原唱/VTuber頻道/公司名/團體名）",
   "Song Query": "歌曲資料",
-  "Minimum length should be 1": "最短長度至少必須為１",
   "Filter by Original Artist": "依原唱篩選",
   "Filter by status": "依影片類型篩選",
   "All Song Types": "不進行篩選",
@@ -46,7 +45,6 @@
   "Play": "播放",
   "Add to Queue": "加入待播清單",
   "Edit": "編輯",
-  "Save Changes": "保存變更",
   "Created": "已建立播放清單",
   "Deleted": "已刪除",
   "You need to provide both name and description": "建立播放清單時需要同時填寫該清單的名稱與簡述",
@@ -121,7 +119,6 @@
   "Open in Holodex": "於 Holodex 開啟",
   "Open in YouTube": "於 YouTube 開啟",
   "Added {{amount}} to Queue": "將{{amount}}首歌加入到待播清單中",
-  "See All": "顯示全部",
   "English": "英文",
   "Original Name on YouTube (Japanese, etc)": "顯示原始 YouTube 頻道名稱",
   "{{org}} Channels": "{{org}} 相關頻道",
@@ -147,5 +144,13 @@
   "Return to Home": "回到首頁",
   "Add To Playlist": "新增至播放清單",
   "... and {{count}} other": "... 和其他 {{count}} 首",
-  "... and {{count}} other_plural": "... 和其他 {{count}} 首"
+  "... and {{count}} other_plural": "... 和其他 {{count}} 首",
+  "Radio": "Radio",
+  "Abort Changes": "Abort Changes",
+  "Radio featuring {{name}}": "Radio featuring {{name}}",
+  "Trending Songs": "Trending Songs",
+  "Trending songs radio": "Trending songs radio",
+  "See More": "See More",
+  "{{org}} Community Playlists": "{{org}} Community Playlists",
+  "{{org}} Radios": "{{org}} Radios"
 }
