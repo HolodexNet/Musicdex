@@ -12,7 +12,7 @@ export function useSongQueuer() {
     async (toQueue: { songs: Song[]; immediatelyPlay: boolean }) => {
       const ct = await queueSongs(toQueue);
 
-      // immediate play doens't need feedback
+      // immediate play doesn't need feedback
       if (toQueue.immediatelyPlay) return;
       toast({
         variant: "subtle",

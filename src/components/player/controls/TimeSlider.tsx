@@ -53,7 +53,10 @@ export const TimeSlider = React.memo(
           </>
         )}
 
-        <SliderTrack height={hovering ? "10px" : "6px"}>
+        <SliderTrack
+          height={hovering ? "10px" : "6px"}
+          transition="height var(--chakra-transition-duration-fast) ease-in"
+        >
           <SliderFilledTrack
             background={`linear-gradient(to right, var(--chakra-colors-brand-400), var(--chakra-colors-n2-400))`}
           />
@@ -67,7 +70,8 @@ export const TimeSlider = React.memo(
           label={<span>{formatSeconds((progress / 100) * totalDuration)}</span>}
         >
           <SliderThumb
-            visibility={hovering || fullPlayer ? "visible" : "hidden"}
+            opacity={hovering || fullPlayer ? 1 : 0}
+            transition="opacity var(--chakra-transition-duration-fast) ease-in"
           />
         </Tooltip>
       </Slider>
