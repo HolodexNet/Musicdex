@@ -114,7 +114,7 @@ const routes: RouteObject[] = [
   {
     path: "/library",
     element: (
-      <RequireLogin title={"Libary"}>
+      <RequireLogin title={"Library"}>
         <Library />
       </RequireLogin>
     ),
