@@ -82,7 +82,6 @@ export const SongTable = ({
     <WindowScroller onScroll={onScroll} scrollElement={frameRef.current}>
       {({ height }) => {
         return (
-          // @ts-ignore
           <FixedSizeList
             height={height || frameRef.current.getBoundingClientRect().height}
             width="100%"

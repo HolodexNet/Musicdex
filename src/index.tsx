@@ -26,7 +26,6 @@ import "@fontsource/assistant/600.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { HelmetProvider } from "react-helmet-async";
-import ReactDOM from "react-dom";
 
 console.log(
   `VERSION: ${process.env.REACT_APP_NAME} ${process.env.REACT_APP_VERSION}`
@@ -39,25 +38,22 @@ const StoreProviderReact18Casted =
   StoreProvider as unknown as React.ComponentType<Props>;
 
 // Using new root kills the player iframe
-// const container = document.getElementById("root");
-// const root = createRoot(container!);
+const container = document.getElementById("root");
+const root = createRoot(container!);
 
 store.persist.resolveRehydration().then(() => {
-  ReactDOM.render(
-    <React.StrictMode>
-      <StoreProviderReact18Casted store={store}>
-        <ChakraProvider theme={theme}>
-          <QueryClientProvider client={queryClient}>
-            <HelmetProvider>
-              <Router>
-                <App />
-              </Router>
-            </HelmetProvider>
-          </QueryClientProvider>
-        </ChakraProvider>
-      </StoreProviderReact18Casted>
-    </React.StrictMode>,
-    document.getElementById("root")
+  root.render(
+    <StoreProviderReact18Casted store={store}>
+      <ChakraProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <HelmetProvider>
+            <Router>
+              <App />
+            </Router>
+          </HelmetProvider>
+        </QueryClientProvider>
+      </ChakraProvider>
+    </StoreProviderReact18Casted>
   );
 });
 
