@@ -14,19 +14,20 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Box,
   Flex,
   Heading,
-  Input,
   Progress,
   Tag,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SongTable, SongTableCol } from "../components/data/SongTable";
 import "./Search.css";
+import { GeneralSearchInput } from "../components/search/GeneralSearchInput";
+
+const debounceValue = 1000;
 
 const SearchResultSongTable = ({
   data,
@@ -65,7 +66,6 @@ const SearchResultSongTable = ({
 
 export default function Search() {
   const [suborgVisible, setSuborgVisible] = useState(false);
-
   const flexWrap: "nowrap" | "wrap" | undefined = useBreakpointValue({
     base: "wrap",
     sm: "wrap",
@@ -84,6 +84,56 @@ export default function Search() {
     if (searchParams.has("ch")) setChannelSelected(true);
   }, [searchParams]); // searchParams --> isExact
 
+  const getGeneralQuery = useCallback((q) => {
+    if (!q) return {};
+
+    return {
+      query: {
+        multi_match: {
+          query: q,
+          fields: [
+            "general",
+            "general.romaji",
+            "original_artist",
+            "original_artist.romaji",
+          ],
+          type: "phrase",
+        },
+      },
+    };
+  }, []);
+
+  const getSongQuery = useCallback((q) => {
+    if (!q) return {};
+
+    return {
+      query: {
+        multi_match: {
+          query: q,
+          fields: ["name.ngram", "name"],
+          type: "phrase",
+        },
+      },
+    };
+  }, []);
+
+  const getArtistQuery = useCallback((q) => {
+    if (!q) return {};
+
+    return {
+      query: {
+        multi_match: {
+          query: q,
+          fields: [
+            "original_artist.ngram^2",
+            "original_artist^2",
+            "original_artist.romaji^0.5",
+          ],
+          type: "phrase",
+        },
+      },
+    };
+  }, []);
   return (
     <ReactiveBase
       className="m-search"
@@ -110,37 +160,21 @@ export default function Search() {
           spacing={2}
           mr={3}
         >
-          <DataSearch
-            className="datasearch"
+          <ReactiveComponent
             componentId="q"
             URLParams
-            debounce={1000}
-            customQuery={(q) => {
-              if (!q) return {};
-
-              return {
-                query: {
-                  multi_match: {
-                    query: q,
-                    fields: [
-                      "general",
-                      "general.romaji",
-                      "original_artist",
-                      "original_artist.romaji",
-                    ],
-                    type: "phrase",
-                  },
-                },
-              };
-            }}
-            dataField=""
-            queryFormat="and"
-            placeholder="Search for Music / Artist"
-            autosuggest={false}
-            enableDefaultSuggestions={false}
-            iconPosition="right"
-            onError={(e) => console.log(e)}
             filterLabel="Search"
+            customQuery={getGeneralQuery}
+            render={(props) => (
+              <GeneralSearchInput
+                initialState={searchParams.get("q")}
+                debounceValue={debounceValue}
+                placeholder="Search for Music / Artist"
+                getQuery={getGeneralQuery}
+                {...props}
+              />
+            )}
+            onError={(e) => console.log(e)}
           />
           <Accordion allowToggle defaultIndex={0}>
             <AccordionItem>
@@ -165,71 +199,46 @@ export default function Search() {
                     URLParams
                     style={{ marginLeft: 0 }}
                   />
+
                   <Tag colorScheme="brand" size="md" alignSelf="start">
                     Song
                   </Tag>
-                  <DataSearch
-                    className="datasearch"
+                  <ReactiveComponent
                     componentId="song"
                     URLParams
-                    debounce={1000}
-                    dataField=""
-                    customQuery={(q) => {
-                      if (!q) return {};
-
-                      return {
-                        query: {
-                          multi_match: {
-                            query: q,
-                            fields: ["name.ngram", "name"],
-                            type: "phrase",
-                          },
-                        },
-                      };
-                    }}
-                    queryFormat="and"
-                    placeholder="Song Name"
-                    autosuggest={false}
-                    enableDefaultSuggestions={false}
-                    iconPosition="right"
-                    onError={(e) => console.log(e)}
                     filterLabel="Song Name"
+                    customQuery={getSongQuery}
+                    render={(props) => (
+                      <GeneralSearchInput
+                        initialState={searchParams.get("song")}
+                        placeholder="Song Name"
+                        debounceValue={debounceValue}
+                        getQuery={getSongQuery}
+                        {...props}
+                      />
+                    )}
+                    onError={(e) => console.log(e)}
                   />
                   <Tag colorScheme="brand" size="md" alignSelf="start">
                     Artist
                   </Tag>
-
-                  <DataSearch
-                    className="datasearch"
+                  <ReactiveComponent
                     componentId="artist"
                     URLParams
-                    debounce={1000}
-                    dataField=""
-                    customQuery={(q) => {
-                      if (!q) return {};
-
-                      return {
-                        query: {
-                          multi_match: {
-                            query: q,
-                            fields: [
-                              "original_artist.ngram^2",
-                              "original_artist^2",
-                              "original_artist.romaji^0.5",
-                            ],
-                            type: "phrase",
-                          },
-                        },
-                      };
-                    }}
-                    queryFormat="and"
-                    placeholder="Original Artist Name"
-                    autosuggest={false}
-                    enableDefaultSuggestions={false}
-                    iconPosition="right"
-                    onError={(e) => console.log(e)}
                     filterLabel="Original Artist"
+                    customQuery={getSongQuery}
+                    render={(props) => (
+                      <GeneralSearchInput
+                        initialState={searchParams.get("artist")}
+                        placeholder="Original Artist Name"
+                        debounceValue={debounceValue}
+                        getQuery={getArtistQuery}
+                        {...props}
+                      />
+                    )}
+                    onError={(e) => console.log(e)}
                   />
+
                   <MultiList
                     className="input-fix"
                     componentId="ch"
