@@ -145,12 +145,12 @@
   "Add To Playlist": "新增至播放清單",
   "... and {{count}} other": "... 和其他 {{count}} 首",
   "... and {{count}} other_plural": "... 和其他 {{count}} 首",
-  "Radio": "Radio",
-  "Abort Changes": "Abort Changes",
-  "Radio featuring {{name}}": "Radio featuring {{name}}",
-  "Trending Songs": "Trending Songs",
-  "Trending songs radio": "Trending songs radio",
-  "See More": "See More",
-  "{{org}} Community Playlists": "{{org}} Community Playlists",
-  "{{org}} Radios": "{{org}} Radios"
+  "Radio": "音樂電台",
+  "Abort Changes": "放棄變更",
+  "Radio featuring {{name}}": "內含 {{name}} 的音樂電台",
+  "Trending Songs": "熱門歌曲",
+  "Trending songs radio": "熱門音樂電台",
+  "See More": "查看更多",
+  "{{org}} Community Playlists": "{{org}} 社群播放清單",
+  "{{org}} Radios": "{{org}} 音樂電台"
 }
