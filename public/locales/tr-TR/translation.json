@@ -145,12 +145,12 @@
   "Add To Playlist": "Çalma Listesine Ekle",
   "... and {{count}} other": "... ve {{count}} daha",
   "... and {{count}} other_plural": "... ve {{count}} daha",
-  "Radio": "Radio",
-  "Abort Changes": "Abort Changes",
-  "Radio featuring {{name}}": "Radio featuring {{name}}",
-  "Trending Songs": "Trending Songs",
-  "Trending songs radio": "Trending songs radio",
-  "See More": "See More",
-  "{{org}} Community Playlists": "{{org}} Community Playlists",
-  "{{org}} Radios": "{{org}} Radios"
+  "Radio": "Radyo",
+  "Abort Changes": "Değişiklikleri İptal Et",
+  "Radio featuring {{name}}": "{{name}} içeren radyo",
+  "Trending Songs": "Trend Şarkılar",
+  "Trending songs radio": "Trend şarkılar radyosu",
+  "See More": "Daha Fazla",
+  "{{org}} Community Playlists": "{{org}} Topluluk Çalma Listeleri",
+  "{{org}} Radios": "{{org}} Radyoları"
 }
