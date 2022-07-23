@@ -3,6 +3,7 @@ import { TFunction, useTranslation } from "react-i18next";
 import useNamePicker from "../common/useNamePicker";
 import { formatters } from "./formatters";
 
+// FIXME: Migrate to URLSearchParams
 var qs = require("querystringify");
 
 type PlaylistLike = Partial<PlaylistFull>;

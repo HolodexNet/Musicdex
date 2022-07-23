@@ -206,8 +206,6 @@ export function Player({ player }: { player: YouTubePlayer | null }) {
     if (!player || !currentSong || currentTime === undefined) return;
     if (currentSong.video_id !== currentVideo) return;
 
-    // console.log("Current Progress:", progress, state);
-
     // Progress will never reach 100 because player ended. Video length != song start/end
     // Example id: KiUvL-rp1zg
     const earlyEnd = state === PlayerStates.ENDED && progress < 100;
@@ -216,7 +214,7 @@ export function Player({ player }: { player: YouTubePlayer | null }) {
       console.log(
         `Auto advancing due to: ${
           progress >= 100 ? "prog>100" : "playerStatus=Ended"
-        }`
+        }`,
       );
       setProgress(0);
       next({ count: 1, userSkipped: false });
@@ -234,12 +232,13 @@ export function Player({ player }: { player: YouTubePlayer | null }) {
       retryCounts[currentSong.video_id] = 0;
 
     if (retryCounts[currentSong.video_id] < MAX_RETRIES) {
+      // NOTE: async function breaks the flow, so commented it out
       // if (getID(player.getVideoUrl()) !== currentSong.video_id) return;
       setTimeout(() => {
         console.log(
           `[Player] Retrying ${currentSong.name} - attempt #${
             retryCounts[currentSong.video_id]
-          }/${MAX_RETRIES}`
+          }/${MAX_RETRIES}`,
         );
         player.loadVideoById(currentSong.video_id, currentSong.start);
         setError(false);
@@ -248,7 +247,7 @@ export function Player({ player }: { player: YouTubePlayer | null }) {
       return;
     }
     console.log(
-      "[PLAYER] SKIPPING DUE TO VIDEO PLAYBACK FAILURE (maybe the video is blocked in your country)"
+      "[PLAYER] SKIPPING DUE TO VIDEO PLAYBACK FAILURE (maybe the video is blocked in your country)",
     );
     toast({
       position: "top-right",
@@ -300,7 +299,7 @@ export function Player({ player }: { player: YouTubePlayer | null }) {
       e.preventDefault();
       togglePlay();
     },
-    []
+    [],
   );
 
   // Toggle repeat / shuffle mode
