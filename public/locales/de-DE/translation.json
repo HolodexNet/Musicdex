@@ -20,7 +20,6 @@
   "Search for VTubers, songs, original artists...": "Suche nach VTubern, Liedern, Original-Interpreten...",
   "Search by Everything (Name, Original Artist, Channel,Organization)": "Suche nach allem (Name, Original-Interpret, Kanal, Organisation)",
   "Song Query": "Liedabfrage",
-  "Minimum length should be 1": "Mindestlänge sollte 1 sein",
   "Filter by Original Artist": "Nach Original-Interpret filtern",
   "Filter by status": "Nach Status filtern",
   "All Song Types": "Alle Liedtypen",
@@ -46,7 +45,6 @@
   "Play": "Wiedergabe",
   "Add to Queue": "Zur Warteschlange hinzufügen",
   "Edit": "Bearbeiten",
-  "Save Changes": "Änderungen speichern",
   "Created": "Erstellt",
   "Deleted": "Gelöscht",
   "You need to provide both name and description": "Name und Beschreibung müssen angegeben werden",
@@ -121,7 +119,6 @@
   "Open in Holodex": "In Holodex öffnen",
   "Open in YouTube": "Auf YouTube öffnen",
   "Added {{amount}} to Queue": "{{amount}} zur Warteschlange hinzugefügt",
-  "See All": "Alle anzeigen",
   "English": "Englisch",
   "Original Name on YouTube (Japanese, etc)": "Originalname auf YouTube (Japanisch, etc)",
   "{{org}} Channels": "{{org}}-Kanäle",
@@ -147,5 +144,13 @@
   "Return to Home": "Zurück zur Startseite",
   "Add To Playlist": "Zu Playlist hinzufügen",
   "... and {{count}} other": "... und {{count}} weitere",
-  "... and {{count}} other_plural": "... und {{count}} weitere"
+  "... and {{count}} other_plural": "... und {{count}} weitere",
+  "Radio": "Radio",
+  "Abort Changes": "Abort Changes",
+  "Radio featuring {{name}}": "Radio featuring {{name}}",
+  "Trending Songs": "Trending Songs",
+  "Trending songs radio": "Trending songs radio",
+  "See More": "See More",
+  "{{org}} Community Playlists": "{{org}} Community Playlists",
+  "{{org}} Radios": "{{org}} Radios"
 }

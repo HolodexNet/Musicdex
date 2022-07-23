@@ -20,7 +20,6 @@
   "Search for VTubers, songs, original artists...": "Tìm VTubers, bài hát, nghệ sĩ gốc,...",
   "Search by Everything (Name, Original Artist, Channel,Organization)": "Tìm tất cả (Tên, Nghệ sĩ gốc, Kênh, Tổ chức)",
   "Song Query": "Kết quả tìm kiếm",
-  "Minimum length should be 1": "Độ dài tối thiểu phải là 1",
   "Filter by Original Artist": "Lọc theo Nghệ sĩ gốc",
   "Filter by status": "Lọc theo trạng thái",
   "All Song Types": "Mọi thể loại",
@@ -46,7 +45,6 @@
   "Play": "Phát",
   "Add to Queue": "Thêm vào hàng chờ",
   "Edit": "Chỉnh sửa",
-  "Save Changes": "Lưu thay đổi",
   "Created": "Đã tạo",
   "Deleted": "Deleted",
   "You need to provide both name and description": "Bạn cần phải cung cấp tên và mô tả",
@@ -121,7 +119,6 @@
   "Open in Holodex": "Mở trên Holodex",
   "Open in YouTube": "Mở trên Youtube",
   "Added {{amount}} to Queue": "Đã thêm {{amount}} vào hàng chờ",
-  "See All": "Xem tất cả",
   "English": "English",
   "Original Name on YouTube (Japanese, etc)": "Tên gốc trên Youtube (tiếng Nhật, v.v...)",
   "{{org}} Channels": "{{org}} Channels",
@@ -147,5 +144,13 @@
   "Return to Home": "Return to Home",
   "Add To Playlist": "Add To Playlist",
   "... and {{count}} other": "... and {{count}} other",
-  "... and {{count}} other_plural": "... and {{count}} other"
+  "... and {{count}} other_plural": "... and {{count}} other",
+  "Radio": "Radio",
+  "Abort Changes": "Abort Changes",
+  "Radio featuring {{name}}": "Radio featuring {{name}}",
+  "Trending Songs": "Trending Songs",
+  "Trending songs radio": "Trending songs radio",
+  "See More": "See More",
+  "{{org}} Community Playlists": "{{org}} Community Playlists",
+  "{{org}} Radios": "{{org}} Radios"
 }
