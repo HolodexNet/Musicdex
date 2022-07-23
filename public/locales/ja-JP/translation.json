@@ -147,7 +147,7 @@
   "... and {{count}} other_plural": "... 他 {{count}} 曲",
   "Radio": "Radio",
   "Abort Changes": "変更を中止",
-  "Radio featuring {{name}}": "Radio featuring {{name}}",
+  "Radio featuring {{name}}": "{{name}} のRadio",
   "Trending Songs": "人気の曲",
   "Trending songs radio": "Trending songs radio",
   "See More": "もっと見る",
