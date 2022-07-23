@@ -103,7 +103,7 @@ export function SidebarContent({
         <CloseButton onClick={onClose} />
       </Flex>
       <NavItem icon={FiHome} key={"Home"} mb={1} path={orgPath}>
-        {t("Home") as string}
+        {t("Home")}
       </NavItem>
       <AnimatePresence>
         {pathname.startsWith("/org/") && <OrgSelector />}
@@ -145,7 +145,7 @@ export function SidebarContent({
           py="2"
           path="#"
         >
-          {t("Create New Playlist") as string}
+          {t("Create New Playlist")}
         </NavItem>
         <Suspense fallback={"..."}>
           {playlistList && (
