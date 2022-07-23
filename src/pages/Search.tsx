@@ -15,11 +15,11 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Button,
   Flex,
   Heading,
   Input,
   Progress,
+  Tag,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
@@ -42,11 +42,15 @@ const SearchResultSongTable = ({
       lg: ["idx", "og_artist"],
       xl: [],
     },
-    "xl"
+    "xl",
   );
   return (
     <>
-      {loading && <Progress size="xs" isIndeterminate />}
+      <Progress
+        size="xs"
+        isIndeterminate
+        visibility={loading ? "visible" : "hidden"}
+      />
       {data && (
         <SongTable
           songs={data}
@@ -73,7 +77,7 @@ export default function Search() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [channelSelected, setChannelSelected] = useState(
-    searchParams.has("ch")
+    searchParams.has("ch"),
   );
 
   useEffect(() => {
@@ -87,13 +91,11 @@ export default function Search() {
       url={window.location.origin + "/api/v2/musicdex/elasticsearch"}
       transformRequest={({ url, ...req }) => {
         req.url = "/api/v2/musicdex/elasticsearch/search";
-        // console.log(req);
         return req;
       }}
       themePreset="dark"
-      setSearchParams={(newurl) => {
-        // console.log(newurl);
-        navigate({ search: new URL(newurl).search });
+      setSearchParams={(newURL) => {
+        navigate({ search: new URL(newURL).search });
       }}
       enableAppbase={false}
     >
@@ -104,6 +106,7 @@ export default function Search() {
           alignItems="stretch"
           px={2}
           flexGrow={1}
+          flexBasis="300px"
           spacing={2}
           mr={3}
         >
@@ -117,21 +120,15 @@ export default function Search() {
 
               return {
                 query: {
-                  bool: {
-                    must: [
-                      {
-                        multi_match: {
-                          query: q,
-                          fields: [
-                            "general",
-                            "general.romaji",
-                            "original_artist",
-                            "original_artist.romaji",
-                          ],
-                          type: "phrase",
-                        },
-                      },
+                  multi_match: {
+                    query: q,
+                    fields: [
+                      "general",
+                      "general.romaji",
+                      "original_artist",
+                      "original_artist.romaji",
                     ],
+                    type: "phrase",
                   },
                 },
               };
@@ -141,7 +138,7 @@ export default function Search() {
             placeholder="Search for Music / Artist"
             autosuggest={false}
             enableDefaultSuggestions={false}
-            iconPosition="left"
+            iconPosition="right"
             onError={(e) => console.log(e)}
             filterLabel="Search"
           />
@@ -165,20 +162,12 @@ export default function Search() {
                     title="Presentation"
                     filterLabel="Presentation"
                     defaultValue={[]}
-                    URLParams={true}
+                    URLParams
                     style={{ marginLeft: 0 }}
                   />
-                  <Button
-                    colorScheme="brand"
-                    size="xs"
-                    variant={"solid"}
-                    rounded="0.2rem 0.2rem 0 0"
-                    style={{ marginBottom: "-0.5rem" }}
-                    alignSelf="start"
-                    cursor="default"
-                  >
+                  <Tag colorScheme="brand" size="md" alignSelf="start">
                     Song
-                  </Button>
+                  </Tag>
                   <DataSearch
                     className="datasearch"
                     componentId="song"
@@ -187,18 +176,13 @@ export default function Search() {
                     dataField=""
                     customQuery={(q) => {
                       if (!q) return {};
+
                       return {
                         query: {
-                          bool: {
-                            should: [
-                              {
-                                multi_match: {
-                                  query: q,
-                                  fields: ["name.ngram", "name"],
-                                  type: "phrase",
-                                },
-                              },
-                            ],
+                          multi_match: {
+                            query: q,
+                            fields: ["name.ngram", "name"],
+                            type: "phrase",
                           },
                         },
                       };
@@ -207,21 +191,13 @@ export default function Search() {
                     placeholder="Song Name"
                     autosuggest={false}
                     enableDefaultSuggestions={false}
-                    iconPosition="left"
+                    iconPosition="right"
                     onError={(e) => console.log(e)}
                     filterLabel="Song Name"
                   />
-                  <Button
-                    colorScheme="brand"
-                    size="xs"
-                    variant={"solid"}
-                    rounded="0.2rem 0.2rem 0 0"
-                    style={{ marginBottom: "-0.5rem" }}
-                    alignSelf="start"
-                    cursor="default"
-                  >
+                  <Tag colorScheme="brand" size="md" alignSelf="start">
                     Artist
-                  </Button>
+                  </Tag>
 
                   <DataSearch
                     className="datasearch"
@@ -231,22 +207,17 @@ export default function Search() {
                     dataField=""
                     customQuery={(q) => {
                       if (!q) return {};
+
                       return {
                         query: {
-                          bool: {
-                            should: [
-                              {
-                                multi_match: {
-                                  query: q,
-                                  fields: [
-                                    "original_artist.ngram^2",
-                                    "original_artist^2",
-                                    "original_artist.romaji^0.5",
-                                  ],
-                                  type: "phrase",
-                                },
-                              },
+                          multi_match: {
+                            query: q,
+                            fields: [
+                              "original_artist.ngram^2",
+                              "original_artist^2",
+                              "original_artist.romaji^0.5",
                             ],
+                            type: "phrase",
                           },
                         },
                       };
@@ -255,7 +226,7 @@ export default function Search() {
                     placeholder="Original Artist Name"
                     autosuggest={false}
                     enableDefaultSuggestions={false}
-                    iconPosition="left"
+                    iconPosition="right"
                     onError={(e) => console.log(e)}
                     filterLabel="Original Artist"
                   />
@@ -266,14 +237,13 @@ export default function Search() {
                     filterLabel="Channel"
                     title="Filter by Channel"
                     react={{ and: ["q", "song", "artist", "isMv", "org"] }}
-                    showSearch={true}
+                    showSearch
                     onValueChange={(e) => {
-                      if (e && e.length > 0) setChannelSelected(true);
-                      else setChannelSelected(false);
+                      setChannelSelected(e && e.length > 0);
                     }}
-                    URLParams={true}
+                    URLParams
                     size={12}
-                    showCheckbox={true}
+                    showCheckbox
                   />
                   {!channelSelected && (
                     <SingleList
@@ -284,10 +254,9 @@ export default function Search() {
                       react={{ and: ["q", "song", "artist", "isMv"] }}
                       showSearch={false}
                       onValueChange={(e) => {
-                        if (e) setSuborgVisible(true);
-                        else setSuborgVisible(false);
+                        setSuborgVisible(!!e);
                       }}
-                      URLParams={true}
+                      URLParams
                     />
                   )}
                   {suborgVisible && !channelSelected && (
@@ -296,11 +265,11 @@ export default function Search() {
                       dataField="suborg"
                       filterLabel="Suborg"
                       title="Filter by Suborg"
-                      showCheckbox={true}
+                      showCheckbox
                       showSearch={false}
                       queryFormat="and"
                       react={{ and: ["q", "org", "song", "artist", "isMv"] }}
-                      URLParams={true}
+                      URLParams
                     />
                   )}
                 </VStack>
@@ -331,15 +300,18 @@ export default function Search() {
               ],
             }}
             // pagination
-            URLParams={true}
-            pagination={true}
-            showLoader={true}
+            URLParams
+            pagination
+            showLoader
             size={12}
             sortOptions={[
               { dataField: "_score", sortBy: "desc", label: "Relevance" },
               { dataField: "available_at", sortBy: "desc", label: "Latest" },
               { dataField: "available_at", sortBy: "asc", label: "Earliest" },
             ]}
+            innerClass={{
+              sortOptions: "sort-select",
+            }}
             render={SearchResultSongTable}
           />
         </VStack>
@@ -351,7 +323,7 @@ export default function Search() {
 // Garbage stuff:
 /* <ReactiveComponent
         componentId="q"
-        showFilter={true}
+        showFilter
         filterLabel="Query"
         // defaultQuery={}
         defaultQuery={(args) => {
