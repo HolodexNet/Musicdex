@@ -124,8 +124,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
   }, [currentlyPlaying.song, currentlyPlaying.repeat, loadPlayer]);
 
   function onReady(event: { target: YouTubePlayer }) {
-    // @ts-ignore Hack to not pass `player` instance without mounted iframe
-    event.target.i && setPlayer(event.target);
+    setPlayer(event.target);
   }
 
   const location = useLocation();
