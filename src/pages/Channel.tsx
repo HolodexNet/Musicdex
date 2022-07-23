@@ -66,7 +66,7 @@ export default function Channel() {
   )
     return <QueryStatus queryStatus={channelStatus} />;
 
-  const name = tn(channel.english_name, channel.name);
+  const name = tn(channel.english_name, channel.name) ?? "";
 
   return (
     <PageContainer>
@@ -97,7 +97,7 @@ export default function Channel() {
           ></ChannelPhoto>
           <Link to={`/?org=${encodeURIComponent(channel.org)}`}>
             <PlaylistHeading
-              title={name as string}
+              title={name}
               description={
                 channel.org +
                 (channel?.suborg?.slice(2)

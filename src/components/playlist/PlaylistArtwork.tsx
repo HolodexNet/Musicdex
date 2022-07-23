@@ -87,10 +87,8 @@ export const PlaylistArtwork = React.memo(
         <StackedTextArt
           typeText={t("Daily Mix")}
           titleText={
-            tn(
-              description?.channel.english_name,
-              description?.channel.name
-            ) as string
+            tn(description?.channel.english_name, description?.channel.name) ??
+            ""
           }
           imageUrl={thumbnail || ""}
           {...props}

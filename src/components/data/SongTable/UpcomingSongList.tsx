@@ -76,7 +76,7 @@ const QueueHeader = () => {
     <Flex mt={4} gap={2} alignItems="center">
       <Text fontSize={["md", "lg"]}>
         <Text opacity={0.66} as={"span"}>
-          {t("Queue") as string}
+          {t("Queue")}
         </Text>
       </Text>
       <Spacer />
@@ -120,8 +120,8 @@ const PlaylistHeader = () => {
       <Text fontSize={["md", "lg"]} noOfLines={1}>
         <Text opacity={0.66} as={"span"}>
           {currentPlaylist?.type.startsWith("radio")
-            ? (t("Radio") as string)
-            : (t("Playlist") as string)}
+            ? t("Radio")
+            : t("Playlist")}
           :&nbsp;
         </Text>
         <Text
