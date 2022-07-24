@@ -9,6 +9,7 @@ interface GeneralInputProps {
   placeholder?: string;
   getQuery: (q: string) => object;
   setQuery: (query: { value?: string; query?: any; opts?: any }) => void;
+  value: string | null;
 }
 
 export const GeneralSearchInput = ({
@@ -17,6 +18,7 @@ export const GeneralSearchInput = ({
   placeholder,
   getQuery,
   setQuery,
+  value,
 }: GeneralInputProps) => {
   const { t } = useTranslation();
   const [searchText, setSearchText] = useState(
@@ -30,6 +32,11 @@ export const GeneralSearchInput = ({
       query: getQuery(debouncedSearchText),
     });
   }, [debouncedSearchText, getQuery, setQuery]);
+
+  // Support resetting from SelectedFilters
+  useEffect(() => {
+    if (value === null) setSearchText("");
+  }, [value]);
 
   return (
     <Input

@@ -27,6 +27,7 @@ import { SongTable, SongTableCol } from "../components/data/SongTable";
 import "./Search.css";
 import { GeneralSearchInput } from "../components/search/GeneralSearchInput";
 import { CheckboxSearchList } from "../components/search/CheckboxSearchList";
+import { RadioButtonSearchList } from "../components/search/RadioButtonSearchList";
 
 const debounceValue = 1000;
 
@@ -189,6 +190,9 @@ export default function Search() {
               </AccordionButton>
               <AccordionPanel p={0}>
                 <VStack alignItems="stretch" flexGrow={1} spacing={2}>
+                  <Tag colorScheme="brand" size="md" alignSelf="start">
+                    {t("Type")}
+                  </Tag>
                   <ToggleButton
                     componentId="isMv"
                     dataField="is_mv"
@@ -196,8 +200,7 @@ export default function Search() {
                       { label: "MV", value: "true" },
                       { label: "Stream", value: "false" },
                     ]}
-                    title="Presentation"
-                    filterLabel="Presentation"
+                    filterLabel="Type"
                     defaultValue={[]}
                     URLParams
                     style={{ marginLeft: 0 }}
@@ -275,18 +278,38 @@ export default function Search() {
                     onError={(e) => console.log(e)}
                   />
                   {!channelSelected && (
-                    <SingleList
-                      componentId="org"
-                      dataField="org"
-                      filterLabel="Org"
-                      title="Filter by Org"
-                      react={{ and: ["q", "song", "artist", "isMv"] }}
-                      showSearch={false}
-                      onValueChange={(e) => {
-                        setSuborgVisible(!!e);
-                      }}
-                      URLParams
-                    />
+                    <>
+                      <Tag colorScheme="brand" size="md" alignSelf="start">
+                        {t("Organization")}
+                      </Tag>
+                      <ReactiveComponent
+                        componentId="org"
+                        filterLabel="Org"
+                        URLParams
+                        react={{ and: ["q", "song", "artist", "isMv"] }}
+                        defaultQuery={() => ({
+                          aggs: {
+                            org: {
+                              terms: {
+                                field: "org",
+                                order: { _count: "desc" },
+                              },
+                            },
+                          },
+                        })}
+                        render={(props) => {
+                          setSuborgVisible(!!props.value);
+                          return (
+                            <RadioButtonSearchList
+                              dataField="org"
+                              placeholder="Organization"
+                              {...props}
+                            />
+                          );
+                        }}
+                        onError={(e) => console.log(e)}
+                      />
+                    </>
                   )}
                   {suborgVisible && !channelSelected && (
                     <>
@@ -333,7 +356,7 @@ export default function Search() {
           flexGrow={2}
           flexShrink={1}
         >
-          <SelectedFilters showClearAll="default" />
+          <SelectedFilters showClearAll clearAllLabel={t("Clear filters")} />
           <ReactiveList
             componentId="results"
             dataField="name"
@@ -348,15 +371,14 @@ export default function Search() {
                 "ch",
               ],
             }}
-            // pagination
             URLParams
             pagination
             showLoader
             size={12}
             sortOptions={[
-              { dataField: "_score", sortBy: "desc", label: "Relevance" },
-              { dataField: "available_at", sortBy: "desc", label: "Latest" },
-              { dataField: "available_at", sortBy: "asc", label: "Earliest" },
+              { dataField: "_score", sortBy: "desc", label: t("Relevance") },
+              { dataField: "available_at", sortBy: "desc", label: t("Latest") },
+              { dataField: "available_at", sortBy: "asc", label: t("Oldest") },
             ]}
             innerClass={{
               sortOptions: "sort-select",

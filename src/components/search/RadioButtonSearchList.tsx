@@ -1,8 +1,8 @@
-import { Checkbox, CheckboxGroup, Input, VStack } from "@chakra-ui/react";
+import { Radio, RadioGroup, Input, VStack } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-interface CheckboxSearchListProps {
+interface RadioButtonSearchListProps {
   dataField: string;
   placeholder?: string;
   showSearch?: boolean;
@@ -10,42 +10,40 @@ interface CheckboxSearchListProps {
     [k: string]: { buckets: Array<{ key: string; doc_count: number }> };
   };
   setQuery: (query: any) => void;
-  value: string[] | null;
+  value: string | null;
 }
 
-export const CheckboxSearchList = ({
+export const RadioButtonSearchList = ({
   dataField,
   placeholder,
   showSearch = false,
   aggregations,
   setQuery,
   value,
-}: CheckboxSearchListProps) => {
+}: RadioButtonSearchListProps) => {
   const { t } = useTranslation();
   const [filterValue, setFilterValue] = useState("");
-  const [checkboxValues, setCheckboxValues] = useState<Array<string | number>>(
-    [],
-  );
+  const [radioValue, setRadioValue] = useState<string>("");
 
-  const getTermsQuery = useCallback(
-    (values: typeof checkboxValues) => {
-      if (!values?.length) return {};
+  const getQuery = useCallback(
+    (value: string) => {
+      if (!value) return {};
 
-      return { query: { terms: { [dataField]: values } } };
+      return { query: { term: { [dataField]: value } } };
     },
     [dataField],
   );
 
   useEffect(() => {
     setQuery({
-      value: checkboxValues,
-      query: getTermsQuery(checkboxValues),
+      value: radioValue,
+      query: getQuery(radioValue),
     });
-  }, [checkboxValues, getTermsQuery, setQuery]);
+  }, [radioValue, getQuery, setQuery]);
 
   // Support resetting from SelectedFilters
   useEffect(() => {
-    if (value === null) setCheckboxValues([]);
+    if (value === null) setRadioValue("");
   }, [value]);
 
   return (
@@ -57,22 +55,19 @@ export const CheckboxSearchList = ({
           placeholder={t(placeholder!)}
         />
       )}
-      <CheckboxGroup
-        value={checkboxValues}
-        onChange={(e) => setCheckboxValues(e)}
-      >
+      <RadioGroup value={radioValue} onChange={(value) => setRadioValue(value)}>
         <VStack maxH="200px" alignItems="stretch" overflowY="scroll" p={2}>
           {aggregations?.[dataField]?.buckets
             ?.filter(({ key }) =>
               key.toLowerCase().includes(filterValue.toLowerCase()),
             )
             .map(({ key }) => (
-              <Checkbox key={key} value={key}>
+              <Radio key={key} value={key}>
                 {key}
-              </Checkbox>
+              </Radio>
             ))}
         </VStack>
-      </CheckboxGroup>
+      </RadioGroup>
     </>
   );
 };
