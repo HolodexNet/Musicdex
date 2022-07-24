@@ -53,6 +53,7 @@ const SearchResultSongTable = ({
         size="xs"
         isIndeterminate
         visibility={loading ? "visible" : "hidden"}
+        mt={1}
       />
       {data && (
         <SongTable
@@ -87,13 +88,13 @@ export default function Search() {
     if (searchParams.has("ch")) setChannelSelected(true);
   }, [searchParams]); // searchParams --> isExact
 
-  const getGeneralQuery = useCallback((q) => {
-    if (!q) return {};
+  const getGeneralQuery = useCallback((value: string) => {
+    if (!value) return {};
 
     return {
       query: {
         multi_match: {
-          query: q,
+          query: value,
           fields: [
             "general",
             "general.romaji",
@@ -106,13 +107,13 @@ export default function Search() {
     };
   }, []);
 
-  const getSongQuery = useCallback((q) => {
-    if (!q) return {};
+  const getSongQuery = useCallback((value: string) => {
+    if (!value) return {};
 
     return {
       query: {
         multi_match: {
-          query: q,
+          query: value,
           fields: ["name.ngram", "name"],
           type: "phrase",
         },
@@ -120,13 +121,13 @@ export default function Search() {
     };
   }, []);
 
-  const getArtistQuery = useCallback((q) => {
-    if (!q) return {};
+  const getArtistQuery = useCallback((value: string) => {
+    if (!value) return {};
 
     return {
       query: {
         multi_match: {
-          query: q,
+          query: value,
           fields: [
             "original_artist.ngram^2",
             "original_artist^2",
@@ -173,12 +174,12 @@ export default function Search() {
               <GeneralSearchInput
                 initialState={searchParams.get("q")}
                 debounceValue={debounceValue}
-                placeholder="Search for Music / Artist"
+                placeholder={t("Search for Music / Artist")}
                 getQuery={getGeneralQuery}
                 {...props}
               />
             )}
-            onError={(e) => console.log(e)}
+            onError={(e) => console.error(e)}
           />
           <Accordion allowToggle defaultIndex={0}>
             <AccordionItem>
@@ -206,51 +207,44 @@ export default function Search() {
                     style={{ marginLeft: 0 }}
                   />
 
-                  <Tag colorScheme="brand" size="md" alignSelf="start">
-                    {t("Song")}
-                  </Tag>
                   <ReactiveComponent
                     componentId="song"
                     URLParams
-                    filterLabel="Song Name"
+                    filterLabel={t("Song Name")}
                     customQuery={getSongQuery}
                     render={(props) => (
                       <GeneralSearchInput
                         initialState={searchParams.get("song")}
-                        placeholder="Song Name"
+                        placeholder={t("Song Name")}
                         debounceValue={debounceValue}
                         getQuery={getSongQuery}
+                        tagLabel={t("Song")}
                         {...props}
                       />
                     )}
-                    onError={(e) => console.log(e)}
+                    onError={(e) => console.error(e)}
                   />
-                  <Tag colorScheme="brand" size="md" alignSelf="start">
-                    {t("Artist")}
-                  </Tag>
                   <ReactiveComponent
                     componentId="artist"
                     URLParams
-                    filterLabel="Original Artist"
+                    filterLabel={t("Original Artist")}
                     customQuery={getArtistQuery}
                     render={(props) => (
                       <GeneralSearchInput
                         initialState={searchParams.get("artist")}
-                        placeholder="Original Artist Name"
+                        placeholder={t("Original Artist Name")}
                         debounceValue={debounceValue}
                         getQuery={getArtistQuery}
+                        tagLabel={t("Artist")}
                         {...props}
                       />
                     )}
-                    onError={(e) => console.log(e)}
+                    onError={(e) => console.error(e)}
                   />
 
-                  <Tag colorScheme="brand" size="md" alignSelf="start">
-                    {t("Channel")}
-                  </Tag>
                   <ReactiveComponent
                     componentId="ch"
-                    filterLabel="Channel"
+                    filterLabel={t("Channel")}
                     URLParams
                     react={{ and: ["q", "song", "artist", "isMv", "org"] }}
                     defaultQuery={() => ({
@@ -269,80 +263,71 @@ export default function Search() {
                       return (
                         <CheckboxSearchList
                           dataField="channel.name"
-                          placeholder="Channel name"
+                          placeholder={t("Channel name")}
+                          tagLabel={t("Channel")}
                           showSearch
                           {...props}
                         />
                       );
                     }}
-                    onError={(e) => console.log(e)}
+                    onError={(e) => console.error(e)}
                   />
                   {!channelSelected && (
-                    <>
-                      <Tag colorScheme="brand" size="md" alignSelf="start">
-                        {t("Organization")}
-                      </Tag>
-                      <ReactiveComponent
-                        componentId="org"
-                        filterLabel="Org"
-                        URLParams
-                        react={{ and: ["q", "song", "artist", "isMv"] }}
-                        defaultQuery={() => ({
-                          aggs: {
-                            org: {
-                              terms: {
-                                field: "org",
-                                order: { _count: "desc" },
-                              },
+                    <ReactiveComponent
+                      componentId="org"
+                      filterLabel={t("Org")}
+                      URLParams
+                      react={{ and: ["q", "song", "artist", "isMv"] }}
+                      defaultQuery={() => ({
+                        aggs: {
+                          org: {
+                            terms: {
+                              field: "org",
+                              order: { _count: "desc" },
                             },
                           },
-                        })}
-                        render={(props) => {
-                          setSuborgVisible(!!props.value);
-                          return (
-                            <RadioButtonSearchList
-                              dataField="org"
-                              placeholder="Organization"
-                              {...props}
-                            />
-                          );
-                        }}
-                        onError={(e) => console.log(e)}
-                      />
-                    </>
+                        },
+                      })}
+                      render={(props) => {
+                        setSuborgVisible(!!props.value);
+                        return (
+                          <RadioButtonSearchList
+                            dataField="org"
+                            placeholder={t("Organization")}
+                            tagLabel={t("Organization")}
+                            {...props}
+                          />
+                        );
+                      }}
+                      onError={(e) => console.error(e)}
+                    />
                   )}
                   {suborgVisible && !channelSelected && (
-                    <>
-                      <Tag colorScheme="brand" size="md" alignSelf="start">
-                        {t("Suborg")}
-                      </Tag>
-                      <ReactiveComponent
-                        componentId="suborg"
-                        filterLabel="Suborg"
-                        URLParams
-                        react={{ and: ["q", "song", "artist", "isMv", "org"] }}
-                        defaultQuery={() => ({
-                          aggs: {
-                            suborg: {
-                              terms: {
-                                field: "suborg",
-                                order: { _count: "desc" },
-                              },
+                    <ReactiveComponent
+                      componentId="suborg"
+                      filterLabel={t("Suborg")}
+                      URLParams
+                      react={{ and: ["q", "song", "artist", "isMv", "org"] }}
+                      defaultQuery={() => ({
+                        aggs: {
+                          suborg: {
+                            terms: {
+                              field: "suborg",
+                              order: { _count: "desc" },
                             },
                           },
-                        })}
-                        render={(props) => {
-                          return (
-                            <CheckboxSearchList
-                              dataField="suborg"
-                              placeholder="Suborg name"
-                              {...props}
-                            />
-                          );
-                        }}
-                        onError={(e) => console.log(e)}
-                      />
-                    </>
+                        },
+                      })}
+                      render={(props) => (
+                        <CheckboxSearchList
+                          dataField="suborg"
+                          placeholder={t("Suborg name")}
+                          tagLabel={t("Suborg")}
+                          {...props}
+                        />
+                      )}
+                      onError={(e) => console.error(e)}
+                    />
                   )}
                 </VStack>
               </AccordionPanel>
@@ -356,7 +341,10 @@ export default function Search() {
           flexGrow={2}
           flexShrink={1}
         >
-          <SelectedFilters showClearAll clearAllLabel={t("Clear filters")} />
+          <SelectedFilters
+            clearAllLabel={t("Clear filters")}
+            style={{ minHeight: 35 }}
+          />
           <ReactiveList
             componentId="results"
             dataField="name"
@@ -390,99 +378,3 @@ export default function Search() {
     </ReactiveBase>
   );
 }
-
-// Garbage stuff:
-/* <ReactiveComponent
-        componentId="q"
-        showFilter
-        filterLabel="Query"
-        // defaultQuery={}
-        defaultQuery={(args) => {
-          console.log(args);
-          return {
-            query: {
-              bool: {
-                must: [
-                  {
-                    multi_match: {
-                      query: qFuzzy,
-                      fields: [
-                        "general",
-                        "general.romaji",
-                        "original_artist",
-                        "original_artist.romaji",
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-            value: qFuzzy,
-          }
-        }}
-        render={({ setQuery, value }) => {
-          return (
-            <Searchbox
-              w={{ base: "100%", lg: "40%" }}
-              paddingX={4}
-              didChange={({ qFuzzy, qExact }) => {
-                if (qFuzzy) {
-                  setQuery({
-                    query: {
-                      bool: {
-                        must: [
-                          {
-                            multi_match: {
-                              query: qFuzzy,
-                              fields: [
-                                "general",
-                                "general.romaji",
-                                "original_artist",
-                                "original_artist.romaji",
-                              ],
-                            },
-                          },
-                        ],
-                      },
-                    },
-                    value: qFuzzy,
-                  });
-                } else if (qExact) {
-                  setQuery({
-                    query: {
-                      bool: {
-                        must: [
-                          {
-                            multi_match: {
-                              query: qExact,
-                              fields: [
-                                "general.ngram",
-                                "original_artist.ngram",
-                              ],
-                            },
-                          },
-                          ,
-                        ],
-                        should: [
-                          {
-                            multi_match: {
-                              query: qExact,
-                              fields: [
-                                "general",
-                                "general.romaji",
-                                "original_artist",
-                                "original_artist.romaji",
-                              ],
-                            },
-                          },
-                        ],
-                      },
-                    },
-                    value: qExact,
-                  });
-                }
-              }}
-            />
-          );
-        }}
-      ></ReactiveComponent> */

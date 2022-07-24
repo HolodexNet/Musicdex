@@ -1,6 +1,16 @@
-import { Radio, RadioGroup, Input, VStack } from "@chakra-ui/react";
+import {
+  Radio,
+  RadioGroup,
+  Input,
+  VStack,
+  Tag,
+  InputRightElement,
+  InputGroup,
+  IconButton,
+} from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { RiCloseFill } from "react-icons/ri";
 
 interface RadioButtonSearchListProps {
   dataField: string;
@@ -11,6 +21,7 @@ interface RadioButtonSearchListProps {
   };
   setQuery: (query: any) => void;
   value: string | null;
+  tagLabel?: string;
 }
 
 export const RadioButtonSearchList = ({
@@ -20,6 +31,7 @@ export const RadioButtonSearchList = ({
   aggregations,
   setQuery,
   value,
+  tagLabel,
 }: RadioButtonSearchListProps) => {
   const { t } = useTranslation();
   const [filterValue, setFilterValue] = useState("");
@@ -46,14 +58,40 @@ export const RadioButtonSearchList = ({
     if (value === null) setRadioValue("");
   }, [value]);
 
+  if (!aggregations?.[dataField]?.buckets?.length) {
+    return null;
+  }
+
   return (
     <>
+      {tagLabel && (
+        <Tag colorScheme="brand" size="md" alignSelf="start">
+          {tagLabel}
+        </Tag>
+      )}
       {showSearch && (
-        <Input
-          value={filterValue}
-          onChange={(e) => setFilterValue(e.target.value)}
-          placeholder={t(placeholder!)}
-        />
+        <InputGroup>
+          <Input
+            value={filterValue}
+            onChange={(e) => setFilterValue(e.target.value)}
+            placeholder={placeholder!}
+          />
+          <InputRightElement>
+            {filterValue && (
+              <IconButton
+                color="red.400"
+                colorScheme="red"
+                size="sm"
+                variant="ghost"
+                aria-label={t("Clear")}
+                icon={<RiCloseFill />}
+                type="button"
+                title={t("Clear")}
+                onClick={() => setFilterValue("")}
+              ></IconButton>
+            )}
+          </InputRightElement>
+        </InputGroup>
       )}
       <RadioGroup value={radioValue} onChange={(value) => setRadioValue(value)}>
         <VStack maxH="200px" alignItems="stretch" overflowY="scroll" p={2}>

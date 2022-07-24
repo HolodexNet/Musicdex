@@ -5,6 +5,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Tag,
   VStack,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
@@ -20,6 +21,7 @@ interface CheckboxSearchListProps {
   };
   setQuery: (query: any) => void;
   value: string[] | null;
+  tagLabel?: string;
 }
 
 export const CheckboxSearchList = ({
@@ -29,6 +31,7 @@ export const CheckboxSearchList = ({
   aggregations,
   setQuery,
   value,
+  tagLabel,
 }: CheckboxSearchListProps) => {
   const { t } = useTranslation();
   const [filterValue, setFilterValue] = useState("");
@@ -57,14 +60,23 @@ export const CheckboxSearchList = ({
     if (value === null) setCheckboxValues([]);
   }, [value]);
 
+  if (!aggregations?.[dataField]?.buckets?.length) {
+    return null;
+  }
+
   return (
     <>
+      {tagLabel && (
+        <Tag colorScheme="brand" size="md" alignSelf="start">
+          {tagLabel}
+        </Tag>
+      )}
       {showSearch && (
         <InputGroup>
           <Input
             value={filterValue}
             onChange={(e) => setFilterValue(e.target.value)}
-            placeholder={t(placeholder!)}
+            placeholder={placeholder!}
           />
           <InputRightElement>
             {filterValue && (
@@ -73,10 +85,10 @@ export const CheckboxSearchList = ({
                 colorScheme="red"
                 size="sm"
                 variant="ghost"
-                aria-label="Clear"
+                aria-label={t("Clear")}
                 icon={<RiCloseFill />}
                 type="button"
-                title="Clear"
+                title={t("Clear")}
                 onClick={() => setFilterValue("")}
               ></IconButton>
             )}

@@ -4,10 +4,11 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Tag,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { RiCloseFill, RiSearch2Line } from "react-icons/ri";
+import { RiSearch2Line } from "react-icons/ri";
 import { useDebounce } from "use-debounce";
 
 interface GeneralInputProps {
@@ -17,6 +18,7 @@ interface GeneralInputProps {
   getQuery: (q: string) => object;
   setQuery: (query: { value?: string; query?: any; opts?: any }) => void;
   value: string | null;
+  tagLabel?: string;
 }
 
 export const GeneralSearchInput = ({
@@ -26,6 +28,7 @@ export const GeneralSearchInput = ({
   getQuery,
   setQuery,
   value,
+  tagLabel,
 }: GeneralInputProps) => {
   const { t } = useTranslation();
   const [searchText, setSearchText] = useState(
@@ -49,31 +52,38 @@ export const GeneralSearchInput = ({
   }, [value]);
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        flush();
-      }}
-    >
-      <InputGroup>
-        <Input
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          placeholder={t(placeholder!)}
-        ></Input>
-        <InputRightElement>
-          <IconButton
-            color="brand.400"
-            colorScheme="brand"
-            size="sm"
-            variant="ghost"
-            aria-label="Search"
-            icon={<RiSearch2Line />}
-            type="submit"
-            title="Search"
-          ></IconButton>
-        </InputRightElement>
-      </InputGroup>
-    </form>
+    <>
+      {tagLabel && (
+        <Tag colorScheme="brand" size="md" alignSelf="start">
+          {tagLabel}
+        </Tag>
+      )}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          flush();
+        }}
+      >
+        <InputGroup>
+          <Input
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder={placeholder}
+          ></Input>
+          <InputRightElement>
+            <IconButton
+              color="brand.400"
+              colorScheme="brand"
+              size="sm"
+              variant="ghost"
+              aria-label={t("Search")}
+              icon={<RiSearch2Line />}
+              type="submit"
+              title={t("Search")}
+            ></IconButton>
+          </InputRightElement>
+        </InputGroup>
+      </form>
+    </>
   );
 };
