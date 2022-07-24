@@ -146,11 +146,11 @@
   "... and {{count}} other": "... und {{count}} weitere",
   "... and {{count}} other_plural": "... und {{count}} weitere",
   "Radio": "Radio",
-  "Abort Changes": "Abort Changes",
-  "Radio featuring {{name}}": "Radio featuring {{name}}",
-  "Trending Songs": "Trending Songs",
-  "Trending songs radio": "Trending songs radio",
-  "See More": "See More",
-  "{{org}} Community Playlists": "{{org}} Community Playlists",
-  "{{org}} Radios": "{{org}} Radios"
+  "Abort Changes": "Änderungen verwerfen",
+  "Radio featuring {{name}}": "Radio mit {{name}}",
+  "Trending Songs": "Beliebte Lieder",
+  "Trending songs radio": "Trend-Lieder-Radio",
+  "See More": "Mehr anzeigen",
+  "{{org}} Community Playlists": "{{org}}-Community-Playlisten",
+  "{{org}} Radios": "{{org}}-Radios"
 }
