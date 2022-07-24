@@ -71,7 +71,7 @@ export default function Home() {
   const setOrg = useStoreActions((state) => state.org.setOrg);
   const { data: orgs } = useServerOrgList();
   const { data: trendingSongs, ...trendingStatus } = useTrendingSongs(
-    org.name !== "All Vtubers" ? { org: org.name } : {}
+    org.name !== "All Vtubers" ? { org: org.name } : {},
   );
   const { org: orgParam } = useParams();
   useEffect(() => {
@@ -157,7 +157,7 @@ export default function Home() {
         {recRadios?.length ? (
           <HomeSection>
             <HomeHeading seeMoreTo="./radios">
-              {t("{{org}} Radios", { org })}
+              {t("{{org}} Radios", { org: org.name })}
             </HomeHeading>
             <CardCarousel
               height={210}
