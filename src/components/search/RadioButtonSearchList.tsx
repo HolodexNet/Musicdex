@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { RiCloseFill } from "react-icons/ri";
 
 interface RadioButtonSearchListProps {
+  initialValue?: string;
   dataField: string;
   placeholder?: string;
   showSearch?: boolean;
@@ -25,6 +26,7 @@ interface RadioButtonSearchListProps {
 }
 
 export const RadioButtonSearchList = ({
+  initialValue,
   dataField,
   placeholder,
   showSearch = false,
@@ -35,7 +37,9 @@ export const RadioButtonSearchList = ({
 }: RadioButtonSearchListProps) => {
   const { t } = useTranslation();
   const [filterValue, setFilterValue] = useState("");
-  const [radioValue, setRadioValue] = useState<string>("");
+  const [radioValue, setRadioValue] = useState<string>(
+    initialValue ? JSON.parse(initialValue) : "",
+  );
 
   const getQuery = useCallback(
     (value: string) => {

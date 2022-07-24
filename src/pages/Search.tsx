@@ -1,10 +1,8 @@
 import {
-  MultiList,
   ReactiveBase,
   ReactiveComponent,
   ReactiveList,
   SelectedFilters,
-  SingleList,
   ToggleButton,
 } from "@appbaseio/reactivesearch";
 import {
@@ -22,12 +20,14 @@ import {
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { BiMovie, BiMoviePlay } from "react-icons/bi";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SongTable, SongTableCol } from "../components/data/SongTable";
 import "./Search.css";
 import { GeneralSearchInput } from "../components/search/GeneralSearchInput";
 import { CheckboxSearchList } from "../components/search/CheckboxSearchList";
 import { RadioButtonSearchList } from "../components/search/RadioButtonSearchList";
+import { ToggleButtonSearchInput } from "../components/search/ToggleButtonSearchInput";
 
 const debounceValue = 1000;
 
@@ -172,7 +172,7 @@ export default function Search() {
             customQuery={getGeneralQuery}
             render={(props) => (
               <GeneralSearchInput
-                initialState={searchParams.get("q")}
+                initialValue={searchParams.get("q")}
                 debounceValue={debounceValue}
                 placeholder={t("Search for Music / Artist")}
                 getQuery={getGeneralQuery}
@@ -191,20 +191,42 @@ export default function Search() {
               </AccordionButton>
               <AccordionPanel p={0}>
                 <VStack alignItems="stretch" flexGrow={1} spacing={2}>
-                  <Tag colorScheme="brand" size="md" alignSelf="start">
-                    {t("Type")}
-                  </Tag>
-                  <ToggleButton
+                  {/*<Tag colorScheme="brand" size="md" alignSelf="start">*/}
+                  {/*  {t("Type")}*/}
+                  {/*</Tag>*/}
+                  {/*<ToggleButton*/}
+                  {/*  componentId="isMv"*/}
+                  {/*  dataField="is_mv"*/}
+                  {/*  data={[*/}
+                  {/*    { label: t("MV"), value: "true" },*/}
+                  {/*    { label: t("Stream"), value: "false" },*/}
+                  {/*  ]}*/}
+                  {/*  filterLabel="Type"*/}
+                  {/*  defaultValue={[]}*/}
+                  {/*  URLParams*/}
+                  {/*  innerClass={{ button: "toggle-button" }}*/}
+                  {/*/>*/}
+                  <ReactiveComponent
                     componentId="isMv"
-                    dataField="is_mv"
-                    data={[
-                      { label: "MV", value: "true" },
-                      { label: "Stream", value: "false" },
-                    ]}
-                    filterLabel="Type"
-                    defaultValue={[]}
+                    filterLabel={t("Is MV")}
                     URLParams
-                    style={{ marginLeft: 0 }}
+                    render={(props) => (
+                      <ToggleButtonSearchInput
+                        initialValue={searchParams.get("isMv")}
+                        dataField="is_mv"
+                        tagLabel={t("Type")}
+                        buttons={[
+                          { label: t("MV"), value: "true", icon: <BiMovie /> },
+                          {
+                            label: t("Stream"),
+                            value: "false",
+                            icon: <BiMoviePlay />,
+                          },
+                        ]}
+                        {...props}
+                      />
+                    )}
+                    onError={(e) => console.error(e)}
                   />
 
                   <ReactiveComponent
@@ -214,7 +236,7 @@ export default function Search() {
                     customQuery={getSongQuery}
                     render={(props) => (
                       <GeneralSearchInput
-                        initialState={searchParams.get("song")}
+                        initialValue={searchParams.get("song")}
                         placeholder={t("Song Name")}
                         debounceValue={debounceValue}
                         getQuery={getSongQuery}
@@ -231,7 +253,7 @@ export default function Search() {
                     customQuery={getArtistQuery}
                     render={(props) => (
                       <GeneralSearchInput
-                        initialState={searchParams.get("artist")}
+                        initialValue={searchParams.get("artist")}
                         placeholder={t("Original Artist Name")}
                         debounceValue={debounceValue}
                         getQuery={getArtistQuery}
@@ -262,6 +284,7 @@ export default function Search() {
                       setChannelSelected(props.value?.length > 0);
                       return (
                         <CheckboxSearchList
+                          initialValue={searchParams.get("ch")}
                           dataField="channel.name"
                           placeholder={t("Channel name")}
                           tagLabel={t("Channel")}
@@ -292,6 +315,7 @@ export default function Search() {
                         setSuborgVisible(!!props.value);
                         return (
                           <RadioButtonSearchList
+                            initialValue={searchParams.get("org")}
                             dataField="org"
                             placeholder={t("Organization")}
                             tagLabel={t("Organization")}
@@ -320,6 +344,7 @@ export default function Search() {
                       })}
                       render={(props) => (
                         <CheckboxSearchList
+                          initialValue={searchParams.get("suborg")}
                           dataField="suborg"
                           placeholder={t("Suborg name")}
                           tagLabel={t("Suborg")}

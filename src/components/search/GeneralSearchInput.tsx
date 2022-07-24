@@ -12,7 +12,7 @@ import { RiSearch2Line } from "react-icons/ri";
 import { useDebounce } from "use-debounce";
 
 interface GeneralInputProps {
-  initialState?: string;
+  initialValue?: string;
   debounceValue?: number;
   placeholder?: string;
   getQuery: (q: string) => object;
@@ -22,7 +22,7 @@ interface GeneralInputProps {
 }
 
 export const GeneralSearchInput = ({
-  initialState,
+  initialValue,
   debounceValue = 1000,
   placeholder,
   getQuery,
@@ -31,8 +31,8 @@ export const GeneralSearchInput = ({
   tagLabel,
 }: GeneralInputProps) => {
   const { t } = useTranslation();
-  const [searchText, setSearchText] = useState(
-    initialState ? JSON.parse(initialState) : "",
+  const [searchText, setSearchText] = useState<string>(
+    initialValue ? JSON.parse(initialValue) : "",
   );
   const [debouncedSearchText, { flush }] = useDebounce(
     searchText,
