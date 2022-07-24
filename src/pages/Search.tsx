@@ -1,5 +1,4 @@
 import {
-  DataSearch,
   MultiList,
   ReactiveBase,
   ReactiveComponent,
@@ -22,10 +21,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SongTable, SongTableCol } from "../components/data/SongTable";
 import "./Search.css";
 import { GeneralSearchInput } from "../components/search/GeneralSearchInput";
+import { CheckboxSearchList } from "../components/search/CheckboxSearchList";
 
 const debounceValue = 1000;
 
@@ -65,6 +66,7 @@ const SearchResultSongTable = ({
 };
 
 export default function Search() {
+  const { t } = useTranslation();
   const [suborgVisible, setSuborgVisible] = useState(false);
   const flexWrap: "nowrap" | "wrap" | undefined = useBreakpointValue({
     base: "wrap",
@@ -134,6 +136,7 @@ export default function Search() {
       },
     };
   }, []);
+
   return (
     <ReactiveBase
       className="m-search"
@@ -180,7 +183,7 @@ export default function Search() {
             <AccordionItem>
               <AccordionButton>
                 <Heading flex="1" textAlign="center" size="sm">
-                  Advanced Filters
+                  {t("Advanced Filters")}
                 </Heading>
                 <AccordionIcon />
               </AccordionButton>
@@ -201,7 +204,7 @@ export default function Search() {
                   />
 
                   <Tag colorScheme="brand" size="md" alignSelf="start">
-                    Song
+                    {t("Song")}
                   </Tag>
                   <ReactiveComponent
                     componentId="song"
@@ -220,13 +223,13 @@ export default function Search() {
                     onError={(e) => console.log(e)}
                   />
                   <Tag colorScheme="brand" size="md" alignSelf="start">
-                    Artist
+                    {t("Artist")}
                   </Tag>
                   <ReactiveComponent
                     componentId="artist"
                     URLParams
                     filterLabel="Original Artist"
-                    customQuery={getSongQuery}
+                    customQuery={getArtistQuery}
                     render={(props) => (
                       <GeneralSearchInput
                         initialState={searchParams.get("artist")}
@@ -239,20 +242,37 @@ export default function Search() {
                     onError={(e) => console.log(e)}
                   />
 
-                  <MultiList
-                    className="input-fix"
+                  <Tag colorScheme="brand" size="md" alignSelf="start">
+                    {t("Channel")}
+                  </Tag>
+                  <ReactiveComponent
                     componentId="ch"
-                    dataField="channel.name"
                     filterLabel="Channel"
-                    title="Filter by Channel"
-                    react={{ and: ["q", "song", "artist", "isMv", "org"] }}
-                    showSearch
-                    onValueChange={(e) => {
-                      setChannelSelected(e && e.length > 0);
-                    }}
                     URLParams
-                    size={12}
-                    showCheckbox
+                    react={{ and: ["q", "song", "artist", "isMv", "org"] }}
+                    defaultQuery={() => ({
+                      aggs: {
+                        "channel.name": {
+                          terms: {
+                            field: "channel.name",
+                            size: 12,
+                            order: { _count: "desc" },
+                          },
+                        },
+                      },
+                    })}
+                    render={(props) => {
+                      setChannelSelected(props.value?.length > 0);
+                      return (
+                        <CheckboxSearchList
+                          dataField="channel.name"
+                          placeholder="Channel name"
+                          showSearch
+                          {...props}
+                        />
+                      );
+                    }}
+                    onError={(e) => console.log(e)}
                   />
                   {!channelSelected && (
                     <SingleList
@@ -269,17 +289,37 @@ export default function Search() {
                     />
                   )}
                   {suborgVisible && !channelSelected && (
-                    <MultiList
-                      componentId="suborg"
-                      dataField="suborg"
-                      filterLabel="Suborg"
-                      title="Filter by Suborg"
-                      showCheckbox
-                      showSearch={false}
-                      queryFormat="and"
-                      react={{ and: ["q", "org", "song", "artist", "isMv"] }}
-                      URLParams
-                    />
+                    <>
+                      <Tag colorScheme="brand" size="md" alignSelf="start">
+                        {t("Suborg")}
+                      </Tag>
+                      <ReactiveComponent
+                        componentId="suborg"
+                        filterLabel="Suborg"
+                        URLParams
+                        react={{ and: ["q", "song", "artist", "isMv", "org"] }}
+                        defaultQuery={() => ({
+                          aggs: {
+                            suborg: {
+                              terms: {
+                                field: "suborg",
+                                order: { _count: "desc" },
+                              },
+                            },
+                          },
+                        })}
+                        render={(props) => {
+                          return (
+                            <CheckboxSearchList
+                              dataField="suborg"
+                              placeholder="Suborg name"
+                              {...props}
+                            />
+                          );
+                        }}
+                        onError={(e) => console.log(e)}
+                      />
+                    </>
                   )}
                 </VStack>
               </AccordionPanel>
