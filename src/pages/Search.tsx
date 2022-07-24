@@ -3,7 +3,6 @@ import {
   ReactiveComponent,
   ReactiveList,
   SelectedFilters,
-  ToggleButton,
 } from "@appbaseio/reactivesearch";
 import {
   Accordion,
@@ -14,11 +13,10 @@ import {
   Flex,
   Heading,
   Progress,
-  Tag,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiMovie, BiMoviePlay } from "react-icons/bi";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -70,6 +68,8 @@ const SearchResultSongTable = ({
 export default function Search() {
   const { t } = useTranslation();
   const [suborgVisible, setSuborgVisible] = useState(false);
+  const navigate = useNavigate();
+  const [channelSelected, setChannelSelected] = useState(false);
   const flexWrap: "nowrap" | "wrap" | undefined = useBreakpointValue({
     base: "wrap",
     sm: "wrap",
@@ -78,15 +78,6 @@ export default function Search() {
     lg: "nowrap",
     xl: "nowrap",
   });
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [channelSelected, setChannelSelected] = useState(
-    searchParams.has("ch"),
-  );
-
-  useEffect(() => {
-    if (searchParams.has("ch")) setChannelSelected(true);
-  }, [searchParams]); // searchParams --> isExact
 
   const getGeneralQuery = useCallback((value: string) => {
     if (!value) return {};
@@ -172,7 +163,6 @@ export default function Search() {
             customQuery={getGeneralQuery}
             render={(props) => (
               <GeneralSearchInput
-                initialValue={searchParams.get("q")}
                 debounceValue={debounceValue}
                 placeholder={t("Search for Music / Artist")}
                 getQuery={getGeneralQuery}
@@ -191,28 +181,12 @@ export default function Search() {
               </AccordionButton>
               <AccordionPanel p={0}>
                 <VStack alignItems="stretch" flexGrow={1} spacing={2}>
-                  {/*<Tag colorScheme="brand" size="md" alignSelf="start">*/}
-                  {/*  {t("Type")}*/}
-                  {/*</Tag>*/}
-                  {/*<ToggleButton*/}
-                  {/*  componentId="isMv"*/}
-                  {/*  dataField="is_mv"*/}
-                  {/*  data={[*/}
-                  {/*    { label: t("MV"), value: "true" },*/}
-                  {/*    { label: t("Stream"), value: "false" },*/}
-                  {/*  ]}*/}
-                  {/*  filterLabel="Type"*/}
-                  {/*  defaultValue={[]}*/}
-                  {/*  URLParams*/}
-                  {/*  innerClass={{ button: "toggle-button" }}*/}
-                  {/*/>*/}
                   <ReactiveComponent
                     componentId="isMv"
                     filterLabel={t("Is MV")}
                     URLParams
                     render={(props) => (
                       <ToggleButtonSearchInput
-                        initialValue={searchParams.get("isMv")}
                         dataField="is_mv"
                         tagLabel={t("Type")}
                         buttons={[
@@ -236,7 +210,6 @@ export default function Search() {
                     customQuery={getSongQuery}
                     render={(props) => (
                       <GeneralSearchInput
-                        initialValue={searchParams.get("song")}
                         placeholder={t("Song Name")}
                         debounceValue={debounceValue}
                         getQuery={getSongQuery}
@@ -253,7 +226,6 @@ export default function Search() {
                     customQuery={getArtistQuery}
                     render={(props) => (
                       <GeneralSearchInput
-                        initialValue={searchParams.get("artist")}
                         placeholder={t("Original Artist Name")}
                         debounceValue={debounceValue}
                         getQuery={getArtistQuery}
@@ -284,7 +256,6 @@ export default function Search() {
                       setChannelSelected(props.value?.length > 0);
                       return (
                         <CheckboxSearchList
-                          initialValue={searchParams.get("ch")}
                           dataField="channel.name"
                           placeholder={t("Channel name")}
                           tagLabel={t("Channel")}
@@ -315,7 +286,6 @@ export default function Search() {
                         setSuborgVisible(!!props.value);
                         return (
                           <RadioButtonSearchList
-                            initialValue={searchParams.get("org")}
                             dataField="org"
                             placeholder={t("Organization")}
                             tagLabel={t("Organization")}
@@ -344,7 +314,6 @@ export default function Search() {
                       })}
                       render={(props) => (
                         <CheckboxSearchList
-                          initialValue={searchParams.get("suborg")}
                           dataField="suborg"
                           placeholder={t("Suborg name")}
                           tagLabel={t("Suborg")}

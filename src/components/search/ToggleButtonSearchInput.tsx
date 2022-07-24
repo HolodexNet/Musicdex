@@ -1,10 +1,7 @@
 import { Button, HStack, Tag } from "@chakra-ui/react";
 import { ReactElement, useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { RiSearch2Line } from "react-icons/ri";
 
 interface ToggleButtonSearchInputProps {
-  initialValue?: string;
   dataField: string;
   buttons: Array<{ label: string; value: string; icon?: ReactElement }>;
   setQuery: (query: { value?: string; query?: any; opts?: any }) => void;
@@ -13,18 +10,13 @@ interface ToggleButtonSearchInputProps {
 }
 
 export const ToggleButtonSearchInput = ({
-  initialValue,
   dataField,
   setQuery,
   value,
   buttons,
   tagLabel,
 }: ToggleButtonSearchInputProps) => {
-  console.log(value, buttons);
-  const { t } = useTranslation();
-  const [buttonValue, setButtonValue] = useState(
-    initialValue ? JSON.parse(initialValue) : "",
-  );
+  const [buttonValue, setButtonValue] = useState<string>(value!);
 
   const getQuery = useCallback(
     (value: string) => {
@@ -41,8 +33,8 @@ export const ToggleButtonSearchInput = ({
       query: getQuery(buttonValue),
     });
   }, [buttonValue, getQuery, setQuery]);
-  //
-  // // Support resetting from SelectedFilters
+
+  // Support resetting from SelectedFilters
   useEffect(() => {
     if (value === null) setButtonValue("");
   }, [value]);

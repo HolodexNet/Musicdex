@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 import { RiCloseFill } from "react-icons/ri";
 
 interface CheckboxSearchListProps {
-  initialValue?: string;
   dataField: string;
   placeholder?: string;
   showSearch?: boolean;
@@ -26,7 +25,6 @@ interface CheckboxSearchListProps {
 }
 
 export const CheckboxSearchList = ({
-  initialValue,
   dataField,
   placeholder,
   showSearch = false,
@@ -38,7 +36,7 @@ export const CheckboxSearchList = ({
   const { t } = useTranslation();
   const [filterValue, setFilterValue] = useState("");
   const [checkboxValues, setCheckboxValues] = useState<Array<string | number>>(
-    initialValue ? JSON.parse(initialValue) : [],
+    value!,
   );
 
   const getTermsQuery = useCallback(
