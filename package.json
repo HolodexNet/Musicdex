@@ -70,6 +70,7 @@
     "react-youtube": "^7.14.0",
     "setimmediate": "^1.0.5",
     "typescript": "4.6.3",
+    "use-debounce": "^8.0.2",
     "workbox-background-sync": "^5.1.3",
     "workbox-broadcast-update": "^5.1.3",
     "workbox-cacheable-response": "^5.1.3",

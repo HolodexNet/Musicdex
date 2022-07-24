@@ -14,24 +14,24 @@ import { RiSearch2Line } from "react-icons/ri";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 
-export function Searchbox(props: BoxProps) {
+export function SearchBox(props: BoxProps) {
   const { t } = useTranslation();
   let [isFocused, setFocused] = useState(false);
   let navigate = useNavigate();
   let [searchParams] = useSearchParams();
   let [currentValue, setValue] = useState("");
-  const input = useRef<any>();
+  const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const q = searchParams.get("q");
-    const prettyValue = q ? JSON.parse(q) : "";
+    const prettyValue: string = q ? JSON.parse(q) : "";
     setValue(prettyValue);
-    input.current.value = prettyValue;
+    input.current!.value = prettyValue;
   }, [searchParams]);
 
   useHotkeys("ctrl+l, cmd+l, cmd+alt+f", (e) => {
     e.preventDefault();
-    input.current.focus();
+    input.current!.focus();
   });
 
   const submitHandler = (e: FormEvent) => {

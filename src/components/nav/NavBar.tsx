@@ -19,12 +19,13 @@ import { useTranslation } from "react-i18next";
 import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useClient } from "../../modules/client";
-import { Searchbox } from "./Searchbox";
+import { SearchBox } from "./SearchBox";
 import { LogoWithText } from "./LogoWithText";
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
+
 export function NavBar({ onOpen, ...rest }: MobileProps) {
   const { t } = useTranslation();
   const { isLoggedIn, logout, user } = useClient();
@@ -57,7 +58,7 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
       />
       <LogoWithText display={{ base: "none", lg: "flex" }} />
 
-      <Searchbox w={{ base: "100%", lg: "40%" }} paddingX={4} />
+      <SearchBox w={{ base: "100%", lg: "40%" }} paddingX={4} />
 
       <HStack spacing={{ base: "0", lg: "6" }}>
         <Flex alignItems={"center"}>
