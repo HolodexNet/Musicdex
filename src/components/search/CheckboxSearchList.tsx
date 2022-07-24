@@ -1,6 +1,15 @@
-import { Checkbox, CheckboxGroup, Input, VStack } from "@chakra-ui/react";
+import {
+  Checkbox,
+  CheckboxGroup,
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+  VStack,
+} from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { RiCloseFill } from "react-icons/ri";
 
 interface CheckboxSearchListProps {
   dataField: string;
@@ -51,11 +60,28 @@ export const CheckboxSearchList = ({
   return (
     <>
       {showSearch && (
-        <Input
-          value={filterValue}
-          onChange={(e) => setFilterValue(e.target.value)}
-          placeholder={t(placeholder!)}
-        />
+        <InputGroup>
+          <Input
+            value={filterValue}
+            onChange={(e) => setFilterValue(e.target.value)}
+            placeholder={t(placeholder!)}
+          />
+          <InputRightElement>
+            {filterValue && (
+              <IconButton
+                color="red.400"
+                colorScheme="red"
+                size="sm"
+                variant="ghost"
+                aria-label="Clear"
+                icon={<RiCloseFill />}
+                type="button"
+                title="Clear"
+                onClick={() => setFilterValue("")}
+              ></IconButton>
+            )}
+          </InputRightElement>
+        </InputGroup>
       )}
       <CheckboxGroup
         value={checkboxValues}

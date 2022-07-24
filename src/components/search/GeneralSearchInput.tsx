@@ -1,6 +1,13 @@
-import { Input } from "@chakra-ui/react";
+import {
+  HStack,
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { RiCloseFill, RiSearch2Line } from "react-icons/ri";
 import { useDebounce } from "use-debounce";
 
 interface GeneralInputProps {
@@ -24,7 +31,10 @@ export const GeneralSearchInput = ({
   const [searchText, setSearchText] = useState(
     initialState ? JSON.parse(initialState) : "",
   );
-  const [debouncedSearchText] = useDebounce(searchText, debounceValue);
+  const [debouncedSearchText, { flush }] = useDebounce(
+    searchText,
+    debounceValue,
+  );
 
   useEffect(() => {
     setQuery({
@@ -39,10 +49,31 @@ export const GeneralSearchInput = ({
   }, [value]);
 
   return (
-    <Input
-      value={searchText}
-      onChange={(e) => setSearchText(e.target.value)}
-      placeholder={t(placeholder!)}
-    ></Input>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        flush();
+      }}
+    >
+      <InputGroup>
+        <Input
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          placeholder={t(placeholder!)}
+        ></Input>
+        <InputRightElement>
+          <IconButton
+            color="brand.400"
+            colorScheme="brand"
+            size="sm"
+            variant="ghost"
+            aria-label="Search"
+            icon={<RiSearch2Line />}
+            type="submit"
+            title="Search"
+          ></IconButton>
+        </InputRightElement>
+      </InputGroup>
+    </form>
   );
 };
