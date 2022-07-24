@@ -126,6 +126,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
   function onReady(event: { target: YouTubePlayer }) {
     setPlayer(event.target);
   }
+
   const location = useLocation();
   useEffect(() => {
     if (isOpen) {

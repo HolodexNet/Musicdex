@@ -41,7 +41,7 @@ const useResponsePlaylistArray = () => {
   });
 };
 
-export interface PlalyistButtonType
+export interface PlaylistButtonType
   extends Omit<Partial<IconButtonProps>, "type"> {
   type: PlaylistButtonElement;
   hidden?: boolean;
@@ -73,7 +73,7 @@ export function PlaylistButtonArray({
   canStar?: boolean;
   playlist: PlaylistFull;
   hideElement?: PlaylistButtonElement[];
-  children?: Partial<PlalyistButtonType>[];
+  children?: Partial<PlaylistButtonType>[];
 } & StackProps): JSX.Element {
   const { t } = useTranslation();
   const clip = useClipboardWithToast();
@@ -129,7 +129,7 @@ export function PlaylistButtonArray({
   );
 
   // List of all buttons and props
-  const buttonList: PlalyistButtonType[] = useMemo(() => {
+  const buttonList: PlaylistButtonType[] = useMemo(() => {
     return [
       {
         type: "play",

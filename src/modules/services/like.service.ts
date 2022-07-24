@@ -12,7 +12,6 @@ import {
 import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
 import { useStoreState } from "../../store";
-import { useEffect } from "react";
 
 export const LIKE_QUERY_CONFIG = {
   ...DEFAULT_FETCH_CONFIG,
@@ -88,6 +87,7 @@ export const useLikedSongs = (
 export const LIKED_QUERY_KEY = "BLK:";
 let dataloader: Dataloader<string, boolean, unknown> | undefined = undefined;
 let dataLoaderToken: string | null = null;
+
 export function useSongLikeCheck_Loader():
   | Dataloader<string, boolean, unknown>
   | undefined {
