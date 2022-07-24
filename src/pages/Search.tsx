@@ -395,6 +395,7 @@ export default function Search() {
             ]}
             innerClass={{
               sortOptions: "sort-select",
+              pagination: "custom-chakra-button",
             }}
             render={SearchResultSongTable}
           />
