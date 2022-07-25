@@ -29,7 +29,6 @@ interface PlayerBarProps {
   progress: number;
   onProgressChange: (e: number) => void;
   currentSong: Song | undefined;
-  isPlaying: boolean;
   togglePlay: () => void;
   seconds: string;
   volume: number;
@@ -49,7 +48,6 @@ export const PlayerBar = React.memo(
     progress,
     onProgressChange,
     currentSong,
-    isPlaying,
     togglePlay,
     seconds,
     volume,
@@ -59,7 +57,7 @@ export const PlayerBar = React.memo(
   }: PlayerBarProps) => {
     const fullPlayer = useStoreState((state) => state.player.fullPlayer);
     const setFullPlayer = useStoreActions(
-      (store) => store.player.setFullPlayer
+      (store) => store.player.setFullPlayer,
     );
     const setPos = useStoreActions((store) => store.player.setOverridePosition);
     const location = useLocation();
@@ -146,7 +144,6 @@ export const PlayerBar = React.memo(
                   animate={{ opacity: 1, y: 0 }}
                 >
                   <PlaybackControl
-                    isPlaying={isPlaying}
                     togglePlay={togglePlay}
                     mobilePlayer={breakpoint === "base"}
                   />
@@ -247,7 +244,6 @@ export const PlayerBar = React.memo(
                     transition={springTransition}
                   >
                     <PlaybackControl
-                      isPlaying={isPlaying}
                       togglePlay={togglePlay}
                       fullPlayer={true}
                       justifyContent="space-around"
@@ -287,7 +283,7 @@ export const PlayerBar = React.memo(
         </AnimatePresence>
       </PlayerContainer>
     );
-  }
+  },
 );
 // const MemoizedPlayerBarLower = React.memo(PlayerBar);
 
@@ -305,7 +301,6 @@ const PlayerContainer = styled.div<{
   background: var(--chakra-colors-bg-800);
 
   width: 100%;
-  flex-basis: 1;
   flex-shrink: 0;
   bottom: 0;
   transition: all 0.3s ease-out;

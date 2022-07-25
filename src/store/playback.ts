@@ -18,6 +18,8 @@ interface SongPlayback {
 export interface PlaybackModel {
   // ==== Currently Playing. It is separate from queue and playlistQueue.
   currentlyPlaying: SongPlayback;
+  isPlaying: boolean;
+  setIsPlaying: Action<PlaybackModel, boolean>;
 
   // ==== Queue and Queue Mutators
   queue: Song[]; // a high priority queue of song. This plays 'next'.
@@ -101,10 +103,15 @@ const playbackModel: PlaybackModel = {
     repeat: 0,
   },
 
+  isPlaying: false,
+  setIsPlaying: action((state, payload) => {
+    state.isPlaying = payload;
+  }),
+
   queue: [],
   _queueAdd: action((state, songs) => {
-    const goodsongs = songs.filter((x) => x.id && x.video_id);
-    state.queue.push(...goodsongs);
+    const goodSongs = songs.filter((x) => x.id && x.video_id);
+    state.queue.push(...goodSongs);
   }),
   _queueClear: action((state) => {
     state.queue = [];
@@ -152,7 +159,7 @@ const playbackModel: PlaybackModel = {
   history: [],
   addSongToHistory: action((state, s) => {
     state.history = state.history.filter(
-      (x) => x.song && s.song && x.song.id !== s.song.id
+      (x) => x.song && s.song && x.song.id !== s.song.id,
     );
     state.history.unshift(s);
     if (state.history.length > 100) {
@@ -207,7 +214,7 @@ const playbackModel: PlaybackModel = {
     if (s.song) {
       // Add to history
       state.history = state.history.filter(
-        (x) => x.song && s.song && x.song.id !== s.song.id
+        (x) => x.song && s.song && x.song.id !== s.song.id,
       );
       state.history.unshift({ ...s });
       // Trim history
@@ -241,7 +248,7 @@ const playbackModel: PlaybackModel = {
     if (s.song) {
       // Add to history
       state.history = state.history.filter(
-        (x) => x.song && s.song && x.song.id !== s.song.id
+        (x) => x.song && s.song && x.song.id !== s.song.id,
       );
       state.history.unshift({ ...s });
       // Trim history
@@ -350,7 +357,7 @@ const playbackModel: PlaybackModel = {
       // songs should be singular.
       if (songs && songs.length === 0) {
         console.error(
-          "Tried to enqueue empty song array with immediatePlay : true. This doesn't make sense."
+          "Tried to enqueue empty song array with immediatePlay : true. This doesn't make sense.",
         );
         return { err: "Songs being queued should not be empty" };
       }
@@ -463,7 +470,7 @@ const playbackModel: PlaybackModel = {
             actions._extendPlaylist({ radio: resp.data });
           });
       }
-    }
+    },
   ),
 
   previous: thunk((actions, opt, h) => {

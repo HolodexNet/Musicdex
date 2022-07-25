@@ -1,6 +1,6 @@
-import { usePrevious, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useStoreState, useStoreActions, store } from "../../store";
+import { useStoreState, useStoreActions } from "../../store";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 import { formatSeconds } from "../../utils/SongHelper";
@@ -15,34 +15,38 @@ export function Player({ player }: { player: any }) {
   const toast = useToast();
   const position = useStoreState((store) => store.player.position);
   const setOverridePos = useStoreActions(
-    (store) => store.player.setOverridePosition
+    (store) => store.player.setOverridePosition,
   );
   // Current song
   const currentSong = useStoreState(
-    (state) => state.playback.currentlyPlaying.song
+    (state) => state.playback.currentlyPlaying.song,
   );
   const repeat = useStoreState(
-    (state) => state.playback.currentlyPlaying.repeat
+    (state) => state.playback.currentlyPlaying.repeat,
+  );
+  const isPlaying = useStoreState((actions) => actions.playback.isPlaying);
+  const setIsPlaying = useStoreActions(
+    (actions) => actions.playback.setIsPlaying,
   );
   const previous = useStoreActions((actions) => actions.playback.previous);
   const next = useStoreActions((actions) => actions.playback.next);
   const toggleShuffleMode = useStoreActions(
-    (actions) => actions.playback.toggleShuffle
+    (actions) => actions.playback.toggleShuffle,
   );
   const toggleRepeatMode = useStoreActions(
-    (actions) => actions.playback.toggleRepeat
+    (actions) => actions.playback.toggleRepeat,
   );
 
   const setFullPlayer = useStoreActions(
-    (actions) => actions.player.setFullPlayer
+    (actions) => actions.player.setFullPlayer,
   );
 
   const totalDuration = useMemo(
     () => (currentSong ? currentSong.end - currentSong.start : 0),
-    [currentSong]
+    [currentSong],
   );
 
-  const { mutate: trackSong, isSuccess, isError, isLoading } = useTrackSong();
+  const { mutate: trackSong } = useTrackSong();
 
   const {
     currentVideo,
@@ -54,7 +58,6 @@ export function Player({ player }: { player: any }) {
     muted,
   } = usePlayer(player);
   const [progress, setProgress] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [volumeSlider, setVolumeSlider] = useState(0);
   // Stop song from playing on initial page load
   const [firstLoadPauseId, setFirstLoadPauseId] = useState("");
@@ -79,7 +82,7 @@ export function Player({ player }: { player: any }) {
         }
       }
     },
-    [player]
+    [player],
   );
 
   // Jot down the song that the page loaded on, and keep this paused
@@ -101,9 +104,9 @@ export function Player({ player }: { player: any }) {
       return;
     }
     setIsPlaying(
-      state === PlayerStates.BUFFERING || state === PlayerStates.PLAYING
+      state === PlayerStates.BUFFERING || state === PlayerStates.PLAYING,
     );
-  }, [firstLoadPauseId, player, state]);
+  }, [firstLoadPauseId, player, setIsPlaying, state]);
 
   // Sanity video id check event
   useEffect(() => {
@@ -221,7 +224,7 @@ export function Player({ player }: { player: any }) {
     if ((progress >= 100 && state === PlayerStates.PLAYING) || earlyEnd) {
       console.log(
         "Auto advancing due to: " +
-          (progress >= 100 ? "prog>100" : "playerStatus=Ended")
+          (progress >= 100 ? "prog>100" : "playerStatus=Ended"),
       );
       setProgress(0);
       next({ count: 1, userSkipped: false });
@@ -244,7 +247,7 @@ export function Player({ player }: { player: any }) {
           console.log(
             `[Player] Retrying ${currentSong.name} - attempt #${
               retryCounts[currentSong.video_id]
-            }/3`
+            }/3`,
           );
           player.loadVideoById(currentSong.video_id, currentSong.start);
           setError(false);
@@ -254,7 +257,7 @@ export function Player({ player }: { player: any }) {
       }
 
       console.log(
-        "[PLAYER] SKIPPING____ DUE TO VIDEO PLAYBACK FAILURE (maybe the video is blocked in your country)"
+        "[PLAYER] SKIPPING____ DUE TO VIDEO PLAYBACK FAILURE (maybe the video is blocked in your country)",
       );
       toast({
         position: "top-right",
@@ -273,7 +276,7 @@ export function Player({ player }: { player: any }) {
       setProgress(e);
       player?.seekTo(currentSong.start + (e / 100) * totalDuration, true);
     },
-    [currentSong, player?.seekTo, totalDuration]
+    [currentSong, player, totalDuration],
   );
 
   const onVolumeChange = useCallback(
@@ -282,7 +285,7 @@ export function Player({ player }: { player: any }) {
       player?.setVolume(e);
       setVolumeSlider(e);
     },
-    [player, setVolumeSlider]
+    [player, setVolumeSlider],
   );
 
   const seconds = useMemo(() => {
@@ -294,8 +297,8 @@ export function Player({ player }: { player: any }) {
     // User action, unlock the first load pause
     if (firstLoadPauseId) setFirstLoadPauseId("");
     if (player) isPlaying ? player.pauseVideo() : player.playVideo();
-    setIsPlaying((prev) => !prev);
-  }, [currentSong, firstLoadPauseId, isPlaying, player]);
+    setIsPlaying(!isPlaying);
+  }, [currentSong, firstLoadPauseId, isPlaying, player, setIsPlaying]);
 
   // Keyboard shortcuts
   // Follows spotify keyboard shortcuts
@@ -306,7 +309,7 @@ export function Player({ player }: { player: any }) {
       e.preventDefault();
       togglePlay();
     },
-    [currentSong, firstLoadPauseId, isPlaying, player]
+    [currentSong, firstLoadPauseId, isPlaying, player],
   );
 
   // Toggle repeat / shuffle mode
@@ -354,7 +357,7 @@ export function Player({ player }: { player: any }) {
           break;
       }
     },
-    [volumeSlider, muted]
+    [volumeSlider, muted],
   );
 
   // Forward / Reward tracks
@@ -381,7 +384,7 @@ export function Player({ player }: { player: any }) {
           break;
       }
     },
-    [player, currentSong, progress]
+    [player, currentSong, progress],
   );
 
   // Open / Close full-screen player
@@ -404,7 +407,6 @@ export function Player({ player }: { player: any }) {
       progress={progress}
       onProgressChange={onProgressChange}
       currentSong={currentSong}
-      isPlaying={isPlaying}
       togglePlay={togglePlay}
       // next={(e: any) => next(e)}
       // player={player}

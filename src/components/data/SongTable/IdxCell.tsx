@@ -1,4 +1,4 @@
-import { FaPlay } from "react-icons/fa";
+import { FaPause, FaPlay } from "react-icons/fa";
 import { useStoreState } from "../../../store";
 import { MotionBox } from "../../common/MotionBox";
 import { NowPlayingIcon } from "../../icons/NowPlayingIcon";
@@ -16,12 +16,17 @@ export const IdxGrid = ({
   onPlayClick: (e: any) => void;
 }) => {
   const currentId = useStoreState(
-    (state) => state.playback.currentlyPlaying?.song?.id
+    (state) => state.playback.currentlyPlaying?.song?.id,
   );
+  const isPlaying = useStoreState((state) => state.playback.isPlaying);
+
   switch (true) {
     case songId === currentId:
       return (
-        <NowPlayingIcon style={{ color: "var(--chakra-colors-n2-400)" }} />
+        <NowPlayingIcon
+          isPlaying={isPlaying}
+          style={{ color: "var(--chakra-colors-n2-400)" }}
+        />
       );
     case active:
       return (
