@@ -20,7 +20,7 @@ export default function LikedSongs() {
   } = useLikedSongs(page, { keepPreviousData: true });
   const hasMore = useMemo(
     () => page < (paginatedSongs?.page_count || 1),
-    [page, paginatedSongs]
+    [page, paginatedSongs],
   );
   const queueSongs = useSongQueuer();
 
@@ -58,7 +58,7 @@ export default function LikedSongs() {
                 })}
               </Button>
             </HStack>
-            {paginatedSongs?.content?.length && (
+            {!!paginatedSongs?.content?.length && (
               <>
                 <Suspense fallback={<div>{t("Loading...")}</div>}>
                   <SongTable songs={paginatedSongs.content}></SongTable>
