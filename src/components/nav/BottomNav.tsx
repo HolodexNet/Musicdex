@@ -5,19 +5,22 @@ import { IconType } from "react-icons";
 import { FiClock, FiHeart, FiHome } from "react-icons/fi";
 import { RiPlayListFill } from "react-icons/ri";
 import { Link, useLocation } from "react-router-dom";
+import { useOrgPath } from "./OrgSelector";
 import { LinkItemProps } from "./Sidebar";
 
 export function BottomNav() {
   const { t } = useTranslation();
   const { pathname } = useLocation();
+  const orgPath = useOrgPath();
+
   const pages: LinkItemProps[] = useMemo(
     () => [
-      { name: t("Home"), icon: FiHome, path: "/" },
+      { name: t("Home"), icon: FiHome, path: orgPath },
       { name: t("Recently Played"), icon: FiClock, path: "/history" },
       { name: t("Liked Songs"), icon: FiHeart, path: "/liked" },
       { name: t("Library"), icon: RiPlayListFill, path: "/library" },
     ],
-    [t]
+    [t, orgPath],
   );
   return (
     <Flex
