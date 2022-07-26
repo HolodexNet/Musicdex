@@ -67,8 +67,10 @@ export default function Video() {
             }}
             mb={2}
           >
+            {/* @ts-ignore */}
             {[
               {
+                // @ts-ignore
                 title: t("Open in YouTube"),
                 ariaLabel: "open-on-youtube",
                 icon: <FiYoutube />,

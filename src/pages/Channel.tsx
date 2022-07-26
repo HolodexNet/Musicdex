@@ -66,7 +66,7 @@ export default function Channel() {
   )
     return <QueryStatus queryStatus={channelStatus} />;
 
-  const name = tn(channel.english_name, channel.name);
+  const name = tn(channel.english_name, channel.name) ?? "";
 
   return (
     <PageContainer>
@@ -133,6 +133,7 @@ export default function Channel() {
     </PageContainer>
   );
 }
+
 function ChannelSocialButtons({
   isMobile,
   channel,

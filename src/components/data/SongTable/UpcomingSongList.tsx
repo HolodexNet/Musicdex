@@ -152,7 +152,6 @@ export const UpcomingSongList = ({
   queue,
   playlist,
   useWindowScroller = false,
-  ...rest
 }: UpcomingSongTableProps & BoxProps) => {
   const { t } = useTranslation();
   const detailLevel = useMemo<SongTableCol[]>(
@@ -176,17 +175,21 @@ export const UpcomingSongList = ({
   const list = React.useRef<any>(null);
 
   useEffect(() => {
-    // Hint at variablesizelist to recheck row heights after queue length changed
+    // Hint at VariableSizeList to recheck row heights after queue length changed
     list.current?.resetAfterIndex(queue.length);
   }, [queue.length]);
 
   const frameRef = useContext(FrameRef);
-  const onScroll = useCallback(({ scrollTop }) => {
-    list.current?.scrollTo(scrollTop);
-  }, []);
+  const onScroll = useCallback(
+    ({ scrollTop }: { scrollLeft: number; scrollTop: number }) => {
+      list.current?.scrollTo(scrollTop);
+    },
+    []
+  );
 
   const renderList = useCallback(
     ({ height, width }: { height: number; width: number }) => (
+      // @ts-ignore React 18 typings issue
       <VariableSizeList
         height={height || 800}
         width={useWindowScroller ? "100%" : width}
@@ -210,8 +213,10 @@ export const UpcomingSongList = ({
   return (
     <Box height="100%" width="100%">
       {!useWindowScroller ? (
+        // @ts-ignore
         <AutoSizer>{renderList}</AutoSizer>
       ) : (
+        // @ts-ignore
         <WindowScroller onScroll={onScroll} scrollElement={frameRef?.current}>
           {renderList}
         </WindowScroller>

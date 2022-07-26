@@ -9,7 +9,7 @@ import { StoreProvider } from "easy-peasy";
 // https://chakra-ui.com/docs/migration#css-reset
 import "focus-visible/dist/focus-visible";
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import {
   queryClient,
   QueryClientProvider,
@@ -18,7 +18,6 @@ import App from "./App";
 import "./modules/common/i18n";
 import { store } from "./store";
 import { theme } from "./theme";
-// import reportWebVitals from "./utils/reportWebVitals";
 import "./global.css";
 import "@fontsource/manrope/700.css";
 import "@fontsource/assistant/400.css";
@@ -33,28 +32,29 @@ console.log(
 );
 (window as any)["App_Version"] = process.env.REACT_APP_VERSION;
 
+// https://github.com/ctrlplusb/easy-peasy/issues/741
+type Props = StoreProvider["props"] & { children: React.ReactNode };
+const StoreProviderReact18Casted =
+  StoreProvider as unknown as React.ComponentType<Props>;
+
+// Using new root kills the player iframe
+const container = document.getElementById("root");
+const root = createRoot(container!);
+
 store.persist.resolveRehydration().then(() => {
-  ReactDOM.render(
-    <React.StrictMode>
-      <StoreProvider store={store}>
-        <ChakraProvider theme={theme}>
-          <QueryClientProvider client={queryClient}>
-            <HelmetProvider>
-              <Router>
-                <App />
-              </Router>
-            </HelmetProvider>
-          </QueryClientProvider>
-        </ChakraProvider>
-      </StoreProvider>
-    </React.StrictMode>,
-    document.getElementById("root")
+  root.render(
+    <StoreProviderReact18Casted store={store}>
+      <ChakraProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <HelmetProvider>
+            <Router>
+              <App />
+            </Router>
+          </HelmetProvider>
+        </QueryClientProvider>
+      </ChakraProvider>
+    </StoreProviderReact18Casted>
   );
 });
 
 serviceWorkerRegistration.register();
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-// reportWebVitals();

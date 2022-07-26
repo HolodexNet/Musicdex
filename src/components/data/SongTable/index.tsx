@@ -69,12 +69,16 @@ export const SongTable = ({
   const frameRef = useContext(FrameRef);
   const list = React.useRef<any>(null);
   const [expanded, setExpanded] = useState(false);
-  const onScroll = useCallback(({ scrollTop }) => {
-    list.current?.scrollTo(scrollTop);
-  }, []);
+  const onScroll = useCallback(
+    ({ scrollTop }: { scrollLeft: number; scrollTop: number }) => {
+      list.current?.scrollTo(scrollTop);
+    },
+    []
+  );
   if (!songList) return <>{t("No Songs")}</>;
 
   return virtualized ? (
+    // @ts-ignore
     <WindowScroller onScroll={onScroll} scrollElement={frameRef.current}>
       {({ height }) => {
         return (
