@@ -88,9 +88,13 @@ export default function Song() {
               p={4}
               alignItems={["center", null, null, "start"]}
             >
-              <Text fontSize="3xl" fontWeight={600}>
-                {song.name}
-              </Text>
+              <HStack>
+                <Text fontSize="3xl" fontWeight={600}>
+                  {song.name}
+                </Text>
+                <SongLikeButton size={24} song={song}></SongLikeButton>
+              </HStack>
+
               <HStack py={2}>
                 <Link to={"/channel/" + song.channel_id}>
                   <ChannelPhoto channelId={song.channel_id} resizePhoto={30} />
@@ -134,15 +138,6 @@ export default function Song() {
                 >
                   {t("Play")}
                 </Button>
-                <IconButton
-                  icon={<FiMoreHorizontal />}
-                  size="md"
-                  variant="ghost"
-                  colorScheme="n2"
-                  aria-label="More"
-                  onClick={(e) => show(e, { props: song })}
-                ></IconButton>
-
                 {/* <Button
                   variant="ghost"
                   aria-label="share link"
@@ -168,8 +163,6 @@ export default function Song() {
                 >
                   <FiYoutube />
                 </Button> */}
-
-                <SongLikeButton song={song}></SongLikeButton>
 
                 <Button
                   variant="ghost"
@@ -202,6 +195,15 @@ export default function Song() {
                     Apple Music
                   </Button>
                 )}
+
+                <IconButton
+                  icon={<FiMoreHorizontal />}
+                  size="md"
+                  variant="ghost"
+                  colorScheme="n2"
+                  aria-label="More"
+                  onClick={(e) => show(e, { props: song })}
+                ></IconButton>
               </HStack>
             </Flex>
           </Flex>
