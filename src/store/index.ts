@@ -33,7 +33,8 @@ export const useStoreDispatch = typedHooks.useStoreDispatch;
 export const useStoreState = typedHooks.useStoreState;
 
 const storeM = createStore(
-  persist(storeModel, { storage: "localStorage", deny: ["dnd", "player"] })
+  persist(storeModel, { storage: "localStorage", deny: ["dnd", "player"] }),
+  { devTools: process.env.NODE_ENV === "development" },
 );
 
 if (process.env.NODE_ENV === "development") {
