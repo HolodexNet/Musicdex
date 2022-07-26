@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Flex,
   HStack,
@@ -13,10 +12,15 @@ import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { BiMovie } from "react-icons/bi";
 import { FaPlay } from "react-icons/fa";
-import { FiMoreHorizontal, FiShare2, FiYoutube } from "react-icons/fi";
+import {
+  FiMoreHorizontal,
+  FiSearch,
+  FiShare2,
+  FiYoutube,
+} from "react-icons/fi";
 import { SiApplemusic } from "react-icons/si";
 import { useParams } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChannelPhoto } from "../components/channel/ChannelPhoto";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { useDraggableSong } from "../components/data/DraggableSong";
@@ -28,7 +32,6 @@ import { SongLikeButton } from "../components/song/SongLikeButton";
 import { useClipboardWithToast } from "../modules/common/clipboard";
 import useNamePicker from "../modules/common/useNamePicker";
 import { useSong } from "../modules/services/songs.service";
-import { useStoreActions } from "../store";
 import { formatSeconds } from "../utils/SongHelper";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 
@@ -36,8 +39,7 @@ export default function Song() {
   let params = useParams();
   let songId = params.songId!;
 
-  const { t, i18n } = useTranslation();
-  // const t = (str: string, ..._: any) => str;
+  const { t } = useTranslation();
 
   const imageSize =
     useBreakpointValue({
@@ -54,6 +56,7 @@ export default function Song() {
   const channelName = song && tn(song.channel.english_name, song.channel.name);
   const { show } = useContextMenu({ id: DEFAULT_MENU_ID });
   const dragSongProps = useDraggableSong(song!);
+  const navigate = useNavigate();
 
   return (
     <PageContainer>
@@ -167,6 +170,26 @@ export default function Song() {
                 </Button> */}
 
                 <SongLikeButton song={song}></SongLikeButton>
+
+                <Button
+                  variant="ghost"
+                  aria-label="search"
+                  size="md"
+                  onClick={() => {
+                    const search = new URLSearchParams();
+                    search.set("song", JSON.stringify(song.name));
+                    navigate({
+                      pathname: "/search",
+                      search: `?${search}`,
+                    });
+                  }}
+                  colorScheme="n2"
+                  title={t("Find similar")}
+                  leftIcon={<FiSearch />}
+                >
+                  {t("Find similar")}
+                </Button>
+
                 {song.amUrl && (
                   <Button
                     as="a"
