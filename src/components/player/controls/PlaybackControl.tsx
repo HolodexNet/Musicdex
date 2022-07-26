@@ -14,7 +14,6 @@ import { ChangePlayerLocationButton } from "../ChangePlayerLocationButton";
 import { ShuffleIcon, RepeatIcon } from "./PlayerOption";
 
 interface PlaybackControlProps extends FlexProps {
-  isPlaying: boolean;
   togglePlay: () => void;
   fullPlayer?: boolean;
   mobilePlayer?: boolean;
@@ -46,12 +45,12 @@ const PlaybackButton = ({ icon, ...rest }: PlaybackButtonProps) => {
 
 export const PlaybackControl = React.memo(
   ({
-    isPlaying,
     togglePlay,
     fullPlayer = false,
     mobilePlayer = false,
     ...rest
   }: PlaybackControlProps) => {
+    const isPlaying = useStoreState((state) => state.playback.isPlaying);
     const previous = useStoreActions((actions) => actions.playback.previous);
     const next = useStoreActions((actions) => actions.playback.next);
 
@@ -60,12 +59,12 @@ export const PlaybackControl = React.memo(
 
     const shuffleMode = useStoreState((state) => state.playback.shuffleMode);
     const toggleShuffleMode = useStoreActions(
-      (actions) => actions.playback.toggleShuffle
+      (actions) => actions.playback.toggleShuffle,
     );
 
     const repeatMode = useStoreState((state) => state.playback.repeatMode);
     const toggleRepeatMode = useStoreActions(
-      (actions) => actions.playback.toggleRepeat
+      (actions) => actions.playback.toggleRepeat,
     );
 
     return (
@@ -115,5 +114,5 @@ export const PlaybackControl = React.memo(
         )}
       </Flex>
     );
-  }
+  },
 );

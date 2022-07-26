@@ -1,8 +1,15 @@
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
+import { CSSProperties } from "react";
 
-export function NowPlayingIcon({ ...rest }) {
+interface NowPlayingIconProps {
+  style: CSSProperties;
+  isPlaying: boolean;
+}
+
+export function NowPlayingIcon(props: NowPlayingIconProps) {
   return (
-    <NowPlayingIconContainer {...rest}>
+    <NowPlayingIconContainer {...props}>
       <span />
       <span />
       <span />
@@ -15,25 +22,33 @@ const NowPlayingIconContainer = styled.div`
   height: 0.9em;
   justify-content: start;
   align-items: flex-end;
-  /* margin-top: 5px; */
 
   > span {
     width: 0.24em;
     height: 100%;
     margin-right: 1px;
+    transform: scaleY(
+      ${({ isPlaying }: NowPlayingIconProps) => (isPlaying ? `0` : `0.1`)}
+    );
 
     background-color: currentColor;
-    transform-origin: middle;
+    transform-origin: center;
 
-    &:nth-of-type(1) {
-      animation: ease-out now-playing-bounce-1 1202ms 13ms infinite;
-    }
-    &:nth-of-type(2) {
-      animation: ease-out now-playing-bounce-2 1502ms infinite;
-    }
-    &:nth-of-type(3) {
-      animation: ease-out now-playing-bounce-3 902ms infinite;
-    }
+    ${({ isPlaying }: NowPlayingIconProps) =>
+      isPlaying &&
+      css`
+        &:nth-of-type(1) {
+          animation: ease-out now-playing-bounce-1 1202ms 13ms infinite;
+        }
+
+        &:nth-of-type(2) {
+          animation: ease-out now-playing-bounce-2 1502ms infinite;
+        }
+
+        &:nth-of-type(3) {
+          animation: ease-out now-playing-bounce-3 902ms infinite;
+        }
+      `}
   }
 
   @keyframes now-playing-bounce-1 {
