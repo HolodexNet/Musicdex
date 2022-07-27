@@ -7,11 +7,17 @@ import {
   useSongLikeBulkCheck,
 } from "../../modules/services/like.service";
 
-interface SongLikeButtonProps extends Omit<IconButtonProps, "aria-label"> {
+interface SongLikeButtonProps
+  extends Omit<IconButtonProps, "size" | "aria-label"> {
   song: Song;
+  size?: number;
 }
 
-export function SongLikeButton({ song, ...rest }: SongLikeButtonProps) {
+export function SongLikeButton({
+  song,
+  size = 16,
+  ...rest
+}: SongLikeButtonProps) {
   const toast = useToast();
   const { t } = useTranslation();
   const {
@@ -50,7 +56,7 @@ export function SongLikeButton({ song, ...rest }: SongLikeButtonProps) {
     <IconButton
       width="20px"
       margin={-2}
-      icon={isLiked ? <FaHeart /> : <FaRegHeart />}
+      icon={isLiked ? <FaHeart size={size} /> : <FaRegHeart size={size} />}
       onClick={toggleLike}
       colorScheme={"brand"}
       variant="ghost"
