@@ -165,13 +165,13 @@
   "Artist": "가수",
   "Channel": "채널",
   "Channel name": "채널명",
-  "Org": "Org",
-  "Organization": "Organization",
-  "Suborg": "Suborg",
-  "Suborg name": "Suborg name",
-  "Clear filters": "Clear filters",
-  "Relevance": "Relevance",
-  "Latest": "Latest",
-  "Oldest": "Oldest",
-  "Find similar": "Find similar"
+  "Org": "소속",
+  "Organization": "소속",
+  "Suborg": "그룹",
+  "Suborg name": "그룹명",
+  "Clear filters": "필터 지우기",
+  "Relevance": "정확도순",
+  "Latest": "최신순",
+  "Oldest": "오래된순",
+  "Find similar": "유사한 노래"
 }
