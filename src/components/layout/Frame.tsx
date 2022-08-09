@@ -54,6 +54,7 @@ const POSITIONS: { [key: string]: ChakraProps } = {
     position: "absolute",
     top: "20px",
     right: "20px",
+    paddingLeft: "30px",
     zIndex: 10,
   },
   "hover-bottom": {
@@ -63,6 +64,7 @@ const POSITIONS: { [key: string]: ChakraProps } = {
     position: "absolute",
     bottom: "20px",
     right: "20px",
+    paddingLeft: "30px",
     zIndex: 10,
   },
   "full-player": {
