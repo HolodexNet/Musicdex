@@ -67,7 +67,7 @@
   "Select and Copy": "Auswählen und kopieren",
   "Song Name": "Liedname",
   "Original Artist": "Original-Interpret",
-  "Timestamped Youtube Link": "Timestamped YouTube Link",
+  "Timestamped Youtube Link": "Youtube-Link mit Zeitstempel",
   "Go To Song Page": "Lied-Seite aufrufen",
   "Go To Video Page": "Video-Seite aufrufen",
   "Go To Channel Page": "Kanalseite aufrufen",
@@ -173,6 +173,6 @@
   "Relevance": "Relevanz",
   "Latest": "Alter (fallend)",
   "Oldest": "Alter (steigend)",
-  "Open on YouTube": "Open on YouTube",
+  "Open on YouTube": "Auf YouTube öffnen",
   "Find similar": "Ähnliches finden"
 }
