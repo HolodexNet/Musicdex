@@ -67,7 +67,7 @@
   "Select and Copy": "複製資料",
   "Song Name": "歌曲名稱",
   "Original Artist": "原唱",
-  "Timestamped Youtube Link": "Timestamped YouTube Link",
+  "Timestamped Youtube Link": "附帶時間戳記的 YouTube 連結",
   "Go To Song Page": "跳至歌曲頁面",
   "Go To Video Page": "跳至影片頁面",
   "Go To Channel Page": "跳至頻道頁面",
@@ -173,6 +173,6 @@
   "Relevance": "相關度",
   "Latest": "新增日期（最新）",
   "Oldest": "新增日期（最舊）",
-  "Open on YouTube": "Open on YouTube",
+  "Open on YouTube": "於 YouTube 開啟",
   "Find similar": "搜尋相關歌曲"
 }
