@@ -67,7 +67,7 @@
   "Select and Copy": "선택 및 복사",
   "Song Name": "노래 이름",
   "Original Artist": "원곡 가수",
-  "Timestamped Youtube Link": "시간이 포함된 YouTube 링크",
+  "Timestamped Youtube Link": "Timestamped YouTube Link",
   "Go To Song Page": "노래 페이지로 이동",
   "Go To Video Page": "동영상 페이지로 이동",
   "Go To Channel Page": "채널 페이지로 이동",
@@ -173,5 +173,6 @@
   "Relevance": "정확도순",
   "Latest": "최신순",
   "Oldest": "오래된순",
+  "Open on YouTube": "Open on YouTube",
   "Find similar": "유사한 노래"
 }
