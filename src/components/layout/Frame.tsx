@@ -110,11 +110,11 @@ export default function Frame({ children }: { children?: ReactNode }) {
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
 
   const currentlyPlaying = useStoreState(
-    (state) => state.playback.currentlyPlaying
+    (state) => state.playback.currentlyPlaying,
   );
 
   const showCreateDialog = useStoreActions(
-    (actions) => actions.playlist.showPlaylistCreateDialog
+    (actions) => actions.playlist.showPlaylistCreateDialog,
   );
 
   // Lazy load the player, wait for first song to be played
@@ -159,18 +159,20 @@ export default function Frame({ children }: { children?: ReactNode }) {
           client.logout();
       }
     },
-    [client]
+    [client],
   );
 
   return (
     <Box
-      h="100vh"
+      // https://github.com/chakra-ui/chakra-ui/discussions/2297#discussioncomment-109835
+      // @ts-ignore
+      h={[["100vh", "100dvh"]]}
       w="100vw"
       className={colorMode}
       bg={useColorModeValue("bg.100", "bg.900")}
       overflow="hidden"
     >
-      <Flex direction="column" h="100vh" overflow="hidden">
+      <Flex direction="column" h="100%" overflow="hidden">
         {/* Generic Display: always present */}
         <NavBar
           onOpen={onOpen}
