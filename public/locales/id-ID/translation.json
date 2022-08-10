@@ -67,7 +67,7 @@
   "Select and Copy": "Pilih dan Salin",
   "Song Name": "Nama Lagu",
   "Original Artist": "Penyanyi Asli",
-  "Timestamped Youtube Link": "Tautan Youtube dengan cap waktu",
+  "Timestamped Youtube Link": "Timestamped YouTube Link",
   "Go To Song Page": "Lihat Halaman Lagu",
   "Go To Video Page": "Lihat Halaman Video",
   "Go To Channel Page": "Lihat Halaman Channel",
@@ -173,5 +173,6 @@
   "Relevance": "Relevance",
   "Latest": "Latest",
   "Oldest": "Oldest",
+  "Open on YouTube": "Open on YouTube",
   "Find similar": "Find similar"
 }
