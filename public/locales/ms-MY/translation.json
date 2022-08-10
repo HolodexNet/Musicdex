@@ -67,7 +67,7 @@
   "Select and Copy": "Pilih lalu Salin",
   "Song Name": "Judul",
   "Original Artist": "Penyanyi Asal",
-  "Timestamped Youtube Link": "Pautan YouTube Bercap Masa",
+  "Timestamped Youtube Link": "Timestamped YouTube Link",
   "Go To Song Page": "Lihat Laman Lagu",
   "Go To Video Page": "Lihat Laman Video",
   "Go To Channel Page": "Lihat Laman Saluran",
@@ -173,5 +173,6 @@
   "Relevance": "Relevance",
   "Latest": "Latest",
   "Oldest": "Oldest",
+  "Open on YouTube": "Open on YouTube",
   "Find similar": "Find similar"
 }
