@@ -67,7 +67,7 @@
   "Select and Copy": "Kijelölés és másolás",
   "Song Name": "Dal címe",
   "Original Artist": "Eredeti előadó",
-  "Timestamped Youtube Link": "Időzített Youtube link",
+  "Timestamped Youtube Link": "Timestamped YouTube Link",
   "Go To Song Page": "A dal oldalára",
   "Go To Video Page": "A videó oldalára",
   "Go To Channel Page": "A csatorna oldalára",
@@ -173,5 +173,6 @@
   "Relevance": "Relevance",
   "Latest": "Latest",
   "Oldest": "Oldest",
+  "Open on YouTube": "Open on YouTube",
   "Find similar": "Find similar"
 }
