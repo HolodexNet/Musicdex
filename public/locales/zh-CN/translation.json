@@ -67,7 +67,7 @@
   "Select and Copy": "选择并复制",
   "Song Name": "歌曲名称",
   "Original Artist": "原唱",
-  "Timestamped Youtube Link": "Timestamped YouTube Link",
+  "Timestamped Youtube Link": "附带时间戳的YouTube链接",
   "Go To Song Page": "前往歌曲页面",
   "Go To Video Page": "前往视频页面",
   "Go To Channel Page": "前往频道页面",
@@ -173,7 +173,7 @@
   "Relevance": "相关性",
   "Latest": "最新",
   "Oldest": "最早",
-  "Open on YouTube": "Open on YouTube",
+  "Open on YouTube": "在Youtube上打开",
   "Find similar": "查找相似...",
-  "You are not logged in": "You're not logged in!"
+  "You are not logged in": "你尚未登录！"
 }
