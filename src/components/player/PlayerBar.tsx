@@ -316,11 +316,13 @@ const PlayerContainer = styled.div<{
     margin-top: ${({ dense }) => (dense ? "3.5px" : "11.5px")};
   }
 `;
+
 const PlayerBarExpandedRightSide = React.memo(() => {
   const { t } = useTranslation();
 
   const queue = useStoreState((state) => state.playback.queue);
   const playlistQueue = useStoreState((state) => state.playback.playlistQueue);
+  const playlist = useStoreState((state) => state.playback.currentPlaylist);
   const next = useStoreActions((actions) => actions.playback.next);
 
   return (
@@ -354,6 +356,7 @@ const PlayerBarExpandedRightSide = React.memo(() => {
             <UpcomingSongList
               songs={playlistQueue}
               queue={queue}
+              playlist={playlist}
               rowProps={{
                 songClicked: (e, song, idx) =>
                   next({ count: idx + 1, userSkipped: true }),
