@@ -1,5 +1,4 @@
 import { IconButton, IconButtonProps, useToast } from "@chakra-ui/react";
-import { AxiosError } from "axios";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -35,16 +34,13 @@ export function SongLikeButton({
     if (isLoading || (!isSuccess && !isError)) return; // Check if in progress
     if (isSuccess) return; // Do not show toast on success
 
-    console.log(error);
-
-    const err: AxiosError = error as any;
     const title = !isLiked
       ? t("Added to liked songs")
       : t("Removed from liked songs");
     toast({
       title: isSuccess
         ? title
-        : err.response?.status === 401
+        : error.response?.status === 401
         ? t("You are not logged in")
         : t("An error has occurred"),
       status: isSuccess ? "success" : "error",
