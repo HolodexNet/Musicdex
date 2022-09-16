@@ -285,8 +285,10 @@ export function Player({ player }: { player: YouTubePlayer | null }) {
     if (!currentSong) return;
     // User action, unlock the first load pause
     if (firstLoadPauseId) setFirstLoadPauseId("");
-    if (player) isPlaying ? player.pauseVideo() : player.playVideo();
-    setIsPlaying(!isPlaying);
+    if (player) {
+      isPlaying ? player.pauseVideo() : player.playVideo();
+      setIsPlaying(!isPlaying);
+    }
   }, [currentSong, firstLoadPauseId, isPlaying, player, setIsPlaying]);
 
   // Keyboard shortcuts
@@ -299,7 +301,7 @@ export function Player({ player }: { player: YouTubePlayer | null }) {
       e.preventDefault();
       togglePlay();
     },
-    [],
+    [togglePlay],
   );
 
   // Toggle repeat / shuffle mode

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { action, Action, thunk, Thunk, ThunkOn, thunkOn } from "easy-peasy";
 import { StoreModel } from ".";
+import { shuffle } from "lodash-es";
 
 enum SRC {
   RADIO = "radio",
@@ -28,6 +29,7 @@ export interface PlaybackModel {
   _queueClear: Action<PlaybackModel, void>;
   _queueShuffle: Action<PlaybackModel, void>;
   queueRemove: Action<PlaybackModel, number>;
+  queueReverse: Action<PlaybackModel, void>;
   // ===== Playlist and Playlist Mutators:
   playlistQueue: Song[]; // a queue that is fed by the playlist.
   playedPlaylistQueue: Song[]; // a backup queue for songs ONLY if Shuffle + Repeat
@@ -35,6 +37,7 @@ export interface PlaybackModel {
 
   _setPlaylist: Action<PlaybackModel, PlaylistFull | undefined>;
   _shufflePlaylist: Action<PlaybackModel, void>; // specifically if you want to shuffle again... probably not a public.
+  reversePlaylist: Action<PlaybackModel, void>;
   _extendPlaylist: Action<PlaybackModel, { radio: PlaylistFull | undefined }>; // appends new data from playlist (idk if needed) / radio (currently impl) into current Queue.
   // ==== History:
   history: SongPlayback[];
@@ -89,13 +92,6 @@ export interface PlaybackModel {
   clearPlaylist: Action<PlaybackModel>;
 }
 
-function shuffleArray(arr: Array<any>) {
-  return arr
-    .map((value) => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
-}
-
 const playbackModel: PlaybackModel = {
   currentlyPlaying: {
     from: SRC.QUEUE,
@@ -117,11 +113,14 @@ const playbackModel: PlaybackModel = {
     state.queue = [];
   }),
   _queueShuffle: action((state) => {
-    state.queue = shuffleArray(state.queue || []);
+    state.queue = shuffle(state.queue || []);
   }),
   queueRemove: action((state, idx) => {
     const x = [...state.queue.slice(0, idx), ...state.queue.slice(idx + 1)];
     state.queue = x;
+  }),
+  queueReverse: action((state) => {
+    state.queue = state.queue.reverse();
   }),
 
   playlistQueue: [],
@@ -130,7 +129,7 @@ const playbackModel: PlaybackModel = {
   _setPlaylist: action((state, playlist) => {
     state.currentPlaylist = playlist;
     if (state.shuffleMode && playlist) {
-      state.playlistQueue = shuffleArray([...(playlist?.content || [])]);
+      state.playlistQueue = shuffle([...(playlist?.content || [])]);
     } else {
       state.playlistQueue = [...(playlist?.content || [])];
     }
@@ -144,8 +143,11 @@ const playbackModel: PlaybackModel = {
         ? mq.filter((x) => x.id !== state.currentlyPlaying.song?.id)
         : mq;
     // shuffle the rest.
-    state.playlistQueue = shuffleArray(nq);
+    state.playlistQueue = shuffle(nq);
     state.playedPlaylistQueue = [];
+  }),
+  reversePlaylist: action((state) => {
+    state.playlistQueue = state.playlistQueue.reverse();
   }),
   _extendPlaylist: action((state, { radio }) => {
     // with radio extension we want to avoid adding duplicates.
@@ -177,20 +179,20 @@ const playbackModel: PlaybackModel = {
   }),
 
   toggleShuffle: thunk((actions, _, helpers) => {
-    const shuf = !helpers.getState().shuffleMode;
-    actions._setShuffleMode(shuf);
+    const shuffleMode = !helpers.getState().shuffleMode;
+    actions._setShuffleMode(shuffleMode);
     const currentPlaylist = helpers.getState().currentPlaylist;
     if (currentPlaylist && currentPlaylist.type.startsWith("playlist")) {
-      if (shuf) {
+      if (shuffleMode) {
         actions._shufflePlaylist();
-      } else if (!shuf) {
+      } else if (!shuffleMode) {
         actions._setPlaylist(currentPlaylist);
       }
     } else if (currentPlaylist && currentPlaylist.type.startsWith("radio")) {
       // actions._shuffleRadio(); - if we want to enable it we should shuffle radio.
     }
 
-    if (shuf && helpers.getState().queue) {
+    if (shuffleMode && helpers.getState().queue) {
       actions._queueShuffle();
     }
   }),
@@ -204,6 +206,9 @@ const playbackModel: PlaybackModel = {
         state.repeatMode = "repeat-one";
         return;
       case "repeat-one":
+        state.repeatMode = "none";
+        return;
+      default:
         state.repeatMode = "none";
         return;
     }
