@@ -182,7 +182,12 @@ const playbackModel: PlaybackModel = {
     const shuffleMode = !helpers.getState().shuffleMode;
     actions._setShuffleMode(shuffleMode);
     const currentPlaylist = helpers.getState().currentPlaylist;
-    if (currentPlaylist && currentPlaylist.type.startsWith("playlist")) {
+    console.log(currentPlaylist);
+    if (
+      currentPlaylist &&
+      (currentPlaylist.type === "ugp" ||
+        currentPlaylist.type.startsWith("playlist"))
+    ) {
       if (shuffleMode) {
         actions._shufflePlaylist();
       } else if (!shuffleMode) {
