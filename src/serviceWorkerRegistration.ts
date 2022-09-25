@@ -16,8 +16,8 @@ const isLocalhost = Boolean(
     window.location.hostname === "[::1]" ||
     // 127.0.0.0/8 are considered localhost for IPv4.
     window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-    )
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/,
+    ),
 );
 
 declare global {
@@ -53,7 +53,7 @@ export function register() {
         navigator.serviceWorker.ready.then(() => {
           console.log(
             "This web app is being served cache-first by a service " +
-              "worker. To learn more, visit https://cra.link/PWA"
+              "worker. To learn more, visit https://cra.link/PWA",
           );
         });
       } else {
@@ -88,6 +88,7 @@ function checkAndRegisterValidServiceWorker(swUrl: string) {
         // No service worker found. Probably a different app. Reload the page.
         navigator.serviceWorker.ready.then((registration) => {
           registration.unregister().then(() => {
+            console.log("Unregistered, reloading...");
             window.location.reload();
           });
         });
@@ -99,7 +100,7 @@ function checkAndRegisterValidServiceWorker(swUrl: string) {
     })
     .catch(() => {
       console.log(
-        "No internet connection found. App is running in offline mode."
+        "No internet connection found. App is running in offline mode.",
       );
     });
 }
@@ -144,6 +145,7 @@ async function registerValidSW(swUrl: string) {
   // detect controller change and refresh the page
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (!refreshing) {
+      console.log("Controller changed, reloading...");
       window.location.reload();
       refreshing = true;
     }

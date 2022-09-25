@@ -1,16 +1,60 @@
-.m-search .input-fix input {
-  height: unset !important;
+.m-search .sort-select {
+  color: inherit;
+  outline: transparent solid 2px;
+  outline-offset: 2px;
+  appearance: auto;
+  transition-property: var(--chakra-transition-property-common);
+  transition-duration: var(--chakra-transition-duration-normal);
+  background: inherit;
+  padding: 0 17px 0 10px;
+  margin: 0 5px 0 0;
+  line-height: var(--chakra-lineHeights-normal);
+  font-size: var(--chakra-fontSizes-md);
+  padding-inline-start: var(--chakra-space-4);
+  height: var(--chakra-sizes-10);
+  border-radius: var(--chakra-radii-md);
+  border-width: 1px;
+  border-style: solid;
+  border-image: initial;
+  border-color: inherit;
 }
 
-.m-search label > span > span:nth-child(2) {
-  color: #555 !important;
+.m-search .sort-select:hover {
+  border-color: var(--chakra-colors-whiteAlpha-400);
 }
 
-.m-search .m-filters li {
-  padding: 0px 4px;
-  border-radius: 3px;
+.m-search .sort-select:focus-visible {
+  z-index: 1;
+  border-color: rgb(99, 179, 237);
+  box-shadow: rgb(99, 179, 237) 0 0 0 1px;
 }
 
-.m-search .m-filters li[aria-checked="true"] {
-  background-color: var(--chakra-colors-gray-800);
+.m-search .custom-chakra-button > a {
+  border-radius: var(--chakra-radii-md);
+  font-weight: var(--chakra-fontWeights-semibold);
+  transition-property: var(--chakra-transition-property-common);
+  transition-duration: var(--chakra-transition-duration-normal);
+  height: var(--chakra-sizes-10);
+  min-width: var(--chakra-sizes-10);
+  font-size: var(--chakra-fontSizes-md);
+  -webkit-padding-start: var(--chakra-space-4);
+  padding-inline-start: var(--chakra-space-4);
+  -webkit-padding-end: var(--chakra-space-4);
+  padding-inline-end: var(--chakra-space-4);
+  background: var(--chakra-colors-whiteAlpha-200);
+}
+
+.m-search .custom-chakra-button > a:hover {
+  background: var(--chakra-colors-n2-300);
+}
+
+.m-search .custom-chakra-button > a:focus {
+  outline: none;
+  border-color: transparent;
+  background: var(--chakra-colors-whiteAlpha-200);
+}
+
+.m-search .custom-chakra-button > a.active {
+  background: var(--chakra-colors-n2-100);
+  color: var(--chakra-colors-gray-800);
 }

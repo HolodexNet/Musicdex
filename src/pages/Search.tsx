@@ -1,12 +1,8 @@
 import {
-  DataSearch,
-  MultiList,
   ReactiveBase,
   ReactiveComponent,
   ReactiveList,
   SelectedFilters,
-  SingleList,
-  ToggleButton,
 } from "@appbaseio/reactivesearch";
 import {
   Accordion,
@@ -14,19 +10,24 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Box,
-  Button,
   Flex,
   Heading,
-  Input,
   Progress,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { BiMovie, BiMoviePlay } from "react-icons/bi";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SongTable, SongTableCol } from "../components/data/SongTable";
 import "./Search.css";
+import { GeneralSearchInput } from "../components/search/GeneralSearchInput";
+import { CheckboxSearchList } from "../components/search/CheckboxSearchList";
+import { RadioButtonSearchList } from "../components/search/RadioButtonSearchList";
+import { ToggleButtonSearchInput } from "../components/search/ToggleButtonSearchInput";
+
+const debounceValue = 1000;
 
 const SearchResultSongTable = ({
   data,
@@ -42,11 +43,16 @@ const SearchResultSongTable = ({
       lg: ["idx", "og_artist"],
       xl: [],
     },
-    "xl"
+    "xl",
   );
   return (
     <>
-      {loading && <Progress size="xs" isIndeterminate />}
+      <Progress
+        size="xs"
+        isIndeterminate
+        visibility={loading ? "visible" : "hidden"}
+        mt={1}
+      />
       {data && (
         <SongTable
           songs={data}
@@ -60,8 +66,10 @@ const SearchResultSongTable = ({
 };
 
 export default function Search() {
+  const { t } = useTranslation();
   const [suborgVisible, setSuborgVisible] = useState(false);
-
+  const navigate = useNavigate();
+  const [channelSelected, setChannelSelected] = useState(false);
   const flexWrap: "nowrap" | "wrap" | undefined = useBreakpointValue({
     base: "wrap",
     sm: "wrap",
@@ -70,15 +78,57 @@ export default function Search() {
     lg: "nowrap",
     xl: "nowrap",
   });
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [channelSelected, setChannelSelected] = useState(
-    searchParams.has("ch")
-  );
 
-  useEffect(() => {
-    if (searchParams.has("ch")) setChannelSelected(true);
-  }, [searchParams]); // searchParams --> isExact
+  const getGeneralQuery = useCallback((value: string) => {
+    if (!value) return {};
+
+    return {
+      query: {
+        multi_match: {
+          query: value,
+          fields: [
+            "general",
+            "general.romaji",
+            "original_artist",
+            "original_artist.romaji",
+          ],
+          type: "phrase",
+        },
+      },
+    };
+  }, []);
+
+  const getSongQuery = useCallback((value: string) => {
+    if (!value) return {};
+
+    return {
+      query: {
+        multi_match: {
+          query: value,
+          fields: ["name.ngram", "name"],
+          type: "phrase",
+        },
+      },
+    };
+  }, []);
+
+  const getArtistQuery = useCallback((value: string) => {
+    if (!value) return {};
+
+    return {
+      query: {
+        multi_match: {
+          query: value,
+          fields: [
+            "original_artist.ngram^2",
+            "original_artist^2",
+            "original_artist.romaji^0.5",
+          ],
+          type: "phrase",
+        },
+      },
+    };
+  }, []);
 
   return (
     <ReactiveBase
@@ -87,13 +137,11 @@ export default function Search() {
       url={window.location.origin + "/api/v2/musicdex/elasticsearch"}
       transformRequest={({ url, ...req }) => {
         req.url = "/api/v2/musicdex/elasticsearch/search";
-        // console.log(req);
         return req;
       }}
       themePreset="dark"
-      setSearchParams={(newurl) => {
-        // console.log(newurl);
-        navigate({ search: new URL(newurl).search });
+      setSearchParams={(newURL) => {
+        navigate({ search: new URL(newURL).search });
       }}
       enableAppbase={false}
     >
@@ -104,203 +152,175 @@ export default function Search() {
           alignItems="stretch"
           px={2}
           flexGrow={1}
+          flexBasis="300px"
           spacing={2}
           mr={3}
         >
-          <DataSearch
-            className="datasearch"
+          <ReactiveComponent
             componentId="q"
             URLParams
-            debounce={1000}
-            customQuery={(q) => {
-              if (!q) return {};
-
-              return {
-                query: {
-                  bool: {
-                    must: [
-                      {
-                        multi_match: {
-                          query: q,
-                          fields: [
-                            "general",
-                            "general.romaji",
-                            "original_artist",
-                            "original_artist.romaji",
-                          ],
-                          type: "phrase",
-                        },
-                      },
-                    ],
-                  },
-                },
-              };
-            }}
-            dataField=""
-            queryFormat="and"
-            placeholder="Search for Music / Artist"
-            autosuggest={false}
-            enableDefaultSuggestions={false}
-            iconPosition="left"
-            onError={(e) => console.log(e)}
             filterLabel="Search"
+            customQuery={getGeneralQuery}
+            render={(props) => (
+              <GeneralSearchInput
+                debounceValue={debounceValue}
+                placeholder={t("Search for Music / Artist")}
+                getQuery={getGeneralQuery}
+                {...props}
+              />
+            )}
+            onError={(e) => console.error(e)}
           />
           <Accordion allowToggle defaultIndex={0}>
             <AccordionItem>
               <AccordionButton>
                 <Heading flex="1" textAlign="center" size="sm">
-                  Advanced Filters
+                  {t("Advanced Filters")}
                 </Heading>
                 <AccordionIcon />
               </AccordionButton>
               <AccordionPanel p={0}>
                 <VStack alignItems="stretch" flexGrow={1} spacing={2}>
-                  <ToggleButton
+                  <ReactiveComponent
                     componentId="isMv"
-                    dataField="is_mv"
-                    data={[
-                      { label: "MV", value: "true" },
-                      { label: "Stream", value: "false" },
-                    ]}
-                    title="Presentation"
-                    filterLabel="Presentation"
-                    defaultValue={[]}
-                    URLParams={true}
-                    style={{ marginLeft: 0 }}
+                    filterLabel={t("Is MV")}
+                    URLParams
+                    render={(props) => (
+                      <ToggleButtonSearchInput
+                        dataField="is_mv"
+                        tagLabel={t("Type")}
+                        buttons={[
+                          { label: t("MV"), value: "true", icon: <BiMovie /> },
+                          {
+                            label: t("Stream"),
+                            value: "false",
+                            icon: <BiMoviePlay />,
+                          },
+                        ]}
+                        {...props}
+                      />
+                    )}
+                    onError={(e) => console.error(e)}
                   />
-                  <Button
-                    colorScheme="brand"
-                    size="xs"
-                    variant={"solid"}
-                    rounded="0.2rem 0.2rem 0 0"
-                    style={{ marginBottom: "-0.5rem" }}
-                    alignSelf="start"
-                    cursor="default"
-                  >
-                    Song
-                  </Button>
-                  <DataSearch
-                    className="datasearch"
+
+                  <ReactiveComponent
                     componentId="song"
                     URLParams
-                    debounce={1000}
-                    dataField=""
-                    customQuery={(q) => {
-                      if (!q) return {};
-                      return {
-                        query: {
-                          bool: {
-                            should: [
-                              {
-                                multi_match: {
-                                  query: q,
-                                  fields: ["name.ngram", "name"],
-                                  type: "phrase",
-                                },
-                              },
-                            ],
-                          },
-                        },
-                      };
-                    }}
-                    queryFormat="and"
-                    placeholder="Song Name"
-                    autosuggest={false}
-                    enableDefaultSuggestions={false}
-                    iconPosition="left"
-                    onError={(e) => console.log(e)}
-                    filterLabel="Song Name"
+                    filterLabel={t("Song Name")}
+                    customQuery={getSongQuery}
+                    render={(props) => (
+                      <GeneralSearchInput
+                        placeholder={t("Song Name")}
+                        debounceValue={debounceValue}
+                        getQuery={getSongQuery}
+                        tagLabel={t("Song")}
+                        {...props}
+                      />
+                    )}
+                    onError={(e) => console.error(e)}
                   />
-                  <Button
-                    colorScheme="brand"
-                    size="xs"
-                    variant={"solid"}
-                    rounded="0.2rem 0.2rem 0 0"
-                    style={{ marginBottom: "-0.5rem" }}
-                    alignSelf="start"
-                    cursor="default"
-                  >
-                    Artist
-                  </Button>
-
-                  <DataSearch
-                    className="datasearch"
+                  <ReactiveComponent
                     componentId="artist"
                     URLParams
-                    debounce={1000}
-                    dataField=""
-                    customQuery={(q) => {
-                      if (!q) return {};
-                      return {
-                        query: {
-                          bool: {
-                            should: [
-                              {
-                                multi_match: {
-                                  query: q,
-                                  fields: [
-                                    "original_artist.ngram^2",
-                                    "original_artist^2",
-                                    "original_artist.romaji^0.5",
-                                  ],
-                                  type: "phrase",
-                                },
-                              },
-                            ],
+                    filterLabel={t("Original Artist")}
+                    customQuery={getArtistQuery}
+                    render={(props) => (
+                      <GeneralSearchInput
+                        placeholder={t("Original Artist Name")}
+                        debounceValue={debounceValue}
+                        getQuery={getArtistQuery}
+                        tagLabel={t("Artist")}
+                        {...props}
+                      />
+                    )}
+                    onError={(e) => console.error(e)}
+                  />
+
+                  <ReactiveComponent
+                    componentId="ch"
+                    filterLabel={t("Channel")}
+                    URLParams
+                    react={{ and: ["q", "song", "artist", "isMv", "org"] }}
+                    defaultQuery={() => ({
+                      aggs: {
+                        "channel.name": {
+                          terms: {
+                            field: "channel.name",
+                            size: 12,
+                            order: { _count: "desc" },
                           },
                         },
-                      };
+                      },
+                    })}
+                    render={(props) => {
+                      setChannelSelected(props.value?.length > 0);
+                      return (
+                        <CheckboxSearchList
+                          dataField="channel.name"
+                          placeholder={t("Channel name")}
+                          tagLabel={t("Channel")}
+                          showSearch
+                          {...props}
+                        />
+                      );
                     }}
-                    queryFormat="and"
-                    placeholder="Original Artist Name"
-                    autosuggest={false}
-                    enableDefaultSuggestions={false}
-                    iconPosition="left"
-                    onError={(e) => console.log(e)}
-                    filterLabel="Original Artist"
-                  />
-                  <MultiList
-                    className="input-fix"
-                    componentId="ch"
-                    dataField="channel.name"
-                    filterLabel="Channel"
-                    title="Filter by Channel"
-                    react={{ and: ["q", "song", "artist", "isMv", "org"] }}
-                    showSearch={true}
-                    onValueChange={(e) => {
-                      if (e && e.length > 0) setChannelSelected(true);
-                      else setChannelSelected(false);
-                    }}
-                    URLParams={true}
-                    size={12}
-                    showCheckbox={true}
+                    onError={(e) => console.error(e)}
                   />
                   {!channelSelected && (
-                    <SingleList
+                    <ReactiveComponent
                       componentId="org"
-                      dataField="org"
-                      filterLabel="Org"
-                      title="Filter by Org"
+                      filterLabel={t("Org")}
+                      URLParams
                       react={{ and: ["q", "song", "artist", "isMv"] }}
-                      showSearch={false}
-                      onValueChange={(e) => {
-                        if (e) setSuborgVisible(true);
-                        else setSuborgVisible(false);
+                      defaultQuery={() => ({
+                        aggs: {
+                          org: {
+                            terms: {
+                              field: "org",
+                              order: { _count: "desc" },
+                            },
+                          },
+                        },
+                      })}
+                      render={(props) => {
+                        setSuborgVisible(!!props.value);
+                        return (
+                          <RadioButtonSearchList
+                            dataField="org"
+                            placeholder={t("Organization")}
+                            tagLabel={t("Organization")}
+                            {...props}
+                          />
+                        );
                       }}
-                      URLParams={true}
+                      onError={(e) => console.error(e)}
                     />
                   )}
                   {suborgVisible && !channelSelected && (
-                    <MultiList
+                    <ReactiveComponent
                       componentId="suborg"
-                      dataField="suborg"
-                      filterLabel="Suborg"
-                      title="Filter by Suborg"
-                      showCheckbox={true}
-                      showSearch={false}
-                      queryFormat="and"
-                      react={{ and: ["q", "org", "song", "artist", "isMv"] }}
-                      URLParams={true}
+                      filterLabel={t("Suborg")}
+                      URLParams
+                      react={{ and: ["q", "song", "artist", "isMv", "org"] }}
+                      defaultQuery={() => ({
+                        aggs: {
+                          suborg: {
+                            terms: {
+                              field: "suborg",
+                              order: { _count: "desc" },
+                            },
+                          },
+                        },
+                      })}
+                      render={(props) => (
+                        <CheckboxSearchList
+                          dataField="suborg"
+                          placeholder={t("Suborg name")}
+                          tagLabel={t("Suborg")}
+                          {...props}
+                        />
+                      )}
+                      onError={(e) => console.error(e)}
                     />
                   )}
                 </VStack>
@@ -315,7 +335,10 @@ export default function Search() {
           flexGrow={2}
           flexShrink={1}
         >
-          <SelectedFilters showClearAll="default" />
+          <SelectedFilters
+            clearAllLabel={t("Clear filters")}
+            style={{ minHeight: 35 }}
+          />
           <ReactiveList
             componentId="results"
             dataField="name"
@@ -330,16 +353,19 @@ export default function Search() {
                 "ch",
               ],
             }}
-            // pagination
-            URLParams={true}
-            pagination={true}
-            showLoader={true}
+            URLParams
+            pagination
+            showLoader
             size={12}
             sortOptions={[
-              { dataField: "_score", sortBy: "desc", label: "Relevance" },
-              { dataField: "available_at", sortBy: "desc", label: "Latest" },
-              { dataField: "available_at", sortBy: "asc", label: "Earliest" },
+              { dataField: "_score", sortBy: "desc", label: t("Relevance") },
+              { dataField: "available_at", sortBy: "desc", label: t("Latest") },
+              { dataField: "available_at", sortBy: "asc", label: t("Oldest") },
             ]}
+            innerClass={{
+              sortOptions: "sort-select",
+              pagination: "custom-chakra-button",
+            }}
             render={SearchResultSongTable}
           />
         </VStack>
@@ -347,99 +373,3 @@ export default function Search() {
     </ReactiveBase>
   );
 }
-
-// Garbage stuff:
-/* <ReactiveComponent
-        componentId="q"
-        showFilter={true}
-        filterLabel="Query"
-        // defaultQuery={}
-        defaultQuery={(args) => {
-          console.log(args);
-          return {
-            query: {
-              bool: {
-                must: [
-                  {
-                    multi_match: {
-                      query: qFuzzy,
-                      fields: [
-                        "general",
-                        "general.romaji",
-                        "original_artist",
-                        "original_artist.romaji",
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-            value: qFuzzy,
-          }
-        }}
-        render={({ setQuery, value }) => {
-          return (
-            <Searchbox
-              w={{ base: "100%", lg: "40%" }}
-              paddingX={4}
-              didChange={({ qFuzzy, qExact }) => {
-                if (qFuzzy) {
-                  setQuery({
-                    query: {
-                      bool: {
-                        must: [
-                          {
-                            multi_match: {
-                              query: qFuzzy,
-                              fields: [
-                                "general",
-                                "general.romaji",
-                                "original_artist",
-                                "original_artist.romaji",
-                              ],
-                            },
-                          },
-                        ],
-                      },
-                    },
-                    value: qFuzzy,
-                  });
-                } else if (qExact) {
-                  setQuery({
-                    query: {
-                      bool: {
-                        must: [
-                          {
-                            multi_match: {
-                              query: qExact,
-                              fields: [
-                                "general.ngram",
-                                "original_artist.ngram",
-                              ],
-                            },
-                          },
-                          ,
-                        ],
-                        should: [
-                          {
-                            multi_match: {
-                              query: qExact,
-                              fields: [
-                                "general",
-                                "general.romaji",
-                                "original_artist",
-                                "original_artist.romaji",
-                              ],
-                            },
-                          },
-                        ],
-                      },
-                    },
-                    value: qExact,
-                  });
-                }
-              }}
-            />
-          );
-        }}
-      ></ReactiveComponent> */

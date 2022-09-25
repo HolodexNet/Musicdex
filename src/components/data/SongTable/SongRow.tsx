@@ -46,7 +46,7 @@ export const SongRow = React.memo(
     // const { t } = useTranslation();
     const song = useMemo(() => data.songList[index], [data.songList, index]);
     const queueSongs = useStoreActions(
-      (actions) => actions.playback.queueSongs
+      (actions) => actions.playback.queueSongs,
     );
     const { show } = useContextMenu({ id: data.menuId });
     const rowProps = data.rowProps;
@@ -55,10 +55,11 @@ export const SongRow = React.memo(
     };
     const dragSongProps = useDraggableSong(song);
     const setPlaylist = useStoreActions(
-      (actions) => actions.playback.setPlaylist
+      (actions) => actions.playback.setPlaylist,
     );
     const [hoveredRowIndex, setHoveredRowIndex] = useState(false);
     const hideCol = rowProps?.hideCol;
+    const isRadio = data.playlist?.type.includes("radio");
     const clickFn = useCallback(
       (e: React.MouseEvent) => {
         if (rowProps?.songClicked) {
@@ -74,7 +75,7 @@ export const SongRow = React.memo(
           queueSongs({ songs: [song], immediatelyPlay: true });
         }
       },
-      [data.playlist, index, queueSongs, rowProps, setPlaylist, song]
+      [data.playlist, index, queueSongs, rowProps, setPlaylist, song],
     );
     return (
       <div style={style}>
@@ -90,6 +91,7 @@ export const SongRow = React.memo(
           _hover={HOVER_ROW_STYLE}
           onMouseEnter={() => setHoveredRowIndex(true)}
           onMouseLeave={() => setHoveredRowIndex(false)}
+          opacity={isRadio ? (data.songList.length + 1 - index) / 10 : 1}
         >
           {/* IDX: */}
           {!hideCol?.includes("idx") ? (
@@ -170,5 +172,5 @@ export const SongRow = React.memo(
         </Flex>
       </div>
     );
-  }
+  },
 );

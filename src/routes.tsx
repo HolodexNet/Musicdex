@@ -27,7 +27,7 @@ const Search = React.lazy(() => import("./pages/Search"));
 
 const RedirectToOrg = () => {
   const org = useStoreState((store) => store.org.currentOrg);
-  return <Navigate to={`/org/${org.name || "Hololive"}`} />;
+  return <Navigate to={`/org/${org.name || "Hololive"}`} replace />;
 };
 
 const routes: RouteObject[] = [
@@ -114,7 +114,7 @@ const routes: RouteObject[] = [
   {
     path: "/library",
     element: (
-      <RequireLogin title={"Libary"}>
+      <RequireLogin title={"Library"}>
         <Library />
       </RequireLogin>
     ),

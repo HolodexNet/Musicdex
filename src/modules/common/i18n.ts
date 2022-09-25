@@ -106,6 +106,7 @@ i18n
       order: ["localStorage", "querystring", "navigator"], // local storage first. then querystring for incoming users?
     },
     backend: {
+      addPath: undefined,
       // reloadInterval: 5000,
     },
     react: {

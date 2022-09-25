@@ -10,41 +10,40 @@ import {
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useTranslation } from "react-i18next";
-import { RiCompasses2Fill, RiSearch2Line } from "react-icons/ri";
+import { RiSearch2Line } from "react-icons/ri";
 import { useNavigate } from "react-router";
-import { createSearchParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
-export function Searchbox({ ...props }: BoxProps & {}) {
+export function SearchBox(props: BoxProps) {
   const { t } = useTranslation();
   let [isFocused, setFocused] = useState(false);
   let navigate = useNavigate();
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
   let [currentValue, setValue] = useState("");
-  const input = useRef<any>();
+  const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const q = searchParams.get("q");
-    const pq = q && JSON.parse(q);
-    setValue(pq || "");
-    input.current.value = pq || "";
+    const prettyValue: string = q ? JSON.parse(q) : "";
+    setValue(prettyValue);
+    input.current!.value = prettyValue;
   }, [searchParams]);
 
-  useHotkeys("ctrl+l,cmd+l, cmd+alt+f", (e) => {
+  useHotkeys("ctrl+l, cmd+l, cmd+alt+f", (e) => {
     e.preventDefault();
-    input.current.focus();
+    input.current!.focus();
   });
 
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
-    if (currentValue) {
-      const newSP = new URLSearchParams(searchParams);
-      newSP.append("q", JSON.stringify(currentValue));
+    if (!currentValue) return;
 
-      navigate({
-        pathname: "/search",
-        search: `?${newSP}`,
-      });
-    }
+    const search = new URLSearchParams(searchParams);
+    search.set("q", JSON.stringify(currentValue));
+    navigate({
+      pathname: "/search",
+      search: `?${search}`,
+    });
   };
 
   return (
@@ -57,7 +56,7 @@ export function Searchbox({ ...props }: BoxProps & {}) {
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onChange={(e) => setValue(e.currentTarget.value)}
-            paddingRight="80px"
+            paddingRight="40px" // 40px is one button, change back to 80px if you gonna uncomment the blurry button
             ref={input}
           />
           <InputRightElement>
@@ -82,10 +81,8 @@ export function Searchbox({ ...props }: BoxProps & {}) {
                   console.log("huh", currentValue);
                   if (currentValue) {
                     const newSP = new URLSearchParams(searchParams);
-                    newSP.delete("q");
-                    newSP.delete("mode");
-                    newSP.append("q", JSON.stringify(currentValue));
-                    newSP.append("mode", "exact");
+                    newSP.set("q", JSON.stringify(currentValue));
+                    newSP.set("mode", "exact");
 
                     const isChanged =
                       newSP.get("q") === searchParams.get("q") &&

@@ -36,6 +36,7 @@ import useNamePicker from "../../modules/common/useNamePicker";
 import { SangOnGrid } from "./SongTable/SangOnCell";
 
 type IndexedSong = Song & { idx: number };
+
 interface SongEditableTableProps {
   songs: Song[];
   songsEdited: (songIds: string[]) => void;
@@ -75,7 +76,7 @@ const SongEditableTable = ({ songs, songsEdited }: SongEditableTableProps) => {
         Header: "#",
         accessor: "idx",
         maxWidth: 40,
-        Cell: (cellInfo: any) => String(cellInfo.row.index + 1),
+        Cell: (cellInfo: any) => <>{String(cellInfo.row.index + 1)}</>,
       },
       {
         Header: "Title",

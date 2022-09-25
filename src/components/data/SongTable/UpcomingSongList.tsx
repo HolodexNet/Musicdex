@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { SongTableCol, SongTableProps } from ".";
 import { t } from "i18next";
 import { FiFolderPlus, FiTrash } from "react-icons/fi";
+import { TbArrowsUpDown } from "react-icons/tb";
 import { useStoreActions, useStoreState } from "../../../store";
 import { useFormatPlaylist } from "../../../modules/playlist/useFormatPlaylist";
 import WindowScroller from "react-virtualized/dist/es/WindowScroller";
@@ -68,18 +69,29 @@ const Row = (props: RowWithHeader) => {
 const QueueHeader = () => {
   const queue = useStoreState((state) => state.playback.queue);
   const showAddDialog = useStoreActions(
-    (action) => action.playlist.showPlaylistAddDialog
+    (action) => action.playlist.showPlaylistAddDialog,
   );
   const clearQueue = useStoreActions((actions) => actions.playback._queueClear);
+  const reverseQueue = useStoreActions(
+    (actions) => actions.playback.queueReverse,
+  );
 
   return (
-    <Flex mt={4} gap={2} alignItems="center">
-      <Text fontSize={["md", "lg"]}>
+    <Flex mt={4} gap={1} alignItems="center">
+      <Text fontSize={["md", "lg"]} noOfLines={1}>
         <Text opacity={0.66} as={"span"}>
           {t("Queue")}
         </Text>
       </Text>
       <Spacer />
+      <IconButton
+        aria-label="reverse playlist"
+        icon={<TbArrowsUpDown />}
+        colorScheme="whiteAlpha"
+        color="white"
+        variant="ghost"
+        onClick={() => reverseQueue()}
+      />
       <IconButton
         aria-label="add to playlist"
         icon={<FiFolderPlus />}
@@ -101,11 +113,14 @@ const QueueHeader = () => {
 
 const PlaylistHeader = () => {
   const clearPlaylist = useStoreActions(
-    (actions) => actions.playback.clearPlaylist
+    (actions) => actions.playback.clearPlaylist,
   );
 
   const formatPlaylist = useFormatPlaylist();
   const currentPlaylist = useStoreState((s) => s.playback.currentPlaylist);
+  const reversePlaylist = useStoreActions(
+    (actions) => actions.playback.reversePlaylist,
+  );
 
   const { currentTitle, urlLinkToPlaylist } = useMemo(
     () => ({
@@ -113,10 +128,10 @@ const PlaylistHeader = () => {
       urlLinkToPlaylist:
         currentPlaylist && formatPlaylist("link", currentPlaylist),
     }),
-    [currentPlaylist, formatPlaylist]
+    [currentPlaylist, formatPlaylist],
   );
   return (
-    <Flex mt={4} alignItems="center">
+    <Flex mt={4} gap={1} alignItems="center">
       <Text fontSize={["md", "lg"]} noOfLines={1}>
         <Text opacity={0.66} as={"span"}>
           {currentPlaylist?.type.startsWith("radio")
@@ -135,6 +150,14 @@ const PlaylistHeader = () => {
       </Text>
       <Spacer />
       <IconButton
+        aria-label="reverse playlist"
+        icon={<TbArrowsUpDown />}
+        colorScheme="whiteAlpha"
+        color="white"
+        variant="ghost"
+        onClick={() => reversePlaylist()}
+      />
+      <IconButton
         aria-label="clear playlist"
         icon={<FiTrash />}
         colorScheme="red"
@@ -152,16 +175,15 @@ export const UpcomingSongList = ({
   queue,
   playlist,
   useWindowScroller = false,
-  ...rest
 }: UpcomingSongTableProps & BoxProps) => {
   const { t } = useTranslation();
   const detailLevel = useMemo<SongTableCol[]>(
     () => ["idx", "og_artist", "sang_on"],
-    []
+    [],
   );
   const songList = useMemo<Song[]>(
     () => [...queue, ...(songs || [])],
-    [queue, songs]
+    [queue, songs],
   );
   const data: RawRowProps = useMemo(
     () => ({
@@ -171,22 +193,26 @@ export const UpcomingSongList = ({
       playlist,
       rowProps: { ...rowProps, hideCol: rowProps?.hideCol ?? detailLevel },
     }),
-    [detailLevel, menuId, playlist, queue.length, rowProps, songList]
+    [detailLevel, menuId, playlist, queue.length, rowProps, songList],
   );
   const list = React.useRef<any>(null);
 
   useEffect(() => {
-    // Hint at variablesizelist to recheck row heights after queue length changed
+    // Hint at VariableSizeList to recheck row heights after queue length changed
     list.current?.resetAfterIndex(queue.length);
   }, [queue.length]);
 
   const frameRef = useContext(FrameRef);
-  const onScroll = useCallback(({ scrollTop }) => {
-    list.current?.scrollTo(scrollTop);
-  }, []);
+  const onScroll = useCallback(
+    ({ scrollTop }: { scrollLeft: number; scrollTop: number }) => {
+      list.current?.scrollTo(scrollTop);
+    },
+    [],
+  );
 
   const renderList = useCallback(
     ({ height, width }: { height: number; width: number }) => (
+      // @ts-ignore React 18 typings issue
       <VariableSizeList
         height={height || 800}
         width={useWindowScroller ? "100%" : width}
@@ -203,15 +229,17 @@ export const UpcomingSongList = ({
         {Row}
       </VariableSizeList>
     ),
-    [data, queue.length, songList.length, useWindowScroller]
+    [data, queue.length, songList.length, useWindowScroller],
   );
 
   if (!songList) return <>{t("No Songs")}</>;
   return (
     <Box height="100%" width="100%">
       {!useWindowScroller ? (
+        // @ts-ignore
         <AutoSizer>{renderList}</AutoSizer>
       ) : (
+        // @ts-ignore
         <WindowScroller onScroll={onScroll} scrollElement={frameRef?.current}>
           {renderList}
         </WindowScroller>
