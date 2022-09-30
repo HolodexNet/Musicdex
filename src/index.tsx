@@ -24,13 +24,8 @@ import "@fontsource/assistant/400.css";
 import "@fontsource/assistant/500.css";
 import "@fontsource/assistant/600.css";
 import { BrowserRouter as Router } from "react-router-dom";
-import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+// import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { HelmetProvider } from "react-helmet-async";
-
-console.log(
-  `VERSION: ${process.env.REACT_APP_NAME} ${process.env.REACT_APP_VERSION}`
-);
-(window as any)["App_Version"] = process.env.REACT_APP_VERSION;
 
 // https://github.com/ctrlplusb/easy-peasy/issues/741
 type Props = StoreProvider["props"] & { children: React.ReactNode };
@@ -53,8 +48,8 @@ store.persist.resolveRehydration().then(() => {
           </HelmetProvider>
         </QueryClientProvider>
       </ChakraProvider>
-    </StoreProviderReact18Casted>
+    </StoreProviderReact18Casted>,
   );
 });
 
-serviceWorkerRegistration.register();
+// serviceWorkerRegistration.register();

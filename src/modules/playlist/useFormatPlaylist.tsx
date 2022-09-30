@@ -3,9 +3,6 @@ import { TFunction, useTranslation } from "react-i18next";
 import useNamePicker from "../common/useNamePicker";
 import { formatters } from "./formatters";
 
-// FIXME: Migrate to URLSearchParams
-var qs = require("querystringify");
-
 type PlaylistLike = Partial<PlaylistFull>;
 
 type SGPTypes =
@@ -42,6 +39,16 @@ export function isSGPPlaylist(playlistId: string) {
 
 const IDSplitter = /[[\]]/;
 
+function parseParamString(v: string): any {
+  return Object.fromEntries(
+    new URLSearchParams(v.split(",").join("&")).entries(),
+  );
+}
+
+function stringifyParams(v: Record<string, any>): string {
+  return new URLSearchParams(v).toString();
+}
+
 /**
  * Parses a SGP id
  * @param id id string
@@ -54,7 +61,7 @@ export function parsePlaylistID(id: string): {
   const [type, paramString] = id.split(IDSplitter);
   return {
     type: type as SGPTypes | RadioTypes,
-    params: paramString ? qs.parse(paramString.split(",").join("&")) : {},
+    params: paramString ? parseParamString(paramString) : {},
   };
 }
 
@@ -66,9 +73,9 @@ export function parsePlaylistID(id: string): {
  */
 export function formatPlaylistID(
   type: SGPTypes | RadioTypes,
-  params: Record<string, any>
+  params: Record<string, any>,
 ) {
-  return `${String(type)}[${qs.stringify(params)}]`;
+  return `${String(type)}[${stringifyParams(params)}]`;
 }
 
 type FormatFunctions =
@@ -89,7 +96,7 @@ export type PlaylistFnMap<Param, Desc> = {
     playlist: Partial<PlaylistFull>,
     params: Param,
     data: Desc,
-    context: FormatContext
+    context: FormatContext,
   ) => string | undefined;
 };
 
@@ -106,7 +113,7 @@ export function useFormatPlaylist() {
   return useCallback(
     (fn: FormatFunctions, playlist: PlaylistLike) =>
       formatPlaylist(fn, playlist, { t, tn }),
-    [t, tn]
+    [t, tn],
   );
 }
 
@@ -135,7 +142,7 @@ export function formatPlaylist(
   fn: FormatFunctions,
   playlist: PlaylistLike,
   // formatters: typeof formatters,
-  context: FormatContext
+  context: FormatContext,
 ) {
   if (!isSGPPlaylist(playlist.id!)) {
     return formatters.default[fn]?.(playlist, undefined, undefined, context);
@@ -147,6 +154,6 @@ export function formatPlaylist(
     playlist,
     params,
     (playlist?.description ? parsePlaylistDesc(playlist) : undefined) as any,
-    context
+    context,
   );
 }

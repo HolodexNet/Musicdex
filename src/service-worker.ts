@@ -64,7 +64,7 @@ registerRoute(
     // Return true to signal that we want to use the handler.
     return true;
   },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html")
+  createHandlerBoundToURL(import.meta.env.VITE_PUBLIC_URL + "/index.html"),
 );
 
 // An example runtime caching route for requests that aren't handled by the
@@ -87,7 +87,7 @@ registerRoute(
         maxAgeSeconds: 12 * 60 * 60, // 12 hours of cache?
       }),
     ],
-  })
+  }),
 );
 
 registerRoute(
@@ -107,7 +107,7 @@ registerRoute(
         maxEntries: 160,
       }),
     ],
-  })
+  }),
 );
 
 // This allows the web app to trigger skipWaiting via

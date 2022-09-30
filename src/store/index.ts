@@ -34,12 +34,12 @@ export const useStoreState = typedHooks.useStoreState;
 
 const storeM = createStore(
   persist(storeModel, { storage: "localStorage", deny: ["dnd", "player"] }),
-  { devTools: process.env.NODE_ENV === "development" },
+  { devTools: import.meta.env.NODE_ENV === "development" },
 );
 
-if (process.env.NODE_ENV === "development") {
-  if ((module as any).hot) {
-    (module as any).hot.accept("./index", () => {
+if (import.meta.env.NODE_ENV === "development") {
+  if (import.meta.hot) {
+    import.meta.hot.accept("./index", () => {
       storeM.reconfigure(storeModel); // 👈 Here is the magic
     });
   }

@@ -48,10 +48,9 @@ export interface LinkItemProps {
   disabled?: boolean;
 }
 
-const HOLODEX_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://holodex.net"
-    : "https://staging.holodex.net";
+const HOLODEX_URL = import.meta.env.PROD
+  ? "https://holodex.net"
+  : "https://staging.holodex.net";
 
 export function SidebarContent({
   closeOnNav = false,
@@ -65,7 +64,7 @@ export function SidebarContent({
       { name: t("Liked Songs"), icon: FiHeart, path: "/liked" },
       { name: t("Settings"), icon: FiSettings, path: "/settings" },
     ],
-    [t]
+    [t],
   );
   const { user } = useClient();
   const { data: playlistList, isLoading: loadingMine } = useMyPlaylists();
@@ -74,7 +73,7 @@ export function SidebarContent({
   const isDragging = useStoreState((s) => s.dnd.dragging);
   const toast = useToast();
   const openModal = useStoreActions(
-    (actions) => actions.playlist.showPlaylistCreateDialog
+    (actions) => actions.playlist.showPlaylistCreateDialog,
   );
   const orgPath = useOrgPath();
 
