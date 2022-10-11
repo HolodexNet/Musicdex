@@ -33,6 +33,8 @@ export interface User {
 
 const BASE_URL = `${window.location.protocol}//${window.location.host}/api/v2`;
 
+const axiosInstance = axios.create();
+
 export function useClient() {
   const isLoggedIn = useStoreState((state) => state.auth.isLoggedIn);
   const user = useStoreState((state) => state.auth.user);
@@ -46,7 +48,7 @@ export function useClient() {
   const AxiosInstance = useCallback(
     function <T>(
       url: string,
-      config?: AxiosRequestConfig
+      config?: AxiosRequestConfig,
     ): Promise<AxiosResponse<T>> {
       const configWithUser: AxiosRequestConfig = {
         baseURL: BASE_URL,
@@ -56,9 +58,9 @@ export function useClient() {
           ...authHeader,
         },
       };
-      return axios(url, configWithUser);
+      return axiosInstance(url, configWithUser);
     },
-    [authHeader]
+    [authHeader],
   );
 
   const logout = useCallback(() => {
@@ -116,7 +118,7 @@ export function useClientLogin() {
       setUser(null);
       setToken(null);
     },
-    [setToken, setUser, toast]
+    [setToken, setUser, toast],
   );
 
   async function onGoogleSuccess({ credential }: GoogleCredentialResponse) {
@@ -137,7 +139,7 @@ export function useClientLogin() {
 
   async function onDiscordSuccess(
     err: any,
-    { access_token }: { access_token: string }
+    { access_token }: { access_token: string },
   ) {
     if (err) return onFailure(err);
     try {
@@ -172,7 +174,7 @@ export function useClientLogin() {
         onFailure(e);
       }
     },
-    [navigate, onFailure, setToken, setUser]
+    [navigate, onFailure, setToken, setUser],
   );
 
   // User got bounced from twitter login callbar, parse token and try logging in
@@ -193,9 +195,9 @@ export function useClientLogin() {
       : () =>
           open(
             `https://discord.com/api/oauth2/authorize?client_id=793619250115379262&redirect_uri=${encodeURIComponent(
-              `${window.location.protocol}//${window.location.host}/discord`
+              `${window.location.protocol}//${window.location.host}/discord`,
             )}&response_type=token&scope=identify`,
-            onDiscordSuccess
+            onDiscordSuccess,
           ),
     TwitterAuth: user?.twitter_id
       ? undefined
@@ -250,7 +252,7 @@ export function useCookieTokenFallback() {
   const token = useStoreState((state) => state.auth.token);
   const user = useStoreState((state) => state.auth.user);
   const setLastCookieToken = useStoreActions(
-    (actions) => actions.auth.setLastCookieToken
+    (actions) => actions.auth.setLastCookieToken,
   );
   const lastCookieToken = useStoreState((state) => state.auth.lastCookieToken);
   const setUser = useStoreActions((actions) => actions.auth.setUser);

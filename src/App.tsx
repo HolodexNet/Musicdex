@@ -1,10 +1,10 @@
-import { StrictMode, Suspense } from "react";
+import { StrictMode, Suspense, useEffect } from "react";
 import Frame from "./components/layout/Frame";
 import Routes from "./routes";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "./components/common/ErrorFallback";
 import usePageTracking from "./modules/common/usePageTracking";
-import { useCookieTokenFallback } from "./modules/client";
+import { useClient, useCookieTokenFallback } from "./modules/client";
 import { unregister } from "./serviceWorkerRegistration";
 import { LoadingFullScreen } from "./components/common/GlobalLoadingStatus";
 import { useTranslation } from "react-i18next";
@@ -16,6 +16,13 @@ function App(this: any) {
 
   const { ready: translationReady } = useTranslation();
 
+  const { isLoggedIn, refreshUser } = useClient();
+  useEffect(() => {
+    if (isLoggedIn) {
+      refreshUser();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     // Last resort error boundary
     <ErrorBoundary
