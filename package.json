@@ -17,7 +17,8 @@
     "eject": "react-scripts eject",
     "prepare": "husky install",
     "test": "react-scripts test --passWithNoTests",
-    "i18n": "rimraf -r build/tmp && tsc --jsx preserve --noEmit false --target es2020 --outDir build/tmp && i18next-scanner"
+    "i18n": "rimraf -r build/tmp && tsc --jsx preserve --noEmit false --target es2020 --outDir build/tmp && i18next-scanner",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@appbaseio/reactivesearch": "~3.34.3",
@@ -43,6 +44,7 @@
     "idb-keyval": "^6.2.0",
     "lodash-es": "^4.17.21",
     "oauth-open": "^1.0.4",
+    "patch-package": "^6.4.7",
     "querystringify": "^2.2.0",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.0",
