@@ -1,43 +1,34 @@
-import React, { useEffect } from "react";
-import * as serviceWorker from "../../serviceWorkerRegistration";
 import { Box, Text, CloseButton, HStack, Button } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import { useRegisterSW } from "virtual:pwa-register/react";
+
+const SW_UPDATE_INTERVAL = 15 * 60 * 1000;
 
 const ServiceWorkerWrapper = () => {
   const { t } = useTranslation();
-  const [showReload, setShowReload] = React.useState(false);
-  const [dismissed, setDismissed] = React.useState(false);
-  const [waitingWorker, setWaitingWorker] =
-    React.useState<ServiceWorker | null>(null);
 
-  const onSWUpdate = (registration: ServiceWorkerRegistration) => {
-    if (!registration) return;
-    setShowReload(true);
-    setWaitingWorker(registration.waiting);
-  };
+  const {
+    needRefresh: [needRefresh, setNeedRefresh],
+    updateServiceWorker,
+  } = useRegisterSW({
+    onRegistered(r) {
+      console.log("SW Registered: " + r);
+      r &&
+        setInterval(() => {
+          r.update();
+        }, SW_UPDATE_INTERVAL);
+    },
+    onRegisterError(error) {
+      console.log("SW registration error", error);
+    },
+  });
 
-  useEffect(() => {
-    serviceWorker.addUpdateHook(onSWUpdate);
-  }, []);
-
-  const reloadPage = () => {
-    setShowReload(false);
-    if (waitingWorker) {
-      waitingWorker?.postMessage({ type: "SKIP_WAITING" });
-      waitingWorker?.addEventListener("statechange", (e: any) => {
-        if (e.target.state === "activated") {
-          window.location.reload();
-        }
-      });
-    }
-  };
-
-  return showReload && !dismissed ? (
+  return needRefresh ? (
     <Box
       position="absolute"
       top="env(safe-area-inset-top)"
       bgColor="brand.400"
-      dropShadow={"dark-lg"}
+      shadow="dark-lg"
       px={4}
       py={3}
       m={2}
@@ -49,13 +40,13 @@ const ServiceWorkerWrapper = () => {
         <Button
           size="sm"
           fontSize={"md"}
-          onClick={reloadPage}
+          onClick={() => updateServiceWorker(true)}
           color="white"
           bgColor="n2.400"
         >
           {t("Reload")}
         </Button>
-        <CloseButton onClick={() => setDismissed(true)} />
+        <CloseButton onClick={() => setNeedRefresh(false)} />
       </HStack>
     </Box>
   ) : null;

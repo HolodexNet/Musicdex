@@ -13,6 +13,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js' & source-map-explorer --gzip 'build/static/js/*.js'",
     "build": "vite build",
     "dev": "vite dev",
+    "preview": "vite preview",
     "dev:local-api": "cross-env API_TARGET=local vite dev",
     "prepare": "husky install",
     "test": "vitest run --passWithNoTests",
@@ -112,6 +113,7 @@
     "rimraf": "^3.0.2",
     "source-map-explorer": "^2.5.2",
     "vite": "^3.1.4",
+    "vite-plugin-pwa": "^0.13.1",
     "vite-plugin-replace": "^0.1.1",
     "vitest": "^0.23.4",
     "web-vitals": "^2.1.4"

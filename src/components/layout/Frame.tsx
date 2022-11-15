@@ -112,11 +112,11 @@ export default function Frame({ children }: { children?: ReactNode }) {
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
 
   const currentlyPlaying = useStoreState(
-    (state) => state.playback.currentlyPlaying
+    (state) => state.playback.currentlyPlaying,
   );
 
   const showCreateDialog = useStoreActions(
-    (actions) => actions.playlist.showPlaylistCreateDialog
+    (actions) => actions.playlist.showPlaylistCreateDialog,
   );
 
   // Lazy load the player, wait for first song to be played
@@ -161,7 +161,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
           client.logout();
       }
     },
-    [client]
+    [client],
   );
 
   return (

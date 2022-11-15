@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { execSync } from "child_process";
 import { replaceCodePlugin as replace } from "vite-plugin-replace";
+import { VitePWA } from "vite-plugin-pwa";
 
 const proxy = {
   staging: {
@@ -51,6 +52,7 @@ export default defineConfig({
     outDir: "build",
   },
   server: {
+    port: 3000,
     proxy: process.env.API_TARGET
       ? proxy[process.env.API_TARGET]
       : proxy.staging,
@@ -68,6 +70,65 @@ export default defineConfig({
           to: gitCommitTimestamp,
         },
       ],
+    }),
+    VitePWA({
+      workbox: {
+        navigateFallbackDenylist: [
+          /^\/_/,
+          /^\/api/,
+          /^\/assets/,
+          /^\/img/,
+          /^\/sitemap-.*/,
+          /^\/statics.*/,
+          /^.*\.js(\.map)?/,
+          /^.*\.css/,
+          /^.*\.webmanifest/,
+        ],
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,jpeg,woff,woff2}"],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/i\.ytimg\.com\/.*\.(png|jpg|jpeg)$/i,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "ytimgs",
+              expiration: {
+                maxEntries: 160,
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/.*mzstatic\.com\/.*\.(png|jpg|jpeg)$/,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "mzstatics",
+              expiration: {
+                maxEntries: 160,
+              },
+            },
+          },
+        ],
+      },
+      registerType: "prompt",
+      includeAssets: ["favicon.ico", "apple-touch-icon.png"],
+      manifest: {
+        name: "Musicdex",
+        short_name: "Musicdex",
+        description: "VTuber Music Player",
+        theme_color: "#ffffff",
+        background_color: "#ffffff",
+        display: "standalone",
+        start_url: ".",
+        icons: [
+          {
+            src: "img/android-chrome-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+        ],
+      },
+      devOptions: {
+        enabled: true,
+      },
     }),
   ],
 });

@@ -5,7 +5,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "./components/common/ErrorFallback";
 import usePageTracking from "./modules/common/usePageTracking";
 import { useClient, useCookieTokenFallback } from "./modules/client";
-import { unregister } from "./serviceWorkerRegistration";
+import { unregister } from "./utils/serviceWorker";
 import { LoadingFullScreen } from "./components/common/GlobalLoadingStatus";
 import { useTranslation } from "react-i18next";
 

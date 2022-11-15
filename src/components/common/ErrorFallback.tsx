@@ -11,7 +11,7 @@ import {
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useClient } from "../../modules/client";
-import { unregister } from "../../serviceWorkerRegistration";
+import { unregister } from "../../utils/serviceWorker";
 
 export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   const { t } = useTranslation();
