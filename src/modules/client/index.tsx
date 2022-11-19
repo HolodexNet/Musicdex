@@ -1,4 +1,4 @@
-import { useToast } from "@chakra-ui/react";
+import { useInterval, useToast } from "@chakra-ui/react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useCallback, useEffect } from "react";
 import { useStoreActions, useStoreState } from "../../store";
@@ -29,6 +29,7 @@ export interface User {
   role: "user";
   username: string;
   yt_channel_key: string | null;
+  jwt?: string;
 }
 
 const BASE_URL = `${window.location.protocol}//${window.location.host}/api/v2`;
@@ -71,10 +72,20 @@ export function useClient() {
   const refreshUser = useCallback(async () => {
     if (!token) return;
     try {
-      const resp = await AxiosInstance("/user/check");
-      if (resp.status === 200 && resp.data) setUser(resp.data as User);
-      else throw new Error("Strange bug occured with user checking...");
+      const resp = await AxiosInstance<{ user: User; jwt: string }>(
+        "/user/refresh",
+      );
+      if (resp.status === 200 && resp.data) {
+        setUser(resp.data.user);
+        setToken(resp.data.jwt);
+        console.log("[Auth] Token refreshed");
+        return resp.data;
+      } else {
+        console.log("[Auth] Api error when refreshing token", resp);
+        throw new Error("Strange bug occured with user checking...");
+      }
     } catch (e) {
+      console.error("[Auth] Failed to refresh token", e);
       logout();
       toast({
         position: "top-right",
@@ -82,9 +93,9 @@ export function useClient() {
         status: "error",
       });
     }
-    return "OK";
+    return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logout, setUser, toast]);
+  }, [logout, setUser, toast, setToken]);
 
   return {
     isLoggedIn,
@@ -109,7 +120,7 @@ export function useClientLogin() {
 
   const onFailure = useCallback(
     (err: any) => {
-      console.log("Error", err);
+      console.log("[Auth] Login error", err);
       toast({
         position: "top-right",
         title: "Error while logging in",
@@ -248,6 +259,9 @@ export async function getToken({
   return res.json();
 }
 
+const getTokenExp = (token: string) =>
+  JSON.parse(atob(token.split(".")[1])).exp * 1000;
+
 export function useCookieTokenFallback() {
   const token = useStoreState((state) => state.auth.token);
   const user = useStoreState((state) => state.auth.user);
@@ -262,9 +276,14 @@ export function useCookieTokenFallback() {
     const match = document.cookie.match(/HOLODEX_JWT=([^;]+)/);
     if ((!token || !user) && match?.[1] && match?.[1] !== lastCookieToken) {
       const token = match?.[1];
-      console.log("Falling back on token found in cookie");
+      console.log("[Auth] Falling back on token found in cookie");
       // Only allow this token to be attempted once
       setLastCookieToken(token);
+
+      if (Date.now() > getTokenExp(token)) {
+        console.log("[Auth] Expired token found in cookie");
+        return;
+      }
       // immediately validate token
       (async () => {
         const resp = await axios("/user/check", {
@@ -281,4 +300,30 @@ export function useCookieTokenFallback() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+}
+
+export function useTokenRefresh() {
+  const { token, refreshUser } = useClient();
+
+  // Refresh token when it is close to expiration on load
+  useEffect(() => {
+    if (token)
+      console.log(
+        `[Auth] Found token expiring in ${getTokenExp(token) / 1000}s`,
+      );
+    if (token && Date.now() - 10 * 60 * 1000 > getTokenExp(token)) {
+      refreshUser();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Set timer to refresh token every 30 minutes
+  useEffect(() => {
+    if (!token) return;
+    const timer = setInterval(() => {
+      // const exp = getTokenExp(token);
+      refreshUser();
+    }, 30 * 60 * 1000);
+    return clearInterval(timer);
+  }, [refreshUser, token]);
 }
