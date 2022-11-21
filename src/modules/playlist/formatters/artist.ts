@@ -6,12 +6,12 @@ export const artistFormatter: PlaylistFormatter<
   { channel: Channel } | undefined
 > = {
   bannerImage: (playlist, { ch }, data) => {
-    return `https://holodex.net/api/statics/channelImg/${
+    return `https://holodex.net/statics/channelImg/${
       ch || data?.channel?.id
     }/banner/3.jpeg`;
   },
   channelImage: (playlist, { ch }, data) => {
-    return `https://holodex.net/api/statics/channelImg/${
+    return `https://holodex.net/statics/channelImg/${
       ch || data?.channel.id
     }.png`;
   },
