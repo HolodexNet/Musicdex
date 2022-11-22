@@ -67,7 +67,7 @@
   "Select and Copy": "Select and Copy",
   "Song Name": "Song Name",
   "Original Artist": "Original Artist",
-  "Timestamped Youtube Link": "Timestamped Youtube Link",
+  "Timestamped Youtube Link": "Timestamped YouTube Link",
   "Go To Song Page": "Go To Song Page",
   "Go To Video Page": "Go To Video Page",
   "Go To Channel Page": "Go To Channel Page",
@@ -173,5 +173,7 @@
   "Relevance": "Relevance",
   "Latest": "Latest",
   "Oldest": "Oldest",
-  "Find similar": "Find similar"
+  "Open on YouTube": "Open on YouTube",
+  "Find similar": "Find similar",
+  "You are not logged in": "You're not logged in!"
 }

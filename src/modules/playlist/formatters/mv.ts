@@ -6,7 +6,7 @@ export const mvFormatter: PlaylistFormatter<
 > = {
   channelImage: (playlist, { org }, data) => {
     if (playlist.content && playlist.content[0]) {
-      return `https://holodex.net/api/statics/channelImg/${playlist.content[0].channel_id}.png`;
+      return `https://holodex.net/statics/channelImg/${playlist.content[0].channel_id}.png`;
     } else {
       return undefined;
     }

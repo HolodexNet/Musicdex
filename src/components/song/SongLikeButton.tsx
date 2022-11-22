@@ -1,4 +1,5 @@
 import { IconButton, IconButtonProps, useToast } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
@@ -25,6 +26,7 @@ export function SongLikeButton({
     isLoading,
     isSuccess,
     isError,
+    error,
   } = useSongLikeUpdater();
   const { data: isLiked } = useSongLikeBulkCheck(song.id);
 
@@ -36,7 +38,11 @@ export function SongLikeButton({
       ? t("Added to liked songs")
       : t("Removed from liked songs");
     toast({
-      title: isSuccess ? title : t("An error has occurred"),
+      title: isSuccess
+        ? title
+        : error.response?.status === 401
+        ? t("You are not logged in")
+        : t("An error has occurred"),
       status: isSuccess ? "success" : "error",
       duration: isSuccess ? 1500 : 5000,
       position: "top-right",
@@ -53,16 +59,18 @@ export function SongLikeButton({
   }
 
   return (
-    <IconButton
-      width="20px"
-      margin={-2}
-      icon={isLiked ? <FaHeart size={size} /> : <FaRegHeart size={size} />}
-      onClick={toggleLike}
-      colorScheme={"brand"}
-      variant="ghost"
-      opacity={isLiked ? 1 : 0.3}
-      aria-label="Like Song"
-      {...rest}
-    ></IconButton>
+    <motion.button whileHover={{ scale: 1.0 }} whileTap={{ scale: 0.8 }}>
+      <IconButton
+        width="20px"
+        margin={-2}
+        icon={isLiked ? <FaHeart size={size} /> : <FaRegHeart size={size} />}
+        onClick={toggleLike}
+        colorScheme={"brand"}
+        variant="ghost"
+        opacity={isLiked ? 1 : 0.3}
+        aria-label="Like Song"
+        {...rest}
+      ></IconButton>
+    </motion.button>
   );
 }

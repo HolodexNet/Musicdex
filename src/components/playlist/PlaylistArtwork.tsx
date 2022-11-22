@@ -13,7 +13,6 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
 import { BiCalendar, BiMovie } from "react-icons/bi";
-import { GiSoundWaves } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
 import useNamePicker from "../../modules/common/useNamePicker";
 import {
@@ -56,7 +55,7 @@ export const PlaylistArtwork = React.memo(
 
     const channelImg = useMemo(
       () => playlist && formatPlaylist("channelImage", playlist),
-      [formatPlaylist, playlist]
+      [formatPlaylist, playlist],
     );
     const thumbnail = useMemo(() => {
       const videoId: string =
@@ -69,7 +68,7 @@ export const PlaylistArtwork = React.memo(
 
     const props = useMemo(
       () => ({ width: size, height: size, flexBasis: size, ...rest }),
-      [size, rest]
+      [size, rest],
     );
     if (type === ":weekly") {
       return (
@@ -136,7 +135,7 @@ export const PlaylistArtwork = React.memo(
         {...props}
       />
     );
-  }
+  },
 );
 
 function OverlayTextArt({
@@ -158,7 +157,7 @@ function OverlayTextArt({
 
   const adjFontSize = Math.max(
     14,
-    Math.round(-Math.pow(titleText.length / 15, 2) + 20)
+    Math.round(-Math.pow(titleText.length / 15, 2) + 20),
   );
   return (
     <Flex
@@ -217,7 +216,7 @@ function OverlayTextArt({
           height="80px"
           opacity="0.7"
           transform={`translate(8px, 21px) rotate(${Math.floor(
-            Math.random() * -30
+            Math.random() * -30,
           )}deg)`}
           blendMode="soft-light"
           as={iconType}
@@ -244,7 +243,7 @@ function RadioTextArt({
 
   const adjFontSize = Math.max(
     14,
-    Math.round(-Math.pow(titleText.length / 15, 2) + 20)
+    Math.round(-Math.pow(titleText.length / 15, 2) + 20),
   );
   return (
     <Flex
@@ -276,7 +275,7 @@ function RadioTextArt({
         as={FiRadio}
       ></Icon>
       <Image
-        src={imageUrl}
+        src={imageUrl?.replace(/.png$/, "/150.png")}
         objectFit="cover"
         loading="lazy"
         top="25%"
@@ -334,7 +333,7 @@ function StackedTextArt({
   // Do some fancy math to adjust font size so it can fit longer text
   const adjFontSize = Math.max(
     14,
-    Math.round(-Math.pow(titleText.length / 15, 2) + 18)
+    Math.round(-Math.pow(titleText.length / 15, 2) + 18),
   );
   return (
     <Flex

@@ -17,6 +17,7 @@ import {
   FiLink,
   FiMusic,
   FiUser,
+  FiYoutube,
 } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import { useClipboardWithToast } from "../../modules/common/clipboard";
@@ -47,11 +48,11 @@ export const SongContextMenu: React.FC<{
 
   const { mutateAsync: updatePlaylist } = usePlaylistUpdater();
 
-  const { data: playlists, isLoading } = useMyPlaylists();
+  const { data: playlists } = useMyPlaylists();
 
   function openUrl(
     url: string,
-    event: MouseEvent | TouchEvent | KeyboardEvent
+    event: MouseEvent | TouchEvent | KeyboardEvent,
   ) {
     if (event.shiftKey) {
       window.open(url, "_blank", "width:500,height:500");
@@ -81,7 +82,7 @@ export const SongContextMenu: React.FC<{
           title: t("Something went wrong"),
           isClosable: true,
         });
-      }
+      },
     );
   }
 
@@ -113,7 +114,7 @@ export const SongContextMenu: React.FC<{
               queueRemove(idx);
             else {
               console.error(
-                "Hmm, I can't find the song you're trying to remove? Bug."
+                "Hmm, I can't find the song you're trying to remove? Bug.",
               );
             }
           }}
@@ -152,6 +153,17 @@ export const SongContextMenu: React.FC<{
         <Icon mr={2} as={FiLink}></Icon> {t("Share Song")}
       </Item>
 
+      <Item
+        onClick={(x: ItemParams) => {
+          window.open(
+            `https://youtu.be/${x.props.video_id}?t=${x.props.start}`,
+            "_blank",
+          );
+        }}
+      >
+        <Icon mr={2} as={FiYoutube}></Icon> {t("Open on YouTube")}
+      </Item>
+
       <Submenu
         label={
           <>
@@ -176,7 +188,7 @@ export const SongContextMenu: React.FC<{
         <Item
           onClick={(x: ItemParams) => {
             copyToClipboard(
-              `https://youtu.be/${x.props.video_id}?t=${x.props.start}`
+              `https://youtu.be/${x.props.video_id}?t=${x.props.start}`,
             );
           }}
         >
@@ -190,7 +202,7 @@ export const SongContextMenu: React.FC<{
         onClick={(x: ItemParams) => {
           openUrl("/song/" + x.props.id, x.event as any);
         }}
-        onAuxClick={(e) => {
+        onAuxClick={() => {
           song && window.open("/song/" + song.id, "_blank");
         }}
       >
@@ -201,7 +213,7 @@ export const SongContextMenu: React.FC<{
         onClick={(x: ItemParams) => {
           openUrl("/video/" + x.props.video_id, x.event as any);
         }}
-        onAuxClick={(e) => {
+        onAuxClick={() => {
           song && window.open("/video/" + song.video_id, "_blank");
         }}
       >

@@ -67,7 +67,7 @@
   "Select and Copy": "Seç ve Kopyala",
   "Song Name": "Şarkı İsmi",
   "Original Artist": "Orijinal Sanatçı",
-  "Timestamped Youtube Link": "Zaman Damgalı Youtube Bağlantısı",
+  "Timestamped Youtube Link": "Timestamped YouTube Link",
   "Go To Song Page": "Şarkı Sayfasına Git",
   "Go To Video Page": "Video Sayfasına Git",
   "Go To Channel Page": "Kanal Sayfasına Git",
@@ -173,5 +173,7 @@
   "Relevance": "Alaka",
   "Latest": "En Son",
   "Oldest": "En eski",
-  "Find similar": "Benzerlerini bul"
+  "Open on YouTube": "Open on YouTube",
+  "Find similar": "Benzerlerini bul",
+  "You are not logged in": "You're not logged in!"
 }

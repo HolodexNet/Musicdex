@@ -1,4 +1,5 @@
 import "setimmediate";
+import { AxiosError } from "axios";
 import zipObject from "lodash-es/zipObject";
 import Dataloader, { BatchLoadFn } from "dataloader";
 
@@ -22,7 +23,7 @@ export const LIKE_QUERY_CONFIG = {
 
 type SongLikeUpdaterParams = UseMutationOptions<
   "OK",
-  unknown,
+  AxiosError,
   { song_id: string; action: "add" | "delete" }
 >;
 
