@@ -1,5 +1,20 @@
-import { Box, Flex, Icon, Text, useToast, VStack } from "@chakra-ui/react";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  Box,
+  Flex,
+  HStack,
+  Icon,
+  Spacer,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
+import {
+  AnimatePresence,
+  motion,
+  Reorder,
+  useDragControls,
+  useMotionValue,
+} from "framer-motion";
 import { DragEvent, useCallback, useMemo } from "react";
 import {
   DragDropContext,
@@ -9,12 +24,14 @@ import {
 } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
-import { FiFolder, FiRadio } from "react-icons/fi";
+import { FiFolder, FiMenu, FiRadio } from "react-icons/fi";
+import { MdDragHandle } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useFormatPlaylist } from "../../modules/playlist/useFormatPlaylist";
 import { splitPlaylistEmoji } from "../../modules/playlist/utils";
 import { usePlaylistUpdater } from "../../modules/services/playlist.service";
 import { useStoreActions, useStoreState } from "../../store";
+import { useRaisedShadow } from "../settings/OrgManagement";
 
 function getIcon(type: string, defaultIcon: IconType) {
   if (type.indexOf("radio/") === 0) {
@@ -66,44 +83,26 @@ export const PlaylistList = ({
     <div>
       <AnimatePresence>
         {editMode ? (
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="playlist">
-              {(droppableProvided) => (
-                <VStack
-                  w="100%"
-                  align="stretch"
-                  spacing={0}
-                  {...droppableProvided.droppableProps}
-                  ref={droppableProvided.innerRef}
-                >
-                  {sorted.map((playlist, index) => (
-                    <Draggable
-                      key={playlist.id}
-                      draggableId={playlist.id}
-                      index={index}
-                    >
-                      {(draggableProvided) => (
-                        <Box
-                          {...draggableProvided.draggableProps}
-                          {...draggableProvided.dragHandleProps}
-                          ref={draggableProvided.innerRef}
-                        >
-                          <PlaylistButton
-                            key={playlist.id}
-                            playlist={playlist}
-                            vibe={vibe}
-                            editable={editable}
-                            defaultIcon={defaultIcon}
-                          />
-                        </Box>
-                      )}
-                    </Draggable>
-                  ))}
-                  {droppableProvided.placeholder}
-                </VStack>
-              )}
-            </Droppable>
-          </DragDropContext>
+          <Reorder.Group
+            axis="y"
+            values={sorted}
+            onReorder={(playlists: PlaylistStub[]) =>
+              setPlaylistList(playlists.map((playlist) => playlist.id))
+            }
+          >
+            <VStack align="stretch" spacing={0} userSelect="none">
+              {sorted.map((playlist, index) => (
+                <PlaylistButton
+                  key={playlist.id}
+                  playlist={playlist}
+                  vibe={vibe}
+                  editable={editable}
+                  defaultIcon={defaultIcon}
+                  editMode={editMode}
+                />
+              ))}
+            </VStack>
+          </Reorder.Group>
         ) : (
           <VStack spacing={0} align="stretch">
             {sorted.map((playlist) => (
@@ -113,6 +112,7 @@ export const PlaylistList = ({
                 vibe={vibe}
                 editable={editable}
                 defaultIcon={defaultIcon}
+                editMode={editMode}
               />
             ))}
           </VStack>
@@ -139,10 +139,60 @@ const PlaylistButton = ({
   const { mutateAsync } = usePlaylistUpdater();
   const toast = useToast();
   const formatPlaylist = useFormatPlaylist();
+  const controls = useDragControls();
+  const y = useMotionValue(0);
+  const boxShadow = useRaisedShadow(y);
 
   const title = formatPlaylist("title", playlist) || "Untitled";
   const { rest, emoji } = splitPlaylistEmoji(title);
-  return (
+  return editMode ? (
+    <Reorder.Item
+      value={playlist}
+      id={playlist.id}
+      dragListener={false}
+      dragControls={controls}
+      style={{
+        boxShadow,
+      }}
+    >
+      <HStack
+        spacing={0}
+        mx="2"
+        px="2"
+        py="2"
+        borderRadius="lg"
+        role="group"
+        transition={"all 0.2s ease-out"}
+        _hover={{
+          bg: "bg.700",
+          color: "white",
+        }}
+      >
+        <Flex mr="4" fontSize=".85rem">
+          {emoji || (
+            <Icon
+              width="1.15rem"
+              height="24px"
+              _groupHover={{
+                color: "white",
+              }}
+              as={getIcon(playlist.type, defaultIcon)}
+            />
+          )}
+        </Flex>
+        <Text noOfLines={1}>{rest}</Text>
+        <Spacer />
+        <Icon
+          as={MdDragHandle}
+          w={6}
+          h={6}
+          cursor="move"
+          onPointerDown={(e) => controls.start(e)}
+          onTouchStart={(e) => controls.start(e)}
+        />
+      </HStack>
+    </Reorder.Item>
+  ) : (
     <motion.div
       key={"p-sb-" + playlist.id}
       initial={{ opacity: 0 }}
@@ -208,21 +258,18 @@ const PlaylistButton = ({
             }
           }}
         >
-          {emoji ? (
-            <Flex mr="4" fontSize=".85rem">
-              {emoji}
-            </Flex>
-          ) : (
-            <Icon
-              mr="4"
-              width="1.15rem"
-              height="24px"
-              _groupHover={{
-                color: "white",
-              }}
-              as={getIcon(playlist.type, defaultIcon)}
-            />
-          )}
+          <Flex mr="4" fontSize=".85rem">
+            {emoji || (
+              <Icon
+                width="1.15rem"
+                height="24px"
+                _groupHover={{
+                  color: "white",
+                }}
+                as={getIcon(playlist.type, defaultIcon)}
+              />
+            )}
+          </Flex>
           <Text noOfLines={1}>{rest}</Text>
         </Flex>
       </Link>

@@ -132,7 +132,7 @@ export function SidebarContent({
       <Flex flexDirection="column" overflowY="auto" flex="1">
         <PlaylistCreateModal />
         <HStack mx={2} py={2}>
-          <Heading px={2} size="sm">
+          <Heading px={2} size="sm" noOfLines={1}>
             {t("My Playlists")}
           </Heading>
           <Spacer />
@@ -143,11 +143,12 @@ export function SidebarContent({
                 icon={<FiCheck />}
                 size="sm"
                 colorScheme="green"
+                variant="outline"
                 onClick={() => setEditMode(false)}
               />
             </HStack>
           ) : (
-            <HStack>
+            <HStack spacing={1}>
               {playlistList?.length && (
                 <IconButton
                   aria-label={t("Edit")}
