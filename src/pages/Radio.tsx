@@ -26,7 +26,7 @@ import {
 import { useStoreActions } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 const SongEditableTable = React.lazy(
-  () => import("../components/data/SongTableEditable")
+  () => import("../components/data/SongTableEditable"),
 );
 
 export default function Radio() {
@@ -52,7 +52,7 @@ export default function Radio() {
 
   const queueSongs = useSongQueuer();
   const setPlaylist = useStoreActions(
-    (actions) => actions.playback.setPlaylist
+    (actions) => actions.playback.setPlaylist,
   );
 
   // const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
@@ -64,7 +64,7 @@ export default function Radio() {
           <VStack spacing={4}>
             <Heading>
               {t(
-                "You do not have access to this playlist (or it doesn't exist)"
+                "You do not have access to this playlist (or it doesn't exist)",
               )}
             </Heading>
             <Code>{(status?.error as Error)?.toString()}</Code>
@@ -102,6 +102,13 @@ export default function Radio() {
           editMode={false}
           onPlayClick={() => {
             setPlaylist({ playlist });
+          }}
+          onAddQueueClick={() => {
+            playlist.content &&
+              queueSongs({
+                songs: [...playlist.content],
+                immediatelyPlay: false,
+              });
           }}
         />
 

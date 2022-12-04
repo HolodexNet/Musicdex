@@ -301,7 +301,7 @@ export function Player({ player }: { player: YouTubePlayer | null }) {
       e.preventDefault();
       togglePlay();
     },
-    [togglePlay],
+    [togglePlay, currentSong, firstLoadPauseId, isPlaying, player],
   );
 
   // Toggle repeat / shuffle mode

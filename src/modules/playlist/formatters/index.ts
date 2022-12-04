@@ -5,13 +5,14 @@ import { historyFormatter } from "./history";
 import { hotFormatter } from "./hot";
 import { latestFormatter } from "./latest";
 import { mvFormatter } from "./mv";
+import { userweeklyFormatter } from "./userweekly";
 import { videoFormatter } from "./video";
 import { weeklyFormatter } from "./weekly";
 
 export const formatters = {
   ":dailyrandom": dailyRandomFormatter,
   ":weekly": weeklyFormatter,
-  ":userweekly": defaultFormatter,
+  ":userweekly": userweeklyFormatter,
   ":history": historyFormatter,
   ":video": videoFormatter,
   ":latest": latestFormatter,
