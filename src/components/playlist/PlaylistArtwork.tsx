@@ -19,6 +19,8 @@ import {
   isSGPPlaylist,
   parsePlaylistDesc,
   parsePlaylistID,
+  RadioTypes,
+  SGPTypes,
   useFormatPlaylist,
 } from "../../modules/playlist/useFormatPlaylist";
 import { getVideoThumbnails } from "../../utils/SongHelper";
@@ -41,17 +43,22 @@ export const PlaylistArtwork = React.memo(
     const { t } = useTranslation();
     const tn = useNamePicker();
     const formatPlaylist = useFormatPlaylist();
-    const { title, description, type } = useMemo(() => {
-      let type;
-      if (isSGPPlaylist(playlist.id!)) {
-        type = parsePlaylistID(playlist.id!).type;
-      }
-      return {
-        title: formatPlaylist("title", playlist),
-        description: parsePlaylistDesc(playlist),
-        type,
-      };
-    }, [formatPlaylist, playlist]);
+    const {
+      title,
+      description,
+      type,
+    }: { title?: string; description: any; type?: SGPTypes | RadioTypes } =
+      useMemo(() => {
+        let type;
+        if (isSGPPlaylist(playlist.id!)) {
+          type = parsePlaylistID(playlist.id!).type;
+        }
+        return {
+          title: formatPlaylist("title", playlist),
+          description: parsePlaylistDesc(playlist),
+          type,
+        };
+      }, [formatPlaylist, playlist]);
 
     const channelImg = useMemo(
       () => playlist && formatPlaylist("channelImage", playlist),

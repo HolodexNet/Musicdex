@@ -8,7 +8,7 @@ var qs = require("querystringify");
 
 type PlaylistLike = Partial<PlaylistFull>;
 
-type SGPTypes =
+export type SGPTypes =
   | ":dailyrandom"
   | ":weekly"
   | ":userweekly"
@@ -17,7 +17,7 @@ type SGPTypes =
   | ":latest"
   | ":mv";
 
-type RadioTypes = ":artist" | ":hot";
+export type RadioTypes = ":artist" | ":hot";
 
 const DEFAULT_PARAM_PARSER = (playlistId: string) =>
   parsePlaylistID(playlistId).params;
@@ -66,7 +66,7 @@ export function parsePlaylistID(id: string): {
  */
 export function formatPlaylistID(
   type: SGPTypes | RadioTypes,
-  params: Record<string, any>
+  params: Record<string, any>,
 ) {
   return `${String(type)}[${qs.stringify(params)}]`;
 }
@@ -89,7 +89,7 @@ export type PlaylistFnMap<Param, Desc> = {
     playlist: Partial<PlaylistFull>,
     params: Param,
     data: Desc,
-    context: FormatContext
+    context: FormatContext,
   ) => string | undefined;
 };
 
@@ -106,7 +106,7 @@ export function useFormatPlaylist() {
   return useCallback(
     (fn: FormatFunctions, playlist: PlaylistLike) =>
       formatPlaylist(fn, playlist, { t, tn }),
-    [t, tn]
+    [t, tn],
   );
 }
 
@@ -135,7 +135,7 @@ export function formatPlaylist(
   fn: FormatFunctions,
   playlist: PlaylistLike,
   // formatters: typeof formatters,
-  context: FormatContext
+  context: FormatContext,
 ) {
   if (!isSGPPlaylist(playlist.id!)) {
     return formatters.default[fn]?.(playlist, undefined, undefined, context);
@@ -147,6 +147,6 @@ export function formatPlaylist(
     playlist,
     params,
     (playlist?.description ? parsePlaylistDesc(playlist) : undefined) as any,
-    context
+    context,
   );
 }
