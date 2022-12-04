@@ -12,7 +12,7 @@ export const userweeklyFormatter: PlaylistFormatter<
     }
   },
   title: (playlist, { org }, data, { t }) => {
-    return t(`Your Weekly Mix`, { org });
+    return t(`My Weekly Mix`, { org });
   },
   description: (playlist, { org }, data, { t }) => {
     return t(`Crafted for you based on your listening habits`, { org });
