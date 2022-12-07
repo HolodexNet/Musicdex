@@ -16,7 +16,7 @@ import {
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiMovie, BiMoviePlay } from "react-icons/bi";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -26,6 +26,7 @@ import { GeneralSearchInput } from "../components/search/GeneralSearchInput";
 import { CheckboxSearchList } from "../components/search/CheckboxSearchList";
 import { RadioButtonSearchList } from "../components/search/RadioButtonSearchList";
 import { ToggleButtonSearchInput } from "../components/search/ToggleButtonSearchInput";
+import { useLocalStorage } from "../store/adhoc";
 
 const debounceValue = 1000;
 
@@ -67,6 +68,24 @@ const SearchResultSongTable = ({
 
 export default function Search() {
   const { t } = useTranslation();
+  const sortOptions = useMemo(
+    () => [
+      { dataField: "_score", sortBy: "desc", label: t("Relevance") },
+      { dataField: "available_at", sortBy: "desc", label: t("Latest") },
+      { dataField: "available_at", sortBy: "asc", label: t("Oldest") },
+    ],
+    [t],
+  );
+  const [defaultSort, setDefaultSort] = useLocalStorage(
+    "defaultSort",
+    t("Relevance"),
+  );
+  const defaultSortField = useMemo(() => {
+    return (
+      sortOptions.find((x) => x.label === defaultSort)?.label ||
+      sortOptions[0].label
+    );
+  }, [sortOptions, defaultSort]);
   const [suborgVisible, setSuborgVisible] = useState(false);
   const navigate = useNavigate();
   const [channelSelected, setChannelSelected] = useState(false);
@@ -357,16 +376,22 @@ export default function Search() {
             pagination
             showLoader
             size={12}
-            sortOptions={[
-              { dataField: "_score", sortBy: "desc", label: t("Relevance") },
-              { dataField: "available_at", sortBy: "desc", label: t("Latest") },
-              { dataField: "available_at", sortBy: "asc", label: t("Oldest") },
-            ]}
+            sortOptions={sortOptions}
+            defaultSortOption={defaultSortField}
             innerClass={{
               sortOptions: "sort-select",
               pagination: "custom-chakra-button",
             }}
             render={SearchResultSongTable}
+            onQueryChange={(thisQ, next) => {
+              const datafield = Object.keys(next.sort[0])[0];
+              const sort = next.sort[0][datafield].order;
+              setDefaultSort(
+                sortOptions.find(
+                  (x) => x.dataField === datafield && x.sortBy === sort,
+                )?.label || "unset",
+              );
+            }}
           />
         </VStack>
       </Flex>

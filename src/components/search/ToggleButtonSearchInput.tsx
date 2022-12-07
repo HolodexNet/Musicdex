@@ -50,6 +50,7 @@ export const ToggleButtonSearchInput = ({
         {buttons.map(({ label, value, icon }) => {
           return (
             <Button
+              key={`search-${label}-btn`}
               colorScheme="brand"
               variant={buttonValue === value ? "solid" : "outline"}
               rightIcon={icon}
