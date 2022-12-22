@@ -196,6 +196,7 @@ export default function Search() {
                 debounceValue={debounceValue}
                 placeholder={t("Search for Music / Artist")}
                 getQuery={getGeneralQuery}
+                autoFocus
                 {...props}
               />
             )}

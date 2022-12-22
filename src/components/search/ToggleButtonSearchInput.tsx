@@ -36,7 +36,7 @@ export const ToggleButtonSearchInput = ({
 
   // Support resetting from SelectedFilters
   useEffect(() => {
-    if (value === null) setButtonValue("");
+    setButtonValue(value || "");
   }, [value]);
 
   return (

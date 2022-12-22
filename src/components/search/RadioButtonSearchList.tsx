@@ -55,7 +55,7 @@ export const RadioButtonSearchList = ({
 
   // Support resetting from SelectedFilters
   useEffect(() => {
-    if (value === null) setRadioValue("");
+    setRadioValue(value || "");
   }, [value]);
 
   if (!aggregations?.[dataField]?.buckets?.length) {

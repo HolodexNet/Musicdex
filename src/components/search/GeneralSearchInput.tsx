@@ -17,6 +17,7 @@ interface GeneralInputProps {
   setQuery: (query: { value?: string; query?: any; opts?: any }) => void;
   value: string | null;
   tagLabel?: string;
+  autoFocus?: boolean;
 }
 
 export const GeneralSearchInput = ({
@@ -26,6 +27,7 @@ export const GeneralSearchInput = ({
   setQuery,
   value,
   tagLabel,
+  autoFocus,
 }: GeneralInputProps) => {
   const { t } = useTranslation();
   const [searchText, setSearchText] = useState<string>(value || "");
@@ -43,8 +45,7 @@ export const GeneralSearchInput = ({
 
   // Support resetting from SelectedFilters
   useEffect(() => {
-    if (value === null) setSearchText("");
-    else setSearchText(value);
+    setSearchText(value || "");
   }, [value]);
 
   const changed = useCallback(
@@ -72,6 +73,7 @@ export const GeneralSearchInput = ({
             value={searchText}
             onChange={changed}
             placeholder={placeholder}
+            autoFocus={autoFocus}
           ></Input>
           <InputRightElement>
             <IconButton

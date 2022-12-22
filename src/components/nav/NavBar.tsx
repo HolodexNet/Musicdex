@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { FiMenu, FiChevronDown } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useClient } from "../../modules/client";
 import { SearchBox } from "./SearchBox";
 import { LogoWithText } from "./LogoWithText";
@@ -29,6 +29,7 @@ interface MobileProps extends FlexProps {
 export function NavBar({ onOpen, ...rest }: MobileProps) {
   const { t } = useTranslation();
   const { isLoggedIn, logout, user } = useClient();
+  const { pathname } = useLocation();
 
   // const bgColor = useColorModeValue("white", "gray.900");
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -58,7 +59,9 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
       />
       <LogoWithText display={{ base: "none", lg: "flex" }} />
 
-      <SearchBox w={{ base: "100%", lg: "40%" }} paddingX={4} />
+      {pathname !== "/search" && (
+        <SearchBox w={{ base: "100%", lg: "40%" }} paddingX={4} />
+      )}
 
       <HStack spacing={{ base: "0", lg: "6" }}>
         <Flex alignItems={"center"}>
