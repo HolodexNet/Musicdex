@@ -16,7 +16,7 @@ import {
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiMovie, BiMoviePlay } from "react-icons/bi";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -98,6 +98,16 @@ export default function Search() {
     xl: "nowrap",
   });
 
+  // this system sets up some loose reactivity regarding org and suborg block visibility.
+  const [params] = useSearchParams();
+  useEffect(() => {
+    const ch = params.get("ch");
+    const org = params.get("org");
+
+    setChannelSelected(!!ch);
+    setSuborgVisible(!!org);
+  }, [params]);
+
   const getGeneralQuery = useCallback((value: string) => {
     if (!value) return {};
 
@@ -106,12 +116,13 @@ export default function Search() {
         multi_match: {
           query: value,
           fields: [
-            "general",
-            "general.romaji",
-            "original_artist",
-            "original_artist.romaji",
+            "general^3",
+            "general.romaji^0.5",
+            "original_artist^2",
+            "original_artist.romaji^0.5",
           ],
-          type: "phrase",
+          type: "most_fields",
+          // type: "phrase",
         },
       },
     };
@@ -125,7 +136,7 @@ export default function Search() {
         multi_match: {
           query: value,
           fields: ["name.ngram", "name"],
-          type: "phrase",
+          type: "most_fields",
         },
       },
     };
@@ -143,7 +154,7 @@ export default function Search() {
             "original_artist^2",
             "original_artist.romaji^0.5",
           ],
-          type: "phrase",
+          type: "most_fields",
         },
       },
     };
@@ -272,7 +283,7 @@ export default function Search() {
                       },
                     })}
                     render={(props) => {
-                      setChannelSelected(props.value?.length > 0);
+                      // setChannelSelected(props.value?.length > 0);
                       return (
                         <CheckboxSearchList
                           dataField="channel.name"
@@ -302,7 +313,7 @@ export default function Search() {
                         },
                       })}
                       render={(props) => {
-                        setSuborgVisible(!!props.value);
+                        // setSuborgVisible(!!props.value);
                         return (
                           <RadioButtonSearchList
                             dataField="org"
