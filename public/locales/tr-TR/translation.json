@@ -67,7 +67,7 @@
   "Select and Copy": "Seç ve Kopyala",
   "Song Name": "Şarkı İsmi",
   "Original Artist": "Orijinal Sanatçı",
-  "Timestamped Youtube Link": "Timestamped YouTube Link",
+  "Timestamped Youtube Link": "Zaman Damgalı YouTube Bağlantısı",
   "Go To Song Page": "Şarkı Sayfasına Git",
   "Go To Video Page": "Video Sayfasına Git",
   "Go To Channel Page": "Kanal Sayfasına Git",
@@ -84,7 +84,7 @@
   "Recent Singing Streams": "En Son Şarkı Söyleme Yayınları",
   "{{org}} Playlists": "{{org}} Oynatma Listeleri",
   "Trending {{org}} Songs": "Trend Olan {{org}} Şarkıları",
-  "Discover {{org}}": "Discover {{org}}",
+  "Discover {{org}}": "Keşfet: {{org}}",
   "Library": "Kütüphane",
   "Create Playlist": "Oynatma Listesi Oluştur",
   "My Playlists": "Oynatma Listelerim",
@@ -173,7 +173,7 @@
   "Relevance": "Alaka",
   "Latest": "En Son",
   "Oldest": "En eski",
-  "Open on YouTube": "Open on YouTube",
+  "Open on YouTube": "Youtube'da Aç",
   "Find similar": "Benzerlerini bul",
   "You are not logged in": "Giriş yapmadınız!"
 }
