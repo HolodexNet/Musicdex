@@ -70,6 +70,7 @@ i18n
       "zh-CN",
       "zh-TW",
       "es-MX",
+      "lol-PEKO",
     ],
     interpolation: {
       escapeValue: false,
