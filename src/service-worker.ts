@@ -64,15 +64,17 @@ registerRoute(
     // Return true to signal that we want to use the handler.
     return true;
   },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html")
+  createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html"),
 );
 
 // An example runtime caching route for requests that aren't handled by the
 // precache, in this case same-origin .png requests like those from in public/
+// Caches music.holodex.net images
 registerRoute(
   // Add in any other file extensions or routing criteria as needed.
   ({ url }) =>
-    url.origin === self.location.origin &&
+    (url.origin === self.location.origin ||
+      url.origin === self.location.origin.replace(/^[^.]+\./g, "")) &&
     (url.pathname.endsWith(".png") ||
       url.pathname.endsWith(".jpg") ||
       url.pathname.endsWith(".jpeg")),
@@ -83,31 +85,30 @@ registerRoute(
       // Ensure that once this runtime cache reaches a maximum size the
       // least-recently used images are removed.
       new ExpirationPlugin({
-        maxEntries: 400,
+        maxEntries: 100,
         maxAgeSeconds: 12 * 60 * 60, // 12 hours of cache?
       }),
     ],
-  })
+  }),
 );
 
+// Cache holodex.net images
 registerRoute(
   // Add in any other file extensions or routing criteria as needed.
   ({ url }) =>
-    (url.host === "i.ytimg.com" || url.host.endsWith("mzstatic.com")) &&
-    (url.pathname.endsWith(".png") ||
-      url.pathname.endsWith(".jpg") ||
-      url.pathname.endsWith(".jpeg")),
+    url.pathname.match(new RegExp(`${self.location.origin}/statics/.*.json$`)),
   // Customize this strategy as needed, e.g., by changing to CacheFirst.
   new StaleWhileRevalidate({
-    cacheName: "ytimgs",
+    cacheName: "holodex static json",
     plugins: [
       // Ensure that once this runtime cache reaches a maximum size the
       // least-recently used images are removed.
       new ExpirationPlugin({
-        maxEntries: 160,
+        maxEntries: 50,
+        maxAgeSeconds: 24 * 60 * 60, // 12 hours of cache?
       }),
     ],
-  })
+  }),
 );
 
 // This allows the web app to trigger skipWaiting via
