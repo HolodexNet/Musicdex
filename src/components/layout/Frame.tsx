@@ -166,10 +166,8 @@ export default function Frame({ children }: { children?: ReactNode }) {
 
   return (
     <Box
-      // https://github.com/chakra-ui/chakra-ui/discussions/2297#discussioncomment-109835
-      // @ts-ignore
-      h={[["100vh", "100dvh"]]}
-      w="100vw"
+      h="full"
+      w="full"
       className={colorMode}
       bg={useColorModeValue("bg.100", "bg.900")}
       overflow="hidden"
