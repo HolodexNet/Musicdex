@@ -66,11 +66,11 @@ export const theme = extendTheme(
         body: {
           bg: "bg.900",
           overflow: "hidden",
-          "-webkit-font-smoothing": "antialiased",
-          "-moz-osx-font-smoothing": "grayscale",
+          WebkitFontSmoothing: "antialiased",
+          MozOsxFontSmoothing: "grayscale",
         },
         "#root": {
-          h: ["100vh", "100dvh"],
+          h: "100vh",
           overflow: "hidden",
         },
       },

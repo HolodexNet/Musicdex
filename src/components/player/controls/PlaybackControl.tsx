@@ -1,22 +1,20 @@
 import {
   BoxProps,
   Flex,
-  IconButton,
   FlexProps,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React, { useMemo, useContext } from "react";
 import { ReactElement } from "react";
 import { useStoreActions, useStoreState } from "../../../store";
 import { FaStepBackward, FaPause, FaPlay, FaStepForward } from "react-icons/fa";
 import { MotionBox } from "../../common/MotionBox";
 import { ChangePlayerLocationButton } from "../ChangePlayerLocationButton";
 import { ShuffleIcon, RepeatIcon } from "./PlayerOption";
+import { PlayerContext } from "../../layout/Frame";
 
 interface PlaybackControlProps extends FlexProps {
-  togglePlay: () => void;
   fullPlayer?: boolean;
-  mobilePlayer?: boolean;
 }
 
 interface PlaybackButtonProps extends BoxProps {
@@ -44,13 +42,12 @@ const PlaybackButton = ({ icon, ...rest }: PlaybackButtonProps) => {
 };
 
 export const PlaybackControl = React.memo(
-  ({
-    togglePlay,
-    fullPlayer = false,
-    mobilePlayer = false,
-    ...rest
-  }: PlaybackControlProps) => {
+  ({ fullPlayer, ...rest }: PlaybackControlProps) => {
+    const [player] = useContext(PlayerContext);
     const isPlaying = useStoreState((state) => state.playback.isPlaying);
+    const setIsPlaying = useStoreActions(
+      (actions) => actions.playback.setIsPlaying,
+    );
     const previous = useStoreActions((actions) => actions.playback.previous);
     const next = useStoreActions((actions) => actions.playback.next);
 
@@ -71,10 +68,10 @@ export const PlaybackControl = React.memo(
       <Flex
         justifyContent="center"
         alignItems="center"
-        paddingRight={mobilePlayer ? 2 : 0}
+        pr={isMobile ? 2 : 0}
         {...rest}
       >
-        {mobilePlayer && <ChangePlayerLocationButton size="lg" />}
+        {!fullPlayer && isMobile && <ChangePlayerLocationButton size="lg" />}
         {fullPlayer && !isMobile && (
           <PlaybackButton
             aria-label="Shuffle"
@@ -82,11 +79,11 @@ export const PlaybackControl = React.memo(
             onClick={() => toggleShuffleMode()}
           />
         )}
-        {!mobilePlayer && (
+        {(fullPlayer || !isMobile) && (
           <PlaybackButton
             icon={<FaStepBackward size={sizeMultiplier * 16} />}
             onClick={() => previous()}
-            marginX={3}
+            mx={3}
           />
         )}
         <PlaybackButton
@@ -97,13 +94,16 @@ export const PlaybackControl = React.memo(
               <FaPlay size={sizeMultiplier * 24} />
             )
           }
-          onClick={togglePlay}
+          onClick={() => {
+            setIsPlaying(!isPlaying);
+            isPlaying ? player?.pauseVideo() : player?.playVideo();
+          }}
           padding={sizeMultiplier * 3}
         />
         <PlaybackButton
           icon={<FaStepForward size={sizeMultiplier * 16} />}
           onClick={() => next({ count: 1, userSkipped: true })}
-          marginX={3}
+          mx={3}
         />
         {fullPlayer && !isMobile && (
           <PlaybackButton

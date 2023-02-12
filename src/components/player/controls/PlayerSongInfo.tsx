@@ -13,13 +13,15 @@ import useNamePicker from "../../../modules/common/useNamePicker";
 import { DEFAULT_MENU_ID } from "../../song/SongContextMenu";
 import { SongArtwork } from "../../song/SongArtwork";
 import { SongLikeButton } from "../../song/SongLikeButton";
+import { useStoreState } from "../../../store";
 
 interface SongInfoProps extends StackProps {
   song: Song;
   fullPlayer?: boolean;
 }
+
 export const SongInfo = React.memo(
-  ({ song, fullPlayer = false, ...rest }: SongInfoProps) => {
+  ({ song, fullPlayer, ...rest }: SongInfoProps) => {
     const { show } = useContextMenu({ id: DEFAULT_MENU_ID });
     const tn = useNamePicker();
     const isMobile = useBreakpointValue({ base: true, md: false });
@@ -28,7 +30,7 @@ export const SongInfo = React.memo(
         if (isMobile) return;
         else show(e, { props: song });
       },
-      [isMobile, show, song]
+      [isMobile, show, song],
     );
 
     return (
@@ -74,5 +76,5 @@ export const SongInfo = React.memo(
         />
       </HStack>
     );
-  }
+  },
 );
