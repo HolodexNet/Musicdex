@@ -30,7 +30,7 @@ export const TimeSlider = React.memo(
     const [hovering, setHovering] = useState(false);
 
     useEffect(() => {
-      setProgressSlider(progress);
+      setProgressSlider(Math.max(progress, 0));
     }, [progress]);
 
     return (

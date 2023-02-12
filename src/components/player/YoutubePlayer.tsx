@@ -99,11 +99,9 @@ export const usePlayerStats = () => {
     [currentSong],
   );
 
-  const progress = Math.max(
+  const progress =
     (((currentTime || 0) - (currentSong?.start ?? 0)) * 100) /
-      (totalDuration || 1),
-    0,
-  );
+    (totalDuration || 1);
 
   return {
     totalDuration,

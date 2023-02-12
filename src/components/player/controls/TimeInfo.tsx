@@ -8,8 +8,10 @@ const TimeInfo = React.memo(() => {
 
   return (
     <Text fontSize=".85em" display="inline-block" opacity={0.5}>
-      <span>{formatSeconds((progress / 100) * totalDuration)}</span> /{" "}
-      <span>{formatSeconds(totalDuration)}</span>
+      <span>
+        {formatSeconds((Math.max(progress, 0) / 100) * totalDuration)}
+      </span>{" "}
+      / <span>{formatSeconds(totalDuration)}</span>
     </Text>
   );
 });

@@ -74,10 +74,18 @@ export function Player() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, currentSong, repeat]);
 
+  // Player State Event
+  useEffect(() => {
+    setIsPlaying(
+      state === PlayerStates.BUFFERING || state === PlayerStates.PLAYING,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
+
   // Progress Event
   useEffect(() => {
     // Prevent time from playing before start time
-    if (currentSong && progress <= 0) {
+    if (currentSong && progress < 0) {
       player?.seekTo(currentSong.start, true);
       player?.playVideo();
       return;
@@ -102,6 +110,8 @@ export function Player() {
       return;
     }
 
+    // Progress will never reach 100 because player ended. Video length != song start/end
+    // Example id: KiUvL-rp1zg
     const earlyEnd = state === PlayerStates.ENDED && progress < 100;
     if ((progress >= 100 && state === PlayerStates.PLAYING) || earlyEnd) {
       console.log(
