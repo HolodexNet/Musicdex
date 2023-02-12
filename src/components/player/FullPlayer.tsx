@@ -65,6 +65,8 @@ const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
         h="full"
         drag="y"
         dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={{ top: 0, bottom: 1 }}
+        dragMomentum={false}
         onDragEnd={(event: any, info: PanInfo) => {
           if (info.offset.y > 180) {
             onClose();

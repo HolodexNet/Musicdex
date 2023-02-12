@@ -55,8 +55,9 @@ export function useKeyboardEvents() {
     (e) => {
       e.preventDefault();
       setIsPlaying(!isPlaying);
+      isPlaying ? player?.pauseVideo() : player?.playVideo();
     },
-    [setIsPlaying, isPlaying],
+    [setIsPlaying, isPlaying, player],
   );
 
   // Toggle repeat / shuffle mode
