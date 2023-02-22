@@ -8,6 +8,7 @@ import {
   CloseButton,
   Divider,
   Flex,
+  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -24,14 +25,6 @@ import {
 } from "framer-motion";
 import { MdDragHandle } from "react-icons/md";
 import { Org } from "../../store/org";
-
-export default function OrgManager() {
-  return (
-    <Flex direction="column" flexWrap="wrap">
-      <OrgPickerPanel></OrgPickerPanel>
-    </Flex>
-  );
-}
 
 export function OrgPickerPanel({
   pickOrg,
@@ -92,7 +85,7 @@ export function OrgPickerPanel({
         >
           {orglist
             .filter((x) =>
-              search ? x.toLowerCase().includes(search.toLowerCase()) : true
+              search ? x.toLowerCase().includes(search.toLowerCase()) : true,
             )
             .map((org) => (
               <ReorderableOrgItem
@@ -104,7 +97,7 @@ export function OrgPickerPanel({
         <Divider mt={2} />
         {nonfavs
           ?.filter((x) =>
-            search ? x.name.toLowerCase().includes(search.toLowerCase()) : true
+            search ? x.name.toLowerCase().includes(search.toLowerCase()) : true,
           )
           .map((org) => {
             return (
@@ -193,13 +186,14 @@ function ReorderableOrgItem({
       >
         {org}
       </Button>
-      <MdDragHandle
-        size="30px"
-        width="30px"
-        style={{ marginRight: "0px" }}
+      <Icon
+        as={MdDragHandle}
+        boxSize="30px"
+        mr={0}
+        sx={{ touchAction: "none" }}
         onPointerDown={(e) => controls.start(e)}
         cursor="move"
-      ></MdDragHandle>
+      />
     </Reorder.Item>
   );
 }
