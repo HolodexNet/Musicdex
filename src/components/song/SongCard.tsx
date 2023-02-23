@@ -30,7 +30,7 @@ export const SongCard = ({ song, ...rest }: SongCardProps) => {
       minWidth="128px"
       width="128px"
       direction="column"
-      onContextMenu={(e) => show(e, { props: song })}
+      onContextMenu={(e) => show({ event: e, props: song })}
       {...dragSongProps}
     >
       <Flex position="relative">
