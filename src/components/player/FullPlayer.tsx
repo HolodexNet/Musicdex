@@ -63,6 +63,9 @@ const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
         backdropBrightness="40%"
         w="full"
         h="full"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
         drag="y"
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={{ top: 0, bottom: 1 }}
@@ -83,7 +86,8 @@ const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
           pt={{ base: "max(env(safe-area-inset-top), 1.5rem)", md: 12 }}
           pb={{ base: "max(env(safe-area-inset-bottom), 1.5rem)", md: 12 }}
           h="full"
-          maxW="container.xl"
+          maxH="6xl"
+          maxW={{ md: "8xl", "3xl": "120rem" }}
         >
           <VStack w="full" align="flex-start">
             {isMobile && (
