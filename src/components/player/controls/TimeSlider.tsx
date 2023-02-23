@@ -7,45 +7,58 @@ import {
   SliderProps,
   SliderMark,
 } from "@chakra-ui/react";
-import React from "react";
-import { useState } from "react";
+import React, { useEffect } from "react";
+import { useState, useContext } from "react";
+import { useStoreState } from "../../../store";
 import { formatSeconds } from "../../../utils/SongHelper";
+import { PlayerContext } from "../../layout/Frame";
+import { usePlayerStats } from "../YoutubePlayer";
 
 interface TimeSliderProps extends SliderProps {
-  progress: number;
-  onChange: (e: number) => void;
-  totalDuration: number;
   fullPlayer?: boolean;
 }
 
 export const TimeSlider = React.memo(
-  ({
-    progress,
-    onChange,
-    totalDuration,
-    fullPlayer = false,
-    ...rest
-  }: TimeSliderProps) => {
+  ({ fullPlayer = false, ...rest }: TimeSliderProps) => {
+    const [player] = useContext(PlayerContext);
+    const { totalDuration, progress } = usePlayerStats();
+    const currentSong = useStoreState(
+      (state) => state.playback.currentlyPlaying.song,
+    );
+
+    const [progressSlider, setProgressSlider] = useState(0);
     const [hovering, setHovering] = useState(false);
+
+    useEffect(() => {
+      setProgressSlider(Math.max(progress, 0));
+    }, [progress]);
+
     return (
       <Slider
         defaultValue={0}
         step={0.1}
         min={0}
         max={100}
-        value={progress}
+        value={progressSlider}
         itemID="main-slider"
         colorScheme="blue"
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
-        onChange={onChange}
+        onChange={(value) => {
+          if (!currentSong) return;
+          setProgressSlider(value);
+          player?.seekTo(
+            currentSong.start + (value / 100) * totalDuration,
+            true,
+          );
+        }}
         focusThumbOnChange={false}
         {...rest}
       >
         {fullPlayer && (
           <>
             <SliderMark value={0} mt="1" fontSize="md">
-              {formatSeconds((progress / 100) * totalDuration)}
+              {formatSeconds((progressSlider / 100) * totalDuration)}
             </SliderMark>
             <SliderMark value={100} mt="1" ml="-1.75rem" fontSize="md">
               {formatSeconds(totalDuration)}
@@ -57,9 +70,7 @@ export const TimeSlider = React.memo(
           height={hovering ? "10px" : "6px"}
           transition="height var(--chakra-transition-duration-fast) ease-in"
         >
-          <SliderFilledTrack
-            background={`linear-gradient(to right, var(--chakra-colors-brand-400), var(--chakra-colors-n2-400))`}
-          />
+          <SliderFilledTrack bgGradient="linear(to-r, brand.400, n2.400)" />
         </SliderTrack>
         <Tooltip
           hasArrow
@@ -67,7 +78,9 @@ export const TimeSlider = React.memo(
           color="white"
           placement="top"
           isOpen={hovering}
-          label={<span>{formatSeconds((progress / 100) * totalDuration)}</span>}
+          label={
+            <span>{formatSeconds((progressSlider / 100) * totalDuration)}</span>
+          }
         >
           <SliderThumb
             opacity={hovering || fullPlayer ? 1 : 0}
@@ -76,5 +89,5 @@ export const TimeSlider = React.memo(
         </Tooltip>
       </Slider>
     );
-  }
+  },
 );
