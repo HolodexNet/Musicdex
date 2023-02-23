@@ -31,15 +31,20 @@
   height: 100%;
 }
 
-.react-contexify__theme--dark .react-contexify__separator {
-  background-color: #777;
-}
-.react-contexify__theme--light .react-contexify__separator {
-  background-color: #666;
+.contexify {
+  --contexify-menu-padding: 6px 0px;
+  --contexify-menu-shadow: 0px 10px 20px -2px rgba(0, 0, 0, 0.5);
+  --contexify-itemContent-padding: 6px 12px;
+  --contexify-activeItem-bgColor: rgba(255, 255, 255, 0.16);
+  --contexify-activeItem-radius: 0px;
 }
 
-.react-contexify {
-  box-shadow: 0px 10px 20px -2px rgba(0, 0, 0, 0.5);
+.contexify_theme-dark {
+  --contexify-separator-color: #777;
+}
+
+.contexify_theme-light {
+  --contexify-separator-color: #666;
 }
 
 .chakra-heading:not(a *):not(button *) {

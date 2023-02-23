@@ -1,5 +1,4 @@
-import "react-contexify/dist/ReactContexify.css";
-
+import "react-contexify/ReactContexify.css";
 import { ChakraProvider } from "@chakra-ui/react";
 // import {
 //   HyperThemeEditor,
@@ -28,7 +27,7 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { HelmetProvider } from "react-helmet-async";
 
 console.log(
-  `VERSION: ${process.env.REACT_APP_NAME} ${process.env.REACT_APP_VERSION}`
+  `VERSION: ${process.env.REACT_APP_NAME} ${process.env.REACT_APP_VERSION}`,
 );
 (window as any)["App_Version"] = process.env.REACT_APP_VERSION;
 
@@ -53,7 +52,7 @@ store.persist.resolveRehydration().then(() => {
           </HelmetProvider>
         </QueryClientProvider>
       </ChakraProvider>
-    </StoreProviderReact18Casted>
+    </StoreProviderReact18Casted>,
   );
 });
 

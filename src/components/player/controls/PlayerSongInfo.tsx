@@ -26,13 +26,13 @@ export const SongInfo = React.memo(
     const mobileArtClick: React.MouseEventHandler = useCallback(
       (e) => {
         if (isMobile) return;
-        else show(e, { props: song });
+        else show({ event: e, props: song });
       },
-      [isMobile, show, song]
+      [isMobile, show, song],
     );
 
     return (
-      <HStack onContextMenu={(e) => show(e, { props: song })} {...rest}>
+      <HStack onContextMenu={(e) => show({ event: e, props: song })} {...rest}>
         <SongArtwork
           song={song}
           size={fullPlayer ? 70 : 50}
@@ -74,5 +74,5 @@ export const SongInfo = React.memo(
         />
       </HStack>
     );
-  }
+  },
 );
