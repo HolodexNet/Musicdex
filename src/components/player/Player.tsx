@@ -112,7 +112,8 @@ export function Player() {
 
     // Progress will never reach 100 because player ended. Video length != song start/end
     // Example id: KiUvL-rp1zg
-    const earlyEnd = state === PlayerStates.ENDED && progress < 100;
+    const earlyEnd =
+      currentSong && state === PlayerStates.ENDED && progress < 100;
     if ((progress >= 100 && state === PlayerStates.PLAYING) || earlyEnd) {
       console.log(
         `[Player] Auto advancing due to ${
