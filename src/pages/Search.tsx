@@ -16,7 +16,7 @@ import {
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiMovie, BiMoviePlay } from "react-icons/bi";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -26,6 +26,7 @@ import { GeneralSearchInput } from "../components/search/GeneralSearchInput";
 import { CheckboxSearchList } from "../components/search/CheckboxSearchList";
 import { RadioButtonSearchList } from "../components/search/RadioButtonSearchList";
 import { ToggleButtonSearchInput } from "../components/search/ToggleButtonSearchInput";
+import { useLocalStorage } from "../store/adhoc";
 
 const debounceValue = 1000;
 
@@ -67,6 +68,24 @@ const SearchResultSongTable = ({
 
 export default function Search() {
   const { t } = useTranslation();
+  const sortOptions = useMemo(
+    () => [
+      { dataField: "_score", sortBy: "desc", label: t("Relevance") },
+      { dataField: "available_at", sortBy: "desc", label: t("Latest") },
+      { dataField: "available_at", sortBy: "asc", label: t("Oldest") },
+    ],
+    [t],
+  );
+  const [defaultSort, setDefaultSort] = useLocalStorage(
+    "defaultSort",
+    t("Relevance"),
+  );
+  const defaultSortField = useMemo(() => {
+    return (
+      sortOptions.find((x) => x.label === defaultSort)?.label ||
+      sortOptions[0].label
+    );
+  }, [sortOptions, defaultSort]);
   const [suborgVisible, setSuborgVisible] = useState(false);
   const navigate = useNavigate();
   const [channelSelected, setChannelSelected] = useState(false);
@@ -79,6 +98,16 @@ export default function Search() {
     xl: "nowrap",
   });
 
+  // this system sets up some loose reactivity regarding org and suborg block visibility.
+  const [params] = useSearchParams();
+  useEffect(() => {
+    const ch = params.get("ch");
+    const org = params.get("org");
+
+    setChannelSelected(!!ch);
+    setSuborgVisible(!!org);
+  }, [params]);
+
   const getGeneralQuery = useCallback((value: string) => {
     if (!value) return {};
 
@@ -87,12 +116,13 @@ export default function Search() {
         multi_match: {
           query: value,
           fields: [
-            "general",
-            "general.romaji",
-            "original_artist",
-            "original_artist.romaji",
+            "general^3",
+            "general.romaji^0.5",
+            "original_artist^2",
+            "original_artist.romaji^0.5",
           ],
-          type: "phrase",
+          type: "most_fields",
+          // type: "phrase",
         },
       },
     };
@@ -106,7 +136,7 @@ export default function Search() {
         multi_match: {
           query: value,
           fields: ["name.ngram", "name"],
-          type: "phrase",
+          type: "most_fields",
         },
       },
     };
@@ -124,7 +154,7 @@ export default function Search() {
             "original_artist^2",
             "original_artist.romaji^0.5",
           ],
-          type: "phrase",
+          type: "most_fields",
         },
       },
     };
@@ -166,6 +196,7 @@ export default function Search() {
                 debounceValue={debounceValue}
                 placeholder={t("Search for Music / Artist")}
                 getQuery={getGeneralQuery}
+                autoFocus
                 {...props}
               />
             )}
@@ -253,7 +284,7 @@ export default function Search() {
                       },
                     })}
                     render={(props) => {
-                      setChannelSelected(props.value?.length > 0);
+                      // setChannelSelected(props.value?.length > 0);
                       return (
                         <CheckboxSearchList
                           dataField="channel.name"
@@ -283,7 +314,7 @@ export default function Search() {
                         },
                       })}
                       render={(props) => {
-                        setSuborgVisible(!!props.value);
+                        // setSuborgVisible(!!props.value);
                         return (
                           <RadioButtonSearchList
                             dataField="org"
@@ -357,16 +388,22 @@ export default function Search() {
             pagination
             showLoader
             size={12}
-            sortOptions={[
-              { dataField: "_score", sortBy: "desc", label: t("Relevance") },
-              { dataField: "available_at", sortBy: "desc", label: t("Latest") },
-              { dataField: "available_at", sortBy: "asc", label: t("Oldest") },
-            ]}
+            sortOptions={sortOptions}
+            defaultSortOption={defaultSortField}
             innerClass={{
               sortOptions: "sort-select",
               pagination: "custom-chakra-button",
             }}
             render={SearchResultSongTable}
+            onQueryChange={(thisQ, next) => {
+              const datafield = Object.keys(next.sort[0])[0];
+              const sort = next.sort[0][datafield].order;
+              setDefaultSort(
+                sortOptions.find(
+                  (x) => x.dataField === datafield && x.sortBy === sort,
+                )?.label || "unset",
+              );
+            }}
           />
         </VStack>
       </Flex>

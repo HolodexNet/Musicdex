@@ -9,6 +9,9 @@ export interface PlaylistModel {
   clearPlaylistCreateDialog: Action<PlaylistModel, void>;
   showPlaylistAddDialog: Action<PlaylistModel, Song[] | Song>;
   clearPlaylistAddDialog: Action<PlaylistModel, void>;
+
+  playlistList: string[];
+  setPlaylistList: Action<PlaylistModel, string[]>;
 }
 
 const playlistModel: PlaylistModel = {
@@ -30,6 +33,11 @@ const playlistModel: PlaylistModel = {
   clearPlaylistAddDialog: action((state) => {
     state.addDialogShow = false;
     state.songToAdd = undefined;
+  }),
+
+  playlistList: [],
+  setPlaylistList: action((state, order) => {
+    state.playlistList = order;
   }),
 };
 

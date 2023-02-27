@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Stack, Select, RadioGroup, Radio, Box, Icon } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { FaHeart } from "react-icons/fa";
@@ -6,39 +7,46 @@ import { SettingsSection } from "./SettingsSection";
 
 export function LanguageSettings() {
   const { t, i18n } = useTranslation();
-  const displayLangPrefs = [
-    { value: "en", display: "English", credit: "@Holodex" },
-    { value: "en-GB", display: "English (British)", credit: "@Holodex" },
-    {
-      value: "ja-JP",
-      display: "日本語",
-      credit: "Saginomiya#2353, ぴーまん#2976",
-    },
-    { value: "zh-TW", display: "繁體中文", credit: "angel84326#7887" },
-    { value: "zh-CN", display: "简体中文", credit: "ttg#6038" },
-    { value: "ko-KR", display: "한국어", credit: "AlexKoala#0253" },
-    // { value: "es", display: "Español Latino", credit: "Aldo#3682" },
-    // { value: "ms", display: "Bahasa Melayu", credit: "Admiy#8261" },
-    { value: "id-ID", display: "Bahasa Indonesia", credit: "alcyneous#2803" },
-    // { value: "ru", display: "Русский язык", credit: "kirillbarnaul#8499" },
-    // { value: "pt", display: "Português Brasileiro", credit: "Ash Niartis#5090" },
-    {
-      value: "de-DE",
-      display: "Deutsch",
-      credit: "Doubleturtle#3660",
-    },
-    // { value: "it", display: "Italiano", credit: "テオさん#0139" },
-    { value: "tr-TR", display: "Türkçe", credit: "creeperkafasipw#1861" },
-    { value: "vi-VN", display: "Tiếng Việt", credit: "Frincess" },
-    { value: "hu-HU", display: "Magyar", credit: "kuroihikikomori#7216" },
-    // { value: "th", display: "ไทย", credit: "SnowNeko#0282" },
-    // { value: "cimode", display: "Internal Translation Use" },
-  ];
+  const displayLangPrefs = useMemo(
+    () => [
+      { value: "en", display: "English", credit: "@Holodex" },
+      { value: "en-GB", display: "English (British)", credit: "@Holodex" },
+      { value: "lol-PEKO", display: "English (PEKO)", credit: "@Holodex" },
+      {
+        value: "ja-JP",
+        display: "日本語",
+        credit: "Saginomiya#2353, ぴーまん#2976",
+      },
+      { value: "zh-TW", display: "繁體中文", credit: "angel84326#7887" },
+      { value: "zh-CN", display: "简体中文", credit: "ttg#6038" },
+      { value: "ko-KR", display: "한국어", credit: "AlexKoala#0253" },
+      { value: "es-MX", display: "Español Latino", credit: "Aldo#3682" },
+      { value: "ms-MY", display: "Bahasa Melayu", credit: "Admiy#8261" },
+      { value: "id-ID", display: "Bahasa Indonesia", credit: "alcyneous#2803" },
+      // { value: "ru", display: "Русский язык", credit: "kirillbarnaul#8499" },
+      // { value: "pt", display: "Português Brasileiro", credit: "Ash Niartis#5090" },
+      {
+        value: "de-DE",
+        display: "Deutsch",
+        credit: "Doubleturtle#3660",
+      },
+      // { value: "it", display: "Italiano", credit: "テオさん#0139" },
+      { value: "tr-TR", display: "Türkçe", credit: "creeperkafasipw#1861" },
+      { value: "vi-VN", display: "Tiếng Việt", credit: "Frincess" },
+      { value: "hu-HU", display: "Magyar", credit: "kuroihikikomori#7216" },
+      // { value: "th", display: "ไทย", credit: "SnowNeko#0282" },
+      // { value: "cimode", display: "Internal Translation Use" },
+    ],
+    [],
+  );
 
-  const channelNamePrefs = [
-    { value: "english_name", display: t("English") },
-    { value: "name", display: t("Original Name on YouTube (Japanese, etc)") },
-  ];
+  const channelNamePrefs = useMemo(
+    () => [
+      { value: "english_name", display: t("English") },
+      { value: "name", display: t("Original Name on YouTube (Japanese, etc)") },
+    ],
+    [t],
+  );
 
   const useEN = useStoreState((s) => s.settings.useEN);
   const changeUseEN = useStoreActions((s) => s.settings.setUseEN);

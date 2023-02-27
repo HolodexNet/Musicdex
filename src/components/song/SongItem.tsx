@@ -32,7 +32,7 @@ export const SongItem = ({ song, showChannelImg, ...rest }: SongItemProps) => {
       {...rest}
       {...dragSongProps}
       onContextMenu={(e) => {
-        show(e, { props: song });
+        show({ event: e, props: song });
       }}
     >
       <SongArtwork song={song} size={50} />

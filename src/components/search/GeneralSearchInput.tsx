@@ -5,7 +5,7 @@ import {
   InputRightElement,
   Tag,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RiSearch2Line } from "react-icons/ri";
 import { useDebounce } from "use-debounce";
@@ -17,6 +17,7 @@ interface GeneralInputProps {
   setQuery: (query: { value?: string; query?: any; opts?: any }) => void;
   value: string | null;
   tagLabel?: string;
+  autoFocus?: boolean;
 }
 
 export const GeneralSearchInput = ({
@@ -26,9 +27,10 @@ export const GeneralSearchInput = ({
   setQuery,
   value,
   tagLabel,
+  autoFocus,
 }: GeneralInputProps) => {
   const { t } = useTranslation();
-  const [searchText, setSearchText] = useState<string>(value!);
+  const [searchText, setSearchText] = useState<string>(value || "");
   const [debouncedSearchText, { flush }] = useDebounce(
     searchText,
     debounceValue,
@@ -43,8 +45,15 @@ export const GeneralSearchInput = ({
 
   // Support resetting from SelectedFilters
   useEffect(() => {
-    if (value === null) setSearchText("");
+    setSearchText(value || "");
   }, [value]);
+
+  const changed = useCallback(
+    (e: any) => {
+      setSearchText(e.target.value);
+    },
+    [setSearchText],
+  );
 
   return (
     <>
@@ -62,8 +71,9 @@ export const GeneralSearchInput = ({
         <InputGroup>
           <Input
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={changed}
             placeholder={placeholder}
+            autoFocus={autoFocus}
           ></Input>
           <InputRightElement>
             <IconButton

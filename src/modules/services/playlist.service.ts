@@ -14,7 +14,7 @@ export const usePlaylistWriter = (
     WriteablePlaylist,
     unknown,
     Partial<WriteablePlaylist>
-  > = {}
+  > = {},
 ) => {
   const { AxiosInstance } = useClient();
   const queryClient = useQueryClient();
@@ -37,7 +37,7 @@ export const usePlaylistWriter = (
           callbacks.onSuccess(data, payload, ...rest);
         }
       },
-    }
+    },
   );
 };
 
@@ -46,7 +46,7 @@ export const usePlaylistUpdater = (
     any,
     unknown,
     { playlistId: string; song: number | string; action: "add" | "delete" }
-  > = {}
+  > = {},
 ) => {
   const { AxiosInstance } = useClient();
   const queryClient = useQueryClient();
@@ -66,12 +66,12 @@ export const usePlaylistUpdater = (
           config.onSuccess(data, payload, ...rest);
         }
       },
-    }
+    },
   );
 };
 
 export const usePlaylistDeleter = (
-  config: UseMutationOptions<any, unknown, { playlistId: string }> = {}
+  config: UseMutationOptions<any, unknown, { playlistId: string }> = {},
 ) => {
   const { AxiosInstance } = useClient();
   const queryClient = useQueryClient();
@@ -92,13 +92,13 @@ export const usePlaylistDeleter = (
           config.onSuccess(data, payload, ...rest);
         }
       },
-    }
+    },
   );
 };
 
 export const usePlaylist = (
   playlistId: string | undefined,
-  config: UseQueryOptions<PlaylistFull, unknown, PlaylistFull, string[]> = {}
+  config: UseQueryOptions<PlaylistFull, unknown, PlaylistFull, string[]> = {},
 ) => {
   const queryClient = useQueryClient();
   const { AxiosInstance, isLoggedIn, uid } = useClient();
@@ -122,7 +122,7 @@ export const usePlaylist = (
               "If-Modified-Since":
                 cached.updated_at?.toString() ?? cached.updated_at,
             },
-          }
+          },
         ); // try fetching with If-Modified-Since, Server returns 304 if not modified.
 
         // Not logged in, just check cache 304
@@ -143,7 +143,7 @@ export const usePlaylist = (
           playlist.content.forEach((song, index) => {
             queryClient.setQueryData(
               [LIKED_QUERY_KEY, song.id, uid],
-              likeStatus[index]
+              likeStatus[index],
             );
           });
         }
@@ -166,7 +166,7 @@ export const usePlaylist = (
         playlist.content.forEach((song, index) => {
           queryClient.setQueryData(
             [LIKED_QUERY_KEY, song.id, uid],
-            likeStatus[index]
+            likeStatus[index],
           );
         });
       }
@@ -177,7 +177,7 @@ export const usePlaylist = (
       ...DEFAULT_FETCH_CONFIG,
       ...config,
       enabled: playlistId !== undefined,
-    }
+    },
   );
 
   return result;
@@ -185,7 +185,7 @@ export const usePlaylist = (
 
 export const useRadio = (
   radioId: string | undefined,
-  config: UseQueryOptions<PlaylistFull, unknown, PlaylistFull, string[]> = {}
+  config: UseQueryOptions<PlaylistFull, unknown, PlaylistFull, string[]> = {},
 ) => {
   const { AxiosInstance } = useClient();
   const result = useQuery(
@@ -203,7 +203,7 @@ export const useRadio = (
       keepPreviousData: true,
       staleTime: 1000 * 45, // 45s staleness.
       enabled: radioId !== undefined,
-    }
+    },
   );
 
   return result;
@@ -215,7 +215,7 @@ export const useMyPlaylists = (
     unknown,
     PlaylistFull[],
     string[]
-  > = {}
+  > = {},
 ) => {
   const { AxiosInstance, isLoggedIn, uid } = useClient();
 
@@ -229,14 +229,14 @@ export const useMyPlaylists = (
       ).data;
       playlists.sort(
         (a, b) =>
-          new Date(b.updated_at).valueOf() - new Date(a.updated_at).valueOf()
+          new Date(b.updated_at).valueOf() - new Date(a.updated_at).valueOf(),
       );
       return playlists;
     },
     {
       ...DEFAULT_FETCH_CONFIG,
       ...config,
-    }
+    },
   );
 
   return result;
@@ -255,7 +255,7 @@ export const useStarredPlaylists = () => {
     {
       ...DEFAULT_FETCH_CONFIG,
       cacheTime: 1000 * 60 * 60 * 24,
-    }
+    },
   );
 };
 
@@ -264,7 +264,7 @@ export const usePlaylistStarUpdater = (
     any,
     unknown,
     { playlist_id: string; action: "add" | "delete" }
-  > = {}
+  > = {},
 ) => {
   const { AxiosInstance } = useClient();
   const queryClient = useQueryClient();
@@ -288,6 +288,6 @@ export const usePlaylistStarUpdater = (
           callbacks.onSuccess(data, payload, ...rest);
         }
       },
-    }
+    },
   );
 };

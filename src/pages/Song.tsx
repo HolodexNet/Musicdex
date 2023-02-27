@@ -202,7 +202,7 @@ export default function Song() {
                   variant="ghost"
                   colorScheme="n2"
                   aria-label="More"
-                  onClick={(e) => show(e, { props: song })}
+                  onClick={(e) => show({ event: e, props: song })}
                 ></IconButton>
               </HStack>
             </Flex>

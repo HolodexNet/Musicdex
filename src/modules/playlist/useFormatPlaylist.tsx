@@ -5,7 +5,7 @@ import { formatters } from "./formatters";
 
 type PlaylistLike = Partial<PlaylistFull>;
 
-type SGPTypes =
+export type SGPTypes =
   | ":dailyrandom"
   | ":weekly"
   | ":userweekly"
@@ -14,7 +14,7 @@ type SGPTypes =
   | ":latest"
   | ":mv";
 
-type RadioTypes = ":artist" | ":hot";
+export type RadioTypes = ":artist" | ":hot";
 
 const DEFAULT_PARAM_PARSER = (playlistId: string) =>
   parsePlaylistID(playlistId).params;

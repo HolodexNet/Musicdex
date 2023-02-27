@@ -10,7 +10,13 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { FiList, FiShare2, FiTwitter, FiYoutube } from "react-icons/fi";
+import {
+  FiList,
+  FiShare2,
+  FiTwitter,
+  FiYoutube,
+  FiSearch,
+} from "react-icons/fi";
 import { useQuery } from "react-query";
 import { Link, Route, Routes, useParams } from "react-router-dom";
 import { ChannelCard } from "../components/channel/ChannelCard";
@@ -44,7 +50,7 @@ export default function Channel() {
     async (q) => {
       return (await axios.get("/api/v2/channels/" + q.queryKey[1])).data;
     },
-    { ...DEFAULT_FETCH_CONFIG, cacheTime: 600000 /* 10 mins */ }
+    { ...DEFAULT_FETCH_CONFIG, cacheTime: 600000 /* 10 mins */ },
   );
 
   const { data: discovery, ...discoveryStatus } =
@@ -204,6 +210,35 @@ function ChannelSocialButtons({
   );
 }
 
+interface PlaylistButton {
+  label: string;
+  link: string;
+  icon: any;
+}
+
+function getPlaylistButtons({
+  channel,
+  buttons,
+}: {
+  channel: any;
+  buttons: PlaylistButton[];
+}) {
+  return buttons.map((button) => (
+    <Button
+      variant="ghost"
+      size="md"
+      colorScheme="n2"
+      leftIcon={<button.icon />}
+      as={Link}
+      to={button.link}
+      float="right"
+      textTransform="uppercase"
+    >
+      {button.label}
+    </Button>
+  ));
+}
+
 function ChannelContent({
   discovery,
   trending,
@@ -218,6 +253,18 @@ function ChannelContent({
   channel: any;
 }) {
   const { t } = useTranslation();
+  const ButtonData = [
+    {
+      label: "See All Songs",
+      link: "/channel/" + channel.id + "/songs",
+      icon: FiList,
+    },
+    {
+      label: "Search Songs",
+      link: `/searchV2?mode=fuzzy&ch=["${channel.name}"]`,
+      icon: FiSearch,
+    },
+  ];
   return (
     <>
       {trending && (
@@ -246,20 +293,10 @@ function ChannelContent({
                 showArtwork: true,
               }}
               limit={5}
-              appendRight={
-                <Button
-                  variant="ghost"
-                  size="md"
-                  colorScheme="n2"
-                  leftIcon={<FiList />}
-                  as={Link}
-                  to={"/channel/" + channel.id + "/songs"}
-                  float="right"
-                  textTransform="uppercase"
-                >
-                  {t("See All Songs")}
-                </Button>
-              }
+              appendRight={getPlaylistButtons({
+                channel: channel,
+                buttons: ButtonData,
+              })}
             />
           </Box>
         </>

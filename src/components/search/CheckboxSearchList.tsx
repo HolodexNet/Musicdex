@@ -57,7 +57,7 @@ export const CheckboxSearchList = ({
 
   // Support resetting from SelectedFilters
   useEffect(() => {
-    if (value === null) setCheckboxValues([]);
+    setCheckboxValues(value || []);
   }, [value]);
 
   if (!aggregations?.[dataField]?.buckets?.length) {

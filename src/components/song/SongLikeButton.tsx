@@ -69,6 +69,7 @@ export function SongLikeButton({
         variant="ghost"
         opacity={isLiked ? 1 : 0.3}
         aria-label="Like Song"
+        as="a"
         {...rest}
       ></IconButton>
     </motion.button>

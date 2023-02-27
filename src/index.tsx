@@ -1,5 +1,4 @@
-import "react-contexify/dist/ReactContexify.css";
-
+import "react-contexify/ReactContexify.css";
 import { ChakraProvider } from "@chakra-ui/react";
 // import {
 //   HyperThemeEditor,

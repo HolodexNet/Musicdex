@@ -32,7 +32,7 @@ export function UserSettings() {
       onSuccess: (data, payload, ...rest) => {
         refreshUser();
       },
-    }
+    },
   );
   if (!isLoggedIn) {
     return (
@@ -50,7 +50,7 @@ export function UserSettings() {
           type="text"
           ref={ref}
         />
-        <Center w={"full"}>
+        <Center w="full">
           <Button
             bg={"blue.400"}
             maxW={200}

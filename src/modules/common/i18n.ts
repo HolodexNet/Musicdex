@@ -19,12 +19,16 @@ import {
   hu,
   vi,
   tr,
+  ms,
+  id,
+  es,
 } from "date-fns/locale"; // import all locales we need
 import I18NextHttpBackend from "i18next-http-backend";
 
 const locales: { [key: string]: Locale } = {
   en: enUS,
   "en-GB": enGB,
+  "lol-PEKO": enUS,
   ja,
   "ja-JP": ja,
   zh: zhTW,
@@ -35,6 +39,9 @@ const locales: { [key: string]: Locale } = {
   "hu-HU": hu,
   "vi-VN": vi,
   "tr-TR": tr,
+  "ms-MY": ms,
+  "id-ID": id,
+  "es-MX": es,
 }; // used to look up the required locale
 
 const SYSTEM_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -50,17 +57,20 @@ i18n
     saveMissing: true,
     supportedLngs: [
       "en",
+      "en-GB",
       "ja-JP",
-      "id-ID" /*"es-MX",*/,
+      "id-ID",
       "de-DE",
       "hu-HU",
       "ko-KR",
-      // "ms-MY",
+      "ms-MY",
       // "ru-RU",
       "tr-TR",
       "vi-VN",
       "zh-CN",
       "zh-TW",
+      "es-MX",
+      "lol-PEKO",
     ],
     interpolation: {
       escapeValue: false,

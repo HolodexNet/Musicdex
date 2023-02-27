@@ -36,7 +36,7 @@ export const ToggleButtonSearchInput = ({
 
   // Support resetting from SelectedFilters
   useEffect(() => {
-    if (value === null) setButtonValue("");
+    setButtonValue(value || "");
   }, [value]);
 
   return (
@@ -50,6 +50,7 @@ export const ToggleButtonSearchInput = ({
         {buttons.map(({ label, value, icon }) => {
           return (
             <Button
+              key={`search-${label}-btn`}
               colorScheme="brand"
               variant={buttonValue === value ? "solid" : "outline"}
               rightIcon={icon}

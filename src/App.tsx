@@ -4,7 +4,7 @@ import Routes from "./routes";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "./components/common/ErrorFallback";
 import usePageTracking from "./modules/common/usePageTracking";
-import { useClient, useCookieTokenFallback } from "./modules/client";
+import { useCookieTokenFallback, useTokenRefresh } from "./modules/client";
 import { unregister } from "./utils/serviceWorker";
 import { LoadingFullScreen } from "./components/common/GlobalLoadingStatus";
 import { useTranslation } from "react-i18next";
@@ -13,16 +13,9 @@ function App(this: any) {
   // Page tracker suggested via https://stackoverflow.com/a/63249329
   usePageTracking();
   useCookieTokenFallback();
+  useTokenRefresh();
 
   const { ready: translationReady } = useTranslation();
-
-  const { isLoggedIn, refreshUser } = useClient();
-  useEffect(() => {
-    if (isLoggedIn) {
-      refreshUser();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
     // Last resort error boundary
     <ErrorBoundary
