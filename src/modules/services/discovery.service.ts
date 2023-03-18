@@ -1,5 +1,10 @@
 import axios from "axios";
-import { useInfiniteQuery, useQuery } from "react-query";
+import {
+  useInfiniteQuery,
+  UseInfiniteQueryOptions,
+  useQuery,
+} from "react-query";
+import { useClient } from "../client";
 import { DEFAULT_FETCH_CONFIG } from "./defaults";
 
 export function useDiscoveryOrg(org: string) {
@@ -7,15 +12,25 @@ export function useDiscoveryOrg(org: string) {
     ["discoveryOrg", org],
     async (qk) => {
       return (
-        await axios.get(
-          "/api/v2/musicdex/discovery/org/" + qk.queryKey[1] + "/"
+        await axios.get<OrgDiscovery>(
+          "/api/v2/musicdex/discovery/org/" + qk.queryKey[1] + "/",
         )
       ).data;
     },
     {
       ...DEFAULT_FETCH_CONFIG,
       cacheTime: 5 * 60 * 1000, //5 minutes.
-    }
+    },
+  );
+}
+
+export function useDiscoveryFavorites() {
+  const { AxiosInstance, uid } = useClient();
+
+  return useQuery(
+    ["discoveryFavorites", uid],
+    async () =>
+      (await AxiosInstance("/musicdex/discovery/favorites")).data as any,
   );
 }
 
@@ -25,14 +40,14 @@ export function useDiscoveryChannel(channelId: string) {
     async (qk) => {
       return (
         await axios.get(
-          "/api/v2/musicdex/discovery/channel/" + qk.queryKey[1] + "/"
+          "/api/v2/musicdex/discovery/channel/" + qk.queryKey[1] + "/",
         )
       ).data;
     },
     {
       ...DEFAULT_FETCH_CONFIG,
       cacheTime: 5 * 60 * 1000, //5 minutes.
-    }
+    },
   );
 }
 
@@ -42,30 +57,82 @@ export function useDiscoveryChannel(channelId: string) {
  * @param type sgp | ugp | radio
  * @returns
  */
-export function useAllPlaylistDiscovery(org: string, type: string) {
+export function useAllPlaylistDiscoveryForOrg(
+  org: string,
+  type: string,
+  options: UseInfiniteQueryOptions<PlaylistStub[]> = {},
+) {
   return useInfiniteQuery<PlaylistStub[]>(
     ["discoveryPlaylistsAll", org, type],
     async ({ pageParam = 0 }) => {
       const list: any[] = (
-        await axios.get(`/api/v2/musicdex/discovery/org/${org}/playlists`, {
-          params: {
-            type,
-            offset: 100 * pageParam,
+        await axios.get<PlaylistList>(
+          `/api/v2/musicdex/discovery/org/${org}/playlists`,
+          {
+            params: {
+              type,
+              offset: 100 * pageParam,
+            },
           },
-        })
-      ).data?.items;
+        )
+      ).data.items;
       return list;
     },
     {
+      ...options,
       getNextPageParam: (lastPage, pages) =>
         lastPage.length === 100 ? pages.length + 1 : null,
-      keepPreviousData: true,
-      retry: 1,
-      cacheTime: 1000 * 60 * 60 * 5,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      staleTime: 1000 * 60 * 60 * 5,
-      refetchOnReconnect: false,
-    }
+      keepPreviousData: options.keepPreviousData ?? true,
+      retry: options.retry ?? 1,
+      cacheTime: options.cacheTime ?? 1000 * 60 * 60 * 5,
+      refetchOnMount: options.retryOnMount ?? false,
+      refetchOnWindowFocus: options.refetchOnWindowFocus ?? false,
+      staleTime: options.staleTime ?? 1000 * 60 * 60 * 5,
+      refetchOnReconnect: options.refetchOnReconnect ?? false,
+    },
+  );
+}
+
+/**
+ *
+ * @param org which org (name) to lookup
+ * @param type sgp | ugp | radio
+ * @returns
+ */
+export function useAllPlaylistDiscoveryForFavorites(
+  type: string,
+  options: UseInfiniteQueryOptions<PlaylistStub[]> = {},
+) {
+  const { AxiosInstance, isLoggedIn } = useClient();
+
+  return useInfiniteQuery<PlaylistStub[]>(
+    ["discoveryPlaylistsAll", "favorites", type],
+    async ({ pageParam = 0 }) => {
+      const list: any[] = (
+        await AxiosInstance<PlaylistList>(
+          `/musicdex/discovery/favorites/playlists`,
+          {
+            params: {
+              type,
+              offset: 100 * pageParam,
+            },
+          },
+        )
+      ).data.items;
+      return list;
+    },
+    {
+      ...options,
+      enabled: isLoggedIn && options.enabled,
+      getNextPageParam: (lastPage, pages) =>
+        lastPage.length === 100 ? pages.length + 1 : null,
+      keepPreviousData: options.keepPreviousData ?? true,
+      retry: options.retry ?? 1,
+      cacheTime: options.cacheTime ?? 1000 * 60 * 60 * 5,
+      refetchOnMount: options.retryOnMount ?? false,
+      refetchOnWindowFocus: options.refetchOnWindowFocus ?? false,
+      staleTime: options.staleTime ?? 1000 * 60 * 60 * 5,
+      refetchOnReconnect: options.refetchOnReconnect ?? false,
+    },
   );
 }

@@ -12,6 +12,7 @@ import { RequireLogin } from "./components/login/RequireLogin";
 import Channels from "./pages/Channels";
 import { useStoreState } from "./store";
 import SeeMoreCardGrid from "./pages/SeeMoreCardGrid";
+import Favorites from "./pages/Favorites";
 
 const Radio = React.lazy(() => import("./pages/Radio"));
 const Channel = React.lazy(() => import("./pages/Channel"));
@@ -41,19 +42,19 @@ const routes: RouteObject[] = [
   },
   {
     path: "/org/:org/channels",
-    element: <Channels />,
+    element: <Channels type="org" />,
   },
   {
     path: "/org/:org/playlists",
-    element: <SeeMoreCardGrid type="sgp" />,
+    element: <SeeMoreCardGrid type="org" playlistType="sgp" />,
   },
   {
     path: "/org/:org/radios",
-    element: <SeeMoreCardGrid type="radio" />,
+    element: <SeeMoreCardGrid type="org" playlistType="radio" />,
   },
   {
     path: "/org/:org/community",
-    element: <SeeMoreCardGrid type="ugp" />,
+    element: <SeeMoreCardGrid type="org" playlistType="ugp" />,
   },
   {
     path: "/playlists/:playlistId",
@@ -82,6 +83,26 @@ const routes: RouteObject[] = [
         <History />
       </RequireLogin>
     ),
+  },
+  {
+    path: "/favorites",
+    element: (
+      <RequireLogin title={"Favorites"}>
+        <Favorites />
+      </RequireLogin>
+    ),
+  },
+  {
+    path: "/favorites/channels",
+    element: (
+      <RequireLogin title={"Favorite Channels"}>
+        <Channels type="favorites" />
+      </RequireLogin>
+    ),
+  },
+  {
+    path: "/favorites/radios",
+    element: <SeeMoreCardGrid type="favorites" playlistType="radio" />,
   },
   {
     path: "/search",
