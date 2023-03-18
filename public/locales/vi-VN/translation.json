@@ -74,7 +74,6 @@
   "Copied to clipboard": "Đã sao chép vào bộ nhớ tạm",
   "Popular": "Phổ biến",
   "Queue ({{amount}})": "Hàng chờ ({{amount}})",
-  "See All Songs": "Xem mọi bài hát",
   "Latest Streams": "Các stream gần đây nhất",
   "Featuring {{name}}": "Góp mặt bởi {{name}}",
   "Discover more from {{org}}": "Khám phá thêm từ {{org}}",
@@ -175,5 +174,13 @@
   "Oldest": "Oldest",
   "Open on YouTube": "Open on YouTube",
   "Find similar": "Find similar",
-  "You are not logged in": "You're not logged in!"
+  "You are not logged in": "You're not logged in!",
+  "My Weekly Mix": "My Weekly Mix",
+  "Crafted for you based on your listening habits": "Crafted for you based on your listening habits",
+  "Favorites": "Favorites",
+  "Favorite Channels": "Favorite Channels",
+  "Favorites Radios": "Favorites Radios",
+  "Discover Favorites": "Discover Favorites",
+  "Favorites Community Playlists": "Favorites Community Playlists",
+  "Favorites Playlists": "Favorites Playlists"
 }
