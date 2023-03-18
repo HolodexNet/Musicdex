@@ -74,7 +74,6 @@
   "Copied to clipboard": "クリップボードにコピー",
   "Popular": "人気の楽曲",
   "Queue ({{amount}})": "キューに追加 ({{amount}})",
-  "See All Songs": "すべての楽曲を見る",
   "Latest Streams": "最新の配信",
   "Featuring {{name}}": "ここでも聴ける {{name}}",
   "Discover more from {{org}}": "{{org}} の楽曲をもっと見る",
@@ -175,5 +174,13 @@
   "Oldest": "古い順",
   "Open on YouTube": "YouTubeで開く",
   "Find similar": "関連するものを検索",
-  "You are not logged in": "ログインしていません"
+  "You are not logged in": "ログインしていません",
+  "My Weekly Mix": "My Weekly Mix",
+  "Crafted for you based on your listening habits": "Crafted for you based on your listening habits",
+  "Favorites": "Favorites",
+  "Favorite Channels": "Favorite Channels",
+  "Favorites Radios": "Favorites Radios",
+  "Discover Favorites": "Discover Favorites",
+  "Favorites Community Playlists": "Favorites Community Playlists",
+  "Favorites Playlists": "Favorites Playlists"
 }
