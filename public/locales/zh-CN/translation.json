@@ -74,7 +74,6 @@
   "Copied to clipboard": "已复制到剪贴板",
   "Popular": "热门",
   "Queue ({{amount}})": "加入队列 ({{amount}})",
-  "See All Songs": "查看全部歌曲",
   "Latest Streams": "最新的直播",
   "Featuring {{name}}": "精选{{name}}",
   "Discover more from {{org}}": "探索更多来自{{org}}的歌曲",
@@ -175,5 +174,13 @@
   "Oldest": "最早",
   "Open on YouTube": "在Youtube上打开",
   "Find similar": "查找相似...",
-  "You are not logged in": "你尚未登录！"
+  "You are not logged in": "你尚未登录！",
+  "My Weekly Mix": "My Weekly Mix",
+  "Crafted for you based on your listening habits": "Crafted for you based on your listening habits",
+  "Favorites": "Favorites",
+  "Favorite Channels": "Favorite Channels",
+  "Favorites Radios": "Favorites Radios",
+  "Discover Favorites": "Discover Favorites",
+  "Favorites Community Playlists": "Favorites Community Playlists",
+  "Favorites Playlists": "Favorites Playlists"
 }
