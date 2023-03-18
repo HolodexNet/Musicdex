@@ -74,7 +74,6 @@
   "Copied to clipboard": "已複製至剪貼簿",
   "Popular": "熱門歌曲",
   "Queue ({{amount}})": "加入待播清單 ({{amount}})",
-  "See All Songs": "顯示所有歌曲",
   "Latest Streams": "最新實況影片",
   "Featuring {{name}}": "內含 {{name}} 的播放清單",
   "Discover more from {{org}}": "探索更多 {{org}} 的相關歌曲",
@@ -175,5 +174,13 @@
   "Oldest": "新增日期（最舊）",
   "Open on YouTube": "於 YouTube 開啟",
   "Find similar": "搜尋相關歌曲",
-  "You are not logged in": "您尚未登入"
+  "You are not logged in": "您尚未登入",
+  "My Weekly Mix": "My Weekly Mix",
+  "Crafted for you based on your listening habits": "Crafted for you based on your listening habits",
+  "Favorites": "Favorites",
+  "Favorite Channels": "Favorite Channels",
+  "Favorites Radios": "Favorites Radios",
+  "Discover Favorites": "Discover Favorites",
+  "Favorites Community Playlists": "Favorites Community Playlists",
+  "Favorites Playlists": "Favorites Playlists"
 }
