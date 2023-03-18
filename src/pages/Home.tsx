@@ -25,9 +25,8 @@ import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useEffect, useMemo } from "react";
 import { useServerOrgList } from "../modules/services/statics.service";
-import { useQueryState } from "react-router-use-location-state";
 
-const HomeHeading = function ({
+export function HomeHeading({
   children,
   seeMoreTo,
   seeMoreText,
@@ -63,7 +62,7 @@ const HomeHeading = function ({
       )}
     </Heading>
   );
-};
+}
 
 export default function Home() {
   const { t } = useTranslation();
@@ -117,7 +116,7 @@ export default function Home() {
           {isMobile ? (
             <CardCarousel height={210} width={160} scrollMultiplier={2}>
               {discovery?.recentSingingStreams
-                .filter((stream: any) => stream.playlist?.content?.length)
+                ?.filter((stream: any) => stream.playlist?.content?.length)
                 .map((stream: any) => (
                   <PlaylistCard
                     playlist={stream.playlist}

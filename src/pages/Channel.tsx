@@ -1,16 +1,24 @@
+import { useMemo } from "react";
 import {
   Box,
   Button,
+  Grid,
+  GridItem,
   Heading,
   HStack,
   IconButton,
-  SimpleGrid,
   Spacer,
   useBreakpointValue,
-  useColorModeValue,
 } from "@chakra-ui/react";
-import axios from "axios";
-import { FiList, FiShare2, FiTwitter, FiYoutube, FiSearch } from "react-icons/fi";
+import axios, { AxiosError } from "axios";
+import {
+  FiList,
+  FiShare2,
+  FiTwitter,
+  FiYoutube,
+  FiSearch,
+  FiHeart,
+} from "react-icons/fi";
 import { useQuery } from "react-query";
 import { Link, Route, Routes, useParams } from "react-router-dom";
 import { ChannelCard } from "../components/channel/ChannelCard";
@@ -29,22 +37,27 @@ import useNamePicker from "../modules/common/useNamePicker";
 import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
 import { useDiscoveryChannel } from "../modules/services/discovery.service";
 import { useTrendingSongs } from "../modules/services/songs.service";
-import { useStoreActions } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
 import ChannelSongs from "./ChannelSongs";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
+import {
+  useFavorites,
+  useFavoritesUpdater,
+} from "../modules/services/favorite.service";
+import { useClient } from "../modules/client";
 
 export default function Channel() {
+  const { t } = useTranslation();
   let params = useParams();
   let channelId = params.id!;
 
-  const { data: channel, ...channelStatus } = useQuery(
+  const { data: channel, ...channelStatus } = useQuery<Channel, AxiosError>(
     ["channel", channelId],
     async (q) => {
       return (await axios.get("/api/v2/channels/" + q.queryKey[1])).data;
     },
-    { ...DEFAULT_FETCH_CONFIG, cacheTime: 600000 /* 10 mins */ }
+    { ...DEFAULT_FETCH_CONFIG, cacheTime: 600000 /* 10 mins */ },
   );
 
   const { data: discovery, ...discoveryStatus } =
@@ -54,7 +67,6 @@ export default function Channel() {
     channel_id: channelId,
   });
 
-  const bgColor = useColorModeValue("bgAlpha.50", "bgAlpha.900");
   const queueSongs = useSongQueuer();
   const tn = useNamePicker();
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -66,7 +78,7 @@ export default function Channel() {
   )
     return <QueryStatus queryStatus={channelStatus} />;
 
-  const name = tn(channel.english_name, channel.name) ?? "";
+  const name = tn(channel?.english_name, channel?.name) ?? "";
 
   return (
     <PageContainer>
@@ -78,28 +90,29 @@ export default function Channel() {
           banner_url={`https://i.ytimg.com/vi/${discovery?.recentSingingStreams?.[0].video.id}/sddefault.jpg`}
           height="33vh"
           blur
-        ></BGImg>
+        />
       </BGImgContainer>
 
       <HStack
         mx={isMobile ? 2 : 6}
         my={6}
         flexWrap={isMobile ? "wrap" : "unset"}
+        rowGap={4}
       >
         <HStack>
           <ChannelPhoto
-            channelId={channel.id}
+            channelId={channel?.id}
             resizePhoto={isMobile ? 100 : 150}
             size={isMobile ? "xl" : "2xl"}
             borderRadius={4}
             mr={isMobile ? 2 : 6}
             shadow="xl"
           ></ChannelPhoto>
-          <Link to={`/?org=${encodeURIComponent(channel.org)}`}>
+          <Link to={`/?org=${encodeURIComponent(channel?.org ?? "")}`}>
             <PlaylistHeading
               title={name}
               description={
-                channel.org +
+                channel?.org +
                 (channel?.suborg?.slice(2)
                   ? " — " + channel?.suborg?.slice(2)
                   : "")
@@ -139,10 +152,20 @@ function ChannelSocialButtons({
   channel,
 }: {
   isMobile: boolean | undefined;
-  channel: any;
+  channel: Channel | undefined;
 }) {
+  const { isLoggedIn } = useClient();
   const { t } = useTranslation();
   const copy = useClipboardWithToast();
+  const { data: favorites } = useFavorites();
+  const { mutate } = useFavoritesUpdater();
+
+  const isFavorited = favorites
+    ?.map((channel) => channel.id)
+    .includes(channel?.id ?? "");
+  const favoriteBtnText = isFavorited
+    ? "Remove from Favorites"
+    : "Add to Favorites";
 
   const style = {
     color: "white",
@@ -155,11 +178,35 @@ function ChannelSocialButtons({
     },
   };
   return (
-    <SimpleGrid
-      spacing={isMobile ? 4 : 2}
-      columns={isMobile ? 4 : 2}
+    <Grid
+      gap={isMobile ? 4 : 2}
+      templateRows="repeat(2, 1fr)"
+      templateColumns={
+        isMobile || isFavorited ? "repeat(4, 1fr)" : "repeat(2, 1fr)"
+      }
       {...(isMobile ? { pt: 2, mb: -2, width: "100%", pr: "0.5rem" } : {})}
     >
+      {isLoggedIn && (
+        <GridItem colStart={1} colEnd={5}>
+          <Button
+            {...style}
+            bgColor={isFavorited ? "n2.700" : style.bgColor}
+            w="full"
+            leftIcon={<FiHeart />}
+            onClick={() => {
+              channel &&
+                mutate({
+                  channelId: channel.id,
+                  action: isFavorited ? "remove" : "add",
+                });
+            }}
+            aria-label={favoriteBtnText}
+            title={t(favoriteBtnText)}
+          >
+            {t(favoriteBtnText)}
+          </Button>
+        </GridItem>
+      )}
       <IconButton
         {...style}
         icon={<FiShare2 />}
@@ -175,7 +222,7 @@ function ChannelSocialButtons({
         aria-label="Holodex"
         title={t("Open in Holodex")}
         as="a"
-        href={"https://holodex.net/channel/" + channel.id}
+        href={"https://holodex.net/channel/" + channel?.id}
         target="_blank"
       />
       <IconButton
@@ -185,10 +232,10 @@ function ChannelSocialButtons({
         aria-label="YouTube"
         title="YouTube"
         as="a"
-        href={"https://youtube.com/channel/" + channel.id}
+        href={"https://youtube.com/channel/" + channel?.id}
         target="_blank"
       />
-      {channel.twitter && (
+      {channel?.twitter && (
         <IconButton
           {...style}
           color="twitter.100"
@@ -196,41 +243,40 @@ function ChannelSocialButtons({
           aria-label="Twitter"
           title="Twitter"
           as="a"
-          href={"https://twitter.com/" + channel.twitter}
+          href={"https://twitter.com/" + channel?.twitter}
           target="_blank"
         />
       )}
-    </SimpleGrid>
+    </Grid>
   );
 }
 
 interface PlaylistButton {
-  label: string,
-  link: string,
-  icon: any,
+  label: string;
+  link: string;
+  icon: any;
 }
 
-function getPlaylistButtons({
-  channel,
-  buttons,
-}: {
-  channel: any,
-  buttons: PlaylistButton[],
-}) {
-  return (buttons.map( button =>
-      <Button
-      variant="ghost"
-      size="md"
-      colorScheme="n2"
-      leftIcon={<button.icon />}
-      as={Link}
-      to={button.link}
-      float="right"
-      textTransform="uppercase"
-      >
-        {button.label}
-      </Button>
-  ));
+function PlaylistButtons({ buttons }: { buttons: PlaylistButton[] }) {
+  const { t } = useTranslation();
+  return (
+    <>
+      {buttons.map((button) => (
+        <Button
+          variant="ghost"
+          size="md"
+          colorScheme="n2"
+          leftIcon={<button.icon />}
+          as={Link}
+          to={button.link}
+          float="right"
+          textTransform="uppercase"
+        >
+          {t(button.label)}
+        </Button>
+      ))}
+    </>
+  );
 }
 
 function ChannelContent({
@@ -244,13 +290,26 @@ function ChannelContent({
   trending: Song[] | undefined;
   queueSongs: (_: { songs: Song[]; immediatelyPlay: boolean }) => void;
   name: any;
-  channel: any;
+  channel?: Channel;
 }) {
   const { t } = useTranslation();
-  const ButtonData = [
-    {label: "See All Songs", link: "/channel/" + channel.id + "/songs", icon: FiList}, 
-    {label: "Search Songs", link: `/searchV2?mode=fuzzy&ch=["${channel.name}"]`, icon: FiSearch}
-  ];
+
+  const buttonData = useMemo(
+    () => [
+      {
+        label: "See All Songs",
+        link: "/channel/" + channel?.id + "/songs",
+        icon: FiList,
+      },
+      {
+        label: "Search Songs",
+        link: `/searchV2?mode=fuzzy&ch=["${channel?.name}"]`,
+        icon: FiSearch,
+      },
+    ],
+    [channel],
+  );
+
   return (
     <>
       {trending && (
@@ -279,7 +338,7 @@ function ChannelContent({
                 showArtwork: true,
               }}
               limit={5}
-              appendRight={getPlaylistButtons({ channel: channel, buttons: ButtonData})}
+              appendRight={<PlaylistButtons buttons={buttonData} />}
             />
           </Box>
         </>
@@ -321,7 +380,7 @@ function ChannelContent({
         </>
       )}
       <Heading size="md" mt={4} mb={2}>
-        {t("Discover more from {{org}}", { org: channel.org })}
+        {t("Discover more from {{org}}", { org: channel?.org })}
       </Heading>
       {discovery && (
         <CardCarousel height={180} width={160} scrollMultiplier={4}>

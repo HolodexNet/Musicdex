@@ -20,26 +20,26 @@ import { VideoPlaylistCard } from "./VideoPlaylistCard";
 export function VideoPlaylistCarousel({
   videoPlaylists,
 }: {
-  videoPlaylists?: { playlist: PlaylistFull; video: any }[];
+  videoPlaylists?: { playlist?: PlaylistFull; video: any }[];
 }) {
   const snapList = useRef(null);
 
   const visible = useVisibleElements(
     { debounce: 10, ref: snapList },
-    ([element]) => element
+    ([element]) => element,
   );
   const goToSnapItem = useScroll({ ref: snapList });
 
   const [currentItemAuto, setCurrentItemAuto] = useState(0);
 
   const currentlyPlayingPlaylistId = useStoreState(
-    (store) => store.playback.currentPlaylist?.id
+    (store) => store.playback.currentPlaylist?.id,
   );
 
   const playingFromIdx = useMemo(() => {
     return (
       videoPlaylists?.findIndex(
-        (x) => x?.playlist?.id === currentlyPlayingPlaylistId
+        (x) => x?.playlist?.id === currentlyPlayingPlaylistId,
       ) || -1
     );
   }, [currentlyPlayingPlaylistId, videoPlaylists]);
