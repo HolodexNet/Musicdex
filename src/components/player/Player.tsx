@@ -30,7 +30,7 @@ export function Player() {
 
   const { mutate: trackSong } = useTrackSong();
 
-  const { state, setError, hasError } = usePlayer();
+  const { currentVideo, currentTime, state, setError, hasError } = usePlayer();
 
   // Keyboard controls
   useKeyboardEvents();
@@ -54,14 +54,6 @@ export function Player() {
     [player, currentSong],
   );
 
-  // keep the song that the page loaded on paused
-  useEffect(() => {
-    if (currentSong) {
-      setIsPlaying(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // CurrentSong/repeat update event
   useEffect(() => {
     if (currentSong) {
@@ -84,27 +76,30 @@ export function Player() {
 
   // Progress Event
   useEffect(() => {
+    if (
+      !player ||
+      !currentSong ||
+      currentTime === undefined ||
+      currentSong.video_id !== currentVideo
+    )
+      return;
+
     // Prevent time from playing before start time
-    if (currentSong && progress < 0) {
+    if (progress < 0) {
       player?.seekTo(currentSong.start, true);
       player?.playVideo();
       return;
     }
 
     // Track song to history if the song has listened > 80%
-    if (
-      currentSong &&
-      progress > 80 &&
-      progress < 105 &&
-      !trackedSongs.has(currentSong.id)
-    ) {
+    if (progress > 80 && progress < 105 && !trackedSongs.has(currentSong.id)) {
       console.log("[Player] Track song play: ", currentSong.name);
       trackedSongs.add(currentSong.id);
       trackSong({ song_id: currentSong.id });
     }
 
     // Something caused it to skip far ahead (e.g. user scrubbed, song time changed on the same video)
-    if (currentSong && progress > 105) {
+    if (progress > 105) {
       loadVideoAtTime(currentSong.video_id, currentSong.start);
       player?.playVideo();
       return;

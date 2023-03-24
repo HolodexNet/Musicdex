@@ -10,6 +10,7 @@ import {
   Spacer,
   IconButton,
   Flex,
+  Collapse,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IconType } from "react-icons";
@@ -32,7 +33,6 @@ import { NavItem } from "./NavItem";
 import { OrgSelector, useOrgPath } from "./OrgSelector";
 import { useLocation } from "react-router-dom";
 import { useStoreActions, useStoreState } from "../../store";
-import { AnimatePresence } from "framer-motion";
 import { Suspense, useMemo, useState, useCallback } from "react";
 import { PlaylistList } from "../playlist/PlaylistList";
 import { LogoWithText } from "./LogoWithText";
@@ -64,8 +64,9 @@ export function SidebarContent({
   const { t } = useTranslation();
   const pages: LinkItemProps[] = useMemo(
     () => [
+      { name: t("Favorites"), icon: FiHeart, path: "/favorites" },
       { name: t("Recently Played"), icon: FiClock, path: "/history" },
-      { name: t("Liked Songs"), icon: FiHeart, path: "/liked" },
+      // { name: t("Liked Songs"), icon: FiHeart, path: "/liked" },
       { name: t("Settings"), icon: FiSettings, path: "/settings" },
     ],
     [t],
@@ -109,9 +110,9 @@ export function SidebarContent({
       <NavItem icon={FiHome} key={"Home"} mb={1} path={orgPath}>
         {t("Home")}
       </NavItem>
-      <AnimatePresence>
-        {pathname.startsWith("/org/") && <OrgSelector />}
-      </AnimatePresence>
+      <Collapse in={pathname.startsWith("/org/")}>
+        <OrgSelector />
+      </Collapse>
       {pages.map((page) => (
         <NavItem {...page} key={page.name} mb={1}>
           {page.name}

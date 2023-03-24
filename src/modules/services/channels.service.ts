@@ -1,5 +1,9 @@
 import axios from "axios";
-import { useInfiniteQuery, useQuery } from "react-query";
+import {
+  useInfiniteQuery,
+  UseInfiniteQueryOptions,
+  useQuery,
+} from "react-query";
 
 /**
  *
@@ -7,7 +11,10 @@ import { useInfiniteQuery, useQuery } from "react-query";
  * @param page page number, start with 0
  * @returns
  */
-export function useChannelListForOrg(org: string) {
+export function useChannelListForOrg(
+  org: string,
+  options?: UseInfiniteQueryOptions<Channel[]>,
+) {
   return useInfiniteQuery<Channel[]>(
     ["channels", org],
     async ({ pageParam = 0 }) => {
@@ -34,7 +41,8 @@ export function useChannelListForOrg(org: string) {
       refetchOnWindowFocus: false,
       staleTime: 1000 * 60 * 60 * 5,
       refetchOnReconnect: false,
-    }
+      ...options,
+    },
   );
 }
 // export function useChannelSearch(partial: string) {

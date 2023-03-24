@@ -80,11 +80,15 @@ const POSITIONS: { [key: string]: ChakraProps } = {
   },
   "full-player": {
     position: "fixed",
-    top: { base: "10vh", md: 12 },
+    top: {
+      base: "10vh",
+      md: "max(calc(50vh - var(--chakra-sizes-xl) + var(--chakra-space-12)), var(--chakra-space-12))",
+    },
     right: { base: undefined, md: "calc(50vw + 1rem)" },
     w: {
       base: "100vw",
-      md: "min(calc(50vw - 2.5rem), calc(var(--chakra-sizes-container-xl) / 2 - 2.5rem))",
+      md: "min(calc(50vw - 2.5rem), calc(var(--chakra-sizes-8xl) / 2 - 2.5rem))",
+      "3xl": "min(calc(50vw - 2.5rem), calc(120rem / 2 - 2.5rem))",
     },
     zIndex: 15,
     sx: {
@@ -111,7 +115,7 @@ export default function Frame({ children }: { children?: ReactNode }) {
 
   // Full player drag value
   const y = useMotionValue(0);
-  const playerY = useTransform(y, [-500, 0, 500], [-500, 0, 500]);
+  const playerY = useTransform(y, [0, 5000], [0, 5000]);
   const opacity = useTransform(y, [0, 500], [1, 0.5]);
 
   const colorMode = useColorModeValue("applight", "appdark");

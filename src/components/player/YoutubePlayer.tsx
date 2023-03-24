@@ -13,7 +13,7 @@ export function YoutubePlayer() {
       opts={{
         playerVars: {
           // https://developers.google.com/youtube/player_parameters
-          // autoplay: 0,
+          autoplay: 0,
           rel: 0,
           modestbranding: 1,
           origin: window.location.origin,
