@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { execSync } from "child_process";
-import { replaceCodePlugin as replace } from "vite-plugin-replace";
 import { VitePWA } from "vite-plugin-pwa";
 
 const proxy = {
@@ -19,20 +18,11 @@ const proxy = {
     "/api": {
       target: "http://localhost:2434/",
       changeOrigin: true,
+      rewrite: (path: string) => path.replace(/^\/api/, ""),
     },
     "/statics": {
       target: "http://localhost:2434/",
       changeOrigin: true,
-    },
-    "^/api/v2": {
-      target: "http://localhost:2434/",
-      changeOrigin: true,
-      rewrite: (path: string) => path.replace(/^\/api\/v2/, "/v2"),
-    },
-    "^/statics": {
-      target: "http://localhost:2434/",
-      changeOrigin: true,
-      rewrite: (path: string) => path.replace(/^\/statics/, "/statics"),
     },
   },
 };
@@ -57,20 +47,12 @@ export default defineConfig({
       ? proxy[process.env.API_TARGET]
       : proxy.staging,
   },
+  define: {
+    GIT_COMMIT_HASH: JSON.stringify(gitCommitHash),
+    GIT_COMMIT_TIMESTAMP: gitCommitTimestamp,
+  },
   plugins: [
     react(),
-    replace({
-      replacements: [
-        {
-          from: "GIT_COMMIT_HASH",
-          to: JSON.stringify(gitCommitHash),
-        },
-        {
-          from: "GIT_COMMIT_TIMESTAMP",
-          to: gitCommitTimestamp,
-        },
-      ],
-    }),
     VitePWA({
       workbox: {
         navigateFallbackDenylist: [
