@@ -55,7 +55,13 @@ const localColors = {
 export const theme = extendTheme(
   {
     breakpoints: {
-      "3xl": "128em",
+      base: "0px",
+      sm: "480px",
+      md: "768px",
+      lg: "960px",
+      xl: "1200px",
+      "2xl": "1536px",
+      "3xl": "1930px",
     },
     config: { initialColorMode: "dark", useSystemColorMode: false },
     colors: localColors,

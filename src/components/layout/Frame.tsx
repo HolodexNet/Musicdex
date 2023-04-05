@@ -120,8 +120,6 @@ export default function Frame({ children }: { children?: ReactNode }) {
 
   const colorMode = useColorModeValue("applight", "appdark");
 
-  const pos = useStoreState((state) => state.player.position);
-  const props = useMemo(() => POSITIONS[pos], [pos]);
   const frameRef = useRef<any>(undefined);
 
   // START: Scroll Set to 0 every navigation
@@ -136,6 +134,12 @@ export default function Frame({ children }: { children?: ReactNode }) {
 
   const currentlyPlaying = useStoreState(
     (state) => state.playback.currentlyPlaying,
+  );
+  const pos = useStoreState((state) => state.player.position);
+
+  const props = useMemo(
+    () => POSITIONS[currentlyPlaying.song ? pos : "hidden"],
+    [pos, currentlyPlaying.song],
   );
 
   const showCreateDialog = useStoreActions(

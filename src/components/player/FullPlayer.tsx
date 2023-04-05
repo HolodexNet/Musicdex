@@ -32,7 +32,6 @@ interface FullPlayerProps {
 
 const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
-
   const currentSong = useStoreState(
     (state) => state.playback.currentlyPlaying.song,
   );
@@ -107,7 +106,13 @@ const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
             <AspectRatio w="100%" pt={{ base: "10vh", md: 0 }} ratio={16 / 9}>
               <Box />
             </AspectRatio>
-            <VStack w="100%" h="100%" align="flex-start" justify="space-evenly">
+            <VStack
+              w="100%"
+              h="100%"
+              maxH="30vh"
+              align="flex-start"
+              justify="space-evenly"
+            >
               <MotionBox>
                 {currentSong && <SongInfo fullPlayer song={currentSong} />}
               </MotionBox>
@@ -128,6 +133,9 @@ const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
                   <PlayerOption fullPlayer justifyContent="center" />
                 </MotionBox>
               )}
+              {/* <div></div>
+              <div></div>  */}
+              {/* Just some empty boxes to push the controls closer together?*/}
             </VStack>
           </VStack>
           {!isMobile && <PlayerBarExpandedRightSide />}
