@@ -74,7 +74,6 @@
   "Copied to clipboard": "In die Zwischenablage kopiert",
   "Popular": "Beliebt",
   "Queue ({{amount}})": "Warteschlange ({{amount}})",
-  "See All Songs": "Alle Lieder anzeigen",
   "Latest Streams": "Neueste Streams",
   "Featuring {{name}}": "Featuring {{name}}",
   "Discover more from {{org}}": "Entdecke mehr von {{org}}",
@@ -175,5 +174,13 @@
   "Oldest": "Alter (steigend)",
   "Open on YouTube": "Auf YouTube öffnen",
   "Find similar": "Ähnliches finden",
-  "You are not logged in": "Du bist nicht angemeldet!"
+  "You are not logged in": "Du bist nicht angemeldet!",
+  "My Weekly Mix": "Mein Wochenmix",
+  "Crafted for you based on your listening habits": "Basierend auf deinen Hörgewohnheiten",
+  "Favorites": "Favoriten",
+  "Favorite Channels": "Lieblingskanäle",
+  "Favorites Radios": "Lieblingsradios",
+  "Discover Favorites": "Favoriten entdecken",
+  "Favorites Community Playlists": "Favoriten-Community-Playlisten",
+  "Favorites Playlists": "Favoriten-Playlisten"
 }

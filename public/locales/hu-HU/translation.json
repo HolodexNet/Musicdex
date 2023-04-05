@@ -74,7 +74,6 @@
   "Copied to clipboard": "Vágólapra másolva",
   "Popular": "Népszerű",
   "Queue ({{amount}})": "Sorban ({{amount}})",
-  "See All Songs": "Minden dal megtekintése",
   "Latest Streams": "Legútóbbi streamek",
   "Featuring {{name}}": "Tartalmazza {{name}}-t",
   "Discover more from {{org}}": "Ismerj meg többet: {{org}}",
@@ -175,5 +174,13 @@
   "Oldest": "Legrégibb",
   "Open on YouTube": "Megnyitás YouTube-on",
   "Find similar": "Hasonlóak",
-  "You are not logged in": "Nem vagy bejelentkezve!"
+  "You are not logged in": "Nem vagy bejelentkezve!",
+  "My Weekly Mix": "My Weekly Mix",
+  "Crafted for you based on your listening habits": "Crafted for you based on your listening habits",
+  "Favorites": "Favorites",
+  "Favorite Channels": "Favorite Channels",
+  "Favorites Radios": "Favorites Radios",
+  "Discover Favorites": "Discover Favorites",
+  "Favorites Community Playlists": "Favorites Community Playlists",
+  "Favorites Playlists": "Favorites Playlists"
 }

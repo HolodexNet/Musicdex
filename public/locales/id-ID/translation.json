@@ -74,7 +74,6 @@
   "Copied to clipboard": "Disalin ke papanklip",
   "Popular": "Populer",
   "Queue ({{amount}})": "Antrean ({{amount}})",
-  "See All Songs": "Lihat Semua Lagu",
   "Latest Streams": "Stream Terbaru",
   "Featuring {{name}}": "Menampilkan {{name}}",
   "Discover more from {{org}}": "Temukan lebih banyak dari {{org}}",
@@ -175,5 +174,13 @@
   "Oldest": "Terlama",
   "Open on YouTube": "Buka di YouTube",
   "Find similar": "Cari yang serupa",
-  "You are not logged in": "Kamu belum masuk!"
+  "You are not logged in": "Kamu belum masuk!",
+  "My Weekly Mix": "My Weekly Mix",
+  "Crafted for you based on your listening habits": "Crafted for you based on your listening habits",
+  "Favorites": "Favorites",
+  "Favorite Channels": "Favorite Channels",
+  "Favorites Radios": "Favorites Radios",
+  "Discover Favorites": "Discover Favorites",
+  "Favorites Community Playlists": "Favorites Community Playlists",
+  "Favorites Playlists": "Favorites Playlists"
 }
