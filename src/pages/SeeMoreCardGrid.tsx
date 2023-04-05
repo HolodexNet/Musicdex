@@ -16,10 +16,19 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { useStoreState } from "../store";
 import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { useAllPlaylistDiscovery } from "../modules/services/discovery.service";
+import {
+  useAllPlaylistDiscoveryForFavorites,
+  useAllPlaylistDiscoveryForOrg,
+} from "../modules/services/discovery.service";
 import { PlaylistCard } from "../components/playlist/PlaylistCard";
 
-export default function Channels({ type }: { type: "ugp" | "sgp" | "radio" }) {
+export default function SeeMoreCardGrid({
+  type,
+  playlistType,
+}: {
+  type: "org" | "favorites";
+  playlistType: "ugp" | "sgp" | "radio";
+}) {
   const { t, i18n } = useTranslation();
   const storeOrg = useStoreState((store) => store.org.currentOrg);
   const { org: paramOrg } = useParams();
@@ -32,26 +41,47 @@ export default function Channels({ type }: { type: "ugp" | "sgp" | "radio" }) {
     hasNextPage,
     status,
     ...rest
-  } = useAllPlaylistDiscovery(org, type);
+  } = useAllPlaylistDiscoveryForOrg(org, playlistType, {
+    enabled: type === "org",
+  });
+
+  const {
+    data: favPlaylistPages,
+    fetchNextPage: fetchFavNextPage,
+    isFetchingNextPage: isFavFetchingNextPage,
+    hasNextPage: hasFavNextPage,
+  } = useAllPlaylistDiscoveryForFavorites(playlistType, {
+    enabled: type === "favorites",
+  });
 
   const pageTitle = useMemo(() => {
-    switch (type) {
-      case "ugp":
-        return t("{{org}} Community Playlists", { org });
-      case "radio":
-        return t("{{org}} Radios", { org });
-      default:
-        return t("{{org}} Playlists", { org });
+    if (type === "org") {
+      switch (playlistType) {
+        case "ugp":
+          return t("{{org}} Community Playlists", { org });
+        case "radio":
+          return t("{{org}} Radios", { org });
+        default:
+          return t("{{org}} Playlists", { org });
+      }
+    } else {
+      switch (playlistType) {
+        case "ugp":
+          return t("Favorites Community Playlists");
+        case "radio":
+          return t("Favorites Radios");
+        default:
+          return t("Favorites Playlists");
+      }
     }
-  }, [org, t, type]);
+  }, [t, org, type, playlistType]);
 
   const playlists = useMemo(
     () =>
-      playlistPages?.pages.reduce<PlaylistStub[]>(
-        (prev, curr) => prev.concat(curr || []),
-        []
-      ),
-    [playlistPages]
+      type === "org"
+        ? playlistPages?.pages.flat() ?? []
+        : favPlaylistPages?.pages.flat() ?? [],
+    [type, playlistPages, favPlaylistPages],
   );
   const navigate = useNavigate();
   return (
@@ -89,9 +119,16 @@ export default function Channels({ type }: { type: "ugp" | "sgp" | "radio" }) {
               <PlaylistCard playlist={p} key={"rec" + p.id} />
             ))}
           </Grid>
-          {hasNextPage && !isFetchingNextPage && (
+          {((hasNextPage && !isFetchingNextPage) ||
+            (hasFavNextPage && !isFavFetchingNextPage)) && (
             <Flex justifyContent={"center"} my={2}>
-              <Button colorScheme="n2" onClick={() => fetchNextPage()}>
+              <Button
+                colorScheme="n2"
+                onClick={() => {
+                  fetchNextPage();
+                  fetchFavNextPage();
+                }}
+              >
                 Load More
               </Button>
             </Flex>

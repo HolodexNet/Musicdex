@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
-import YouTube, { YouTubeProps } from "react-youtube";
-import { YouTubePlayer } from "youtube-player/dist/types";
+import { useCallback, useEffect, useState, useContext, useMemo } from "react";
+import YouTube from "react-youtube";
+import { useStoreState } from "../../store";
+import { PlayerContext } from "../layout/Frame";
 
-export function YoutubePlayer({
-  onReady,
-}: {
-  onReady: YouTubeProps["onReady"];
-}) {
+export function YoutubePlayer() {
+  const [_, setPlayer] = useContext(PlayerContext);
+
   return (
     <YouTube
       className="yt-player"
@@ -14,13 +13,13 @@ export function YoutubePlayer({
       opts={{
         playerVars: {
           // https://developers.google.com/youtube/player_parameters
-          // autoplay: 0,
+          autoplay: 0,
           rel: 0,
           modestbranding: 1,
           origin: window.location.origin,
         },
       }}
-      onReady={onReady}
+      onReady={(e) => setPlayer(e.target)}
       loading="lazy"
     />
   );
@@ -33,7 +32,8 @@ export function getID(url: string | undefined) {
   return url?.match(VideoIDRegex)?.[2] || "";
 }
 
-export function usePlayer(player: YouTubePlayer | null) {
+export function usePlayer() {
+  const [player] = useContext(PlayerContext);
   // const [status, setStatus] =
   //   useState<Partial<typeof INITIALSTATE>>(INITIALSTATE);
   const [currentTime, setCurrentTime] = useState(0);
@@ -41,7 +41,7 @@ export function usePlayer(player: YouTubePlayer | null) {
   const [currentVideo, setCurrentVideo] = useState("");
   const [volume, setVolume] = useState(0);
   const [muted, setMuted] = useState(false);
-  const [state, setState] = useState(0);
+  const [state, setState] = useState(-1);
   const [hasError, setError] = useState(false);
   const errorHandler = useCallback((e: any) => {
     console.warn("PLAYER ERROR OCCURRED", e);
@@ -87,3 +87,24 @@ export function usePlayer(player: YouTubePlayer | null) {
     hasError,
   };
 }
+
+export const usePlayerStats = () => {
+  const { currentTime } = usePlayer();
+  const currentSong = useStoreState(
+    (state) => state.playback.currentlyPlaying.song,
+  );
+
+  const totalDuration = useMemo(
+    () => (currentSong ? currentSong.end - currentSong.start : 0),
+    [currentSong],
+  );
+
+  const progress =
+    (((currentTime || 0) - (currentSong?.start ?? 0)) * 100) /
+    (totalDuration || 1);
+
+  return {
+    totalDuration,
+    progress,
+  };
+};

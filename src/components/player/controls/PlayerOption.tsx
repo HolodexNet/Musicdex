@@ -35,7 +35,7 @@ interface PlayerOptionProps extends FlexProps {
 }
 
 export const PlayerOption = React.memo(
-  ({ fullPlayer = false, ...rest }: PlayerOptionProps) => {
+  ({ fullPlayer, ...rest }: PlayerOptionProps) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
@@ -54,16 +54,16 @@ export const PlayerOption = React.memo(
 
     const shuffleMode = useStoreState((state) => state.playback.shuffleMode);
     const toggleShuffleMode = useStoreActions(
-      (actions) => actions.playback.toggleShuffle
+      (actions) => actions.playback.toggleShuffle,
     );
 
     const repeatMode = useStoreState((state) => state.playback.repeatMode);
     const toggleRepeatMode = useStoreActions(
-      (actions) => actions.playback.toggleRepeat
+      (actions) => actions.playback.toggleRepeat,
     );
 
     const setFullPlayer = useStoreActions(
-      (store) => store.player.setFullPlayer
+      (store) => store.player.setFullPlayer,
     );
     const setPos = useStoreActions((store) => store.player.setOverridePosition);
     const displayFullscreenButton = useBreakpointValue({
@@ -120,5 +120,5 @@ export const PlayerOption = React.memo(
         )}
       </Flex>
     );
-  }
+  },
 );

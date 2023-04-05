@@ -9,7 +9,11 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { VariableSizeList } from "react-window";
-import { DEFAULT_MENU_ID, QUEUE_MENU_ID } from "../../song/SongContextMenu";
+import {
+  DEFAULT_MENU_ID,
+  QUEUE_MENU_ID,
+  SongContextMenu,
+} from "../../song/SongContextMenu";
 import { RowProps, SongRow } from "./SongRow";
 import { useTranslation } from "react-i18next";
 import { SongTableCol, SongTableProps } from ".";
@@ -244,6 +248,7 @@ export const UpcomingSongList = ({
           {renderList}
         </WindowScroller>
       )}
+      <SongContextMenu menuId={QUEUE_MENU_ID} />
     </Box>
   );
 };

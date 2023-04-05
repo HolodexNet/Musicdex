@@ -54,12 +54,30 @@ const localColors = {
 
 export const theme = extendTheme(
   {
+    breakpoints: {
+      "3xl": "128em",
+    },
     config: { initialColorMode: "dark", useSystemColorMode: false },
     colors: localColors,
     fonts: {
-      heading: "Manrope, Sans-Serif",
-      body: "Assistant, Sans-Serif",
+      heading:
+        'Manrope, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto","Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans","Helvetica Neue", Sans-Serif',
+      body: 'Assistant, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto","Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans","Helvetica Neue", Sans-Serif',
+    },
+    styles: {
+      global: {
+        body: {
+          bg: "bg.900",
+          overflow: "hidden",
+          WebkitFontSmoothing: "antialiased",
+          MozOsxFontSmoothing: "grayscale",
+        },
+        "#root": {
+          h: "100vh",
+          overflow: "hidden",
+        },
+      },
     },
   },
-  withDefaultColorScheme({ colorScheme: "brand" })
+  withDefaultColorScheme({ colorScheme: "brand" }),
 );

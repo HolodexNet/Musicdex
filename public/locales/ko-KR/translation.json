@@ -74,7 +74,6 @@
   "Copied to clipboard": "클립보드에 복사됨",
   "Popular": "인기",
   "Queue ({{amount}})": "대기열 ({{amount}})",
-  "See All Songs": "모든 노래 보기",
   "Latest Streams": "마지막 실시간 방송",
   "Featuring {{name}}": "{{name}} 팬이 좋아할 만한 다른 아티스트",
   "Discover more from {{org}}": "{{org}}와 관련이 있는 아티스트",
@@ -175,5 +174,13 @@
   "Oldest": "오래된순",
   "Open on YouTube": "YouTube에서 열기",
   "Find similar": "유사한 노래",
-  "You are not logged in": "로그인되어 있지 않습니다!"
+  "You are not logged in": "로그인되어 있지 않습니다!",
+  "My Weekly Mix": "My Weekly Mix",
+  "Crafted for you based on your listening habits": "Crafted for you based on your listening habits",
+  "Favorites": "Favorites",
+  "Favorite Channels": "Favorite Channels",
+  "Favorites Radios": "Favorites Radios",
+  "Discover Favorites": "Discover Favorites",
+  "Favorites Community Playlists": "Favorites Community Playlists",
+  "Favorites Playlists": "Favorites Playlists"
 }

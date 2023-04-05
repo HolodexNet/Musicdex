@@ -9,7 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import OrgManager from "../components/settings/OrgManagement";
+import { OrgPickerPanel } from "../components/settings/OrgManagement";
 import { UserSettings } from "../components/settings/UserSettings";
 import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
@@ -20,6 +20,7 @@ import { Helmet } from "react-helmet-async";
 
 export default function Settings() {
   const { t } = useTranslation();
+
   return (
     <PageContainer>
       <Helmet>
@@ -29,23 +30,47 @@ export default function Settings() {
         <Heading size="lg" py={5}>
           {t("Settings")}
         </Heading>
-        <Tabs isLazy>
-          <TabList overflowX="auto" overflowY="hidden" maxW="100vw">
-            <Tab fontSize="lg" fontWeight={600}>
+        <Tabs
+          orientation="vertical"
+          size="lg"
+          align="start"
+          flexDir={{ base: "column", md: "row" }}
+          isLazy
+        >
+          <TabList h="fit-content" minW={{ base: "full", md: 72 }}>
+            <Tab
+              fontSize="lg"
+              fontWeight={600}
+              justifyContent="flex-start"
+              gap={2}
+            >
               <Icon as={FaRegUser} mr={1}></Icon>
               {t("User Preferences")}
             </Tab>
-            <Tab fontSize="lg" fontWeight={600}>
+            <Tab
+              fontSize="lg"
+              fontWeight={600}
+              justifyContent="flex-start"
+              gap={2}
+            >
               <Icon as={IoLanguage} mr={1}></Icon>
               {t("Language Preferences")}
             </Tab>
-            <Tab fontSize="lg" fontWeight={600}>
+            <Tab
+              fontSize="lg"
+              fontWeight={600}
+              justifyContent="flex-start"
+              gap={2}
+            >
               <Icon as={FaRegBuilding} mr={1}></Icon>
               {t("Organization Ordering")}
             </Tab>
           </TabList>
-
-          <TabPanels>
+          <TabPanels
+            borderColor="chakra-border-color"
+            borderLeftWidth={{ base: 0, md: 1 }}
+            pl={{ base: 0, md: 4 }}
+          >
             <TabPanel px={0}>
               <UserSettings />
             </TabPanel>
@@ -56,7 +81,7 @@ export default function Settings() {
               <Text my={2} fontStyle="italic">
                 {t("Drag and Drop to reorder list of orgs in the org dropdown")}
               </Text>
-              <OrgManager />
+              <OrgPickerPanel />
             </TabPanel>
           </TabPanels>
         </Tabs>

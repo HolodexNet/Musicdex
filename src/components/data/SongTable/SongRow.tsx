@@ -84,7 +84,7 @@ export const SongRow = React.memo(
           py={1.5}
           px={2}
           {...dragSongProps}
-          onContextMenu={(e) => show?.(e, { props: song })}
+          onContextMenu={(e) => show({ event: e, props: song })}
           borderTop="1px solid var(--chakra-colors-whiteAlpha-200)"
           boxSizing="border-box"
           transition="all 0.2s ease-out"
@@ -165,7 +165,7 @@ export const SongRow = React.memo(
                 variant="ghost"
                 colorScheme="n2"
                 aria-label="More"
-                onClick={(e) => show(e, { props: song })}
+                onClick={(e) => show({ event: e, props: song })}
               ></IconButton>
             </Box>
           )}
