@@ -34,6 +34,13 @@ export const VolumeSlider = React.memo(() => {
       value={muted ? 0 : volumeSlider}
       onChange={onChange}
       focusThumbOnChange={false}
+      onWheel={(e) =>
+        onChange(
+          e.deltaY < 0
+            ? Math.min(volumeSlider + 10, 100)
+            : Math.max(volumeSlider - 10, 0),
+        )
+      }
     >
       <SliderTrack bg="gray.700">
         <SliderFilledTrack bgGradient="linear(to-r, brand.300, n2.300 90%)" />
