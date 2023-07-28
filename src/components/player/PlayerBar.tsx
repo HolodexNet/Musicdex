@@ -15,7 +15,6 @@ import { PlayerOption } from "./controls/PlayerOption";
 import { SongInfo } from "./controls/PlayerSongInfo";
 import { TimeSlider } from "./controls/TimeSlider";
 import { VolumeSlider } from "./controls/VolumeSlider";
-import FullPlayer from "./FullPlayer";
 import TimeInfo from "./controls/TimeInfo";
 
 export const PlayerBar = React.memo(() => {
