@@ -1,5 +1,5 @@
 {
-  "Unauthorized": "ไม่มีสิทธิ์",
+  "Unauthorized": "ไม่สามารถเข้าถึงได้",
   "Server error": "ข้อผิดพลาดของเซิฟเวอร์",
   "Something went wrong": "มีบางอย่างผิดพลาด",
   "Step 1: Refresh Page": "ขั้นตอนที่ 1: รีเฟรชหน้า",
@@ -183,7 +183,7 @@
   "Discover Favorites": "ค้นพบรายการโปรด",
   "Favorites Community Playlists": "เพลย์ลิสต์ชุมชนโปรด",
   "Favorites Playlists": "เพลย์ลิสต์โปรด",
-  "Username changed": "Username changed",
-  "Joined {{created_at}}": "Joined {{created_at}}",
-  "Username": "Username"
+  "Username changed": "เปลี่ยนชื่อผู้ใช้แล้ว",
+  "Joined {{created_at}}": "เข้าร่วมเมื่อ {{created_at}}",
+  "Username": "ชื่อผู้ใช้"
 }
