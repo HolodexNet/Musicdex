@@ -182,5 +182,8 @@
   "Favorites Radios": "내가 즐겨찾는 라디오",
   "Discover Favorites": "즐겨찾기 시작하기",
   "Favorites Community Playlists": "내가 즐겨찾는 커뮤니티 재생목록",
-  "Favorites Playlists": "즐겨찾는 재생목록"
+  "Favorites Playlists": "즐겨찾는 재생목록",
+  "Username changed": "Username changed",
+  "Joined {{created_at}}": "Joined {{created_at}}",
+  "Username": "Username"
 }
