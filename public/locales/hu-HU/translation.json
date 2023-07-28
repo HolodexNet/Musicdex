@@ -182,5 +182,8 @@
   "Favorites Radios": "Kedvenc rádiók",
   "Discover Favorites": "Felfedezés kedvencek",
   "Favorites Community Playlists": "Kedvenc közösségi lejátszási listák",
-  "Favorites Playlists": "Kedvenc lejátszási listák"
+  "Favorites Playlists": "Kedvenc lejátszási listák",
+  "Username changed": "Username changed",
+  "Joined {{created_at}}": "Joined {{created_at}}",
+  "Username": "Username"
 }
