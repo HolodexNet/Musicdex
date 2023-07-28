@@ -182,5 +182,8 @@
   "Favorites Radios": "Radio Kegemaran",
   "Discover Favorites": "Terokai Kegemaran",
   "Favorites Community Playlists": "Senarai Main Kegemaran Dalam Kalangan Peminat",
-  "Favorites Playlists": "Senarai Main Kegemaran"
+  "Favorites Playlists": "Senarai Main Kegemaran",
+  "Username changed": "Username changed",
+  "Joined {{created_at}}": "Joined {{created_at}}",
+  "Username": "Username"
 }
