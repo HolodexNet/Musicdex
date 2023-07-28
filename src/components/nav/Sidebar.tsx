@@ -23,6 +23,7 @@ import {
   FiPlus,
   FiEdit2,
   FiCheck,
+  FiExternalLink,
 } from "react-icons/fi";
 import { useClient } from "../../modules/client";
 import {
@@ -38,7 +39,6 @@ import { PlaylistList } from "../playlist/PlaylistList";
 import { LogoWithText } from "./LogoWithText";
 import { PlaylistCreateModal } from "../playlist/PlaylistCreateForm";
 import { useTranslation } from "react-i18next";
-import { BsBoxArrowRight } from "react-icons/bs";
 import { HolodexLogo } from "../icons/HolodexLogo";
 
 interface SidebarProps extends BoxProps {
@@ -127,7 +127,7 @@ export function SidebarContent({
         // @ts-ignore
         href={HOLODEX_URL}
       >
-        Holodex <Icon as={BsBoxArrowRight} ml={2} />
+        Holodex <Icon as={FiExternalLink} ml={2} />
       </NavItem>
       <Divider mb={2} />
       <Flex flexDirection="column" overflowY="auto" flex="1">
