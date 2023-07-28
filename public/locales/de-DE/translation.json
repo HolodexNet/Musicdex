@@ -183,7 +183,7 @@
   "Discover Favorites": "Favoriten entdecken",
   "Favorites Community Playlists": "Favoriten-Community-Playlisten",
   "Favorites Playlists": "Favoriten-Playlisten",
-  "Username changed": "Username changed",
-  "Joined {{created_at}}": "Joined {{created_at}}",
-  "Username": "Username"
+  "Username changed": "Benutzername wurde geändert",
+  "Joined {{created_at}}": "Am {{created_at}} beigetreten",
+  "Username": "Benutzername"
 }
