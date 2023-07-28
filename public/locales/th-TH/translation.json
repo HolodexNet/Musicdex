@@ -182,5 +182,8 @@
   "Favorites Radios": "วิทยุโปรด",
   "Discover Favorites": "ค้นพบรายการโปรด",
   "Favorites Community Playlists": "เพลย์ลิสต์ชุมชนโปรด",
-  "Favorites Playlists": "เพลย์ลิสต์โปรด"
+  "Favorites Playlists": "เพลย์ลิสต์โปรด",
+  "Username changed": "Username changed",
+  "Joined {{created_at}}": "Joined {{created_at}}",
+  "Username": "Username"
 }
