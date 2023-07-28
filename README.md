@@ -4,6 +4,8 @@
 [![Actions Status: test](<https://github.com/HolodexNet/Musicdex/workflows/Deploy%20to%20Musicdex%20(Staging)/badge.svg>)](<https://github.com/HolodexNet/Musicdex/actions?query=Deploy%20to%20Musicdex%20(Staging)>)
 [![Actions Status: test](<https://github.com/HolodexNet/Musicdex/workflows/Deploy%20to%20Musicdex%20(Production)/badge.svg>)](<https://github.com/HolodexNet/Musicdex/actions?query=Deploy%20to%20Musicdex%20(Production)>)
 
+![Musicdex](https://github.com/HolodexNet/Musicdex/tree/dev/public/img/intro-promo.png)
+
 - Public Beta: <https://music.holodex.net>
 - Staging: <https://music-staging.holodex.net>
 
