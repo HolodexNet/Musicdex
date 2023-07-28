@@ -182,5 +182,8 @@
   "Favorites Radios": "Favorites Radios",
   "Discover Favorites": "Discover Favorites",
   "Favorites Community Playlists": "Favorites Community Playlists",
-  "Favorites Playlists": "Favorites Playlists"
+  "Favorites Playlists": "Favorites Playlists",
+  "Username changed": "Username changed",
+  "Joined {{created_at}}": "Joined {{created_at}}",
+  "Username": "Username"
 }
