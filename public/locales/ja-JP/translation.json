@@ -182,5 +182,8 @@
   "Favorites Radios": "お気に入りのRadio",
   "Discover Favorites": "お気に入りを開拓する",
   "Favorites Community Playlists": "お気に入りのコミュニティプレイリスト",
-  "Favorites Playlists": "お気に入りのプレイリスト"
+  "Favorites Playlists": "お気に入りのプレイリスト",
+  "Username changed": "Username changed",
+  "Joined {{created_at}}": "Joined {{created_at}}",
+  "Username": "Username"
 }
