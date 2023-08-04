@@ -183,7 +183,7 @@
   "Discover Favorites": "즐겨찾기 시작하기",
   "Favorites Community Playlists": "내가 즐겨찾는 커뮤니티 재생목록",
   "Favorites Playlists": "즐겨찾는 재생목록",
-  "Username changed": "Username changed",
-  "Joined {{created_at}}": "Joined {{created_at}}",
-  "Username": "Username"
+  "Username changed": "아이디가 변경됨",
+  "Joined {{created_at}}": "{{created_at}}에 가입함",
+  "Username": "아이디"
 }
