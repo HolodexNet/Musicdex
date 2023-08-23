@@ -96,7 +96,7 @@ export default function Home() {
     const sgp: PlaylistStub[] = [];
     const radios: PlaylistStub[] = [];
     const ugp: PlaylistStub[] = [];
-    discovery?.recommended?.playlists.forEach((p: PlaylistStub) => {
+    discovery?.recommended?.playlists.forEach((p) => {
       if (p.type === "ugp") ugp.push(p);
       else if (p.type.startsWith("radio")) radios.push(p);
       else sgp.push(p);
@@ -116,11 +116,11 @@ export default function Home() {
           {isMobile ? (
             <CardCarousel height={210} width={160} scrollMultiplier={2}>
               {discovery?.recentSingingStreams
-                ?.filter((stream: any) => stream.playlist?.content?.length)
-                .map((stream: any) => (
+                ?.filter((stream) => stream.playlist?.content?.length)
+                .map((stream) => (
                   <PlaylistCard
-                    playlist={stream.playlist}
-                    key={"kpc" + stream.playlist.id}
+                    playlist={stream.playlist!}
+                    key={"kpc" + stream.playlist?.id}
                     mx={["2px", null, 1, 2]}
                   />
                 ))}
@@ -142,7 +142,7 @@ export default function Home() {
               width={160}
               scrollMultiplier={isMobile ? 2 : 4}
             >
-              {recPlaylists?.map((p: Partial<PlaylistFull>) => (
+              {recPlaylists?.map((p) => (
                 <PlaylistCard
                   playlist={p}
                   key={"rec" + p.id}
@@ -163,7 +163,7 @@ export default function Home() {
               width={160}
               scrollMultiplier={isMobile ? 2 : 4}
             >
-              {recRadios?.map((p: Partial<PlaylistFull>) => (
+              {recRadios?.map((p) => (
                 <PlaylistCard
                   playlist={p}
                   key={"rec" + p.id}
@@ -184,7 +184,7 @@ export default function Home() {
               width={160}
               scrollMultiplier={isMobile ? 2 : 4}
             >
-              {communityPlaylists?.map((p: Partial<PlaylistFull>) => (
+              {communityPlaylists?.map((p) => (
                 <PlaylistCard
                   playlist={p}
                   key={"rec" + p.id}
@@ -236,7 +236,7 @@ export default function Home() {
             scrollMultiplier={isMobile ? 2 : 4}
             mb={2}
           >
-            {discovery?.channels?.slice(0, 10).map((c: Channel) => (
+            {discovery?.channels?.slice(0, 10).map((c) => (
               <ChannelCard
                 channel={c}
                 key={c.id}

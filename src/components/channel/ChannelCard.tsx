@@ -4,7 +4,7 @@ import useNamePicker from "../../modules/common/useNamePicker";
 import { ChannelPhoto } from "./ChannelPhoto";
 
 interface ChannelCardProps extends FlexProps {
-  channel: Channel;
+  channel: ChannelStub | Channel;
 }
 
 export function ChannelCard({ channel, ...rest }: ChannelCardProps) {

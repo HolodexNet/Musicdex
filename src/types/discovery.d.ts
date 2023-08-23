@@ -33,3 +33,10 @@ interface PlaylistList {
   items: PlaylistStub[];
   total: number;
 }
+
+interface ChannelStub {
+  id: string;
+  name: string;
+  english_name: string;
+  song_count: number;
+}

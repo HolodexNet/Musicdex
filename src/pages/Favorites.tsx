@@ -53,11 +53,11 @@ export default function Favorites() {
           {isMobile ? (
             <CardCarousel height={210} width={160} scrollMultiplier={2}>
               {discovery?.recentSingingStreams
-                .filter((stream: any) => stream.playlist?.content?.length)
-                .map((stream: any) => (
+                ?.filter((stream) => stream.playlist?.content?.length)
+                .map((stream) => (
                   <PlaylistCard
-                    playlist={stream.playlist}
-                    key={"kpc" + stream.playlist.id}
+                    playlist={stream.playlist!}
+                    key={"kpc" + stream.playlist?.id}
                     mx={["2px", null, 1, 2]}
                   />
                 ))}
@@ -121,7 +121,7 @@ export default function Favorites() {
             scrollMultiplier={isMobile ? 2 : 4}
             mb={2}
           >
-            {discovery?.channels?.slice(0, 10).map((c: Channel) => (
+            {discovery?.channels?.slice(0, 10).map((c) => (
               <ChannelCard
                 channel={c}
                 key={c.id}
