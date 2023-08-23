@@ -12,7 +12,7 @@ import {
   IconButton,
   Icon,
 } from "@chakra-ui/react";
-import { AnimatePresence, MotionValue, PanInfo } from "framer-motion";
+import { MotionValue, PanInfo } from "framer-motion";
 import React, { Suspense, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { FiMinimize2, FiMinus } from "react-icons/fi";
@@ -61,7 +61,9 @@ const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
         exit={{ opacity: 0 }}
         pos="fixed"
         inset={0}
-        bgGradient="linear(to-b, brand.700, n2.800)"
+        bgGradient="linear(to-b, brand.600, n2.800)"
+        filter="auto"
+        brightness="150%"
         zIndex={0}
         style={{ y, opacity }}
       />
