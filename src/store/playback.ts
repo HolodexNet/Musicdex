@@ -427,11 +427,9 @@ const playbackModel: PlaybackModel = {
     }
     while (count > 0) {
       const hasQ = h.getState().queue.length > 0;
-      const hasPlaylist =
-        h.getState().playlistQueue.length +
-          h.getState().playedPlaylistQueue.length >
-        0;
-      const isRepeatOne = h.getState().repeatMode === "repeat-one";
+      const hasPlaylist = h.getState().playlistQueue.length > 0;
+      const hasPlayedPlaylist = h.getState().playedPlaylistQueue.length > 0;
+      const repeatMode = h.getState().repeatMode;
       const playlistIsRadio = h
         .getState()
         .currentPlaylist?.type.startsWith("radio");
@@ -440,10 +438,12 @@ const playbackModel: PlaybackModel = {
       let src: "queue" | "playlist" | "repeat-one" | "radio" | undefined;
       if (hasQ) {
         src = "queue";
-      } else {
-        if (hasPlaylist) {
-          src = playlistIsRadio ? "radio" : "playlist";
-        } else if (isRepeatOne) src = "repeat-one";
+      } else if (hasPlaylist) {
+        src = playlistIsRadio ? "radio" : "playlist";
+      } else if (hasPlayedPlaylist) {
+        src = repeatMode === "repeat" ? "playlist" : undefined;
+      } else if (repeatMode === "repeat-one") {
+        src = repeatMode;
       }
 
       // console.log("considering next song from", src);
