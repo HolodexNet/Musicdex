@@ -182,5 +182,8 @@
   "Favorites Radios": "Lieblingsradios",
   "Discover Favorites": "Favoriten entdecken",
   "Favorites Community Playlists": "Favoriten-Community-Playlisten",
-  "Favorites Playlists": "Favoriten-Playlisten"
+  "Favorites Playlists": "Favoriten-Playlisten",
+  "Username changed": "Benutzername wurde geändert",
+  "Joined {{created_at}}": "Am {{created_at}} beigetreten",
+  "Username": "Benutzername"
 }
