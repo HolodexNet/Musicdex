@@ -26,7 +26,7 @@ export interface User {
   google_id: string | null;
   twitter_id: string | null;
   id: string;
-  role: "user";
+  role: "admin" | "editor" | "user";
   username: string;
   yt_channel_key: string | null;
   jwt?: string;

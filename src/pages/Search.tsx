@@ -115,12 +115,7 @@ export default function Search() {
       query: {
         multi_match: {
           query: value,
-          fields: [
-            "general^3",
-            "general.romaji^0.5",
-            "original_artist^2",
-            "original_artist.romaji^0.5",
-          ],
+          fields: ["general^2", "general.ngram", "general.romaji"],
           type: "most_fields",
           // type: "phrase",
         },
@@ -135,8 +130,8 @@ export default function Search() {
       query: {
         multi_match: {
           query: value,
-          fields: ["name.ngram", "name"],
-          type: "most_fields",
+          fields: ["name.ngram^2", "name^2", "name.romaji"],
+          type: "phrase",
         },
       },
     };
@@ -152,9 +147,9 @@ export default function Search() {
           fields: [
             "original_artist.ngram^2",
             "original_artist^2",
-            "original_artist.romaji^0.5",
+            "original_artist.romaji",
           ],
-          type: "most_fields",
+          type: "phrase",
         },
       },
     };

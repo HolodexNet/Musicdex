@@ -182,5 +182,8 @@
   "Favorites Radios": "收藏音樂電台",
   "Discover Favorites": "探索我的收藏",
   "Favorites Community Playlists": "收藏社群播放清單",
-  "Favorites Playlists": "收藏播放清單"
+  "Favorites Playlists": "收藏播放清單",
+  "Username changed": "使用者名稱已變更",
+  "Joined {{created_at}}": "帳號建立於 {{created_at}}",
+  "Username": "使用者名稱"
 }

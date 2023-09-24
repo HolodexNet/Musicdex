@@ -178,9 +178,12 @@
   "My Weekly Mix": "My Weekly Mix",
   "Crafted for you based on your listening habits": "あなたが聞く曲の傾向を基に作成されました",
   "Favorites": "お気に入り",
-  "Favorite Channels": "お気に入りチャンネル",
-  "Favorites Radios": "お気に入りのラジオ",
+  "Favorite Channels": "お気に入りのチャンネル",
+  "Favorites Radios": "お気に入りのRadio",
   "Discover Favorites": "お気に入りを開拓する",
   "Favorites Community Playlists": "お気に入りのコミュニティプレイリスト",
-  "Favorites Playlists": "お気に入りのプレイリスト"
+  "Favorites Playlists": "お気に入りのプレイリスト",
+  "Username changed": "Username changed",
+  "Joined {{created_at}}": "Joined {{created_at}}",
+  "Username": "Username"
 }

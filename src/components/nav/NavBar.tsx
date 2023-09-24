@@ -14,9 +14,10 @@ import {
   MenuItem,
   MenuDivider,
   Text,
+  Icon,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { FiMenu, FiChevronDown } from "react-icons/fi";
+import { FiMenu, FiChevronDown, FiSettings, FiLogOut } from "react-icons/fi";
 import { Link, useLocation } from "react-router-dom";
 import { useClient } from "../../modules/client";
 import { SearchBox } from "./SearchBox";
@@ -101,11 +102,13 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
                 </HStack>
               </MenuButton>
               <MenuList borderColor={borderColor}>
-                <MenuItem as={Link} to="/settings">
+                <MenuItem icon={<FiSettings />} as={Link} to="/settings">
                   {t("Profile / Settings")}
                 </MenuItem>
                 <MenuDivider />
-                <MenuItem onClick={logout}>{t("Sign out")}</MenuItem>
+                <MenuItem color="red.500" icon={<FiLogOut />} onClick={logout}>
+                  {t("Sign out")}
+                </MenuItem>
               </MenuList>
             </Menu>
           ) : (

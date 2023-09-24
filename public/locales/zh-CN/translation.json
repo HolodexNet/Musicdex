@@ -182,5 +182,8 @@
   "Favorites Radios": "收藏的广播",
   "Discover Favorites": "探索收藏",
   "Favorites Community Playlists": "收藏社区播放列表",
-  "Favorites Playlists": "收藏播放列表"
+  "Favorites Playlists": "收藏播放列表",
+  "Username changed": "用户名已更改",
+  "Joined {{created_at}}": "账号创建于 {{created_at}}",
+  "Username": "用户名"
 }

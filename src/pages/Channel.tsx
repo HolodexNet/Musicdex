@@ -6,9 +6,11 @@ import {
   GridItem,
   Heading,
   HStack,
+  Icon,
   IconButton,
   Spacer,
   useBreakpointValue,
+  VStack,
 } from "@chakra-ui/react";
 import axios, { AxiosError } from "axios";
 import {
@@ -46,6 +48,7 @@ import {
   useFavoritesUpdater,
 } from "../modules/services/favorite.service";
 import { useClient } from "../modules/client";
+import { IconType } from "react-icons/lib";
 
 export default function Channel() {
   const { t } = useTranslation();
@@ -254,25 +257,25 @@ function ChannelSocialButtons({
 interface PlaylistButton {
   label: string;
   link: string;
-  icon: any;
+  icon: IconType;
 }
 
 function PlaylistButtons({ buttons }: { buttons: PlaylistButton[] }) {
   const { t } = useTranslation();
   return (
     <>
-      {buttons.map((button) => (
+      {buttons.map(({ label, icon, link }) => (
         <Button
           variant="ghost"
           size="md"
           colorScheme="n2"
-          leftIcon={<button.icon />}
+          leftIcon={<Icon as={icon} />}
           as={Link}
-          to={button.link}
+          to={link}
           float="right"
           textTransform="uppercase"
         >
-          {t(button.label)}
+          {t(label)}
         </Button>
       ))}
     </>
@@ -286,13 +289,14 @@ function ChannelContent({
   name,
   channel,
 }: {
-  discovery: any;
+  discovery?: ChannelDiscovery;
   trending: Song[] | undefined;
   queueSongs: (_: { songs: Song[]; immediatelyPlay: boolean }) => void;
-  name: any;
+  name: string;
   channel?: Channel;
 }) {
   const { t } = useTranslation();
+  const scrollAmount = useBreakpointValue({ base: 2, md: 4 }) ?? 4;
 
   const buttonData = useMemo(
     () => [
@@ -311,11 +315,13 @@ function ChannelContent({
   );
 
   return (
-    <>
+    <VStack w="100%">
       {trending && (
-        <>
-          <Heading size="md" mt={4} mb={2}>
-            {t("Popular")}
+        <VStack w="100%">
+          <HStack w="100%" align="center" justify="space-between">
+            <Heading size="md" mt={4} mb={2}>
+              {t("Popular")}
+            </Heading>
             <Button
               variant="ghost"
               size="sm"
@@ -328,8 +334,8 @@ function ChannelContent({
             >
               {t("Queue ({{amount}})", { amount: trending.length })}
             </Button>
-          </Heading>
-          <Box flex="1 1 140px" minWidth="300px">
+          </HStack>
+          <Box w="100%" flex="1 1 140px" minWidth="300px">
             <SongTable
               songs={trending.slice(0, 10)}
               rowProps={{
@@ -341,33 +347,45 @@ function ChannelContent({
               appendRight={<PlaylistButtons buttons={buttonData} />}
             />
           </Box>
-        </>
+        </VStack>
       )}
-      {discovery?.recentSingingStreams?.length > 0 && (
-        <>
+      {discovery?.recentSingingStreams?.filter(
+        (stream) => stream.playlist?.content?.length,
+      ).length && (
+        <VStack w="100%" align="flex-start">
           <Heading size="md" mt={4} mb={2}>
             {t("Latest Streams")}
           </Heading>
-          <CardCarousel height={230} width={160} scrollMultiplier={4}>
+          <CardCarousel
+            w="100%"
+            height={230}
+            width={160}
+            scrollMultiplier={scrollAmount}
+          >
             {discovery?.recentSingingStreams
-              .filter((stream: any) => stream.playlist?.content?.length)
-              .map((stream: any) => (
+              .filter((stream) => stream.playlist?.content?.length)
+              .map((stream) => (
                 <PlaylistCard
-                  playlist={stream.playlist}
-                  key={"kpc" + stream.playlist.id}
+                  playlist={stream.playlist!}
+                  key={"kpc" + stream.playlist?.id}
                   mx={["2px", null, 1, 2]}
                 />
               ))}
           </CardCarousel>
-        </>
+        </VStack>
       )}
-      {discovery?.recommended?.playlists?.length > 0 && (
-        <>
+      {discovery?.recommended?.playlists?.length && (
+        <VStack w="100%" align="flex-start">
           <Heading size="md" mt={4} mb={2}>
             {t("Featuring {{name}}", { name })}
           </Heading>
-          <CardCarousel height={230} width={160} scrollMultiplier={4}>
-            {discovery.recommended.playlists.map((x: any) => {
+          <CardCarousel
+            w="100%"
+            height={230}
+            width={160}
+            scrollMultiplier={scrollAmount}
+          >
+            {discovery.recommended.playlists.map((x) => {
               return (
                 <PlaylistCard
                   playlist={x}
@@ -377,18 +395,29 @@ function ChannelContent({
               );
             })}
           </CardCarousel>
-        </>
+        </VStack>
       )}
-      <Heading size="md" mt={4} mb={2}>
-        {t("Discover more from {{org}}", { org: channel?.org })}
-      </Heading>
-      {discovery && (
-        <CardCarousel height={180} width={160} scrollMultiplier={4}>
-          {discovery.channels.slice(0, 10).map((c: Channel) => (
-            <ChannelCard channel={c} key={c.id} marginX={["2px", null, 1, 2]} />
-          ))}
-        </CardCarousel>
-      )}
-    </>
+      <VStack w="100%" align="flex-start">
+        <Heading size="md" mt={4} mb={2}>
+          {t("Discover more from {{org}}", { org: channel?.org })}
+        </Heading>
+        {discovery && (
+          <CardCarousel
+            w="100%"
+            height={180}
+            width={160}
+            scrollMultiplier={scrollAmount}
+          >
+            {discovery.channels?.slice(0, 10).map((c) => (
+              <ChannelCard
+                channel={c}
+                key={c.id}
+                marginX={["2px", null, 1, 2]}
+              />
+            ))}
+          </CardCarousel>
+        )}
+      </VStack>
+    </VStack>
   );
 }

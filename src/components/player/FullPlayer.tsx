@@ -32,7 +32,6 @@ interface FullPlayerProps {
 
 const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
-
   const currentSong = useStoreState(
     (state) => state.playback.currentlyPlaying.song,
   );
@@ -53,19 +52,31 @@ const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
       style={{
         top: 0,
         zIndex: 10,
-        background:
-          "linear-gradient(to bottom, var(--chakra-colors-brand-300) 30%, var(--chakra-colors-n2-300) 90%)",
-        opacity,
+        backdropFilter: "blur(8px)",
       }}
     >
       <MotionBox
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        pos="fixed"
+        inset={0}
+        bgGradient="linear(to-b, brand.600, n2.800)"
+        filter="auto"
+        brightness="150%"
+        zIndex={0}
+        style={{ y, opacity }}
+      />
+      <MotionBox
+        bg="blackAlpha.500"
         backdropFilter="auto"
-        backdropBrightness="40%"
+        backdropBlur="8px"
         w="full"
         h="full"
         display="flex"
         justifyContent="center"
         alignItems="center"
+        zIndex={1}
         drag="y"
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={{ top: 0, bottom: 1 }}
@@ -75,7 +86,7 @@ const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
             onClose();
           }
         }}
-        style={{ y }}
+        style={{ y, opacity }}
       >
         <Container
           display="grid"
@@ -107,7 +118,13 @@ const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
             <AspectRatio w="100%" pt={{ base: "10vh", md: 0 }} ratio={16 / 9}>
               <Box />
             </AspectRatio>
-            <VStack w="100%" h="100%" align="flex-start" justify="space-evenly">
+            <VStack
+              w="100%"
+              h="100%"
+              maxH="30vh"
+              align="flex-start"
+              justify="space-evenly"
+            >
               <MotionBox>
                 {currentSong && <SongInfo fullPlayer song={currentSong} />}
               </MotionBox>
@@ -128,6 +145,9 @@ const FullPlayer = React.memo(({ y, opacity }: FullPlayerProps) => {
                   <PlayerOption fullPlayer justifyContent="center" />
                 </MotionBox>
               )}
+              {/* <div></div>
+              <div></div>  */}
+              {/* Just some empty boxes to push the controls closer together?*/}
             </VStack>
           </VStack>
           {!isMobile && <PlayerBarExpandedRightSide />}

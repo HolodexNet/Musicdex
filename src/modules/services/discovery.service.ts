@@ -30,7 +30,7 @@ export function useDiscoveryFavorites() {
   return useQuery(
     ["discoveryFavorites", uid],
     async () =>
-      (await AxiosInstance("/musicdex/discovery/favorites")).data as any,
+      (await AxiosInstance<OrgDiscovery>("/musicdex/discovery/favorites")).data,
   );
 }
 
@@ -39,7 +39,7 @@ export function useDiscoveryChannel(channelId: string) {
     ["discoveryChannel", channelId],
     async (qk) => {
       return (
-        await axios.get(
+        await axios.get<ChannelDiscovery>(
           "/api/v2/musicdex/discovery/channel/" + qk.queryKey[1] + "/",
         )
       ).data;
