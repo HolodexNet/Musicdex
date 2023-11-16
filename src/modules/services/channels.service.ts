@@ -33,7 +33,7 @@ export function useChannelListForOrg(
     },
     {
       getNextPageParam: (lastPage, pages) =>
-        lastPage.length === 100 ? pages.length + 1 : null,
+        lastPage.length === 100 ? pages.length : null,
       keepPreviousData: true,
       retry: 1,
       cacheTime: 1000 * 60 * 60 * 5,
