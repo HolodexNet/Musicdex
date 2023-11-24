@@ -183,7 +183,7 @@
   "Discover Favorites": "Felfedezés kedvencek",
   "Favorites Community Playlists": "Kedvenc közösségi lejátszási listák",
   "Favorites Playlists": "Kedvenc lejátszási listák",
-  "Username changed": "Username changed",
-  "Joined {{created_at}}": "Joined {{created_at}}",
-  "Username": "Username"
+  "Username changed": "Felhasználónév megváltoztatva",
+  "Joined {{created_at}}": "Csatlakozott: {{created_at}}",
+  "Username": "Felhasználónév"
 }

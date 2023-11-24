@@ -81,7 +81,7 @@ export function useAllPlaylistDiscoveryForOrg(
     {
       ...options,
       getNextPageParam: (lastPage, pages) =>
-        lastPage.length === 100 ? pages.length + 1 : null,
+        lastPage.length === 100 ? pages.length : null,
       keepPreviousData: options.keepPreviousData ?? true,
       retry: options.retry ?? 1,
       cacheTime: options.cacheTime ?? 1000 * 60 * 60 * 5,
@@ -125,7 +125,7 @@ export function useAllPlaylistDiscoveryForFavorites(
       ...options,
       enabled: isLoggedIn && options.enabled,
       getNextPageParam: (lastPage, pages) =>
-        lastPage.length === 100 ? pages.length + 1 : null,
+        lastPage.length === 100 ? pages.length : null,
       keepPreviousData: options.keepPreviousData ?? true,
       retry: options.retry ?? 1,
       cacheTime: options.cacheTime ?? 1000 * 60 * 60 * 5,
