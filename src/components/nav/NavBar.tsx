@@ -76,7 +76,7 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
                 <HStack>
                   <Avatar
                     size={"sm"}
-                    src={`https://avatars.dicebear.com/api/jdenticon/${user?.id}.svg`}
+                    src={`https://api.dicebear.com/7.x/shapes/svg?seed=${user?.id}`}
                     bg="transparent"
                   />
                   <VStack
