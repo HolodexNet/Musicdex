@@ -73,7 +73,7 @@ export function UserSettings() {
         <Avatar
           boxSize={{ base: 24, md: 48 }}
           bg="transparent"
-          src={`https://avatars.dicebear.com/api/jdenticon/${user?.id}.svg`}
+          src={`https://api.dicebear.com/7.x/shapes/svg?seed=${user?.id}`}
         />
         <VStack
           w={{ base: undefined, md: "full" }}

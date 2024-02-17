@@ -23,7 +23,7 @@ export const DEFAULT_ORG_LIST = {
   KAMITSUBAKI: -430,
   "774inc": -400,
   GuildCQ: -283,
-  ReACT: -184,
+  ReAcT: -184,
 };
 
 const orgModel: OrgModel = {
