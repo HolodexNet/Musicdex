@@ -9,10 +9,7 @@ import {
 import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
 import { SiKofi } from "react-icons/si";
 import { ContainerInlay } from "./ContainerInlay";
-import GitInfo from "react-git-info/macro";
 import { format } from "date-fns";
-
-const gi = GitInfo();
 
 const SocialButton = ({ icon, ...rest }: any) => {
   return (
@@ -43,8 +40,8 @@ export default function Footer() {
           <Text>
             © 2020 Holodex.{" "}
             <small style={{ color: "#445" }}>
-              Musicdex (beta) build {gi.commit.shortHash}/
-              {format(new Date(gi.commit.date), "LLL dd HH:mm")}
+              Musicdex (beta) build {GIT_COMMIT_HASH}/
+              {format(new Date(GIT_COMMIT_TIMESTAMP), "LLL dd HH:mm")}
             </small>
           </Text>
           <Stack direction={"row"} spacing={6}>

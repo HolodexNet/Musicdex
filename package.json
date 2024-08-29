@@ -11,12 +11,11 @@
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js' & source-map-explorer --gzip 'build/static/js/*.js'",
-    "build": "react-scripts build",
-    "dev": "cross-env GENERATE_SOURCEMAP=false react-scripts start",
-    "dev:local-api": "cross-env API_TARGET=local react-scripts start",
-    "eject": "react-scripts eject",
+    "build": "rsbuild build",
+    "dev": "cross-env GENERATE_SOURCEMAP=false rsbuild dev",
+    "dev:local-api": "cross-env API_TARGET=local rsbuild dev",
+    "preview": "rsbuild preview",
     "prepare": "husky install",
-    "test": "react-scripts test --passWithNoTests",
     "i18n": "rimraf -r build/tmp && tsc --jsx preserve --noEmit false --target es2020 --outDir build/tmp && i18next-scanner"
   },
   "dependencies": {
@@ -28,6 +27,7 @@
     "@fontsource/assistant": "^4.5.9",
     "@fontsource/manrope": "^4.5.10",
     "@hypertheme-editor/chakra-ui": "^0.1.5",
+    "@rsbuild/plugin-node-polyfill": "^1.0.4",
     "axios": "^0.27.2",
     "dataloader": "^2.1.0",
     "date-fns": "^2.29.1",
@@ -59,7 +59,6 @@
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
     "react-router-use-location-state": "^3.0.2",
-    "react-scripts": "^5.0.1",
     "react-snaplist-carousel": "^4.4.2",
     "react-table": "^7.8.0",
     "react-virtualized": "^9.22.3",
@@ -83,6 +82,8 @@
     "workbox-streams": "^6.5.3"
   },
   "devDependencies": {
+    "@rsbuild/core": "^1.0.1-rc.0",
+    "@rsbuild/plugin-react": "^1.0.1-rc.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.3.0",
