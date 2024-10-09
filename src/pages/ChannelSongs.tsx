@@ -8,11 +8,11 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useMemo, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useQuery } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { QueryStatus } from "../components/common/QueryStatus";
 import { SongTable } from "../components/data/SongTable";
 import { DEFAULT_FETCH_CONFIG } from "../modules/services/defaults";
@@ -21,18 +21,21 @@ import { useSongQueuer } from "../utils/SongQueuerHook";
 const PERPAGE = 10;
 export default function ChannelSongs() {
   const { t } = useTranslation();
-  let params = useParams();
-  let channelId = params.id!;
+  const params = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const channelId = params.id!;
 
   const { data: channel, ...channelStatus } = useQuery(
     ["channel", channelId],
     async (q) => {
       return (await axios.get("/api/v2/channels/" + q.queryKey[1])).data;
     },
-    { ...DEFAULT_FETCH_CONFIG, cacheTime: 600000 /* 10 mins */ }
+    { ...DEFAULT_FETCH_CONFIG, cacheTime: 600000 /* 10 mins */ },
   );
 
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(
+    Math.max((Number(searchParams.get("page")) - 1) * PERPAGE, 0),
+  );
   const { data, ...songStatus } = useSongAPI({
     channel_id: channelId,
     paginated: true,
@@ -42,8 +45,18 @@ export default function ChannelSongs() {
 
   const { items: latest, total } = useMemo(
     () => (data as any) || { items: undefined, total: 0 },
-    [data]
+    [data],
   );
+
+  const onPageChange = useCallback(
+    (nextOffset: number) => {
+      setOffset(nextOffset);
+      searchParams.set("page", (nextOffset / PERPAGE + 1).toString());
+      setSearchParams(searchParams, { replace: true });
+    },
+    [searchParams, setSearchParams],
+  );
+
   const queueSongs = useSongQueuer();
   const navigate = useNavigate();
 
@@ -96,11 +109,14 @@ export default function ChannelSongs() {
       <ButtonGroup colorScheme="brand" mt="3" spacing="5">
         <Button
           onClick={() =>
-            setOffset((e) =>
+            onPageChange(
               Math.max(
-                Math.min(Math.floor(total / PERPAGE) * PERPAGE, e - PERPAGE),
-                0
-              )
+                Math.min(
+                  Math.floor(total / PERPAGE) * PERPAGE,
+                  offset - PERPAGE,
+                ),
+                0,
+              ),
             )
           }
           disabled={offset === 0}
@@ -113,14 +129,14 @@ export default function ChannelSongs() {
           fontSize="xl"
           onSubmit={(e) => {
             const n = Number.parseInt(e);
-            setOffset(
+            onPageChange(
               Math.max(
                 Math.min(
                   Math.floor(total / PERPAGE) * PERPAGE,
-                  (n - 1) * PERPAGE
+                  (n - 1) * PERPAGE,
                 ),
-                0
-              )
+                0,
+              ),
             );
           }}
         >
@@ -134,11 +150,14 @@ export default function ChannelSongs() {
         </Editable>
         <Button
           onClick={() =>
-            setOffset((e) =>
+            onPageChange(
               Math.max(
-                Math.min(Math.floor(total / PERPAGE) * PERPAGE, e + PERPAGE),
-                0
-              )
+                Math.min(
+                  Math.floor(total / PERPAGE) * PERPAGE,
+                  offset + PERPAGE,
+                ),
+                0,
+              ),
             )
           }
           disabled={offset + PERPAGE > total}
